@@ -1,0 +1,2089 @@
+[
+ {
+  "id": "WS1-01",
+  "kontext": "Zwei grosse Ops-System-Welten sind eine unmittelbare Folge der unvollendeten Fusion AAS+AHS. Bevor konsolidiert wird, braucht jeder Ops-Bereich einen bewussten Zielsystem-Entscheid: konsolidieren auf ein Bestandssystem vs. auf eine KI-Lösung überspringen — nicht blind konsolidieren, wo KI Teile in 12–18 Monaten ablöst. Der Entscheid je Bereich (nicht die Migration) ist bis 15.08.2026 (Mitte August, DRS 07.07.) machbar und vorgezogen (vor Programmstart 01.09.).",
+  "leistung": [
+   "Systemlandkarte: alle Systeme, Vertragslaufzeiten/Kündigungsfristen, Verortung der 2 Ops-Welten",
+   "Dokumentierter Zielsystem-Entscheid je Ops-Bereich (konsolidieren vs. KI-Ersatz)",
+   "Kopplung an Data Foundation/Ontologie (Layer 2, WS6) und No-/High-AI-Zones (TRAK-2026-0010)"
+  ],
+  "vorgehen": [
+   "Systeminventar je Ops-Bereich erheben (Matthei/Pajor), inkl. Vertragslaufzeiten/Kündigungsfristen",
+   "Entscheid-Brille pro Bereich anlegen: Bestandssystem-Konsolidierung vs. KI-Sprung (Abgleich mit WS6/Petric)",
+   "Sunk-Cost-Prüfung Beekeeper + übrige Kernsysteme (Phase-0-Datenlücke) einarbeiten",
+   "Entscheide je Bereich dokumentieren und für Umsetzung ab M1 (Sep 26) einplanen"
+  ],
+  "beteiligte": "Owner: Matthei (COO); Mitwirkende: Pajor (CFO-Stv), AFR (WS1-Strom-Owner), Petric (WS6-Schnittstelle Data Foundation)",
+  "risiken": [
+   "Vertragslaufzeiten/Kündigungsfristen Beekeeper und Kernsysteme = Phase-0-Datenlücke (zu klären) — Sunk-Cost-Risiko bei vorschnellem Entscheid",
+   "Kopplung an Data Foundation Layer 2 (WS6): verspätete Ontologie-Klärung verzögert KI-Ersatz-Optionen",
+   "«One World bis Ende Juli» wäre bei der Systemtiefe unrealistisch — Scope ist bewusst nur der Entscheid, nicht die Migration"
+  ],
+  "erfolgsmessung": "100% der Ops-Bereiche haben bis 15.08.2026 einen dokumentierten Zielsystem-Entscheid",
+  "grounding": "projekt.yaml WS1-01; RUBICON-Doc §4 WS1 D8/K9 + Abschnitt Systemlandkarte; WS-Paket WS1 Phase 0"
+ },
+ {
+  "id": "WS1-02",
+  "kontext": "Datenehrlichkeit ist Spielregel: kein Zielwert wird vor validierter Baseline fixiert (Gate G2, 15.10.2026). Das Baseline-Datenpaket WS1 liefert FTE, echte Holding-Kostenbasis (heute nur Recharge-Proxy ≈ 3'984 TEUR) und Reporting-Linien inkl. Finance-Geografie VIE/HAM — und klärt per Kompetenz-Assessment, ob die heutige Aufstellung Rohde/Lesch/Pajor für eine konsolidierte Finance-Linie reicht. Kritischer Pfad (G2), abhängig vom Datenzugangs-Gate OE-01/G1.",
+  "leistung": [
+   "Baseline-Datenpaket WS1: FTE, echte Holding-Kostenbasis, Reporting-Linien (Finance-Geografie VIE↔HAM kartiert)",
+   "Finance-Kompetenz-/Besetzungs-Assessment für die konsolidierte Finance-Linie",
+   "Abnahme im Diagnose-Review G2; Zentralkosten-IST als Basis für das −30%-Ziel fixiert",
+   "Ablage aller Daten-Lieferungen: Drive «RUBICON — Datenlieferungen» (WS-Unterordner; Baseline-Datenpakete → _Baseline-Datenpakete G2)"
+  ],
+  "vorgehen": [
+   "Datenerhebung starten ab Programmstart 01.09. (K1, M1–M2); FTE-Lücke via Looker/EPG-Zugang (OE-01) schliessen",
+   "Echte Holding-Kostenbasis erheben — ersetzt den FC26-Recharge-Proxy (Datenlücke explizit führen, nie schönen)",
+   "Finance-Kompetenz-Assessment durchführen (Aufstellung Rohde/Lesch/Pajor vs. Zielbild eine Finance-Linie)",
+   "Paket im Diagnose-Review GL (G2, 15.10.) vorlegen und abnehmen lassen"
+  ],
+  "beteiligte": "Owner: Rohde (Group CFO, HAM); Mitwirkende: AFR (WS1-Owner, Finanz-Challenge), Pajor (CFO-Stv, VIE, cross-border), Lesch (Finance)",
+  "risiken": [
+   "Abhängigkeit OE-01/G1 (12.09.): ohne EPG-GHS-/Looker-Zugang bleibt die FTE-Baseline lückenhaft — Interim AHM-730-Rohdaten bzw. Eskalation Stufe 3",
+   "Echte Holding-Kostenbasis = Datenlücke; verspätete Baseline blockiert Zielwert-Fixierung aller WS1-/WS3-Kostenziele (kritischer Pfad G2)",
+   "Assessment-Ergebnis kann Besetzungsfragen aufwerfen — individuelle Personalentscheide laufen über den HR-Sensitive-Kanal, nicht im Board-Dokument"
+  ],
+  "erfolgsmessung": "Baseline vollständig vorgelegt und im Diagnose-Review G2 (15.10.2026) abgenommen; Zentralkosten-IST als Basis für −30% fixiert",
+  "grounding": "projekt.yaml WS1-02 (Gate G2, critical, depends_on OE-01); RUBICON-Doc §4 WS1 K1; WS-Paket WS1 Phase 0"
+ },
+ {
+  "id": "WS1-03",
+  "kontext": "Die Gremien-Zähl-Vermischung «5 vs. 7» (GL, Vice Chairman und Chairman durcheinander gezählt) ist ein Kernbefund der Diagnose (C — unklare Accountability). Nach dem formalen GL=6-Beschluss vom 18.09.2026 (M1) macht das Organigramm v2 die bereinigte Struktur gruppenweit sichtbar: GL = 6 (CEO Gökcöl, CFO Rohde, CFO-Stv Pajor, COO Matthei, CCO Haeffner, CHRO Charisius), Charisius→CEO, Fritthum = Vice Chairman auf Board-Ebene, nicht Linie.",
+  "leistung": [
+   "Organigramm v2 gruppenweit publiziert (GL=6, Berichtsweg Charisius→CEO eindeutig, Fritthum separat auf Board-Ebene)",
+   "Ebenen-Trennung GL / Vice Chairman / Chairman sauber abgebildet («5 vs. 7» aufgelöst)",
+   "Genau ein Accountable je Ergebnis im Organigramm abgebildet (Prinzip P1)"
+  ],
+  "vorgehen": [
+   "GL=6-Beschluss vom 18.09. (WS2-D1/K2) als Grundlage übernehmen",
+   "Organigramm v2 nach Führungsspannen-Prinzipien P1–P7 aufbauen (max. 5 Ebenen, Zielspanne 5–8 Reports, keine Doppelunterstellungen)",
+   "Design-Review mit Charisius (HR-/Legal-Org) und DRS (Design-/Governance-Rahmen)",
+   "Gruppenweite Publikation bis 31.10.2026"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman, Struktur- & Disziplin-Owner); Mitwirkende: Charisius (CHRO & Legal), DRS (Design-Rahmen), Gökcöl (CEO, öffentliches Gesicht)",
+  "risiken": [
+   "Termin 31.10. ist Annahme (date_assumed) — hängt am formalen GL=6-Beschluss 18.09. und der VR-Traktandierung",
+   "Mindestens 3 N.N.-Vakanzen in der heutigen Struktur (Metriktabelle) — offene Besetzungen dürfen die Publikation nicht blockieren",
+   "Wahrnehmungsrisiko Zwei-Kopf-Führung: Duo AFR+CGO muss nach aussen einheitlich auftreten, der CEO verantwortet öffentlich"
+  ],
+  "erfolgsmessung": "Organigramm v2 bis 31.10.2026 gruppenweit veröffentlicht; genau ein Accountable je Ergebnis abgebildet",
+  "grounding": "projekt.yaml WS1-03; RUBICON-Doc §4 WS1 D1/K2; WS-Paket WS1 Phase 1"
+ },
+ {
+  "id": "WS1-04",
+  "kontext": "Die Gruppe wird als zwei parallele Verwaltungen geführt (Diagnose A): Finance dreifach gespalten, doppelte CFO-Mailboxen, uneinheitliche Mail-Domain (z.B. @ahs-aero.de statt @axs.aero). Der Org-Entscheid «eine klare Verwaltungs-/Finance-Organisation» (ein Owner, eine Linie, ein Reporting; Standort abgeleitet nach Kosten/Rechts-Machbarkeit) ist die Weichenstellung — inkl. rechtssicherer §613a-Vorbereitung für die Folgeumsetzung.",
+  "leistung": [
+   "GL-beschlossener Org-Entscheid Verwaltungs-/Finance-Organisation (ein Owner, eine Linie, ein Reporting; Standort = abgeleitete Variable)",
+   "§613a-BGB-Unterrichtungsvorbereitung (Unterrichtung Abs. 5, 1-Monats-Widerspruchsrecht) für Nov–Dez 26",
+   "Eine CFO-Mailbox statt doppelter Mailboxen",
+   "GL-Mail-Domain auf @axs.aero migriert"
+  ],
+  "vorgehen": [
+   "Entscheidungsvorlage Verwaltungs-/Finance-Organisation erstellen (K10) — Zielbild-Sprache: Klarheit vor Geografie, kein «DUS vs. HAM»",
+   "GL-Beschluss bis Okt 26 herbeiführen",
+   "§613a-Unterrichtungsschreiben mit Charisius (Recht) vorbereiten; §99/§111-BetrVG-Pfad prüfen",
+   "CFO-Mailbox konsolidieren und GL-Mailkonten auf @axs.aero migrieren (K11, Abstimmung Didit)"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman); Mitwirkende: Charisius (Recht/§613a, HR-Org), Rohde (Finance-Linie), Didit (Mail-Domain-Umsetzung)",
+  "risiken": [
+   "DE §613a BGB + §99/§111 BetrVG: Standort-/Personalverlagerung Finance ist mitbestimmungssensibel — Unterrichtung und Fristen zwingend vor Umsetzung (Gate G4, Owner Charisius)",
+   "IT-/Didit-Fragilität (Ein-Mann-IT Suchomski) blockiert die Mail-Domain-Migration — Stellvertretung + Doku bis M2 nötig",
+   "Kopplung an AT ArbVG §§108/109 + §45a AMFG für die österreichische Seite (VIE) der Verwaltungskonsolidierung"
+  ],
+  "erfolgsmessung": "Org-Entscheid GL-beschlossen, GL-Mail-Domain @axs.aero migriert und §613a-Unterrichtungsschreiben vorbereitet — bis 31.10.2026",
+  "grounding": "projekt.yaml WS1-04; RUBICON-Doc §4 WS1 K10/K11; WS-Paket WS1 Phase 1 (messbar-Spalte)"
+ },
+ {
+  "id": "WS1-05",
+  "kontext": "Diagnose-Befund C: Aus der Chairman-Jobdescription (2-Pager, V18 final / V19) sind bislang keine abgeleiteten Role-Descriptions für die GL-Rollen entwickelt — die Accountability-Architektur ist nicht im Rollen-Dokument verankert. Die Kaskade leitet alle 6 GL-Rollen plus die Vice-Chairman-Abgrenzung einheitlich aus dem Chairman-2-Pager ab und koppelt sie an die Zielvereinbarungen der P&L-Owner.",
+  "leistung": [
+   "Role-Descriptions aller 6 GL-Rollen (CEO/CFO/CFO-Stv/COO/CCO/CHRO): je Zweck, P&L-/Ergebnisverantwortung, Entscheidungsschwellen (INS-001), Zielvereinbarung",
+   "Vice-Chairman-Abgrenzung: Board-/Governance-Ebene, kein Linien-/GL-Mandat; Umsetzungsführungs-Rolle sauber abgegrenzt",
+   "Kopplung der JDs an die Zielvereinbarungen/P&L-Owner-Matrix (WS1-07)"
+  ],
+  "vorgehen": [
+   "Chairman-2-Pager (Doc 1FzOkfNGi7vz…, V18 final / V19) als Anker-Dokument und Strukturvorlage übernehmen",
+   "Je GL-Rolle Ableitung erstellen: Zweck, Ergebnisverantwortung, INS-001-Entscheidungsschwellen (K5, M2–M4)",
+   "Vice-Chairman-Abgrenzung mit DRS abstimmen (Governance- vs. Programm-Treiberrolle)",
+   "Finalisierung und Kopplung an Zielvereinbarungen bis 31.10.2026"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman); Mitwirkende: Charisius (CHRO & Legal), DRS (Anker-Dokument Chairman-2-Pager, Design-Rahmen)",
+  "risiken": [
+   "Abhängigkeit vom finalen Stand des Chairman-2-Pagers (V18/V19) — Versionsstand vor Ableitung zu bestätigen",
+   "Kopplung an WS1-07: ohne finale JDs fehlt die Basis für unterschriebene Zielvereinbarungen (Folge-Milestone Dez 26)",
+   "Termin 31.10. ist Annahme (date_assumed); Doc-Termin D5 nennt M4 — WS-Paket präzisiert «final Okt 26»"
+  ],
+  "erfolgsmessung": "6/6 GL-Rollen-JDs plus Vice-Chairman-Abgrenzung final abgeleitet und an P&L-Owner-Zielvereinbarungen gekoppelt — bis 31.10.2026",
+  "grounding": "projekt.yaml WS1-05; RUBICON-Doc §4 WS1 D5/K5 + Abschnitt JD-Kaskade; WS-Paket WS1 Phase 1"
+ },
+ {
+  "id": "WS1-06",
+  "kontext": "Berichtswege sind uneindeutig und Entscheide werden hochdelegiert (Diagnose C/D). Die RACI-Charta regelt für 10 Entscheidungstypen entlang AXS-INS-001, wer entscheidet, mitwirkt und informiert wird — und schliesst zugleich die offenen INS-001-Punkte (inkl. Entscheids-Kaskade Anhang B, gemeinsam mit WS2). Prinzip P6: Führung = Zeichnungsrecht.",
+  "leistung": [
+   "RACI-Charta für 10 Entscheidungstypen als INS-001-Anlage in Kraft",
+   "Offene INS-001-Punkte geschlossen (Entscheids-Kaskade Anhang B, Schnittstelle WS2-D4)",
+   "Verabschiedung im Richtlinien-Loop mit Wüst (Konzernrichtlinien-Owner)"
+  ],
+  "vorgehen": [
+   "10 Entscheidungstypen definieren und je Typ RACI-Zuordnung entlang INS-001-Schwellen erarbeiten (K4, M1–M3)",
+   "Abgleich mit der Entscheids-Kaskade INS-001 Anhang B (WS2, ebenfalls Nov 26) — eine konsistente Mechanik, kein Parallelwerk",
+   "Richtlinien-Sign-off-Loop Charisius/Wüst durchlaufen",
+   "Inkraftsetzung als INS-001-Anlage und Publikation bis 30.11.2026"
+  ],
+  "beteiligte": "Owner: Charisius (CHRO & Legal); Mitwirkende: Wüst (Richtlinien/INS-001-Loop), AFR (WS1-Strom-Owner, Struktur-Rahmen)",
+  "risiken": [
+   "Sequenz-Kopplung an WS2-07 (Entscheids-Kaskade Anhang B, gleicher Termin): Inkonsistenzen zwischen RACI und Kaskade würden Hochdelegieren wieder ermöglichen",
+   "Termin 30.11. ist Annahme (date_assumed); Doc-Termin D3 nennt M3",
+   "Wirksamkeit hängt an gelebter Durchsetzung via Gruppen-Commitment-Tracker (WS2), nicht am Papier"
+  ],
+  "erfolgsmessung": "RACI-Charta für 10 Entscheidungstypen verabschiedet und als INS-001-Anlage in Kraft; offene INS-001-Punkte geschlossen — bis 30.11.2026",
+  "grounding": "projekt.yaml WS1-06; RUBICON-Doc §4 WS1 D3/K4; WS-Paket WS1 Phase 1 (messbar-Spalte)"
+ },
+ {
+  "id": "WS1-07",
+  "kontext": "Heute sind 0% der Einheiten mit dokumentiertem P&L-Owner belegt; Station→Director ist nicht dokumentiert (Metriktabelle). Die P&L-Owner-Matrix gibt jeder Einheit (43 Legal Entities, ~15 Stationen) genau einen P&L-Owner mit unterschriebener Zielvereinbarung — das Kernstück der Accountability-Architektur und Voraussetzung für den monatlichen P&L-Review (M8).",
+  "leistung": [
+   "P&L-Owner-Matrix 100%: genau ein Owner je Einheit (43 LE / ~15 Stationen)",
+   "Unterschriebene Zielvereinbarung je Einheit mit 4 Pflichtgrössen (EBITDA/Cash/SLA/Produktivität)",
+   "Kopplung an JD-Kaskade (WS1-05) und Gruppen-Commitment-Tracker (WS2, kein neues Gefäss)"
+  ],
+  "vorgehen": [
+   "P&L-Owner-Interimsliste 100% aus WS3-Sofortpaket (30.09.) als Startpunkt übernehmen",
+   "Owner-Zuordnung je Einheit finalisieren nach Prinzip P1 (genau ein Accountable je Ergebnis), Abgleich mit Organigramm v2",
+   "Zielvereinbarungen mit 4 Pflichtgrössen aufsetzen; Produktivitätsziel nach FTE-Baseline nachziehen (Datenlücke Looker)",
+   "Unterschriften einholen; Vorlage 100% zum Q4-VR (Dez 26) — K3, M1–M4"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman); Mitwirkende: Rohde (Finance-Daten/Zielgrössen), GL-Funktions-Owner (Unterzeichner je Einheit)",
+  "risiken": [
+   "Produktivitäts-Pflichtgrösse hängt an der FTE-Baseline (Looker = Datenlücke, OE-01/G2) — wird nachgezogen, darf die Unterschrift nicht blockieren",
+   "Minority-Stationen (HAM/HAJ/BRE/CGN/STR; Call Options bis 2032, 8-Jahres-Betriebspflichten) begrenzen den Durchgriff — Gesellschaftervereinbarungen vorab prüfen",
+   "Datenehrlichkeits-Spielregel: keine Zielwerte vor validierter Baseline (G2, 15.10.) — enge Taktung bis Dez 26"
+  ],
+  "erfolgsmessung": "100% der Einheiten (43 LE / ~15 Stationen) mit dokumentiertem P&L-Owner und unterschriebener Zielvereinbarung — bis 31.12.2026 (Q4-VR)",
+  "grounding": "projekt.yaml WS1-07; RUBICON-Doc §4 WS1 D2/K3 + Metrik P&L-Owner-Abdeckung; WS-Paket WS1 Phase 1"
+ },
+ {
+  "id": "WS1-08",
+  "kontext": "Der TOM-Blueprint ist das VR-genehmigte Zielbild der gesamten Organisation — identisch mit «Elysium 2.0» (Elysium und TOM sind ein und dasselbe Zielbild, nicht zwei Programme). Er ist kritischer Pfad: Die Restrukturierungs-Einleitung WS3-12 (§111/§17) hängt an ihm, und er selbst hängt am Finanzierungs-Closing G6 (WS3-05, 31.10.), das cash-wirksame Schritte erst zulässt.",
+  "leistung": [
+   "TOM-Blueprint (≡ Elysium 2.0, 1-Seiter-Definition der Zielstruktur) VR-genehmigt am Q4-VR Dez 26",
+   "Pre-Read T−14 via Sherpany (VR-Prozess-Standard WS2-D8)",
+   "Verankerung: Führungsspannen-Prinzipien P1–P7, GL=6, Zero-based-Zielorganisation"
+  ],
+  "vorgehen": [
+   "Blueprint-Entwurf aus Baseline (WS1-02/G2), Organigramm v2 und Zero-based-Zielorganisation (WS3-07) konsolidieren",
+   "Closing-Status G6 (WS3-05, 31.10.) prüfen — Sequenzierung cash-wirksamer TOM-Elemente daran ausrichten",
+   "Vorabstimmung zwischen AFR und CGO (AFR legt vor, CGO trägt öffentlich) und mit DRS (Steuerung/Kontrolle, Eskalations-Endpunkt)",
+   "Pre-Read T−14 vor Q4-VR einreichen; formale Genehmigung im Q4-VR (Dez 26) einholen"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman); Mitwirkende: DRS (Governance-Rahmen, VR-Vorsitz), CGO/Gökcöl (öffentliche Verantwortung), VR (Genehmigungsorgan)",
+  "risiken": [
+   "Kritischer Pfad: Verzug verschiebt WS3-12 (Restrukturierung AAS Technics + BER, G4) und damit den Q2/27-Verlustquellen-Effekt",
+   "Abhängigkeit WS3-05/G6: verspätetes Closing (31.10.) verschiebt cash-wirksame TOM-Bausteine — Blueprint muss die Sequenzierung explizit ausweisen",
+   "VR-Terminierung: Pre-Read T−14 zwingend; Q4-VR-Datum ist der harte Anker (due 31.12. ist Annahme)"
+  ],
+  "erfolgsmessung": "TOM-Blueprint im Q4-VR (Sherpany, Pre-Read T−14) formal genehmigt — bis 31.12.2026",
+  "grounding": "projekt.yaml WS1-08 (critical, depends_on WS3-05); RUBICON-Doc §4 WS1 D4 + Elysium≡TOM-Reconciliation; WS-Paket WS1 Phase 1"
+ },
+ {
+  "id": "WS1-09",
+  "kontext": "Finance ist heute dreifach gespalten — strukturell (getrennte Systeme), personell (getrennte Teams AAS-Finance VIE / AHS-Finance HAM) und grenzüberschreitend (AT/DE); CFO in HAM, CFO-Stv in VIE. Eine operative Finance-Linie mit einem Owner ist Voraussetzung für die Konzern-Wahrheit (Art. 963 OR, Reporting-Vollausbau). Umsetzung nur nach sauberem §613a-Ablauf.",
+  "leistung": [
+   "Konsolidierte Finance-Linie operativ: Group Controlling + Accounting cross-border AT↔DE mit genau einem Owner",
+   "§613a-Prozess abgeschlossen: 1-Monats-Widerspruchsfrist abgelaufen, Widerspruchsquote dokumentiert",
+   "VIE-Vorbehalt eingehalten: keine VIE-Massnahmen vor BVD-Entscheid"
+  ],
+  "vorgehen": [
+   "§613a-Unterrichtung (vorbereitet in WS1-04) Nov–Dez 26 zustellen; Widerspruchsfrist abwarten",
+   "Cross-border-Konsolidierung AAS-Finance (VIE) ↔ AHS-Finance (HAM) umsetzen (K6, M2–M7), AT-Seite nach ArbVG §§108/109 + §45a AMFG",
+   "Ergebnis des Finance-Kompetenz-Assessments (WS1-02) in die Besetzung der Linie einarbeiten",
+   "Operativen Betrieb mit einem Owner per Jan 27 herstellen; Puffer bis Mär 27 bei Widersprüchen einplanen"
+  ],
+  "beteiligte": "Owner: Rohde (Group CFO); Mitwirkende: AFR (Struktur-Owner WS1), Charisius (Recht: §613a/ArbVG), Pajor (CFO-Stv, VIE, cross-border)",
+  "risiken": [
+   "§613a-Widersprüche können die Konsolidierung verzögern — Plan sieht Puffer bis Mär 27 vor",
+   "VIE = Lizenz-/Profit-Rückgrat mit laufendem BVD-Verfahren: VIE-Massnahmen bis BVD-Entscheid eingefroren — Taktung realistisch halten",
+   "AT ArbVG §§108/109 + AMS §45a AMFG und DE §99/§111 BetrVG: jede Verlagerung nur nach Gate G4 (Freigabe Charisius)"
+  ],
+  "erfolgsmessung": "Konsolidierte Finance-Linie operativ mit einem Owner; §613a-Frist abgelaufen und Widerspruchsquote dokumentiert — bis 31.01.2027",
+  "grounding": "projekt.yaml WS1-09; RUBICON-Doc §4 WS1 K6 + Stromrisiko Finance cross-border; WS-Paket WS1 Phase 2 (messbar-Spalte)"
+ },
+ {
+  "id": "WS1-10",
+  "kontext": "DRS hält heute 18 DE-GF-Mandate — eine Haftungskonzentration auf einer Person (Diagnose C: GF-Haftungskonzentration aufzulösen). Die Entflechtung läuft in gestaffelten Wellen auf ≤5 Mandate; Welle 1 muss bis Feb 27 im Handelsregister eingetragen sein, mit Prokuren + Delegationsordnung als Interim.",
+  "leistung": [
+   "Welle-1-Mandatswechsel im Handelsregister eingetragen (Zielpfad DRS 18 → ≤5)",
+   "Interim-Absicherung: Prokuren + Delegationsordnung für noch nicht übergebene Gesellschaften",
+   "Swissport-Covenant-Check (G5) und §35-GewO-Status FRA je Mandatswechsel dokumentiert"
+  ],
+  "vorgehen": [
+   "Wellenplan finalisieren (K12, M3–M8): Priorisierung der Gesellschaften, Kandidaten je GF-Position",
+   "Je Wechsel Rechts-Checks durchführen: Swissport-Covenants (G5) + §35-GewO-Verfahren FRA (Gewerbeuntersagungs-Kontext)",
+   "Interim Prokuren erteilen und Delegationsordnung in Kraft setzen, wo Kandidaten fehlen",
+   "Handelsregister-Eintragungen Welle 1 bis 28.02.2027 vollziehen"
+  ],
+  "beteiligte": "Owner: Charisius (CHRO & Legal); Mitwirkende: Rohde (Support gemäss D10/K12), AFR (WS1-Strom-Owner), DRS (abgebender Mandatsträger)",
+  "risiken": [
+   "Kandidatenmangel für GF-Positionen kann Wellen verzögern — deshalb gestaffelte Wellen mit Prokuren-Interim (im Plan bereits als Stromrisiko benannt)",
+   "§35-GewO-Verfahren FRA: laufendes Verfahren beeinflusst Timing der FRA-relevanten Mandatswechsel",
+   "Swissport-Covenant-Verletzung (G5) stoppt den jeweiligen Schritt bis zur Freigabe"
+  ],
+  "erfolgsmessung": "Welle-1-Mandate im Handelsregister eingetragen; DRS-Mandatszahl gesenkt auf Zielpfad →≤5 — bis 28.02.2027",
+  "grounding": "projekt.yaml WS1-10; RUBICON-Doc §4 WS1 D10/K12 + Stromrisiko DE-GF-Entflechtung; WS-Paket WS1 Phase 2"
+ },
+ {
+  "id": "WS1-11",
+  "kontext": "Die HR-Organisation ist Teil der Fusions-Doppelstrukturen; zusätzlich ist die Schnittstelle zu ShAir (Payrolling-Einheit) ungeklärt. WS1 adressiert ausschliesslich die Struktur-Ebene: HR-Zielorganisation streamlinen und die ShAir-Rolle/-Schnittstelle klären — individuelle Personalentscheide und ShAir-MBO-/Vertragsspezifika laufen strikt über den vertraulichen HR-Sensitive-Kanal.",
+  "leistung": [
+   "HR-Zielorganisation streamlined und beschlossen",
+   "ShAir/HR-Schnittstelle als Struktur dokumentiert (Rolle/Schnittstelle im Board-Doc, keine MBO-Spezifika)",
+   "Kopplung an WS5 (BR-/Mitbestimmungs-Fahrplan) sichergestellt"
+  ],
+  "vorgehen": [
+   "Ist-Aufnahme der HR-Doppelstrukturen aus Baseline (WS1-02) ableiten",
+   "HR-Zielorganisation designen (K7, M2–M6) — Abgleich mit Organigramm v2 und Führungsspannen-Prinzipien P1–P7",
+   "ShAir-Rolle/-Schnittstelle auf Struktur-Ebene definieren (Payrolling-Einheit; nur Rolle/Schnittstelle im Board-Dokument)",
+   "Beschlussfassung und Dokumentation bis 28.02.2027; BR-Kopplung via WS5 (Charisius)"
+  ],
+  "beteiligte": "Owner: Charisius (CHRO & Legal); Mitwirkende: AFR (WS1-Strom-Owner, Struktur-Rahmen)",
+  "risiken": [
+   "Vertraulichkeits-Grenze: ShAir-MBO-/Vertragsspezifika und individuelle Personalentscheide dürfen nicht ins Board-Dokument — Verstoss wäre Governance-Bruch (HR-Sensitive-Kanal)",
+   "Kopplung WS5/Mitbestimmung: BR-Konsultationspflichten (DE/AT) können die Umsetzung der Zielorganisation takten",
+   "Parallellast Charisius (WS1-10/-11/-14, RACI, WS5-Strom) — Priorisierungskonflikt möglich (zu klären im GL-Weekly)"
+  ],
+  "erfolgsmessung": "HR-Zielorganisation beschlossen; ShAir-Rolle/-Schnittstelle als Struktur dokumentiert (keine MBO-Spezifika) — bis 28.02.2027",
+  "grounding": "projekt.yaml WS1-11; RUBICON-Doc §4 WS1 D6/K7 + Vertraulichkeits-Passus; WS-Paket WS1 Phase 2 (messbar-Spalte)"
+ },
+ {
+  "id": "WS1-12",
+  "kontext": "IT/Didit ist ungeordnet: Ein-Mann-IT (Bus-Faktor Suchomski), zugleich zentral für Mail-Domain, Kommunikationsplattform, Data Foundation und AI-Hosting (Vertex) — Zielorganisation und Governance sind ungeklärt, die Owner-Frage (Didit/Suchomski heute unter AI@AXS) offen. Die Bereinigung ist mehr als Bus-Faktor-Entschärfung: Org-Aufstellung, Governance und ein expliziter Sourcing-Entscheid.",
+  "leistung": [
+   "IT-/Didit-Zielorganisation dokumentiert (Org-Aufstellung + Governance)",
+   "Sourcing-Entscheid gefällt (Insourcing vs. Externalisierung)",
+   "Bus-Faktor entschärft: Stellvertretung benannt und Dokumentation vorhanden (Vorstufe bis M2)"
+  ],
+  "vorgehen": [
+   "Stellvertretung + Dokumentation für Suchomski bis M2 sicherstellen (Sofortmassnahme aus Stromrisiko)",
+   "Owner-Klärung Didit (heute unter AI@AXS) mit Petric/WS6 herbeiführen",
+   "Zielorganisations- und Governance-Design erarbeiten (K8, M2–M6), inkl. Schnittstellen Mail-Domain/Plattform/Data Foundation/Vertex-Hosting",
+   "Sourcing-Entscheid (Insourcing/Externalisierung) vorbereiten und entscheiden; Dokumentation bis 28.02.2027"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman); Mitwirkende: Charisius (Legal/Governance), Petric (AI-Delivery, WS6-Schnittstelle), Didit/Suchomski (Ist-Träger)",
+  "risiken": [
+   "Ein-Mann-IT als Single Point of Failure blockiert parallel Mail-Domain (WS1-04), Plattform-Konsolidierung, Data Foundation und AI-Hosting — Ausfall vor Stellvertretungs-Aufbau wäre programmkritisch",
+   "Ungeklärte Owner-Frage Didit (AI@AXS vs. Konzern-IT) kann den Sourcing-Entscheid verzögern",
+   "Abhängigkeit WS6: Vertex-Stack-Übernahme der Chairman-Automationen (WS2-12, Feb 27) setzt geordnete IT-Governance voraus"
+  ],
+  "erfolgsmessung": "IT-/Didit-Zielorganisation + Sourcing-Entscheid dokumentiert; Stellvertretung/Doku vorhanden — bis 28.02.2027",
+  "grounding": "projekt.yaml WS1-12; RUBICON-Doc §4 WS1 D7/K8 + Stromrisiko IT-Fragilität; WS-Paket WS1 Phase 2 (messbar-Spalte)"
+ },
+ {
+  "id": "WS1-13",
+  "kontext": "Der Zielnachweis schliesst die 8-Monats-Kernumsetzung von WS1 ab (Phase 3, M8): Die Organisation ist vollzogen, die Fusions-Doppelspurigkeiten sind mehrheitlich abgebaut, die GF-Haftungskonzentration ist aufgelöst — und der Strom wird in die Linie übergeben, ohne Rückfall in Chairman-Zentrierung. Das ist die Abnahme-Messlatte des gesamten Stroms gegenüber GL und VR.",
+  "leistung": [
+   "Verwaltungs-/Finance-Organisation vollzogen (eine Linie, ein Reporting, ein Owner)",
+   "Doppelspurigkeits-Abbau ≥5/6 Items (Finance-Linie, Plattform, Mail-Domain, Verwaltungs-Organisation, CFO-Mailbox, Brand; je Item §613a-Check) — Fallback ohne KBR-Plattform-Genehmigung: 4/6 + Plattform M8",
+   "DE-GF-Entflechtung abgeschlossen: DRS ≤5 Mandate im Handelsregister",
+   "Übergabe in die Linie mit Schlussbericht an GL/VR (Audit Chairman-Unabhängigkeit)"
+  ],
+  "vorgehen": [
+   "Vollzugsstand aller Phase-2-Deliverables (WS1-09 bis WS1-12) konsolidieren; Rest-Wellen GF-Entflechtung abschliessen",
+   "Doppelspurigkeits-Checkliste 6 Items final abarbeiten und je Item §613a-Check dokumentieren (D9/K11)",
+   "Zentralkosten-Nachweis mit WS3 abgleichen (K13: −30% strukturell entschieden/umgesetzt, verzahnt ohne Doppelzählung)",
+   "Audit zur Chairman-Unabhängigkeit durchführen, Übergabe in die Linie dokumentieren, Schlussbericht an GL/VR vorlegen"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman); Mitwirkende: Charisius (§613a-Checks, GF-Entflechtung), Rohde (Finance-Linie/Zentralkosten), DRS (Abnahme via Chairman Cockpit + VR), CGO (öffentliche Ergebnisverantwortung)",
+  "risiken": [
+   "KBR-Genehmigung Mitarbeiterplattform offen (noch nicht genehmigt, §87 BetrVG) — deshalb definierter Fallback 4/6 + Plattform M8",
+   "Verzug in Phase-2-Milestones (Finance-Linie-Puffer bis Mär 27, GF-Kandidatenmangel) drückt direkt auf den Apr-27-Nachweis",
+   "Rückfall-Risiko Chairman-Zentrierung: Übergabe gilt nur bei bestandenem Unabhängigkeits-Audit"
+  ],
+  "erfolgsmessung": "Verwaltungs-/Finance-Organisation vollzogen; ≥5/6 Doppelspurigkeits-Items abgebaut (Fallback 4/6 dokumentiert); DRS ≤5 GF-Mandate im Handelsregister; Übergabe-Audit bestanden und Schlussbericht GL/VR vorgelegt — bis 30.04.2027",
+  "grounding": "projekt.yaml WS1-13; RUBICON-Doc §4 WS1 D9/D10/K11–K13; WS-Paket WS1 Phase 3 (messbar-Spalten) + Erfolgskriterien"
+ },
+ {
+  "id": "WS1-14",
+  "kontext": "Die Entity-Portfolio-Bereinigung inkl. ZRH-Vollzug ist gesetzlich gebundener Nachlauf (Q2/27) ausserhalb der 8-Monats-Kernumsetzung — sie zählt nie gegen das Kern-Projektende 30.04.2027. Das ZRH-Residual belastet mit ~−110 TCHF/Monat; der fixe Endtermin wird bereits Feb 27 fixiert (WS3-11), der Vollzug folgt nach Art.-335f–k-OR-Check im Q2/27.",
+  "leistung": [
+   "Entity-Portfolio bereinigt (K14)",
+   "ZRH-Vollzug: Residual (~−110 TCHF/Monat) mit fixem Endtermin beendet",
+   "Art.-335f–k-OR-Konformität (Massenentlassungs-Regeln CH) nach Headcount-Baseline nachgewiesen"
+  ],
+  "vorgehen": [
+   "Headcount-Baseline ZRH aus Baseline-Datenpaket heranziehen (Art.-335d-OR-Check, WS3-Phase-0)",
+   "Fixen ZRH-Endtermin aus WS3-11 (Feb 27) übernehmen; PR-Vorlauf sicherstellen",
+   "Art.-335f–k-OR-Verfahren korrekt durchführen (Konsultation, Anzeige) — Freigabe-Gate bei Charisius (Recht)",
+   "Entity-Portfolio-Bereinigung vollziehen und Vollzug bis 30.06.2027 dokumentieren"
+  ],
+  "beteiligte": "Owner: Charisius (CHRO & Legal); Mitwirkende: Rohde (Support K14, Finance-/Entity-Sicht), CGO (ZRH-Endtermin-Owner aus WS3-11), AFR (WS1-Strom-Owner)",
+  "risiken": [
+   "Art.-335f–k-OR-Verfahrensfehler würden Vollzug und Termin gefährden — Check zwingend nach Headcount-Baseline, vor Vollzug",
+   "Minority-Governance als eigene Klasse: Gesellschaftervereinbarungen (Call Options, Betriebspflichten) vorab prüfen, sie begrenzen den Portfolio-Durchgriff",
+   "PR-/Reputationsrisiko beim ZRH-Vollzug (PR-Vorlauf gemäss WS3-11 eingeplant); Medien-Vorgeschichte ZRH beachten"
+  ],
+  "erfolgsmessung": "ZRH-Residual (~−110 TCHF/Monat) mit fixem Endtermin beendet und Entity-Portfolio bereinigt — Vollzug bis 30.06.2027 (Nachlauf, zählt nicht gegen baseline_end 30.04.2027)",
+  "grounding": "projekt.yaml WS1-14 (nachlauf: true); RUBICON-Doc §4 WS1 K14 + Stromrisiko Minorities; WS-Paket WS1 Nachlauf Q2/27 (messbar-Spalte)"
+ },
+ {
+  "id": "WS2-01",
+  "kontext": "Die heutige Gremien-Zähl-Vermischung («5 vs. 7») entstand, weil GL, Vice Chairman und Chairman durcheinander gezählt wurden — ohne bereinigte Führungsstruktur gibt es keine klare Accountability-Ebene, an der das MOS ansetzen kann. WS2-01 ist das gemeinsame M1-Deliverable mit WS1 (WS2-D1 ≙ WS1-D1) und die formale Gremien-Bereinigung per 18.09.2026.",
+  "leistung": [
+   "GL = 6 formal beschlossen und publiziert: CEO Gökcöl · CFO Rohde · CFO-Stv Pajor · COO Matthei · CCO Haeffner · CHRO Charisius",
+   "Ebenen-Trennung publiziert: GL (6) / Vice Chairman Fritthum (Board-/Governance-Ebene, nicht Linie) / Chairman DRS (separat) — «5 vs. 7» aufgelöst",
+   "Berichtsweg Charisius → CEO eindeutig ausgewiesen"
+  ],
+  "vorgehen": [
+   "Beschlussvorlage GL-Bereinigung auf 6 (inkl. Pajor als CFO-Stv) vorbereiten (AFR mit Gökcöl, Support CEO-Office)",
+   "Ebenen-Trennung GL / Vice Chairman / Chairman sauber rahmen (Fritthum = Chairman-Stellvertreter, kein Linien-/GL-Mandat)",
+   "Formalen Beschluss herbeiführen und VR-traktandieren",
+   "Gruppenweite Publikation der bereinigten Aufstellung bis 18.09.2026"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman, Struktur- & Disziplin-Owner WS2); Mitwirkende: CGO/CEO Gökcöl (Umsetzungsmotor), CEO-Office (Support), DRS (Steuerung/Kontrolle via Chairman Cockpit + VR)",
+  "risiken": [
+   "«Zwei-Kopf-Führungs-Eindruck», wenn die Rolle des AFR + CGO nach aussen nicht einheitlich gerahmt wird — der CEO muss die Ergebnisse öffentlich verantworten",
+   "Abhängigkeit von der VR-Traktandierung: ohne formalen Beschluss bleibt die Zähl-Vermischung bestehen und blockiert nachgelagerte WS1-/WS2-Deliverables (Organigramm v2, JD-Kaskade)"
+  ],
+  "erfolgsmessung": "VR-Beschluss dokumentiert; GL=6 formal publiziert; Fritthum als Vice Chairman (nicht Linie) und DRS als Chairman separat ausgewiesen — bis 18.09.2026.",
+  "grounding": "projekt.yaml WS2-01 (due 18.09.2026, fix); RUBICON-Doc §4 WS2-D1/K1; WS-Paket WS2 Phase 0"
+ },
+ {
+  "id": "WS2-02",
+  "kontext": "WS2 macht aus appellativer Führung ein gemessenes, verbindliches System — dafür muss der Führungsrhythmus in Phase 0 scharf gestellt werden, bevor Tracker und Queue live gehen. Zugleich ist das wöchentliche 13-Wochen-Liquiditätsbild bei zwingendem Finanzierungs-Closing 31.10.2026 ein heute blinder Fleck (Diagnose B).",
+  "leistung": [
+   "Standing-Traktandum «Transformation» im wöchentlichen ExBoD/GL-Weekly + monatlicher Agenda-Ampel-Review terminiert",
+   "Entscheids-Queue («offene Entscheide» mit Liegedauer) eingerichtet und wöchentlich geführt",
+   "Leitsatz «10 Entscheide/Tag, 2 falsche sind morgen korrigierbar» als GL-Norm protokolliert",
+   "13-Wochen-Liquidität wöchentlich verfügbar"
+  ],
+  "vorgehen": [
+   "Standing-Traktandum Transformation im GL-Weekly verankern (AFR = Agenda-Owner Transformation, Vorsitz CGO)",
+   "Entscheids-Queue als GL-Instrument aufsetzen, Pflege durch CEO-Office",
+   "Leitsatz als GL-Norm beschliessen und protokollieren",
+   "13-Wochen-Liquiditäts-Rhythmus mit CFO Rohde (Support Lesch) etablieren — Kopplung an Reporting-Pyramide auf WINGMAN-Basis",
+   "One-in-one-out-Prinzip anwenden: keine neuen Formate ohne Streichung bestehender"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman); Mitwirkende: CEO-Office (Kadenz-Administration, Queue-Pflege), CGO (Vorsitz GL-Weekly, Umsetzungsmotor), Rohde/Lesch (13-Wochen-Liquidität), DRS (Kontrolle via Cockpit)",
+  "risiken": [
+   "Meeting-Inflation durch neue Formate — Gegenmassnahme: one-in-one-out, Ist-Messung Meetingzeit in M1, Deckel-Fixierung erst nach Ist-Messung (Diagnose-Review 15.10.)",
+   "Entscheids-Queue verpufft, wenn Einträge ohne Konsequenz altern — Erzwingungs-Schwelle wird in M1 kalibriert (Wert = Annahme, zu klären)"
+  ],
+  "erfolgsmessung": "ExBoD-Standing-Traktandum + monatlicher Ampel-Review terminiert; Entscheids-Queue existiert und wird wöchentlich geführt; GL-Norm protokolliert; 13-Wochen-Liquidität wöchentlich verfügbar — bis 30.09.2026.",
+  "grounding": "projekt.yaml WS2-02 (due 30.09.2026, fix); RUBICON-Doc §4 WS2-D3/K3/K6; WS-Paket WS2 Phase 0"
+ },
+ {
+  "id": "WS2-03",
+  "kontext": "Datenehrlichkeit ist Spielregel: Kein WS2-Zielwert wird vor validierter Baseline fixiert (Gate G2, 15.10.2026). Die Execution-Rate liegt heute bei «höchstens ~50%, real vermutlich tiefer» — sie wird gemessen statt als harte Grösse verkauft; Durchlaufzeit, Meetingzeit und Reporting-Pünktlichkeit sind Datenlücken. WS2-03 liegt auf dem kritischen Pfad (G1 → G2 → G6 → …).",
+  "leistung": [
+   "Execution-Rate-Baseline erhoben und eingefroren (Commitments termingerecht, VR/GL-Action-Items)",
+   "Entscheidungs-Durchlaufzeit-Baseline erfasst (Gruppe-B-Aufträge, nominal 30 Tage, Ist bisher nicht gemessen)",
+   "Ist-Meetingzeit je Führungsrolle gemessen als Grundlage für den Meeting-Deckel",
+   "Reporting-Pünktlichkeits-Baseline dokumentiert (IST: JAN geliefert 11.03., FEB 24.03.)",
+   "Ablage aller Daten-Lieferungen: Drive «RUBICON — Datenlieferungen» (WS-Unterordner; Baseline-Datenpakete → _Baseline-Datenpakete G2)"
+  ],
+  "vorgehen": [
+   "Messmethodik je Zielgrösse festlegen (Quelle: Chairman-Aufträge-Tracker-Historie, GL-/VR-Protokolle, Report-Eingangsdaten)",
+   "Erhebung durch CEO-Office durchführen, AFR verantwortet Struktur und Abnahmereife",
+   "Baseline-Datenpaket WS2 bis 15.10.2026 zusammenstellen",
+   "Im Diagnose-Review GL (Gate G2) bestätigen lassen; erst danach Zielwerte fixieren",
+   "Meetingzeit-Deckel je Rolle auf Basis der Ist-Messung fixieren"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman); Mitwirkende: CEO-Office (Erhebung/Betrieb), Rohde (Reporting-Daten), GL (Diagnose-Review G2), DRS (Kontrolle)",
+  "risiken": [
+   "Kritischer Pfad: Verzug an G2 verschiebt die gesamte Gate-Kette (G2 15.10. → G6 Closing 31.10. → Zielnachweis Apr 27)",
+   "Unvollständige Historie im heutigen Tracking kann die Baseline verzerren — Lücken explizit als Datenlücke ausweisen, nie schätzen",
+   "Zielwerte (≥80%/≥90%, ≤30 Tage) sind Vorschläge zur Validierung — vor G2 nicht als fix kommunizieren"
+  ],
+  "erfolgsmessung": "Execution-Baseline eingefroren; Durchlaufzeit-Baseline erfasst; Meetingzeit-Deckel je Rolle auf Basis der Ist-Messung fixiert; im Diagnose-Review GL (Gate G2) bestätigt — bis 15.10.2026.",
+  "grounding": "projekt.yaml WS2-03 (due 15.10.2026, Gate G2, critical); RUBICON-Doc §4 WS2-Metriken; WS-Paket WS2 Phase 0"
+ },
+ {
+  "id": "WS2-04",
+  "kontext": "Der Gruppen-Commitment-Tracker ist das operative Tracking-Backbone des gesamten Programms RUBICON — alle sieben Ströme führen ihre Commitments auf diesem einen System (Anti-Duplikations-Regel: kein neues PMO-Tool, kein Parallel-Reporting). Root Cause der Execution-Schwäche ist primär ein Tracking-Problem; deshalb ist der Plan-Ansatz Tracking-first.",
+  "leistung": [
+   "Gruppen-Commitment-Tracker produktiv: Schema 1:1 aus Chairman-Aufträge-Tracker (12 Spalten, Ampel, Gruppen A–D, 48h-Reminder), Betrieb CEO-Office",
+   "Alle 7 Ströme führen ihre Commitments auf dem Tracker (Backbone-Prinzip)",
+   "Konsequenz-Mechanik scharf: T−48h-Reminder; Termin verpasst = ROT + Eskalation eine Ebene höher; 2. Verpassung = CEO-Gespräch + namentliche Nennung im Cockpit; kein Löschen"
+  ],
+  "vorgehen": [
+   "Tracker nach dem 12-Spalten-Schema des Chairman-Aufträge-Workflows aufsetzen (AFR Struktur, CEO-Office Betrieb)",
+   "Konsequenz-Kette technisch und prozessual verankern (Reminder, ROT-Eskalation, Genehmigungspflicht für neue Termine binnen 5 Arbeitstagen)",
+   "Commitments aller 7 Workstreams auf den Tracker überführen",
+   "Wöchentlichen Commitment-Review (zuerst in der Agenda) im GL-Weekly etablieren"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman, Tracker-Governance); Mitwirkende: CEO-Office (Betrieb, Backbone-Administration), CGO (Umsetzungsmotor, verantwortet Execution-Rate öffentlich), alle 7 WS-Owner (führen Commitments zu), DRS (read-only-Kontrolle via Cockpit)",
+  "risiken": [
+   "Mitbestimmungs-Vorbehalt: namentliche Tracker und automatisierte Reminder unterhalb GL/Directors greifen in DE/AT erst nach Betriebsvereinbarung (§87 Abs. 1 Nr. 1/6 BetrVG; AT §96 Abs. 1 Z 3 ArbVG)",
+   "Parallel-Reporting-Rückfall, wenn Ströme eigene Gefässe weiterführen — Anti-Duplikations-Regel konsequent durchsetzen",
+   "Konsequenz-Mechanik wird nicht gelebt, wenn CGO die Eskalationen nicht trägt — Umsetzungsführungs-Rahmung entscheidend"
+  ],
+  "erfolgsmessung": "Tracker produktiv; alle 7 Ströme führen Commitments dort; T−48h-Reminder + ROT-Eskalation aktiv — bis 31.10.2026 (Termin = Annahme «Okt 26/M2»).",
+  "grounding": "projekt.yaml WS2-04 (due 31.10.2026, date_assumed); RUBICON-Doc §4 WS2-D2/K2 + Backbone-Abschnitt; WS-Paket WS2 Phase 1"
+ },
+ {
+  "id": "WS2-05",
+  "kontext": "Der bestehende Chairman-Aufträge-Tracker (Google Sheet + Weekly Review Do 18:00) wird nicht dupliziert, sondern absorbiert — sein Schema ist der Bauplan des Gruppen-Trackers. Der Cutover beseitigt Parallelbetrieb und ist zugleich ein Schritt weg von der Chairman-Zentrierung: Ownership wechselt vom Chairman-Office zum CEO-Office.",
+  "leistung": [
+   "Chairman-Sicht als read-only-Filter (Gruppen A–D) auf den führenden Gruppen-Tracker migriert",
+   "Do-18:00-Serie per Go-Live in GL-Weekly + Chairman Cockpit aufgegangen",
+   "Kein Parallelbetrieb ab Cutover — der Gruppen-Tracker ist das eine führende Commitment-System"
+  ],
+  "vorgehen": [
+   "Cutover-Termin an Go-Live des Gruppen-Trackers koppeln (Voraussetzung: WS2-04 produktiv)",
+   "Bestände des Chairman-Trackers vollständig in den Gruppen-Tracker überführen (kein Item geht verloren)",
+   "Read-only-Filter Gruppen A–D für die Chairman-Sicht einrichten",
+   "Do-18:00-Weekly-Review-Serie beenden und Inhalte in GL-Weekly + monatliches Chairman Cockpit überführen",
+   "Parallelbetrieb explizit abschalten und dies dokumentieren"
+  ],
+  "beteiligte": "Owner: AFR (Struktur-/Kadenz-Verantwortung); Mitwirkende: CEO-Office (Betrieb ab Tag 1), DRS (gibt Chairman-Tracker ab, kontrolliert danach nur via read-only-Filter + Cockpit)",
+  "risiken": [
+   "Rückfall in Chairman-Zentrierung, wenn der alte Tracker faktisch weiterläuft — MOS-Audit (WS2-14) prüft die Chairman-Unabhängigkeit explizit",
+   "Abhängigkeit von WS2-04: ohne produktiven Gruppen-Tracker kein Cutover — bei Verzug kein Zwischenzustand mit Doppelpflege zulassen"
+  ],
+  "erfolgsmessung": "Chairman-Tracker read-only migriert; Do-Serie ohne Parallelbetrieb im GL-Weekly/Cockpit aufgegangen — bis 31.10.2026 (Termin = Annahme «Okt 26»).",
+  "grounding": "projekt.yaml WS2-05 (due 31.10.2026, date_assumed); RUBICON-Doc §4 WS2-D9 + Cutover-Tabelle; WS-Paket WS2 Phase 1"
+ },
+ {
+  "id": "WS2-06",
+  "kontext": "Die Entscheids-Queue macht offene Entscheide sichtbar («wer/was/seit wann», mit Liegedauer) und erzwingt sie ab einer Schwelle — sie ist neben der Kaskade das zweite Instrument der Entscheidungs-Mechanik, die Tempo erzwingt statt appelliert. Der VR-Pre-Read T−14 behebt zudem den dokumentierten Sequenz-Konflikt (VR 26.08. vor Gates 28.08.).",
+  "leistung": [
+   "Entscheids-Queue produktiv mit sichtbarer Liegedauer je offenem Entscheid; Erzwingung ab Schwelle X (Kalibrierung aus M1)",
+   "VR-Prozess: Pre-Reads T−14 als Standard beschlossen und angewandt",
+   "Beschluss-Umsetzungs-Tracking für VR-Beschlüsse etabliert (via Sherpany)"
+  ],
+  "vorgehen": [
+   "Queue-Format aufsetzen (wer/was/seit wann/Liegedauer), Führung durch CEO-Office",
+   "Erzwingungs-Schwelle X aus der M1-Kalibrierung (WS2-03-Baseline) festlegen — Wert heute Annahme, zu klären",
+   "Überfällige Entscheide im Chairman Cockpit sichtbar machen",
+   "VR-Pre-Read-T−14-Prozess beschliessen und ab der nächsten VR-Sitzung anwenden",
+   "Beschluss-Umsetzungs-Tracking an den Gruppen-Tracker andocken (kein neues Gefäss)"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman); Mitwirkende: CEO-Office (Queue-Pflege, VR-Prozess-Support), CGO (GL-Norm-Träger), DRS/VR (Pre-Read-Empfänger, Kontrolle)",
+  "risiken": [
+   "Queue verpufft, wenn Einträge ohne Konsequenz altern — Erzwingungs-Schwelle fest verankern, überfällige Entscheide im Cockpit sichtbar halten",
+   "Schwellenwert X ist noch nicht kalibriert (Annahme, M1) — vorzeitige Fixierung ohne Baseline widerspricht der Datenehrlichkeits-Regel"
+  ],
+  "erfolgsmessung": "Queue produktiv mit sichtbarer Liegedauer; VR-Pre-Read-T−14-Prozess + Beschluss-Tracking beschlossen und angewandt — bis 30.11.2026.",
+  "grounding": "projekt.yaml WS2-06 (due 30.11.2026, date_assumed); RUBICON-Doc §4 WS2-D3/D8/K9 + Entscheidungs-Mechanik; WS-Paket WS2 Phase 1"
+ },
+ {
+  "id": "WS2-07",
+  "kontext": "Die Entscheids-Kaskade klärt, wer bis zu welcher Schwelle allein entscheidet — sie verhindert Hochdelegieren und hält Standardentscheide unten. Als INS-001 Anhang B wird sie im bestehenden Richtlinien-Rahmen verankert (kein neues Regelwerk), ergänzt um die Eskalationsmatrix v1.0 als INS-001-Nachtrag.",
+  "leistung": [
+   "Entscheids-Kaskade als AXS-INS-001 Anhang B verabschiedet und publiziert (Schwellen je Entscheidungstyp)",
+   "Eskalationsmatrix v1.0 (Stufen 24h / 5 AT / sofort) als INS-001-Nachtrag in Kraft"
+  ],
+  "vorgehen": [
+   "Schwellen je Entscheidungstyp definieren — abgestimmt mit der RACI-Charta aus WS1 (10 Entscheidungstypen, INS-001-Anlage)",
+   "Loop mit Wüst über den Richtlinien-Prozess (Owner Konzernrichtlinien) führen",
+   "Anhang B im GL verabschieden und publizieren",
+   "Eskalationsmatrix v1.0 als Nachtrag beschliessen und in Kraft setzen"
+  ],
+  "beteiligte": "Owner: Charisius (CHRO & Legal, Richtlinien-Sign-off); Mitwirkende: Wüst (Richtlinien-Prozess INS-001), AFR (Struktur-Owner WS2, fachliche Vorgabe), GL (Beschluss)",
+  "risiken": [
+   "Kaskade wirkt nur mit Mechanik: ohne gelebte Queue (WS2-06) und Konsequenz-Kette bleibt der Leitsatz Appell",
+   "Schnittstellen-Abhängigkeit zu WS1 (RACI-Charta, gleiche INS-001-Anlage-Logik, due ebenfalls 30.11.) — Inkonsistenzen zwischen Anlage und Anhang B vermeiden"
+  ],
+  "erfolgsmessung": "INS-001 Anhang B verabschiedet und publiziert; Eskalationsmatrix v1.0 (24h/5 AT/sofort) als INS-001-Nachtrag in Kraft — bis 30.11.2026.",
+  "grounding": "projekt.yaml WS2-07 (due 30.11.2026, date_assumed, Owner Charisius); RUBICON-Doc §4 WS2-D4/K4 + Entscheidungs-Mechanik; WS-Paket WS2 Phase 1"
+ },
+ {
+  "id": "WS2-08",
+  "kontext": "Die Top-6-Verluststationen (BER/MUC/FRA/DUS/DUS II + AAS Technics) sind heute ohne durchgängige Betriebs-Scorecard (Diagnose E). WS2-08 installiert das Ops-Performance-Review-Format als WS2-Führungsformat — die Datenbasis liefert der Strom OE (Scorecards); zugleich geht das Commitment-Board auf GL- und Directors-Ebene live.",
+  "leistung": [
+   "Ops-Performance-Review mit Station-Scorecards der Top-6-Verluststationen produktiv (Format WS2, Datenbasis WS-OE)",
+   "Commitment-Board GL + Directors live (Station-Manager DE/AT erst nach Betriebsvereinbarung)",
+   "Konsequenz-Regelwerk (3 Stufen, Trigger 2× Nichtlieferung) je Land rechtlich geprüft und beschlossen"
+  ],
+  "vorgehen": [
+   "Review-Format definieren und in den Monthly Business Review integrieren (kein neues Gefäss)",
+   "Scorecard-Daten der Top-6 aus dem OE-Strom übernehmen (DE/AT: nur aggregierte Stations-KPIs, kein MA-Personenbezug)",
+   "Commitment-Board für GL und Directors aufsetzen — Kopplung an WS5-D2",
+   "Konsequenz-Regelwerk je Land mit Charisius rechtlich prüfen und beschliessen"
+  ],
+  "beteiligte": "Owner: Matthei (COO, Station-/Director-Ebene, Scorecard-Kadenz); Mitwirkende: Lesch (Support Scorecards), OE-Strom/CGO (Datenbasis), Charisius (Mitbestimmung/Rechts-Check), AFR (WS2-Format-Owner)",
+  "risiken": [
+   "Mitbestimmung: Station-Manager sind regelmässig keine leitenden Angestellten (§5 Abs. 3 BetrVG) — namentliche Boards unterhalb GL/Directors erst nach BV (§87 BetrVG / AT §96 ArbVG); Scorecards nur aggregiert",
+   "Datenbasis-Abhängigkeit vom OE-Strom (EPG-GHS-Datenzugang, Gate G1) — ohne Ops-KPI-Extrakt keine belastbaren Top-6-Scorecards"
+  ],
+  "erfolgsmessung": "Top-6-Scorecards im Monthly Business Review; Commitment-Board GL/Directors live; Konsequenz-Regelwerk beschlossen — bis 30.11.2026.",
+  "grounding": "projekt.yaml WS2-08 (due 30.11.2026, date_assumed, Owner Matthei); RUBICON-Doc §4 WS2-D7/K7 + Mitbestimmungs-Vorbehalt; WS-Paket WS2 Phase 1"
+ },
+ {
+  "id": "WS2-09",
+  "kontext": "Das MOS-Handbuch v1.0 kodifiziert das gesamte Management Operating System als Konzernrichtlinie — Rhythmus, Tracker, Kaskade, Eskalationsmatrix — und macht es damit unabhängig von Personen durchsetzbar. Parallel muss der Monthly Report erstmals pünktlich bis zum 20. geliefert werden (IST: JAN 11.03., FEB 24.03. — verspätet), inkl. 13-Wochen-Liquidität.",
+  "leistung": [
+   "MOS-Handbuch v1.0 als Konzernrichtlinie in Kraft (inkl. Eskalationsmatrix; Sign-off Charisius/Wüst)",
+   "Monthly Report erstmals pünktlich ≤ 20. des Folgemonats geliefert, inkl. 13-Wochen-Liquidität"
+  ],
+  "vorgehen": [
+   "Handbuch-Inhalte aus den gelebten WS2-Instrumenten konsolidieren (Tracker, Queue, Kaskade, Kadenzen, Konsequenz-Mechanik)",
+   "Sign-off-Loop Charisius/Wüst über den Richtlinien-Prozess führen",
+   "Als Konzernrichtlinie verabschieden und publizieren",
+   "Reporting-Pyramide auf WINGMAN-Basis mit Rohde/Lesch auf den 20.-Termin takten; 13-Wochen-Liquidität integrieren"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman); Mitwirkende: Charisius/Wüst (Richtlinien-Sign-off), Rohde (Monthly Report, Reporting-Pyramide; Support Lesch/Pajor), CEO-Office (Redaktion/Betrieb)",
+  "risiken": [
+   "Reporting-Pünktlichkeit hängt an der WINGMAN-/Finance-Kapazität (WS3/WS1-Schnittstelle: gespaltene Finance-Linie bis M5) — Verzug dort schlägt direkt auf das WS2-Ziel durch",
+   "Handbuch bleibt Papier, wenn Kadenz-Compliance nicht gemessen wird — Kopplung an die ≥95%-Metrik (WS2-11)"
+  ],
+  "erfolgsmessung": "MOS-Handbuch v1.0 als Richtlinie in Kraft (Sign-off Charisius/Wüst); Monthly Report ≤ 20. mit 13-Wochen-Liquidität geliefert — bis 31.12.2026.",
+  "grounding": "projekt.yaml WS2-09 (due 31.12.2026, date_assumed); RUBICON-Doc §4 WS2-D5/D6/K5; WS-Paket WS2 Phase 1"
+ },
+ {
+  "id": "WS2-10",
+  "kontext": "Der Führungsrhythmus soll durchgängig vom Shift-Huddle bis zum VR reichen — der Pilot bringt das MOS auf die Stationsebene, wo die operative Wertschöpfung stattfindet. Bewusst klein geschnitten: 2 Stationen (1 CH + 1 DE), VIE explizit erst nach BVD-Entscheid (laufendes Lizenzverfahren, AAS-Backbone eingefroren).",
+  "leistung": [
+   "Shift-Huddle an 2 Pilotstationen produktiv (1 CH + 1 DE)",
+   "Pilot-Erkenntnisse dokumentiert als Grundlage für den Rollout auf alle Stationen (WS2-13, M8)"
+  ],
+  "vorgehen": [
+   "Pilotstationen auswählen (1 CH + 1 DE; VIE ausgeschlossen bis BVD-Entscheid — Stationswahl zu klären)",
+   "Huddle-Format definieren (Anbindung an Station-Scorecards, aggregierte KPIs ohne MA-Personenbezug in DE)",
+   "Pilotbetrieb starten und Kadenz-Compliance mitmessen",
+   "Lessons Learned für den Rollout M8 festhalten"
+  ],
+  "beteiligte": "Owner: Matthei (COO); Mitwirkende: Stationsleitungen der Pilotstationen, Charisius (Mitbestimmungs-Check DE), AFR (MOS-Rahmen), CGO (operative Rückendeckung)",
+  "risiken": [
+   "Mitbestimmung DE: technikgestützte Leistungs-/Verhaltenskontrolle identifizierbarer Arbeitnehmer = §87 BetrVG — Huddle-Inhalte aggregiert halten bzw. BV abwarten",
+   "VIE-Vorbehalt: keine Pilot-Ausweitung nach VIE vor BVD-Entscheid",
+   "Pilot ohne Datenbasis (Scorecards aus OE) verliert Substanz — Abhängigkeit von OE-Scorecard-Fortschritt"
+  ],
+  "erfolgsmessung": "Shift-Huddle an 2 Pilotstationen (1 CH + 1 DE) produktiv — bis 31.01.2027.",
+  "grounding": "projekt.yaml WS2-10 (due 31.01.2027, date_assumed, Owner Matthei); RUBICON-Doc §4 WS2-K8; WS-Paket WS2 Phase 2"
+ },
+ {
+  "id": "WS2-11",
+  "kontext": "Erster harter Wirkungsnachweis des MOS: Die Execution-Rate muss von der Baseline (~50%, real vermutlich tiefer) auf ≥80% steigen, die Kadenz-Compliance (Agenda + Protokoll + Commitment-Log) auf ≥95% — beides aus dem Gruppen-Tracker belegt, nicht behauptet. Dies ist die M6-Zwischenmarke auf dem Weg zum ≥90%-Ziel (M8).",
+  "leistung": [
+   "Execution-Rate ≥80% aus dem Gruppen-Tracker belegt (Commitments termingerecht)",
+   "Kadenz-Compliance ≥95% nachgewiesen (Agenda + Protokoll + Commitment-Log je Führungsformat)",
+   "Erste Quartals-Commitment-Runde reviewt"
+  ],
+  "vorgehen": [
+   "Monatliche Auswertung Execution-Rate und Kadenz-Compliance aus dem Tracker etablieren (CEO-Office)",
+   "Abweichungen über die Konsequenz-Mechanik adressieren (ROT-Eskalation, CEO-Gespräch bei 2. Verpassung)",
+   "Quartals-Commitment-Review durchführen",
+   "Ergebnisse im Chairman Cockpit (1-Seiter Pre-Read) und GL-Weekly ausweisen"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman); Mitwirkende: CGO (verantwortet Execution-Rate öffentlich), CEO-Office (Messung/Betrieb), alle WS-Owner (liefern Commitments), DRS (Kontrolle, Eskalations-Endpunkt)",
+  "risiken": [
+   "Zielwert basiert auf der G2-validierten Baseline (WS2-03) — bei angepassten Baseline-Werten Zielpfad im GL nachjustieren, nicht stillschweigend",
+   "Gaming-Gefahr (Commitments weich formuliert, um Quote zu halten) — Nachweispflicht «erledigt mit Nachweis» konsequent durchsetzen",
+   "Kadenz-Compliance-Baseline ist Datenlücke — Messbarkeit hängt an sauberer Protokoll-Disziplin ab M2"
+  ],
+  "erfolgsmessung": "Execution-Rate ≥80% aus Tracker belegt; Kadenz-Compliance (Agenda + Protokoll + Commitment-Log) ≥95% — bis 28.02.2027.",
+  "grounding": "projekt.yaml WS2-11 (due 28.02.2027, date_assumed); RUBICON-Doc §4 WS2-Metriken; WS-Paket WS2 Phase 2 + KPIs"
+ },
+ {
+  "id": "WS2-12",
+  "kontext": "Die Chairman-persönlichen Automationen (Morning Scan, ExBoD-Prep, Dashboards) laufen heute als Single Point of Failure auf dem DRS-Mac — ein dokumentiertes Rückfall-Risiko in die Chairman-Zentrierung. WS2-12 überführt sie in den GL-getragenen Betrieb auf dem Konzern-Stack (Vertex), gekoppelt an WS6.",
+  "leistung": [
+   "Chairman-Automationen (Morning Scan, ExBoD-Prep, Dashboards) laufen produktiv auf dem Vertex-Stack",
+   "Unabhängigkeit vom DRS-Mac nachgewiesen — SPoF beseitigt",
+   "Betriebsverantwortung in der GL-Organisation verankert (nicht mehr Chairman-Office)"
+  ],
+  "vorgehen": [
+   "Bestandsaufnahme der auf dem DRS-Mac laufenden Automationen und ihrer Abhängigkeiten",
+   "Migration auf den GL-getragenen Vertex-Stack planen und umsetzen (Kopplung WS6/Konzern-Stack)",
+   "Parallelbetrieb kurz halten, dann Abschaltung auf dem DRS-Mac",
+   "Betriebs-Ownership und Monitoring in der GL-Organisation dokumentieren"
+  ],
+  "beteiligte": "Owner: Petric (AI-Delivery, WS6-Kopplung); Mitwirkende: CEO-Office (Betriebs-Übernahme), DRS (Übergabe der Automationen), AFR (WS2-Rahmen, Chairman-Unabhängigkeit als Ziel)",
+  "risiken": [
+   "IT-/Didit-Fragilität (Ein-Mann-IT, Bus-Faktor) kann Migration und Hosting verzögern — Abhängigkeit von der WS1-IT-Zielorganisation (gleiche Fälligkeit Feb 27)",
+   "Unvollständige Migration lässt den SPoF faktisch bestehen — MOS-Audit (WS2-14) prüft die Chairman-Unabhängigkeit explizit"
+  ],
+  "erfolgsmessung": "Automationen laufen auf dem Vertex-Stack, unabhängig vom DRS-Mac — bis 28.02.2027.",
+  "grounding": "projekt.yaml WS2-12 (due 28.02.2027, date_assumed, Owner Petric); RUBICON-Doc §4 WS2 (Abschnitt nach K10) + Risikotabelle; WS-Paket WS2 Phase 2"
+ },
+ {
+  "id": "WS2-13",
+  "kontext": "Der Zielnachweis des Stroms: Execution-Rate ≥90% muss über zwei aufeinanderfolgende Monate belegt sein (von Baseline ~50%), das Reporting erreicht den Vollausbau nach Art. 963 OR (P&L + Bilanz + Cashflow + IC-Eliminierung — heute existiert keine Konzernrechnung, EY-bestätigt), und der Shift-Huddle wird vom Pilot auf alle Stationen ausgerollt.",
+  "leistung": [
+   "Execution-Rate ≥90% über 2 aufeinanderfolgende Monate aus dem Gruppen-Tracker belegt",
+   "Monthly Report im Vollausbau Art. 963 OR: P&L + Bilanz + Cashflow + IC-Eliminierung, pünktlich ≤ 20.",
+   "Shift-Huddle-Rollout auf alle ~15 Stationen abgeschlossen (VIE-Vorbehalt: nach BVD-Entscheid)"
+  ],
+  "vorgehen": [
+   "Execution-Messung der Monate Feb+Mär/Mär+Apr 27 konsolidieren und dokumentieren",
+   "Reporting-Vollausbau mit Rohde finalisieren (Kopplung WINGMAN/WS3; Bilanz/Cashflow ab M8 gemäss D6)",
+   "Shift-Huddle-Rollout auf Basis der Pilot-Erkenntnisse (WS2-10) durchführen (Matthei)",
+   "Ergebnisse als Teil des Zielnachweises für GL/VR aufbereiten (Vorstufe zu WS2-14)"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman); Mitwirkende: Rohde (Reporting-Vollausbau, Support Lesch/Pajor), Matthei (Huddle-Rollout), CGO (Execution-Verantwortung öffentlich), CEO-Office (Messung), DRS (Abnahme-Kontrolle)",
+  "risiken": [
+   "Art.-963-OR-Vollausbau hängt an der konsolidierten Finance-Linie (WS1-09) und WINGMAN — AHS-Prüfung 2025 pausiert, Minorities/IFRS-16/IAS-19 heute nicht ausgewiesen",
+   "VIE-Rollout bleibt vom BVD-Entscheid abhängig — Restlücke im «alle Stationen»-Anspruch explizit ausweisen, nicht kaschieren",
+   "≥90% über 2 Monate erfordert stabile Werte bereits ab Feb/Mär 27 — der M6-Meilenstein (WS2-11) ist harte Vorstufe"
+  ],
+  "erfolgsmessung": "Execution-Rate ≥90% über 2 aufeinanderfolgende Monate belegt; Monthly Report inkl. Bilanz/Cashflow; Shift-Huddle flächendeckend — bis 30.04.2027.",
+  "grounding": "projekt.yaml WS2-13 (due 30.04.2027, date_assumed); RUBICON-Doc §4 WS2-Metriken/D6; WS-Paket WS2 Phase 3"
+ },
+ {
+  "id": "WS2-14",
+  "kontext": "Das MOS gilt erst als verankert, wenn es ohne den Chairman läuft: Das Audit prüft explizit Chairman-Unabhängigkeit, keinen Rückfall in Chairman-Zentrierung und den gehaltenen Meeting-Deckel. Mit bestandenem Audit geht das System in die Linie über; der Schlussbericht an GL/VR schliesst den Strom formal ab.",
+  "leistung": [
+   "MOS-Audit durchgeführt und bestanden (Prüfkriterien: Chairman-Unabhängigkeit, kein Rückfall in Chairman-Zentrierung, Meeting-Deckel gehalten)",
+   "Übergabe des MOS in die Linie dokumentiert (Betrieb CEO-Office/GL, ohne Chairman-Office-Abhängigkeit)",
+   "Schlussbericht WS2 an GL/VR vorgelegt (formale VR-Abnahme Q2-VR ~Jun 27, Pre-Read T−14)"
+  ],
+  "vorgehen": [
+   "Audit-Kriterienkatalog aus den WS2-Spielregeln ableiten (Tracker-Ownership CEO-Office, Automationen auf Vertex, read-only-Chairman-Sicht, Meeting-Deckel vs. M1-Ist-Messung)",
+   "Audit durchführen und Befunde dokumentieren (Auditor-Festlegung zu klären — im Plan nicht benannt)",
+   "Übergabe-Dokumentation in die Linie erstellen",
+   "Schlussbericht an GL/VR verfassen; VR-Abnahme mit Pre-Read T−14 vorbereiten"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman); Mitwirkende: CEO-Office (Betriebs-Nachweis), CGO (Linien-Übernahme), DRS (Abnahme als Chairman, bewusst nicht Auditor der eigenen Unabhängigkeit), VR (formale Abnahme Q2-VR)",
+  "risiken": [
+   "Verdeckte Chairman-Abhängigkeiten (Rest-Automationen, informelle Do-Reviews) lassen das Audit scheitern — WS2-05 und WS2-12 sind harte Voraussetzungen",
+   "Audit-Instanz/-Methodik ist im Plan nicht spezifiziert — zu klären vor M7, damit die Prüfung Apr 27 belastbar ist",
+   "Formale VR-Abnahme liegt erst am Q2-VR (~Jun 27) — Milestone-Erfüllung (Audit + Übergabe + Bericht bis Apr 27) davon sauber abgrenzen"
+  ],
+  "erfolgsmessung": "MOS-Audit durchgeführt und bestanden; Übergabe in die Linie dokumentiert; Schlussbericht an GL/VR vorgelegt — bis 30.04.2027.",
+  "grounding": "projekt.yaml WS2-14 (due 30.04.2027, date_assumed); RUBICON-Doc §4 WS2-Risikotabelle (Chairman-Zentrierung); WS-Paket WS2 Phase 3 + Erfolgskriterien"
+ },
+ {
+  "id": "WS3-01",
+  "kontext": "Vor dem Finanzierungs-Closing (31.10.2026, Gate G6) sind nur cash-neutrale Massnahmen zulässig — WS3 startet deshalb mit einem Sofortpaket, das die Kostendrift ohne Cash-Wirkung stoppt. Hintergrund: Zentralkosten heute nur als Recharge-Proxy FC26 ≈ 3'984 TEUR bekannt (FC27-Recharge AAS-only −4'355 TEUR zu stoppen); es gilt, ab Tag 1 Kontrolle über Zentralkosten, Beratermandate und P&L-Ownership herzustellen.",
+  "leistung": [
+   "Interims-Zentralkostendeckel auf FC26-Proxy-Niveau (≈ 3'984 TEUR) in Kraft gesetzt",
+   "Beratermandats-Freeze > EUR 25k (Annahme-Schwelle) mit CEO+CFO-Doppelfreigabe, als INS-001-Nachtrag über den Richtlinien-Prozess (Wüst) beauftragt",
+   "P&L-Owner-Interimsliste für 100% der Einheiten (43 LE / ~15 Stationen)"
+  ],
+  "vorgehen": [
+   "Interimsdeckel auf FC26-Proxy fixieren und FC27-Recharge-Pfad AAS-only (−4'355 TEUR) stoppen; AHS-FC27-Recharge als Datenlücke markieren",
+   "Freeze-Regel > EUR 25k formulieren und als INS-001-Nachtrag über Wüst in den Richtlinien-Prozess geben (CEO+CFO-Doppelfreigabe)",
+   "P&L-Owner-Interimsliste mit AFR/WS1 abstimmen (Vorstufe zur P&L-Owner-Matrix WS1-07)",
+   "Regeln GL-weit publizieren und auf den Gruppen-Commitment-Tracker setzen (48h-Reminder, Ampel)"
+  ],
+  "beteiligte": "Owner: Rohde (CFO, Accountable WS3); Mitwirkende: Wüst (INS-001-Nachtrag/Beratermandats-Governance), Pajor (CFO-Stv, Datenbasis), AFR (Finanz-Challenge aus AFR + CGO), CGO (Doppelfreigabe CEO)",
+  "risiken": [
+   "Interimsdeckel basiert auf Recharge-Proxy, nicht auf echter Holding-Kostenbasis (Datenlücke bis WS3-04) — Fehlsteuerung möglich, daher nur Interimscharakter",
+   "Freeze-Schwelle EUR 25k ist eine Annahme und muss über den Richtlinien-Prozess (Wüst) formal beschlossen werden",
+   "Cash-Gate G6: keine cash-wirksamen Schritte vor Closing — Sofortpaket muss strikt cash-neutral bleiben"
+  ],
+  "erfolgsmessung": "Deckel in Kraft, Freeze-Regel (CEO+CFO-Doppelfreigabe) publiziert, Interimsliste = 100% der Einheiten — bis 30.09.2026.",
+  "grounding": "projekt.yaml WS3-01; RUBICON-Doc §4 WS3 Kernmassnahmen Zentralkosten; WS-Paket WS3 Phase 0, Deliverable 1"
+ },
+ {
+  "id": "WS3-02",
+  "kontext": "Die drei strukturellen Verlustquellen (AAS Technics −4'211, BER −3'291, MUC −2'800 TEUR FY25A, kumuliert ≈ −10'302) sind der grösste Run-Rate-Hebel des Programms; die Gates 28.08.2026 verlangen einen sofortigen Umsetzungs-Kickoff. Ohne frühzeitige arbeitsrechtliche Schwellenprüfung (§17/§18 KSchG, §613a BGB) ist keine Restrukturierung bis März 2027 (WS3-12, G4) einleitbar.",
+  "leistung": [
+   "Dokumentierter Umsetzungs-Kickoff für die Gates AAS Technics + BER + MUC",
+   "BR-Fahrplan inkl. §17/§18-KSchG-Schwellenprüfung je DE-Betrieb (BER, KEL) + §613a-Check",
+   "Binärer Entscheid zur MUC-Personalwirksamkeit (ja/nein) — falls ja: §111/§17-Fahrplan analog BER; falls nein: Quelle der −50%-Run-Rate-Annahme nachliefern"
+  ],
+  "vorgehen": [
+   "Kickoff-Termine je Verlustquelle ansetzen: AFR in charge AAS Technics (KEL: 37 MA, Abbau ~10–12 FTE = §17-anzeigepflichtig), CGO für BER/MUC",
+   "§17/§18-Schwellenprüfung je DE-Betrieb durch Charisius (Arbeitsrecht) durchführen lassen; BER-FTE als Datenlücke in Phase 0 schliessen",
+   "§613a-Check je geplanter Verlagerung dokumentieren",
+   "MUC-Personalwirksamkeit im Kickoff 30.09. klären und binär entscheiden",
+   "Ergebnisse als Input für die Beschlussvorlagen (WS3-08) sichern"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman, in charge AAS-Technics-Turnaround); Mitwirkende: CGO (BER/MUC), Rohde (Zahlengrundlage/BER-Owner), Charisius (Arbeitsrecht §17/§18/§613a, BR-Fahrplan)",
+  "risiken": [
+   "Rechts-/Mitbestimmungs-Vorbehalt (Gate G4): jede DE-Umsetzung erst nach sauberer §17/§18- und §613a-Prüfung; Fehler gefährden Wirksamkeit und Termine",
+   "MUC-Personalwirksamkeit ist eine Datenlücke — bleibt sie ungeklärt, fehlt die Grundlage der −50%-Run-Rate-Annahme",
+   "Sozialplan KEL = Datenlücke; BER-Restrukturierungskosten CHF 1.2m sind cash-wirksam und erst nach Closing (G6) auslösbar"
+  ],
+  "erfolgsmessung": "Kickoff dokumentiert; Schwellenprüfung je Betrieb vorliegend; MUC-Personalwirksamkeit binär entschieden (ja/nein) — bis 30.09.2026.",
+  "grounding": "projekt.yaml WS3-02; RUBICON-Doc §4 WS3 Verlustquellen (Agenda-WS9); WS-Paket WS3 Phase 0, Deliverable 2"
+ },
+ {
+  "id": "WS3-03",
+  "kontext": "Datenehrlichkeit ist oberste Regel: kein Zielwert wird vor validierter Baseline fixiert (Gate G2, 15.10.2026). Dieser kritische Meilenstein friert die Datengrundlage für alle WS3-Ziele ein (−30% Zentralkosten, −5% CpT, −50% Verlustquellen, −20% externe Kosten) und hängt am Datenzugangs-Gate G1 (OE-01, EPG-GHS/Looker bis 12.09.).",
+  "leistung": [
+   "Baseline-Datenpaket komplett: Zentralkosten, FTE, Berater-Spend (12 Monate), Station→Director-Zuordnung, ZRH-Residual-Headcount (Art.-335d-OR-Check), §17-Schwellen je DE-Betrieb",
+   "Diagnose-Review GL (Gate G2) mit validierten oder begründet angepassten Zielwerten je KPI",
+   "Ablage aller Daten-Lieferungen: Drive «RUBICON — Datenlieferungen» (WS-Unterordner; Baseline-Datenpakete → _Baseline-Datenpakete G2)"
+  ],
+  "vorgehen": [
+   "Datenfelder des Kern-Pakets systematisch befüllen (Pajor: Datenbasis Station-P&L; Wüst: Berater-Spend; Charisius: §17-Schwellen, ZRH-Headcount)",
+   "Abhängigkeit OE-01 überwachen: ohne EPG-GHS-/Looker-Zugang Eskalation Stufe 3 an DRS (12.09.) und Interim-Erhebung aus AHM-730-Rohdaten",
+   "Verbleibende Datenlücken explizit markieren — nie geschönt",
+   "Diagnose-Review GL durchführen und Zielwerte (−30%/−5%/−50%/−20%) validieren bzw. begründet anpassen; GL-Protokoll sichern"
+  ],
+  "beteiligte": "Owner: Rohde (CFO); Mitwirkende: Pajor (CFO-Stv, Datenbasis), Wüst (Berater-Spend), Charisius (§17-Schwellen, ZRH-Headcount), AFR (Finanz-Challenge), GL (Diagnose-Review); Abhängigkeit: Pajor/OE-01 (Datenzugangs-Gate G1)",
+  "risiken": [
+   "Abhängigkeit OE-01: verzögerter EPG-GHS-/Looker-Datenzugang blockiert die FTE-/Ops-Datenbasis — Gegenmassnahme: G1-Eskalation Stufe 3, Interim AHM-730-Rohdaten",
+   "Kritischer Pfad: G2 (15.10.) liegt vor Closing G6 (31.10.) und TOM Q4-VR — Verzug verschiebt die gesamte Kette",
+   "Unvollständige Baseline erzwingt Zielwert-Anpassung statt -Bestätigung; Datenehrlichkeit vor Termintreue"
+  ],
+  "erfolgsmessung": "Alle gelisteten Datenfelder befüllt, keine offene Datenlücke im Kern-Paket; GL-Protokoll mit fixierten (oder begründet angepassten) Zielwerten je KPI — bis 15.10.2026 (Gate G2).",
+  "grounding": "projekt.yaml WS3-03 (gate G2, critical, depends_on OE-01); WS-Paket WS3 Phase 0, Deliverables 3+4; RUBICON-Doc §4 WS3 Spielregel Datenehrlichkeit"
+ },
+ {
+  "id": "WS3-04",
+  "kontext": "Die heutige Zentralkosten-Sicht beruht nur auf einem Recharge-Proxy (FC26 ≈ 3'984 TEUR ≈ 1.4% Overhead-Ratio); die echte Holding-Kostenbasis ist eine ausgewiesene Datenlücke. Der finale Overhead-Baseline-Report ersetzt den Proxy und ist die belastbare Basis für den finalen Zentralkosten-Deckel (WS3-07) und den −30%-Nachweis (WS3-13).",
+  "leistung": [
+   "Overhead-Baseline-Report final mit echter Holding-Kostenbasis (ersetzt Recharge-Proxy), inkl. geschlossener Holding-Kostenbasis-/FTE-Lücke",
+   "GL-Abnahme des Reports als verbindliche Referenz für den −30%-Zielpfad"
+  ],
+  "vorgehen": [
+   "Echte Holding-Kostenbasis aus dem Baseline-Datenpaket (WS3-03) und WINGMAN-Finanz-Backbone konsolidieren",
+   "FTE-Daten einarbeiten (abhängig vom Looker-/Datenzugang, OE-01) und verbleibende Lücken explizit ausweisen",
+   "Report zur GL-Abnahme vorlegen und als Referenz für den finalen Deckel (WS3-07) fixieren"
+  ],
+  "beteiligte": "Owner: Rohde (CFO); Mitwirkende: Pajor (CFO-Stv, Finance-Konsolidierung/Datenbasis), AFR (Finanz-Challenge), Lesch (Finance, WINGMAN-Datenbasis)",
+  "risiken": [
+   "Bleibt die Holding-Kostenbasis unvollständig, bleibt der −30%-Zielwert auf Proxy-Basis — Zielverfehlung oder -anpassung im Zielnachweis (WS3-13) möglich",
+   "Abhängigkeit von Datenzugängen (G1/OE-01): FTE-Baseline via Looker weiterhin Datenlücke"
+  ],
+  "erfolgsmessung": "Report mit echter Holding-Kostenbasis liegt vor und ist GL-abgenommen — bis 31.10.2026 (Termin Annahme lt. projekt.yaml).",
+  "grounding": "projekt.yaml WS3-04 (date_assumed true); RUBICON-Doc §4 WS3-D1; WS-Paket WS3 Phase 1, Deliverable 1"
+ },
+ {
+  "id": "WS3-05",
+  "kontext": "Das Finanzierungs-Closing (EUR 15 Mio fix, 31.10.2026) läuft als externe Parallel-Achse in Projekt #98 — WS3 respektiert dessen Sequenzierung als Gate G6: cash-wirksame Restrukturierungen (BER, AAS Technics, ZRH) sind erst danach zulässig. Dieser kritische Gate-Meilenstein sichert die Cash-Disziplin vor dem Closing und die saubere BER-Offenlegung in der Closing-Dokumentation.",
+  "leistung": [
+   "Gate G6 formal passiert: cash-wirksame Restrukturierungs-Schritte ab 31.10.2026 freigegeben",
+   "BER-Disclosure (LH-Verlust ~EUR 7.2 Mio per 31.10.2026, geplante Restrukturierung) in der Closing-Dokumentation enthalten",
+   "Nachweis: kein cash-wirksamer Restrukturierungs-Schritt vor dem Closing ausgelöst"
+  ],
+  "vorgehen": [
+   "Cash-Gate operativ durchsetzen: alle WS3-Auszahlungen gegen den 13-Wochen-Liquiditätsplan sequenzieren (Kopplung WS2-Reporting)",
+   "BER-Sachverhalt mit dem Finanzierungs-Team (Projekt #98) für die Closing-Doku offenlegen",
+   "Nach Closing-Bestätigung die cash-wirksame Umsetzungsplanung (WS3-08/WS3-12) freigeben",
+   "Bei Closing-Verzug: Eskalation an AFR + CGO, Endpunkt DRS via Chairman Cockpit"
+  ],
+  "beteiligte": "Owner: Rohde (CFO, Cash-Gate); Mitwirkende: Projekt #98/Finanzierungs-Team (externe Parallel-Achse), AFR+CGO (Eskalation), DRS (Eskalations-Endpunkt); Abhängigkeit: WS3-03 (Baseline G2)",
+  "risiken": [
+   "Closing-Verzug verschiebt alle cash-wirksamen Restrukturierungen und damit den kritischen Pfad (G6 → Verfahren eingeleitet → Zielnachweis Apr 27) — Finanzierung ist zwingend fürs Winter-Überleben",
+   "Restrukturierungs-Cash-outs vor Closing gefährden die Liquidität — striktes Cash-Gate gegen den 13-Wochen-Plan",
+   "Unvollständige BER-Disclosure in der Closing-Doku wäre ein Rechts-/Reputationsrisiko im Finanzierungsprozess"
+  ],
+  "erfolgsmessung": "Kein cash-wirksamer Restrukturierungs-Schritt vor 31.10.2026; BER in der Closing-Dokumentation offengelegt; Closing-Datum 31.10.2026 (Gate G6) gehalten.",
+  "grounding": "projekt.yaml WS3-05 (gate G6, critical, depends_on WS3-03); RUBICON-Doc §4 WS3 «Finanzierung = externe Parallel-Achse (Projekt #98)»; WS-Paket WS3 Phase 1, Deliverable 3"
+ },
+ {
+  "id": "WS3-06",
+  "kontext": "Externe Kosten (Kanzleien, WP, Agenturen, Einkauf) sind ein eigener Governance-Block mit Zielwert Run-Rate −20% bis M8 (Vorschlag zur Validierung); die Spend-Beträge sind heute eine Datenlücke. Die Einkaufsbündelung über 14 Stationen (Ziel 5% Discount) ist der zweite Hebel des Programms.",
+  "leistung": [
+   "Spend-Baseline extern: Anbieter-Inventar vollständig (min. 6 Kanzleien gemäss Dienstleister-Referenz, 3 WP, Agenturen-Inventar; Agenturen-Zählung = Annahme) mit bezifferten Beträgen",
+   "Einkaufsbündelung über 14 Stationen gestartet (Bündelungs-Verhandlungen initiiert, Ziel 5% Discount)"
+  ],
+  "vorgehen": [
+   "Anbieter-Inventar erheben (Kanzleien/WP/Agenturen) und 12-Monats-Spend beziffern (Input aus Baseline-Datenpaket WS3-03)",
+   "Rechts-/Beratungskosten als eigenen Governance-/Vergabe-Block aufsetzen (nicht als HR-Thema): Mandate und Lieferanten konsolidieren",
+   "Bündelungs-Kandidaten über die 14 Stationen identifizieren und Verhandlungen starten",
+   "−20%-Zielwert im Diagnose-Review (G2) validieren lassen und Reduktionspfad bis M8 festlegen"
+  ],
+  "beteiligte": "Owner: Wüst (externe Kosten/Einkauf/Beratermandats-Governance); Mitwirkende: Rohde (CFO, Testierung der Effekte), Pajor (Datenbasis), Charisius (Kanzleien-Konsolidierung Rechtsbereich)",
+  "risiken": [
+   "Spend-Beträge sind Datenlücke — ohne belastbare Baseline (M2) ist der −20%-Zielwert nicht messbar; Zielwert selbst ist noch Vorschlag zur Validierung",
+   "Mandats-Konsolidierung kann laufende Verfahren berühren (z.B. §35-GewO FRA, BVD Wien) — Wechsel nur mit Rechts-Check (Charisius)"
+  ],
+  "erfolgsmessung": "Anbieter-Inventar vollständig, Spend-Baseline beziffert, Bündelungs-Verhandlungen initiiert (Ziel 5% Discount) — bis 31.10.2026 (Termin Annahme).",
+  "grounding": "projekt.yaml WS3-06 (Owner Wüst, date_assumed true); RUBICON-Doc §4 WS3-D4; WS-Paket WS3 Phase 1, Deliverable 2 + Erfolgskriterium 3"
+ },
+ {
+  "id": "WS3-07",
+  "kontext": "Nach validierter Baseline (G2) und finalem Overhead-Baseline-Report ersetzt der finale Zentralkosten-Deckel den Interimsdeckel aus WS3-01; parallel wird die Zielorganisation der Zentralfunktionen zero-based beschlossen. Der Deckel operationalisiert das −30%-Ziel (≤ ~2'800 TEUR, Overhead-Ratio ~1.0%) und ist mit WS1-K13 und den AI-Initiativen verzahnt.",
+  "leistung": [
+   "Finaler Zentralkosten-Deckel (nach validierter Baseline) in Kraft — ersetzt den Interimsdeckel",
+   "Zero-based-Zielorganisation Zentralfunktionen GL-beschlossen (inkl. Span-Normen; Vakanzen nur nach Blueprint, AI-Substitution geprüft)",
+   "§17-/§613a-Vorprüfung je betroffenem DE-Betrieb dokumentiert"
+  ],
+  "vorgehen": [
+   "Deckel aus dem finalen Overhead-Baseline-Report (WS3-04) ableiten und auf −30%-Pfad kalibrieren",
+   "Zero-based-Blueprint der Zentralfunktionen mit AI-Verzahnung erstellen (HR-Bot −3–5 FTE, Finance-Automation ~1'500k) — gemeinsame Einsparungs-Brücke mit WS6, keine Doppelzählung",
+   "§17-/§613a-Vorprüfung je DE-Betrieb durch Charisius vor jedem Struktur-Schritt",
+   "GL-Beschluss herbeiführen und im Gruppen-Commitment-Tracker verankern"
+  ],
+  "beteiligte": "Owner: Rohde (CFO); Mitwirkende: AFR (Finanz-Challenge, Verzahnung WS1-K13), Charisius (Zielorganisation Zentralfunktionen/Arbeitsrecht), Petric (AI-Substitutions-Prüfung WS6), Wüst (Richtlinien)",
+  "risiken": [
+   "Doppelzählung AI- vs. WS3-Einsparung — nur CFO-testierte Effekte in der gemeinsamen Einsparungs-Brücke zählen",
+   "Rechts-/Mitbestimmungs-Vorbehalt: Verlagerungen/Abbau in Zentralfunktionen nur via G4 (§17/§18 KSchG, §613a BGB); individuelle Personalentscheide nicht im Board-Dokument",
+   "Verspätete Baseline (WS3-03/WS3-04) verschiebt den finalen Deckel — Interimsdeckel bliebe länger auf Proxy-Basis"
+  ],
+  "erfolgsmessung": "Finaler Deckel in Kraft; Zero-based-Blueprint mit GL-Beschluss dokumentiert; §17/§613a-Vorprüfung je DE-Betrieb vorliegend — bis 31.12.2026 (Termin Annahme).",
+  "grounding": "projekt.yaml WS3-07 (date_assumed true); RUBICON-Doc §4 WS3-D2 + Kernmassnahmen Zero-based; WS-Paket WS3 Phase 1, Deliverable 4"
+ },
+ {
+  "id": "WS3-08",
+  "kontext": "Die Verlustquellen AAS Technics (FY25 −4'211 TEUR, Umsatz −54% YoY, Kundenkonzentration 87%) und BER (−3'291 TEUR, LH-Verlust ~EUR 7.2 Mio per 31.10.2026) brauchen beschlussreife Vorlagen «drehen vs. eliminieren» mit hartem Datum — kein Dauer-Monitoring. Die Gates vom 28.08.2026 werden damit in VR-/GL-Beschlüsse überführt; für MUC (−2'800 TEUR) wird der Fahrplan aus dem Kickoff-Ergebnis (WS3-02) abgeleitet.",
+  "leistung": [
+   "Beschlussreife Vorlage AAS Technics «drehen vs. eliminieren» mit Zahlengrundlage und hartem Datum (Turnaround-Lead AFR)",
+   "Beschlussreife Vorlage BER «drehen oder raus» mit Zahlengrundlage (Restrukturierungskosten CHF 1.2m; §17-Anzeige praktisch sicher, Schwellenprüfung aus Phase 0)",
+   "MUC-Fahrplan abgeleitet (je nach Kickoff-Entscheid Personalwirksamkeit: §111/§17-Fahrplan analog BER oder alternative Run-Rate-Quelle)"
+  ],
+  "vorgehen": [
+   "Zahlengrundlagen je Verlustquelle aus Baseline-Datenpaket (WS3-03) und Station-P&L konsolidieren",
+   "Szenarien «drehen vs. eliminieren» je Einheit mit Run-Rate-Effekt, Kosten und Rechtsweg (§111/§17/§613a) durchrechnen — AFR als Analyse-Lead BER/Finance, in charge AAS Technics",
+   "Vorlagen VR-/GL-beschlussreif aufbereiten (Sherpany, Pre-Read T−14)",
+   "Cash-Wirkungen strikt nach G6 sequenzieren (Closing 31.10. passiert)"
+  ],
+  "beteiligte": "Owner: Rohde (CFO, Owner BER + Vorlagen); Mitwirkende: AFR (in charge AAS-Technics-Turnaround, Analyse-Lead BER/Finance), CGO (BER/MUC-Umsetzung), Charisius (Arbeitsrecht/BR-Fahrplan), VR (Beschluss via Sherpany)",
+  "risiken": [
+   "Rechts-/Mitbestimmungs-Vorbehalt: §17-Anzeige BER praktisch sicher, KEL §17-anzeigepflichtig; Sozialplan KEL und BER-FTE sind Datenlücken — Verfahren ohne saubere Grundlage nicht einleitbar",
+   "Wirksamkeit BER realistisch erst Q2/27 (§18-Sperrfrist, Kündigungsfristen; Einigungsstelle → 30.06.27 (Hard Edge)) — Beschluss darf sich daran nicht aufhalten",
+   "Verzug hier gefährdet WS3-12 (G4, kritischer Pfad, 31.03.2027)"
+  ],
+  "erfolgsmessung": "Je Verlustquelle liegt eine beschlussreife Vorlage mit Zahlengrundlage und hartem Datum im VR/GL vor; MUC-Fahrplan dokumentiert — bis 31.12.2026 (Termin Annahme).",
+  "grounding": "projekt.yaml WS3-08 (date_assumed true); RUBICON-Doc §4 WS3-D7 + Verlustquellen-Block (Agenda-WS9); WS-Paket WS3 Phase 1, Deliverable 5"
+ },
+ {
+  "id": "WS3-09",
+  "kontext": "Die zwei Staff-Cost-Quick-Wins (Krankenstand-Transparenz, Arbeitszeitkonten/Überstunden-Monitoring) sind schnell und direkt margenwirksam — ohne Entlassungen — und gehen den strukturellen Hebeln (BTV, Staff Lending, Payrolling, Kurzarbeit) bewusst voraus. Krankenstands-Baseline je Standort ist heute eine Datenlücke; strategische Oberlinie ist «Kapazitätssicherung statt Kostenabbau» (demografischer Personalmangel).",
+  "leistung": [
+   "Krankenstand-Transparenz je Standort mit Zielwerten und gesundheitsorientierten Massnahmen live",
+   "Arbeitszeitkonten/Überstunden-Monitoring als Standard an allen Standorten",
+   "CFO-testierter Effekt der Quick-Wins in der Einsparungs-Brücke"
+  ],
+  "vorgehen": [
+   "Krankenstands-Baseline je Standort erheben (Datenlücke M1/M2 schliessen) und Zielwerte je Standort setzen",
+   "Überstunden-/Arbeitszeitkonten-Monitoring standardisieren — in DE/AT strikt aggregiert starten, Betriebsvereinbarungen parallel verhandeln (Kopplung WS5)",
+   "Gesundheitsorientierte Massnahmen je Standort aufsetzen (ohne Entlassungen)",
+   "Effekte CFO-testieren lassen und in die gemeinsame Einsparungs-Brücke einbuchen",
+   "Strukturelle Hebel (BTV, Staff Lending, Kurzarbeit) erst nach den Quick-Wins, gebündelt in TRAK-2026-0010"
+  ],
+  "beteiligte": "Owner: Charisius (CHRO, Staff-Cost-Hebel HR-Seite + Arbeitsrecht); Mitwirkende: Rohde (CFO-Testierung Einsparungs-Brücke), Matthei (Schnittstelle Shift-Fill/Personalverfügbarkeit WS-OE), WS5 (Betriebsvereinbarungen)",
+  "risiken": [
+   "Mitbestimmungs-Vorbehalt: systematisches technikgestütztes Überstunden-Monitoring identifizierbarer Arbeitnehmer in DE/AT = §87 BetrVG bzw. §96 ArbVG — ohne Betriebsvereinbarung nur aggregiert zulässig",
+   "VIE aus Personal-Kostenmassnahmen ausgenommen bis BVD-Entscheid (Profit-Rückgrat +4'487 CHF k FY25A); keine ES-Massnahme vor Zaforesa-Check",
+   "Krankenstands-Baseline fehlt — ohne sie sind Zielwerte und Margeneffekt nicht messbar"
+  ],
+  "erfolgsmessung": "Beide Hebel an allen Standorten aktiv; Monitoring aggregiert bzw. nach BV (DE/AT); Krankenstands-Zielwert je Standort erreicht (margenwirksam) — bis 28.02.2027 (Termin Annahme; Start Nov 26, flächig Jan/Feb 27).",
+  "grounding": "projekt.yaml WS3-09 (Owner Charisius, date_assumed true); RUBICON-Doc §4 WS3-D6 + Staff-Cost-Hebel (Agenda-WS6); WS-Paket WS3 Phase 2, Deliverable 1"
+ },
+ {
+  "id": "WS3-10",
+  "kontext": "Kostenführerschaft braucht Transparenz auf Stationsebene: Station-P&L und Cost-per-Turn (CpT) je Station monatlich live sind die Steuerungsgrundlage für das −5%-CpT-Ziel (Hebel-Näherung ≈ +10'201 TEUR EBITDA, Annahme aus dem Produktivitäts-Szenario). Die CpT-Baseline ist heute eine Datenlücke (Ops-KPIs Skelett, EPG-GHS beantragt und nicht erteilt).",
+  "leistung": [
+   "Station-P&L + Cost-per-Turn für alle ~15 Stationen monatlich live, mit Financials (WINGMAN) verzahnt",
+   "Reporting-Automatisierung: Monthly Report im 3. Monat in Folge pünktlich (≤ 20. des Folgemonats)"
+  ],
+  "vorgehen": [
+   "CpT-Baseline aus Ops-KPI-Daten aufbauen (Abhängigkeit Datenzugang EPG-GHS/G1; Interim AHM-730-Rohdaten); Stationstypologie definieren (Annahme, M3)",
+   "Station-P&L-Datenmodell mit Pajor auf WINGMAN-Basis konsolidieren und mit den Financials verzahnen",
+   "Monatliche Produktion in den Monthly-Business-Review-Rhythmus (WS2) einbetten",
+   "Pünktlichkeit über drei aufeinanderfolgende Monate nachweisen"
+  ],
+  "beteiligte": "Owner: Rohde (CFO); Mitwirkende: Pajor (CFO-Stv, Datenbasis Station-P&L), Matthei (COO, Ops-Daten), Lesch (Finance/WINGMAN), WS-OE (Ops-KPI-Baseline)",
+  "risiken": [
+   "EPG-GHS-Datenzugang weiterhin nicht erteilt — CpT-Baseline bleibt Skelett; Gegenmassnahme: G1-Eskalation, Interim AHM-730-Rohdaten",
+   "Zielkonflikt Kosten vs. Qualität: SLA-Schutzschirm (SGHA Annex B §9, G7) ist nicht verhandelbare Untergrenze über jeder CpT-Massnahme",
+   "−5%-Hebelwert ist eine Annahme — Kalibrierung erst nach CpT-Baseline M2–M3"
+  ],
+  "erfolgsmessung": "CpT je Station monatlich live für alle Stationen; Report ≤ 20. drei Monate in Folge pünktlich — bis 28.02.2027 (Termin Annahme).",
+  "grounding": "projekt.yaml WS3-10 (date_assumed true); RUBICON-Doc §4 WS3-D5 + Metriktabelle CpT; WS-Paket WS3 Phase 2, Deliverable 2"
+ },
+ {
+  "id": "WS3-11",
+  "kontext": "Das ZRH-Residual kostet ~−110 TCHF/Monat und läuft ohne fixen Endtermin weiter. Dieser Meilenstein setzt den verbindlichen Endtermin — nach Art.-335f–k-OR-Check auf Basis der Residual-Headcount-Baseline (15.10.) und mit PR-Vorlauf (june/Meroni) wegen der medialen Vorgeschichte (AAS-Schliessung ZRH).",
+  "leistung": [
+   "Verbindlicher, fixer ZRH-Endtermin im Plan verankert",
+   "Art.-335f–k-OR-Schwellen-Check auf Basis der Residual-Headcount-Baseline dokumentiert",
+   "PR-Vorlauf (june/Meroni) aufgegleist"
+  ],
+  "vorgehen": [
+   "Residual-Headcount-Baseline aus dem Phase-0-Datenpaket (WS3-03, Art.-335d-OR-Check) übernehmen",
+   "Massenentlassungs-Schwellen nach Art. 335f–k OR prüfen (Charisius) und Konsultationspflichten terminieren",
+   "Endtermin fixieren und cash-wirksame Schritte nach G6 sequenzieren",
+   "PR-/Kommunikationsvorlauf mit june/Meroni takten (ZRH-Medien-Vorgeschichte)",
+   "Vollzug in den Nachlauf Q2/27 übergeben (Entity-Bereinigung, Kopplung WS1-14)"
+  ],
+  "beteiligte": "Owner: CGO (CEO Gökcöl); Mitwirkende: Rohde (CFO, Run-Rate/Cash), Charisius (Art.-335f–k-OR-Check), june/Meroni (PR-Vorlauf), AFR (Challenge zwischen AFR und CGO)",
+  "risiken": [
+   "Rechtsvorbehalt CH: Art.-335f–k-OR-Konsultationsverfahren bei Überschreiten der Schwellen — Check zwingend vor Terminfixierung",
+   "Reputations-/PR-Risiko wegen medialer ZRH-Vorgeschichte (AAS-Schliessung, VPOD) — PR-Vorlauf nicht verhandelbar",
+   "Ohne fixen Endtermin läuft die Run-Rate ~−110 TCHF/Monat ungebremst weiter"
+  ],
+  "erfolgsmessung": "Verbindlicher ZRH-Endtermin im Plan fixiert; ~−110 TCHF/Monat mit Auslaufdatum versehen — bis 28.02.2027 (Termin Annahme).",
+  "grounding": "projekt.yaml WS3-11 (Owner CGO, date_assumed true); RUBICON-Doc §4 WS3 Verlustquellen ZRH-Residual; WS-Paket WS3 Phase 2, Deliverable 3"
+ },
+ {
+  "id": "WS3-12",
+  "kontext": "Kritischer Pfad und Gate G4: Die Restrukturierungen AAS Technics und BER müssen bis Ende März 2027 formal eingeleitet sein (Beschlüsse gefällt, §111-Verfahren/§17-Anzeige gestartet, Kündigungsausspruch begonnen), damit die arbeitsrechtlich gebundene Wirksamkeit im Nachlauf Q2/27 (WS3-14) erreichbar bleibt. Voraussetzung ist der VR-genehmigte TOM-Blueprint (WS1-08, Q4-VR).",
+  "leistung": [
+   "Restrukturierung AAS Technics eingeleitet: Beschluss gefällt, §111/§17-Verfahren (KEL) gestartet, Kündigungsausspruch begonnen",
+   "Restrukturierung BER eingeleitet: §111-Interessenausgleich/§17-Anzeige gestartet, Kündigungsausspruch begonnen",
+   "Nachweisdokumentation der eingeleiteten Verfahren für GL/VR und Chairman Cockpit"
+  ],
+  "vorgehen": [
+   "VR-/GL-Beschlüsse auf Basis der Beschlussvorlagen (WS3-08) und des genehmigten TOM (WS1-08) fassen",
+   "BR-Fahrpläne aus WS3-02 exekutieren: Interessenausgleich/Sozialplan-Verhandlungen (§111), §17-Anzeigen bei der Agentur für Arbeit",
+   "Kündigungsausspruch nach Ablauf der Verfahrensvoraussetzungen starten; Cash-outs gegen 13-Wochen-Plan sequenzieren (nach G6)",
+   "Verfahrensstand wöchentlich im GL-Weekly und monatlich im Chairman Cockpit rapportieren"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman, in charge AAS-Technics-Turnaround, Verhandlungs-/Sanierungs-Lead); Mitwirkende: Rohde (CFO, Owner BER/Zahlen), Charisius (Arbeitsrecht §111/§17/§613a, BR-Verhandlungen), CGO (Umsetzung BER)",
+  "risiken": [
+   "Rechts-/Mitbestimmungs-Vorbehalt (G4): §111-Interessenausgleich und §17/§18 KSchG zwingend vor Kündigungen; Einigungsstelle bei BER kann Wirksamkeit nach 30.06.27 (Hard Edge) schieben",
+   "Abhängigkeit WS1-08: ohne VR-genehmigten TOM-Blueprint (Q4-VR Dez 26) fehlt die Genehmigungsgrundlage — Verzug schlägt direkt auf den kritischen Pfad durch",
+   "Cash-Wirkung (BER-Restrukturierungskosten CHF 1.2m; Sozialpläne) nur nach Closing G6 und gegen 13-Wochen-Liquiditätsplan"
+  ],
+  "erfolgsmessung": "Verfahren nachweislich eingeleitet: Beschlüsse gefällt, §111/§17 gestartet, Kündigungsausspruch begonnen — bis 31.03.2027 (Gate G4, Termin Annahme).",
+  "grounding": "projekt.yaml WS3-12 (gate G4, critical, depends_on WS1-08); RUBICON-Doc §4 WS3 Verlustquellen; WS-Paket WS3 Phase 2, Deliverable 4"
+ },
+ {
+  "id": "WS3-13",
+  "kontext": "Der Zielbild-Nachweis Kosten schliesst die 8-Monats-Kernumsetzung von WS3 ab: Zentralkosten −30% (Overhead-Ratio ~1.4% → ~1.0%, ≤ ~2'800 TEUR) und externe Kosten −20% müssen strukturell entschieden/umgesetzt und CFO-testiert nachgewiesen sein. WS3 ist der grösste Einzelbeitrag zur EBITDA-Run-Rate ≥ CHF 12'372k; der Nachweis setzt die eingeleiteten Restrukturierungen (WS3-12) voraus.",
+  "leistung": [
+   "Nachweis Zentralkosten −30%: Overhead-Ratio ~1.0% gegenüber validierter Baseline, strukturell entschieden/umgesetzt",
+   "Nachweis externe Kosten Run-Rate −20% (Kanzleien/WP/Agenturen/Einkauf), CFO-testiert",
+   "Einsparungs-Brücke konsolidiert: jeder Effekt genau einmal, ohne Doppelzählung mit WS6/AI, CFO-testiert"
+  ],
+  "vorgehen": [
+   "Ist-Werte gegen die G2-validierte Baseline (WS3-03/WS3-04) messen — nur CFO-testierte Effekte zählen",
+   "Einsparungs-Brücke mit WS6 abgleichen (gemeinsame Brücke, keine Doppelzählung AI vs. WS3)",
+   "Verlustquellen-Turnaround-Effekte im Reporting-Vollausbau (Art. 963 OR) belastbar ausweisen",
+   "Zielbild-Nachweis als Pre-Read für Chairman Cockpit/VR aufbereiten (Sherpany, T−14)"
+  ],
+  "beteiligte": "Owner: Rohde (CFO, Accountable WS3 + Testierung); Mitwirkende: Pajor (Datenbasis), Wüst (externe Kosten), AFR (Finanz-Challenge), Petric/WS6 (Abgleich Einsparungs-Brücke), DRS (Kontrolle via Chairman Cockpit)",
+  "risiken": [
+   "Doppelzählung AI- vs. WS3-Einsparungen würde den Nachweis entwerten — strikte gemeinsame Einsparungs-Brücke, nur CFO-testierte Effekte",
+   "Abhängigkeit WS3-12: ohne eingeleitete Restrukturierungen fehlt der strukturelle Teil des Nachweises (kritischer Pfad)",
+   "−20%-Ziel externe Kosten war Vorschlag zur Validierung — falls im G2-Review angepasst, gilt der angepasste Wert"
+  ],
+  "erfolgsmessung": "Overhead-Ratio ~1.0% nachgewiesen; externe Kosten-Run-Rate −20% CFO-testiert; Einsparungs-Brücke ohne Doppelzählung konsolidiert — bis 30.04.2027 (Termin Annahme).",
+  "grounding": "projekt.yaml WS3-13 (critical, depends_on WS3-12); RUBICON-Doc §4 WS3 Metrik; WS-Paket WS3 Phase 3, Deliverables 1+2 + Erfolgskriterien 1/3"
+ },
+ {
+  "id": "WS3-14",
+  "kontext": "Gesetzlicher Nachlauf Q2/27 (ausserhalb der 8-Monats-Kernumsetzung, zählt nicht gegen das Kern-Projektende 30.04.2027): Die bis April 2027 eingeleiteten Restrukturierungen BER und AAS Technics werden arbeitsrechtlich wirksam (§18-Sperrfrist, Kündigungsfristen), die Verlustquellen-Run-Rate wird um −50% (Effekt ≥ +5'000 TEUR p.a.) halbiert und die EBITDA-Run-Rate ≥ CHF 12'372k nachgewiesen — zugleich Gate 2 der AI-Ramp.",
+  "leistung": [
+   "BER-Restrukturierung wirksam (Run-Rate-Effekt realisiert; bei Einigungsstelle Verschiebung nach 30.06.27 (Hard Edge) dokumentiert)",
+   "AAS-Technics-Gate wirksam (KEL §17/§18 im Fahrplan): Run-Rate gegen 0 oder vollzogener Exit",
+   "Verlustquellen-Run-Rate −50% (≥ +5'000 TEUR p.a.) und EBITDA-Run-Rate ≥ CHF 12'372k CFO-testiert nachgewiesen (Gate 2 AI)"
+  ],
+  "vorgehen": [
+   "Wirksamkeitstermine je Verfahren nachhalten (§18-Sperrfristen, Kündigungsfristen; Einigungsstellen-Risiko BER überwachen)",
+   "Run-Rate-Effekte je Verlustquelle im konsolidierten Reporting (Art. 963 OR / WINGMAN) messen und CFO-testieren",
+   "EBITDA-Run-Rate ≥ 12'372k gegen die Metriktabelle nachweisen und als Gate 2 der AI-Ramp an WS6 melden",
+   "Abschlussbericht an GL/VR und Chairman Cockpit liefern"
+  ],
+  "beteiligte": "Owner: Rohde (CFO, Nachweis/Testierung); Mitwirkende: AFR (AAS-Technics-Vollzug), CGO (BER/MUC-Umsetzung), Charisius (arbeitsrechtlicher Vollzug), Petric/WS6 (AI-Ramp Gate 2), DRS (Kontrolle)",
+  "risiken": [
+   "Rechtsvorbehalt: Einigungsstelle bei BER kann die Wirksamkeit nach 30.06.27 (Hard Edge) verschieben — Run-Rate-Effekt verzögert sich entsprechend",
+   "Nachlauf ist gesetzlich gebunden und nur begrenzt beschleunigbar; Basis ist die fristgerechte Einleitung (WS3-12) — jede dortige Verzögerung wirkt 1:1 nach",
+   "EBITDA-Run-Rate-Ziel 12'372k hängt auch an Beiträgen anderer Ströme (WS4/WS-OE/WS6) — Zurechnung sauber über die CFO-testierte Brücke"
+  ],
+  "erfolgsmessung": "BER-Run-Rate-Effekt realisiert (bzw. 30.06.27 (Hard Edge) bei Einigungsstelle dokumentiert); AAS Technics Run-Rate gegen 0 oder vollzogener Exit belegt; Verlustquellen −50% (≥ +5'000 TEUR p.a.) + EBITDA-Run-Rate ≥ CHF 12'372k CFO-testiert — bis 30.06.2027 (Nachlauf, Termin Annahme).",
+  "grounding": "projekt.yaml WS3-14 (nachlauf true, critical, depends_on WS3-12); WS-Paket WS3 Nachlauf Q2/27, Deliverables 1–3; RUBICON-Doc §3 Metriktabelle Verlustquellen"
+ },
+ {
+  "id": "OE-01",
+  "kontext": "Heute existiert keine Konzern-Ops-Sicht (AHM 730 nicht konsolidiert, Ops-KPIs SKELETT); der EPG-GHS-Datenzugang ist beantragt (03.07.), aber nicht erteilt. Ohne diesen Datenzugang bleibt die gesamte Ops-Excellence-Scorecard ein Skelett — OE-01 ist deshalb Gate G1 und liegt auf dem kritischen Pfad; die Baseline-Datenpakete WS1-02 und WS3-03 (beide G2, 15.10.) hängen direkt davon ab.",
+  "leistung": [
+   "EPG-GHS-Zugang erteilt (Datenquelle der Scorecard) — oder dokumentierte Eskalation Stufe 3 an DRS",
+   "Looker-/FTE-Datenzugang erteilt (speist FTE-Baseline für WS1/WS3)",
+   "Bei Nichterteilung: Interim-Datenpfad aus AHM-730-Rohdaten der Stationen aktiviert",
+   "Ablage aller Daten-Lieferungen: Drive «RUBICON — Datenlieferungen» (WS-Unterordner; Baseline-Datenpakete → _Baseline-Datenpakete G2)"
+  ],
+  "vorgehen": [
+   "Status des EPG-GHS-Antrags (03.07.) nachfassen und Erteilung terminlich fixieren",
+   "Looker-/FTE-Zugang parallel einfordern (Kopplung an FTE-Baseline WS1/WS3)",
+   "Bei Blockade bis 12.09.: Eskalation Stufe 3 an DRS formell dokumentieren",
+   "Interim-Erhebung aus AHM-730-Rohdaten (Delay-Codes G31–39/DG52) an den Stationen anstossen",
+   "Gate-G1-Status im Chairman Cockpit und Gruppen-Commitment-Tracker melden"
+  ],
+  "beteiligte": "Owner: Pajor (CFO-Stv, Datenzugang/Systemlandkarte); Mitwirkende: Matthei (COO, Delivery-Abnehmer der Daten), CGO Gökcöl; Steuerung/Kontrolle + Eskalations-Adressat Stufe 3: DRS via Chairman Cockpit (Adressat per DRS-Entscheid 13.07.2026, konsistent mit IN-01).",
+  "risiken": [
+   "EPG-GHS-Zugang wird weiter verzögert → Scorecard bleibt Skelett; Gegenmassnahme: Eskalation Stufe 3 + Interim-AHM-730-Pfad",
+   "Kritischer Pfad: OE-01 blockiert bei Verzug die G2-Baseline-Pakete WS1-02 und WS3-03 (15.10.)",
+   "Datenqualität der Interim-Rohdaten je Station uneinheitlich — als Datenlücke markieren, nie schätzen"
+  ],
+  "erfolgsmessung": "Binär per 12.09.2026: Zugang (EPG-GHS + Looker/FTE) erteilt ODER Eskalation Stufe 3 dokumentiert UND Interim-Datenpfad aus AHM-730-Rohdaten aktiviert.",
+  "grounding": "projekt.yaml OE-01 (G1, critical, due 12.09.26); RUBICON-Doc §4 WS-OE (OE-K1, EPG-GHS-Baseline); WS-Paket WS-OE Phase 0."
+ },
+ {
+  "id": "OE-02",
+  "kontext": "Aus dem Selbstbefund «Wir sind aktuell kein (sehr) guter Ground Handler» (AFR) soll messbare Betriebs-Exzellenz werden. Der Kickoff rahmt das Kern-Deliverable des Stroms — eine bewusst schlanke Scorecard mit 5–6 Kern-KPIs je Station — und macht die operative Prozess-Baustelle sichtbar, indem CGO die «Top-3 ungeregelten Prozesse» persönlich benennt.",
+  "leistung": [
+   "Scorecard-Design gerahmt: KPI-Set 5–6 je Station (Pünktlichkeit/Turnaround G31–39, Ground Damage, Baggage Mishandling, Safety/Audit, Shift-Fill; optional SLA-Compliance)",
+   "Liste «Top-3 ungeregelte Prozesse» von CGO schriftlich benannt",
+   "Kickoff-Dokumentation als Auftakt WS-OE im Gruppen-Commitment-Tracker"
+  ],
+  "vorgehen": [
+   "Kickoff-Termin WS-OE bis 30.09. ansetzen (CGO mit Matthei)",
+   "KPI-Kandidaten aus AHM 730 / IATA Delay Codes (G31–39, DG52 = Haftungs-KPIs) ableiten",
+   "Harten KPI-Deckel festlegen: maximal 5–6 Kern-KPIs, weitere Metriken nur nachgeordnet",
+   "«Top-3 ungeregelte Prozesse» durch CGO benennen und dokumentieren",
+   "Mitbestimmungs-Rahmen vorklären: Stations-KPIs strikt aggregiert, ohne MA-Personenbezug"
+  ],
+  "beteiligte": "Owner: CGO Gökcöl (CEO, Accountable WS-OE); Mitwirkende: Matthei (COO, Delivery/Scorecard-Design), Charisius (Mitbestimmungs-Vorprüfung); Steuerung/Kontrolle: DRS.",
+  "risiken": [
+   "KPI-Inflation (mehr als 6 KPIs) verwässert die Steuerungswirkung — harter Deckel 5–6",
+   "Kickoff ohne belastbare Datenbasis, falls G1 (OE-01) noch offen — Design dann auf Interim-AHM-730-Basis rahmen"
+  ],
+  "erfolgsmessung": "Binär per 30.09.2026: Kickoff durchgeführt; KPI-Set (5–6) und Top-3-Prozessliste schriftlich vorliegend.",
+  "grounding": "projekt.yaml OE-02; RUBICON-Doc §4 WS-OE (Scorecard-Kern-Deliverable) + §5 Roadmap 30.09.26; WS-Paket WS-OE Phase 0."
+ },
+ {
+  "id": "OE-03",
+  "kontext": "Bevor die Scorecard flächig ausgerollt wird, wird die Datenstrecke an drei Pilotstationen (DUS Ramp, VIE, MUC) bewiesen — DUS Ramp und MUC sind zugleich kommerziell bzw. ergebnisseitig heikle Stationen, VIE ist das geschützte Profit-Rückgrat. OE-03 ist das erste Delivery-Ergebnis nach dem Datenzugangs-Gate G1 (depends_on OE-01) und entspricht Deliverable OE-D1 des Stroms.",
+  "leistung": [
+   "Ops-KPI-Extrakt für die 3 Pilotstationen DUS Ramp, VIE, MUC vorliegend",
+   "Datenstrecke EPG-GHS (bzw. Interim AHM-730-Rohdaten) → Scorecard-Rohdaten validiert",
+   "Erste Sicht auf die 5–6 Kern-KPIs je Pilotstation als Input für Scorecard v1.0 (OE-04)"
+  ],
+  "vorgehen": [
+   "Datenzugang aus OE-01 (EPG-GHS oder Interim-Pfad) für die 3 Pilotstationen aktivieren",
+   "KPI-Extraktion je Pilotstation aufsetzen (G31–39/DG52, Ground Damage, Baggage, Safety, Shift-Fill)",
+   "Datenqualität prüfen; fehlende Werte als Datenlücke markieren, nie schätzen",
+   "Extrakt an CGO und ins Scorecard-Design (OE-04) übergeben"
+  ],
+  "beteiligte": "Owner: Matthei (COO, Delivery/Ops-Lead); Mitwirkende: Pajor (Datenzugang/Systemlandkarte), CGO (Accountable Strom); Steuerung/Kontrolle: DRS via Chairman Cockpit.",
+  "risiken": [
+   "Verzug von OE-01 (G1) schiebt den Extrakt direkt — Interim-AHM-730-Pfad als Fallback",
+   "VIE-Sensibilität: laufendes BVD-Verfahren — VIE-Daten nur für die Scorecard, keine VIE-Massnahmen vor BVD-Entscheid",
+   "Uneinheitliche Datenformate der zwei Ops-System-Welten (unvollendete Fusion) erschweren den Extrakt"
+  ],
+  "erfolgsmessung": "Binär per 31.10.2026: Ops-KPI-Extrakt für alle 3 Pilotstationen (DUS Ramp, VIE, MUC) vorliegend.",
+  "grounding": "projekt.yaml OE-03 (depends_on OE-01); RUBICON-Doc §4 WS-OE OE-D1; WS-Paket WS-OE Phase 1."
+ },
+ {
+  "id": "OE-04",
+  "kontext": "«Gut» soll keine Absichtserklärung mehr sein, sondern eine kleine Zahl operativer Kern-KPIs mit Zielwert je Station. Die Scorecard v1.0 definiert dieses Steuerungsinstrument verbindlich — bewusst schlank (5–6 KPIs, keine Inflation) und mitbestimmungskonform (aggregiert, ohne MA-Personenbezug), damit sie in DE/AT ohne Betriebsvereinbarung sofort einsetzbar ist.",
+  "leistung": [
+   "Ops-Excellence-Scorecard v1.0 freigegeben: 5–6 Kern-KPIs mit Definition/Quelle je KPI (Basis AHM 730, G31–39/DG52)",
+   "Zielwerte je Station gesetzt (wo Baseline fehlt: als Annahme markiert, Kalibrierung M1/M2)",
+   "Mitbestimmungs-Konformität bestätigt: strikt aggregierte Stations-KPIs ohne MA-Personenbezug (DE §87 BetrVG / AT §96 ArbVG)"
+  ],
+  "vorgehen": [
+   "KPI-Definitionen aus Kickoff (OE-02) und Pilot-Extrakt (OE-03) finalisieren",
+   "Zielwerte je Station aus Pilot-Baseline ableiten; fehlende Baselines als Datenlücke/Annahme kennzeichnen",
+   "§87-/§96-Konformitätsprüfung mit Charisius durchführen",
+   "Vorlage an CGO zur Freigabe (Matthei legt vor, CGO entscheidet — keine Hochdelegation)",
+   "Scorecard-Format ans Ops-Performance-Review-Format (WS2-08) andocken"
+  ],
+  "beteiligte": "Owner: Matthei (COO, Delivery/Ops-Lead); Mitwirkende: CGO (Freigabe-Entscheid), Charisius (Mitbestimmung Stations-KPIs), Pajor (Datenbasis); Steuerung/Kontrolle: DRS.",
+  "risiken": [
+   "Mitbestimmungs-Konflikt bei personenbezogenen Ops-KPIs (DE §87 / AT §96) — personenbezogene Ebene erst nach Betriebsvereinbarung (→ OE-11, Nachlauf)",
+   "KPI-Inflation verwässert Steuerung — harter Deckel 5–6, weitere Metriken nur nachgeordnet",
+   "Zielwerte ohne validierte Baseline sind Annahmen — Datenehrlichkeit wahren, Kalibrierung nachziehen"
+  ],
+  "erfolgsmessung": "Binär per 30.11.2026: Scorecard v1.0 freigegeben; ≤6 KPIs; Zielwert je KPI/Station gesetzt; §87/§96-Konformität bestätigt.",
+  "grounding": "projekt.yaml OE-04; RUBICON-Doc §4 WS-OE OE-D2 + Scorecard-Tabelle; WS-Paket WS-OE Phase 1."
+ },
+ {
+  "id": "OE-05",
+  "kontext": "Die Scorecard wird zuerst dort produktiv, wo der Handlungsdruck am grössten ist: bei den Top-6 Verluststationen (BER −3'291 / MUC −2'800 / FRA −1'519 / DUS −1'240 / DUS II −1'143 TEUR FY25A + AAS Technics −4'211). Sie läuft als stehender Teil des monatlichen Ops-Performance-Review / Monthly Business Review (WS2-Format) — kein neues Gremium; der Finanz-Turnaround dieser Stationen bleibt strikt bei WS3.",
+  "leistung": [
+   "Scorecard monatlich produktiv für die Top-6 Verluststationen im Ops-Performance-Review",
+   "Mindestens ein Monthly Business Review mit Top-6-Scorecards durchgeführt",
+   "Abgrenzung dokumentiert: Betriebs-Exzellenz (WS-OE) vs. Finanz-Turnaround (WS3) je Station"
+  ],
+  "vorgehen": [
+   "Scorecard v1.0 (OE-04) mit Daten der Top-6 Verluststationen befüllen",
+   "Scorecard-Teil in die Agenda des Monthly Business Review integrieren (Andockung WS2, Leitung Matthei)",
+   "Ersten Review-Durchlauf mit Top-6-Scorecards durchführen und protokollieren",
+   "Ausreisser (Ground Damage, G31–39-Cluster) mit Massnahmen-Commitments in den Gruppen-Tracker geben"
+  ],
+  "beteiligte": "Owner: Matthei (COO, Review-Leitung); Mitwirkende: CGO (Accountable), Lesch (Finance-Support Review-Format gem. WS2-K7), Petric (spätere AI-Anbindung); Steuerung/Kontrolle: DRS.",
+  "risiken": [
+   "Vermischung mit WS3-Finanzentscheiden («drehen vs. eliminieren») — WS-OE misst Betriebsqualität, entscheidet nicht über Stations-Zukunft",
+   "Datenlücken einzelner Verluststationen bei verzögertem EPG-GHS-Zugang — Interim-AHM-730-Daten nutzen, Lücken ausweisen"
+  ],
+  "erfolgsmessung": "Binär per 30.11.2026: ≥1 Monthly Business Review mit Scorecards aller Top-6 Verluststationen durchgeführt und protokolliert.",
+  "grounding": "projekt.yaml OE-05; RUBICON-Doc §4 WS-OE OE-D5 (Start) + §5 Roadmap Nov 26; WS-Paket WS-OE Phase 1."
+ },
+ {
+  "id": "OE-06",
+  "kontext": "Die eingefrorene Baseline aller ~15 Stationen ist die Referenz für Gate G7: «SLA ≥ Baseline durchgehend» wird zur harten Nebenbedingung über jeder kostenwirksamen Massnahme aus WS3. Ohne eingefrorene Baseline gibt es keinen objektiven Nachweis, dass Kostenführerschaft nicht auf Kosten der Servicequalität geht — und keinen belastbaren Zielnachweis in OE-10.",
+  "leistung": [
+   "Scorecard-Baseline für 100% der ~15 Stationen erhoben (alle 5–6 Kern-KPIs)",
+   "Baseline formal eingefroren und als G7-Referenz dokumentiert",
+   "Verbleibende Datenlücken je Station/KPI explizit ausgewiesen"
+  ],
+  "vorgehen": [
+   "Datenerhebung von den 3 Pilotstationen (OE-03) auf alle ~15 Stationen ausrollen",
+   "Baseline-Werte je Station/KPI validieren; Lücken als Datenlücke markieren, nie schätzen",
+   "Baseline einfrieren und als G7-Referenz im Programm dokumentieren",
+   "G7-Referenz an WS3 (Rohde) kommunizieren: keine kostenwirksame Ops-Massnahme unter Baseline-Niveau"
+  ],
+  "beteiligte": "Owner: Matthei (COO, Delivery/Ops-Lead); Mitwirkende: Pajor (Datenzugang), CGO (Accountable), Rohde/WS3 (Adressat der G7-Nebenbedingung); Steuerung/Kontrolle: DRS via Chairman Cockpit (Gate-Status).",
+  "risiken": [
+   "Anhaltende EPG-GHS-Blockade macht die Flächen-Baseline unvollständig — Interim-AHM-730-Pfad, Lücken transparent",
+   "Zielkonflikt Kosten (WS3) vs. Qualität: ohne rechtzeitig eingefrorene Baseline fehlt WS3-Massnahmen die G7-Schranke",
+   "Baseline-Qualität uneinheitlich über zwei Ops-System-Welten — je Station dokumentieren"
+  ],
+  "erfolgsmessung": "Binär per 31.12.2026: Baseline für 100% der ~15 Stationen erhoben und als G7-Referenz eingefroren.",
+  "grounding": "projekt.yaml OE-06 (Gate G7); RUBICON-Doc §4 WS-OE OE-D3; WS-Paket WS-OE Phase 1."
+ },
+ {
+  "id": "OE-07",
+  "kontext": "Die SGHA-Rahmenverträge geben Airlines 60-Tage-Kündbarkeit und Kündigungsrechte bei Qualitätsmängeln (Annex B §9) — Servicequalitäts-Risse gefährden also direkt die WS4-Vertragsbasis von EUR 283.4 Mio FC2026. Der SLA-Schutzschirm installiert Frühwarn-Trigger mit Auto-Eskalation je Station, damit eskaliert wird, bevor Vertragsstrafen oder Kündigungsrechte auslösen; VIE ist als Profit-Rückgrat (laufendes BVD-Verfahren) besonders geschützt.",
+  "leistung": [
+   "Frühwarn-Trigger je Station aktiv (Basis: SLA-/Pünktlichkeits-KPIs G31–39/DG52 gegen Baseline)",
+   "Auto-Eskalations-Mechanik live: Station-SLA reisst → Eskalation eine Ebene höher, bevor Kündigungsrechte auslösen",
+   "VIE-Priorisierung im Schutzschirm verankert",
+   "Mindestens eine Test-Eskalation nachgewiesen"
+  ],
+  "vorgehen": [
+   "Trigger-Schwellen je Station aus der eingefrorenen Baseline (OE-06) und den SGHA-Annex-B-§9-Schwellen ableiten",
+   "Auto-Eskalationspfad definieren (Station → COO → CGO; ereignisgetrieben, bei Wiederholung DRS)",
+   "VIE mit höchster Priorität konfigurieren",
+   "Test-Eskalation durchführen und dokumentieren",
+   "Schutzschirm-Meldungen ins Chairman Cockpit (monatlicher 1-Seiter) integrieren"
+  ],
+  "beteiligte": "Owner: Matthei (COO, Delivery/Ops-Lead); Mitwirkende: CGO (Eskalations-Ebene, verantwortet öffentlich), Haeffner/WS4 (Nutzniesser: Schutzschirm sichert Renewal-Basis), Rohde/WS3 (G7-Schranke); Steuerung/Kontrolle: DRS (bei Wiederholungs-Eskalation).",
+  "risiken": [
+   "Zielkonflikt mit WS3-Kostenmassnahmen: Schutzschirm ist nicht verhandelbare Untergrenze — G7 vor jeder kostenwirksamen Ops-Massnahme",
+   "Trigger ohne belastbare Baseline (Verzug OE-06) produziert Fehlalarme oder blinde Flecken",
+   "SLA-Riss an VIE während des BVD-Verfahrens hätte doppelte Wirkung (Lizenz + Profit) — höchste Priorität"
+  ],
+  "erfolgsmessung": "Binär per 31.12.2026: Frühwarn-Trigger je Station aktiv; ≥1 Test-Eskalation nachgewiesen; 0 SLA-getriebene Kündigungs-/Strafen-Ereignisse.",
+  "grounding": "projekt.yaml OE-07; RUBICON-Doc §4 WS-OE OE-D4 + SLA-Schutzschirm-Abschnitt (SGHA Annex B §9); WS-Paket WS-OE Phase 1."
+ },
+ {
+  "id": "OE-08",
+  "kontext": "Die verdichteten Scorecard-Daten sind der Doppel-Nutzen des Stroms: Sie sind zugleich ein früher AI@AXS-Use-Case (Ops-Analytics) und damit die Brücke zu WS6. Die Übergabe hält die Owner-Trennung sauber — WS-OE liefert Datenbasis und Use-Case, WS6 (Delivery Petric) verantwortet Modell und Hosting.",
+  "leistung": [
+   "Übergabe-Dokument Ops-Analytics-Use-Case an WS6/Petric abgenommen",
+   "Scorecard-Datenbasis (Struktur, Quellen, Aktualisierungsrhythmus) als früher Anwendungsfall beschrieben",
+   "Use-Case im WS6-Backlog aufgenommen"
+  ],
+  "vorgehen": [
+   "Scorecard-Datenmodell und Datenstrecke (aus OE-03/OE-06) für die Übergabe dokumentieren",
+   "Use-Case-Beschreibung Ops-Analytics mit Petric abstimmen (Abgrenzung: Modell/Hosting = WS6)",
+   "Übergabe formal abnehmen und Aufnahme ins WS6-Backlog bestätigen",
+   "Fortlaufende Datenlieferung WS-OE → WS6 als stehende Schnittstelle vereinbaren"
+  ],
+  "beteiligte": "Owner: Matthei (COO, Delivery/Ops-Lead); Mitwirkende: Petric (AI-Delivery WS6, Abnehmer), CGO (Accountable Strom); Steuerung/Kontrolle: DRS.",
+  "risiken": [
+   "Owner-Vermischung: WS-OE darf nicht in Modell-/Hosting-Verantwortung rutschen — harte Schnittstellen-Abgrenzung gemäss 7-Ströme-Logik",
+   "Unvollständige Scorecard-Datenbasis (Verzug OE-06/OE-09) mindert den Use-Case-Wert — Übergabe mit dokumentiertem Datenstand"
+  ],
+  "erfolgsmessung": "Binär per 28.02.2027: Übergabe-Dokument an WS6/Petric abgenommen und Use-Case im WS6-Backlog aufgenommen.",
+  "grounding": "projekt.yaml OE-08; RUBICON-Doc §4 WS-OE OE-D6 + Abgrenzungstabelle (Ops-Analytics → WS6); WS-Paket WS-OE Phase 2."
+ },
+ {
+  "id": "OE-09",
+  "kontext": "Nach Pilot (3 Stationen) und Top-6-Betrieb folgt der Vollausbau: alle ~15 Stationen in CH/DE/AT/ES mit monatlicher Scorecard im Ops-Performance-Review. Erst die Flächendeckung macht Betriebs-Exzellenz konzernweit steuerbar und liefert die Grundlage für den Zielnachweis OE-10 im April 2027.",
+  "leistung": [
+   "Scorecard monatlich produktiv für 100% der ~15 Stationen",
+   "Alle Stationen mit Zielwert je KPI im Ops-Performance-Review vertreten",
+   "Verbleibende Datenlücken je Station transparent ausgewiesen"
+  ],
+  "vorgehen": [
+   "Rollout-Sequenz von Top-6 (OE-05) auf die restlichen Stationen planen und umsetzen",
+   "Datenanbindung je Station herstellen (EPG-GHS bzw. Interim-Pfad)",
+   "Monatliche Review-Kadenz für alle Stationen im Monthly Business Review verankern (kein neues Gremium)",
+   "Abweichungen gegen Zielwerte mit Massnahmen-Commitments in den Gruppen-Tracker geben"
+  ],
+  "beteiligte": "Owner: Matthei (COO, Delivery/Ops-Lead); Mitwirkende: CGO (Accountable), Pajor (Datenzugang), Stationsleiter (Datenlieferung, aggregiert); Steuerung/Kontrolle: DRS via Chairman Cockpit.",
+  "risiken": [
+   "ES-Stationen: Mitbestimmungs-/Rechtsrahmen nach Zaforesa-Assessment (WS5) beachten — zu klären vor personenbezogenen Auswertungen",
+   "Kapazität der Stationsleitungen für monatliche Datenlieferung — schlanke 5–6-KPI-Disziplin hält den Aufwand klein",
+   "Anhaltende Datenzugangs-Probleme einzelner Stationen verhindern 100%-Abdeckung — Lücken ausweisen, nicht schönen"
+  ],
+  "erfolgsmessung": "Binär per 31.03.2027: 100% (~15) Stationen mit monatlicher Scorecard im Ops-Performance-Review produktiv.",
+  "grounding": "projekt.yaml OE-09; RUBICON-Doc §4 WS-OE OE-D5 (Vollausbau, alle Stationen ab M7) + §5 Roadmap Mär 27; WS-Paket WS-OE Phase 2."
+ },
+ {
+  "id": "OE-10",
+  "kontext": "Der Zielnachweis schliesst den Strom zum Programmende der 8-Monats-Kernumsetzung (30.04.2027): AXS weist nach, ein guter, stabiler und solider Ground Handler zu sein — nicht als Absichtserklärung, sondern binär aus der Scorecard ablesbar. CGO verantwortet diesen Nachweis öffentlich; er ist zugleich der Beleg, dass die Kostenführerschaft (WS3) die Servicequalität nicht beschädigt hat (G7 gehalten).",
+  "leistung": [
+   "Ende-April-Scorecard mit 100% Stationsabdeckung und Zielwert je KPI",
+   "Nachweis SLA/Pünktlichkeit ≥ M1-Baseline durchgehend (harte Nebenbedingung SGHA Annex B §9)",
+   "0 SLA-getriebene Kündigungs-/Vertragsstrafen-Ereignisse über den Gesamtzeitraum",
+   "Safety-/Audit-Score ≥ Schwellwert flächendeckend, 0 offene kritische Findings"
+  ],
+  "vorgehen": [
+   "Ende-April-Scorecard aller ~15 Stationen konsolidieren",
+   "SLA-Verlauf gegen die eingefrorene G7-Baseline (OE-06) auswerten",
+   "Ereignis-Log des SLA-Schutzschirms (OE-07) auf Straf-/Kündigungsereignisse prüfen",
+   "Trend Ground Damage/Baggage Mishandling und Safety-Findings-Status ausweisen",
+   "Zielnachweis als Ops-Report an GL/Chairman Cockpit vorlegen; VR-Ausschnitt vorbereiten (Pre-Read T−14)"
+  ],
+  "beteiligte": "Owner: CGO Gökcöl (CEO, Accountable — verantwortet öffentlich); Mitwirkende: Matthei (COO, Datengrundlage/Report), Pajor, Charisius, Petric (Strom-Support); Steuerung/Kontrolle: DRS via Chairman Cockpit + VR.",
+  "risiken": [
+   "SLA-Verfehlung einzelner Stationen gegen die M1-Baseline gefährdet den Gesamtnachweis — Schutzschirm-Eskalation (Stufe 4: Vorlage an DRS, ggf. VR)",
+   "Nachwirkungen der WS3-Restrukturierungen (BER, AAS Technics, ab Mär 27 eingeleitet) auf Betriebsstabilität — Ops-Qualität dort eng monitoren",
+   "Unvollständige Flächendeckung (Verzug OE-09) macht den Nachweis angreifbar"
+  ],
+  "erfolgsmessung": "Binär per 30.04.2027 im Ops-Report ablesbar: 100% Scorecard-Abdeckung; SLA ≥ M1-Baseline; 0 SLA-Strafen-/Kündigungsereignisse; Safety 0 kritische offene Findings.",
+  "grounding": "projekt.yaml OE-10; RUBICON-Doc §4 WS-OE Metriktabelle (8-Monats-Spalte); WS-Paket WS-OE Phase 3 (Zielnachweis, messbar binär)."
+ },
+ {
+  "id": "OE-11",
+  "kontext": "Personenbezogene Ops-KPIs und Shift-Fill-Massnahmen (z.B. Arbeitszeitkonten-/Überstunden-Monitoring auf Personenebene) unterliegen in DE §87 BetrVG und in AT §96 ArbVG der zwingenden Mitbestimmung — sie dürfen erst nach abgeschlossener Betriebsvereinbarung aktiviert werden. Dieser Milestone ist deshalb bewusst als gesetzlich gebundener Nachlauf Q2/27 ausserhalb der 8-Monats-Kernumsetzung terminiert; bis dahin bleiben alle Stations-KPIs strikt aggregiert.",
+  "leistung": [
+   "Betriebsvereinbarung(en) DE (§87 BetrVG) / AT (§96 ArbVG) für personenbezogene Ops-KPIs/Shift-Fill-Massnahmen abgeschlossen",
+   "Personenbezogene KPI-Ebene erst nach BV-Abschluss aktiviert",
+   "Shift-Fill-/Personalverfügbarkeits-Massnahmen mit BV-Pflicht umgesetzt"
+  ],
+  "vorgehen": [
+   "BR-Verhandlungsfahrplan je betroffenem Betrieb DE/AT aufsetzen (Anschluss an BR-Landkarte aus WS5-01)",
+   "BV-Entwürfe für personenbezogene Ops-KPIs und Monitoring verhandeln",
+   "BV-Abschlüsse dokumentieren; ES-Rahmen separat nach Zaforesa-Assessment prüfen (zu klären)",
+   "Personenbezogene KPI-Ebene technisch erst nach unterzeichneter BV freischalten",
+   "Umsetzung an Matthei/Stationen übergeben und im Ops-Performance-Review nachhalten"
+  ],
+  "beteiligte": "Owner: Charisius (CHRO & Legal, Mitbestimmung); Mitwirkende: Matthei (COO, betriebliche Umsetzung), CGO (Accountable Strom), Betriebsräte DE/AT (Verhandlungspartner); Steuerung/Kontrolle: DRS.",
+  "risiken": [
+   "BR-Verhandlungen scheitern oder verzögern sich → personenbezogene Ebene bleibt inaktiv; aggregierte Steuerung läuft als Rückfallebene weiter",
+   "Rechts-Vorbehalt zwingend: jede vorzeitige personenbezogene Leistungs-/Verhaltenskontrolle wäre mitbestimmungswidrig (DE §87 / AT §96)",
+   "Kopplung an WS3-Staff-Cost-Hebel (Krankenstand/Überstunden): Abgrenzung kostenseitig WS3 vs. betriebsseitig WS-OE sauber halten"
+  ],
+  "erfolgsmessung": "Binär per 30.06.2027: Betriebsvereinbarung(en) unterzeichnet (ja/nein); personenbezogene KPI-Ebene erst danach aktiviert.",
+  "grounding": "projekt.yaml OE-11 (nachlauf: true); RUBICON-Doc §4 WS-OE (Mitbestimmungs-Vorbehalt §87/§96); WS-Paket WS-OE Nachlauf Q2/27."
+ },
+ {
+  "id": "WS4-01",
+  "kontext": "Der Kunden-Schutzschirm ist das erste sichtbare WS4-Ergebnis in Phase 0: Das bestehende CRM Cockpit (:8600, live, 129 Accounts / 338 Verträge / EUR 278 Mio) wird als benanntes Steuerungs-Backbone von WS4 scharfgestellt — kein Greenfield, sondern Einbettung des laufenden Commercial-Programms. Ohne validierten Renewal-Status und aktive <120-Tage-Alerts können Vertragsfristen der EUR-283.4-Mio-Basis unbemerkt verstreichen.",
+  "leistung": [
+   "Renewal-Status aller Verträge im CRM Cockpit validiert (Status-Validierung W1, aufbauend auf OPEN-Register M03)",
+   "<120-Tage-Alert/Eskalation im CRM Cockpit aktiv geschaltet",
+   "Datenehrlichkeits-Regel technisch und organisatorisch verankert: fehlendes Aktivitäts-Log = grau, nie grün (Data-Quality-Audit-Layer aktiv)"
+  ],
+  "vorgehen": [
+   "Bestandsaufnahme W1: Status-Validierung der CRM-Cockpit-Daten (Accounts, Verträge, Renewal-Heatmap 36 Monate) gegen den Stand Ende Juni",
+   "Renewal-Status je Vertrag prüfen und validieren; Abgleich mit OPEN-Register (Abhängigkeit M03 aus dem Masterplan)",
+   "<120-Tage-Alert mit Eskalationsmechanik konfigurieren und testen",
+   "Datenehrlichkeits-Regel als verbindliche Spielregel kommunizieren (keine Grünmeldung ohne dokumentierte Aktivität)",
+   "Go-live-Meldung als Commitment in den Gruppen-Commitment-Tracker (GL-Weekly)"
+  ],
+  "beteiligte": "Owner: Haeffner (CCO, WS4-Funktions-Owner); Mitwirkende: Petric (CRM-/AI-Anbindung, Support laut Roadmap 30.09.26); AFR + CGO (Berichtsempfänger); DRS (Kontrolle via Chairman Cockpit)",
+  "risiken": [
+   "Abhängigkeit vom Masterplan-Milestone M03 (OPEN-Register aufbauen & Datenlücken schliessen) — Verzug dort verzögert die Status-Validierung",
+   "CRM-Datenehrlichkeit erodiert (grün ohne Aktivität) — Gegenmassnahme: Data-Quality-Audit-Layer, Regel «grau, nie grün»",
+   "Kontinuitätsrisiko WS4-Lead: Besetzungsbestätigung CCO durch CEO ist Kickoff-Voraussetzung KW36; Deputy Matthei interimistisch"
+  ],
+  "erfolgsmessung": "Bis 30.09.2026: Renewal-Status im CRM Cockpit validiert (ja/nein), <120-Tage-Alert aktiv (ja/nein), Datenehrlichkeits-Regel im Audit-Layer aktiv (ja/nein) — alle drei erfüllt = Milestone erreicht.",
+  "grounding": "projekt.yaml WS4-01 (due 30.09.26, dep M03); RUBICON-Doc §4 WS4 (Flaggschiff-Assets, Datenehrlichkeit) + §5 Roadmap 30.09.26; WS-Paket WS4 Spielregeln 3–4."
+ },
+ {
+  "id": "WS4-02",
+  "kontext": "Der CRM-Datenqualitäts-Stand ist der WS4-Beitrag zum konzernweiten Baseline-Datenpaket für das Diagnose-Review der GL (Gate G2, 15.10.26) — als kritischer Gate-Milestone markiert. Ohne ehrliche Baseline (98% von EUR 283 Mio strukturiert; zwei benannte offene Punkte) kann die GL den Renewal-/Cliff-Pfad nicht belastbar beurteilen.",
+  "leistung": [
+   "CRM-Datenqualitäts-Stand als Bestandteil des Baseline-Datenpakets geliefert (Diagnose-Review GL)",
+   "Ausweis der zwei echten offenen Punkte: (a) Lücke Haeffner 9 Verträge / EUR 2.6 Mio (SWP, Scoot, Air Uniqon, Thai, ASL, DAT, NetJets Europe, BAE, Star East); (b) Contract-Inventory-vs-Pipeline-Gap (~73 Kunden / 150–169 Station×Service-Kombis, v.a. VIE/ZRH/Cargo/Full)",
+   "Bestätigung des Strukturierungsstands: 98% von EUR 283 Mio FC2026 strukturiert; Rest strukturell (Sonstige/GA, ~EUR 4.089 Mio je Station)"
+  ],
+  "vorgehen": [
+   "Datenqualitäts-Extrakt aus dem CRM Cockpit (Data-Quality-Audit-Layer) erstellen",
+   "Nachfass Lücke Haeffner (9 Verträge / EUR 2.6 Mio) dokumentieren; Schliessungspfad bis M2 ausweisen",
+   "Abgleich Contract-Inventory ↔ Renewal-Pipeline durchführen; Gap quantifiziert ausweisen",
+   "Zulieferung an Rohde (Gesamtowner Baseline-Datenpaket) termingerecht vor dem 15.10.26",
+   "Präsentationsfähige Aufbereitung für das Diagnose-Review G2 der GL"
+  ],
+  "beteiligte": "Owner: Haeffner (CCO); Mitwirkende: Rohde (CFO, Gesamtowner Baseline-Datenpaket mit Support Lesch/Matthei/Wüst/Charisius); Petric (CRM-Datenbasis); AFR + CGO (Diagnose-Review)",
+  "risiken": [
+   "Kritischer Gate-Milestone (G2): Verzug blockiert das gesamte Diagnose-Review der GL am 15.10.26",
+   "Lücke Haeffner betrifft den Owner selbst — Nachfass erfordert Selbstverpflichtung; Eskalation an AFR + CGO bei Verzug",
+   "Pipeline-Gap-Schliessung hängt von Datenzulieferung der Stationen ab (VIE/ZRH/Cargo/Full)"
+  ],
+  "erfolgsmessung": "Bis 15.10.2026: CRM-Datenqualitäts-Stand im Baseline-Datenpaket enthalten und im Diagnose-Review GL (G2) behandelt (ja/nein); beide offene Punkte quantifiziert ausgewiesen (ja/nein).",
+  "grounding": "projekt.yaml WS4-02 (due 15.10.26, gate G2, critical); RUBICON-Doc §4 WS4 «Datenstand & echte offene Punkte» + §5 Roadmap 15.10.26; WS-Paket WS4 KPI Datenstrukturierung."
+ },
+ {
+  "id": "WS4-04",
+  "kontext": "Eurowings DUS Ramp (EUR 26.26 Mio, Frist 31.01.2027) ist der grösste Einzel-Cliff und Priorität #1 im 2027-Cliff (EUR 109.3 Mio); Eurowings kumuliert EUR 40.7 Mio = 14% des Forecasts (Klumpenrisiko). D2 schafft die Verhandlungsgrundlage: vollständiges Dossier plus ExBoD/GL-Mandat, bevor die harte Verhandlung unter Lead AFR startet.",
+  "leistung": [
+   "Eurowings-Dossier DUS Ramp erstellt (Vertragslage, EUR 26.26 Mio Volumen, Frist 31.01.27, Verhandlungsposition)",
+   "Ops-KPI-Nachweis DUS als Verhandlungsargument im Dossier integriert (Zulieferung aus WS-OE)",
+   "ExBoD/GL-Mandat für die Verhandlung vorbereitet und eingebracht (Mandat Okt/Nov 26 laut Roadmap)"
+  ],
+  "vorgehen": [
+   "Vertrags- und Renewal-Daten DUS Ramp aus dem CRM Cockpit konsolidieren",
+   "Ops-KPI-Munition für DUS bei Matthei/WS-OE anfordern (Renewal-Argument, Ownership bleibt bei WS-OE)",
+   "Verhandlungsstrategie mit AFR als Verhandlungs-Lead abstimmen (Kern seines Profils)",
+   "Mandatsvorlage für ExBoD/GL erstellen und zur Beschlussfassung einbringen",
+   "Berichtspflicht an AFR + CGO etablieren"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman, Verhandlungs-Lead Eurowings/LH — laut projekt.yaml Milestone-Owner); Mitwirkende: Haeffner (CCO, ownt das Dossier operativ); Matthei (Ops-KPI-Nachweise aus WS-OE); CGO (kommerzielle Ops-/Kundenentscheide); DRS (Steuerung/Kontrolle)",
+  "risiken": [
+   "Eurowings-Klumpenrisiko (R3): DUS Ramp EUR 26.26 Mio, kumuliert 14% des Forecasts — Nichtverlängerung wäre der grösste kommerzielle Einzelschaden",
+   "Ops-KPI-Nachweis hängt an WS-OE-Datenbasis (EPG-GHS-Zugang beantragt 03.07., noch nicht erteilt — Gate G1 in WS-OE)",
+   "Terminvorbehalt: due 31.10.26 ist als Annahme markiert (date_assumed: true) — Feintermin im Kickoff zu bestätigen"
+  ],
+  "erfolgsmessung": "Bis 31.10.2026 (Annahme): Dossier fertiggestellt und ExBoD/GL-Mandat beantragt bzw. terminiert (ja/nein); Mandat spätestens Okt/Nov 26 beschlossen (ja/nein, s. WS4-08).",
+  "grounding": "projekt.yaml WS4-04 (Owner AFR, due 31.10.26 assumed); RUBICON-Doc §4 WS4-D2 + Renewal-Tabelle (Prio #1) + Risikoregister R3; WS-Paket WS4 Spielregel 5 (Entscheidungsrecht Eurowings)."
+ },
+ {
+  "id": "WS4-05",
+  "kontext": "D3 institutionalisiert die Kundennähe auf der zentralen/strategischen Ebene: Die Beziehungspflege-Matrix (Top-Accounts × Owner, 3-Tier) macht Ownership je Account explizit, und «Dieters Liste» (10–15 Top-Accounts, Chairman-Touchpoint ≥1×/Jahr) verankert die Tier-A-Beziehungen persönlich beim Chairman. Baut auf dem Masterplan-Milestone M06 (Top-30-Accounts: Sponsor zugewiesen) auf.",
+  "leistung": [
+   "Beziehungspflege-Matrix Top-Accounts × Owner (3-Tier) finalisiert",
+   "«Dieters Liste» operativ: 10–15 Top-Accounts mit Chairman-Touchpoint ≥1×/Jahr definiert und im CRM dokumentierbar",
+   "Kommunikation und Umsetzung zusammen mit den CRM-Milestones (Deliverable-Kopplung laut RUBICON-Doc)"
+  ],
+  "vorgehen": [
+   "Bestehende Matrix (project_beziehungspflege_matrix_top_accounts, 3-Tier Ownership) gegen aktuellen Account-Stand im CRM Cockpit validieren",
+   "Sponsor-Zuweisungen aus M06 (Top-30 nach Wert) übernehmen und mit der 3-Tier-Logik konsolidieren",
+   "Tier-A-Auswahl für «Dieters Liste» mit DRS abstimmen; Touchpoint-Kadenz festlegen (≥1×/Jahr, ausserhalb der operativen Quartals-KPI)",
+   "Owner je Account verbindlich benennen; CRM-Dokumentationspflicht für Kontakte aktivieren",
+   "Finalisierte Matrix an GL kommunizieren"
+  ],
+  "beteiligte": "Owner: Haeffner (CCO, projekt.yaml; im RUBICON-Doc D3 als DRS/Haeffner geführt); Mitwirkende: DRS (Chairman, Tier-A-Touchpoints persönlich); Matthei (Support Top-Account-Kontaktfrequenz laut KPI-Baum B11)",
+  "risiken": [
+   "Abhängigkeit von M06 (Top-30-Accounts: Sponsor zugewiesen) — Verzug im Masterplan verzögert die Matrix-Finalisierung",
+   "Ist-Kadenz der Top-Account-Kontakte ist eine ausgewiesene Datenlücke (Baseline M1) — ohne Messung keine Steuerung",
+   "Terminvorbehalt: due 31.10.26 ist Annahme (date_assumed: true)"
+  ],
+  "erfolgsmessung": "Bis 31.10.2026 (Annahme): Matrix mit 3-Tier-Ownership finalisiert und kommuniziert (ja/nein); «Dieters Liste» mit benannten Tier-A-Accounts operativ (ja/nein). Zielbild laut WS-Paket: operative Accounts quartalsweise CRM-dokumentiert, Chairman-Touchpoints Tier A separat ≥1×/Jahr.",
+  "grounding": "projekt.yaml WS4-05 (due 31.10.26 assumed, dep M06); RUBICON-Doc §4 WS4-D3 + «Kundennähe institutionalisieren» + KPI-Baum B11; WS-Paket WS4 KPI Top-Account-Kontakt."
+ },
+ {
+  "id": "WS4-06",
+  "kontext": "D4 institutionalisiert die Kundennähe auf der lokalen/operativen Ebene: Commercial Cafés als Monatsrhythmus zwischen Haeffner und den Stationsleitern — datengetrieben über das CRM Cockpit statt Bauchgefühl. Zusammen mit «Dieters Liste» (WS4-05) bildet das die Zwei-Ebenen-Logik der Kundennähe (lokal ↔ zentral) aus dem 3-Ebenen-Modell.",
+  "leistung": [
+   "Commercial Cafés als fester Monatsrhythmus etabliert (Haeffner × Stationsleiter)",
+   "Format datengetrieben aufgesetzt: CRM-Cockpit-Daten (Renewal-Heatmap, at-risk-Accounts, Massnahmen) als Gesprächsgrundlage",
+   "Erste Durchführungen dokumentiert (Start laut Roadmap Nov 26)"
+  ],
+  "vorgehen": [
+   "Format und Agenda der Commercial Cafés definieren (CRM-Cockpit-basiert)",
+   "Teilnehmerkreis Stationsleiter über die ~15 Stationen festlegen und Termine im Monatsrhythmus fixieren",
+   "Erstes Commercial Café durchführen; Ergebnisse/Aktivitäten im CRM dokumentieren (Datenehrlichkeits-Regel)",
+   "Rhythmus verstetigen und als Commitment im Gruppen-Commitment-Tracker führen",
+   "Kopplung zum jährlichen C-Level-Treffen mit Airline-Stationsleitern sicherstellen"
+  ],
+  "beteiligte": "Owner: Haeffner (CCO); Mitwirkende: Stationsleiter (Teilnehmer); Rohde und Petric (Support laut Roadmap Nov 26); AFR + CGO (Berichtsempfänger)",
+  "risiken": [
+   "Rhythmus-Erosion nach dem Start — Gegenmassnahme: Verankerung im Gruppen-Commitment-Tracker (GL-Weekly, Ampel)",
+   "Ohne CRM-Dokumentation der Café-Ergebnisse greift die Datenehrlichkeits-Regel (grau, nie grün) — Aktivitäts-Log ist Pflicht",
+   "Terminvorbehalt: due 30.11.26 ist Annahme (date_assumed: true)"
+  ],
+  "erfolgsmessung": "Bis 30.11.2026 (Annahme): Monatsrhythmus etabliert und mindestens ein Commercial Café durchgeführt und CRM-dokumentiert (ja/nein); danach: Rhythmus monatlich gehalten (ja/nein je Monat).",
+  "grounding": "projekt.yaml WS4-06 (due 30.11.26 assumed); RUBICON-Doc §4 WS4-D4 + «Kundennähe institutionalisieren» + §5 Roadmap Nov 26; WS-Paket WS4 KPI Top-Account-Kontakt (Commercial Cafés im Monatsrhythmus)."
+ },
+ {
+  "id": "WS4-07",
+  "kontext": "D5 macht die Inquiry-Reaktionszeit zur gemessenen und gesteuerten Grösse: Der Inquiry-Manager (AI@AXS Init #1, commercial@axs.aero) geht mit einem Erstantwort-SLA ≤24h live — Teil der E10-Kopplung WS4 ↔ WS6 (CRM speist Pricing/Forecasting/Inquiry Manager). Die 24h-Schwelle ist ausdrücklich eine Annahme, die in der M1-Messung validiert wird.",
+  "leistung": [
+   "Inquiry-Manager-SLA live: Erstantwort ≤24h als gemessener Standard (Annahme, M1 validiert)",
+   "SLA-Messung live (laut Roadmap Nov 26: Inquiry-SLA-Messung live)",
+   "Anbindung an das CRM Cockpit über die E10-Schnittstelle (Delivery Petric)"
+  ],
+  "vorgehen": [
+   "M1-Baseline-Messung der Ist-Inquiry-Reaktionszeit durchführen (ausgewiesene Datenlücke)",
+   "24h-SLA-Annahme gegen die Baseline validieren (Annahmen-Register A6: Realistik der ≤24h-Schwelle prüfen)",
+   "Inquiry-Manager-Delivery mit Petric aufsetzen (Init #1, commercial@axs.aero; Commercial Agent läuft als WS6-Prio C, kein Vorziehen)",
+   "SLA-Messung und Reporting in den Monthly Business Review integrieren",
+   "Go-live und laufende Messung ≥95% ≤24h ab M3 sicherstellen"
+  ],
+  "beteiligte": "Owner: Haeffner (CCO); Mitwirkende: Petric (AI-Delivery, CRM-/AI-Anbindung E10, Init #1 Inquiry Manager); AFR + CGO (Reporting)",
+  "risiken": [
+   "Annahme A6: Erstantwort-SLA ≤24h könnte unrealistisch sein — bei M1-Messung anders befundet, muss das Ziel angepasst werden (WS4-D5 sonst unerfüllbar)",
+   "Abhängigkeit von WS6-Delivery-Kapazität (Petric) und E10-Anbindung des CRM",
+   "Terminvorbehalt: due 30.11.26 ist Annahme (date_assumed: true)"
+  ],
+  "erfolgsmessung": "Bis 30.11.2026 (Annahme): SLA-Messung live (ja/nein); Ziel laut WS-Paket: ≥95% der Inquiries mit Erstantwort ≤24h ab M3, danach gehalten — monatlich binär prüfbar.",
+  "grounding": "projekt.yaml WS4-07 (due 30.11.26 assumed); RUBICON-Doc §4 WS4-D5 + E10-Kopplung + Annahmen-Register A6 + §5 Roadmap Nov 26; WS-Paket WS4 KPI Inquiry-Reaktionszeit."
+ },
+ {
+  "id": "WS4-08",
+  "kontext": "Jahresend-Gate der Renewal-Kohorte 2026: Von 166 OPEN-Verträgen (EUR 95.6 Mio) müssen ≥90% gesichert sein — die kommerzielle Kernabsicherung des Forecasts. Gleichzeitig fallen zwei Weichenstellungen: der TUIFLY-Entscheid (~EUR 5.2 Mio per 31.12.26, WISAG-Risiko, Entscheid Nov) und der GL-Beschluss des Eurowings-Mandats als Voraussetzung für den Abschluss Jan 27. Baut auf M10 (OPEN → 0 offene Klassifizierungen) auf.",
+  "leistung": [
+   "≥90% der 2026-OPEN-Renewals (166 Verträge / EUR 95.6 Mio) gesichert",
+   "TUIFLY-Entscheid (~EUR 5.2 Mio) getroffen und dokumentiert (Nov 26)",
+   "Eurowings-Mandat GL-beschlossen (Grundlage für Verhandlungsabschluss 31.01.27)"
+  ],
+  "vorgehen": [
+   "Renewal-Pipeline über das CRM Cockpit abarbeiten (Renewal-Heatmap, <120-Tage-Alerts aus WS4-01); Klassifizierung vollständig (Abhängigkeit M10)",
+   "Renewal-War-Room für kritische Accounts (u.a. Corendon ~5.8 Mio, Etihad ~3.6 Mio)",
+   "TUIFLY-Entscheidungsvorlage (WISAG-Risiko) für Nov 26 vorbereiten und entscheiden",
+   "Eurowings-Mandat (aus WS4-04) zur GL-Beschlussfassung bringen",
+   "Monatliches Renewal-Status-Reporting an AFR + CGO/GL und Chairman Cockpit"
+  ],
+  "beteiligte": "Owner: Haeffner (CCO); Mitwirkende: AFR (harte Verhandlungen, Support laut Roadmap Dez 26); Matthei (Ops-KPI-Munition, Support); CGO (kommerzielle Kundenentscheide); GL (Mandatsbeschluss)",
+  "risiken": [
+   "TUIFLY-WISAG-Risiko: Verlust von ~EUR 5.2 Mio bei negativem Entscheid",
+   "BER-LH (~EUR 7.2 Mio, gekündigt per 31.10.26) ist bewusst NICHT Teil der Renewal-Quote (WS3) — Abgrenzung sauber halten, sonst Quotenverzerrung",
+   "Abhängigkeit M10: ohne 0 offene Klassifizierungen keine belastbare 90%-Messung; Terminvorbehalt due 31.12.26 (date_assumed: true)"
+  ],
+  "erfolgsmessung": "Bis 31.12.2026 (Annahme): Renewal-Quote 2026-OPEN ≥90% des Volumens EUR 95.6 Mio gesichert (ja/nein, CRM-Cockpit-Messung); TUIFLY-Entscheid dokumentiert (ja/nein); Eurowings-Mandat GL-beschlossen (ja/nein).",
+  "grounding": "projekt.yaml WS4-08 (due 31.12.26 assumed, dep M10); RUBICON-Doc §4 WS4 Renewal-Tabelle + Metrik + §5 Roadmap Nov/Dez 26; WS-Paket WS4 KPI Renewal-Quote 2026."
+ },
+ {
+  "id": "WS4-09",
+  "kontext": "Der Abschluss der Eurowings-Verlängerung DUS Ramp (EUR 26.26 Mio per 31.01.2027) ist der grösste Einzel-Cliff des 2027-Portfolios und als kritischer Milestone markiert. Eurowings steht kumuliert für EUR 40.7 Mio = 14% des Forecasts — das grösste Klumpenrisiko von WS4 (Risikoregister R3). Verhandlungs-Lead ist AFR (Kern seines Profils), auf Basis von Dossier und Mandat aus WS4-04/WS4-08.",
+  "leistung": [
+   "Eurowings DUS Ramp (EUR 26.26 Mio) verlängert — unterschriftsreifer bzw. unterschriebener Abschluss per 31.01.2027",
+   "Ops-KPI-Nachweis DUS als Verhandlungsargument eingesetzt (Zulieferung WS-OE)",
+   "Abschluss-Reporting an AFR + CGO, GL und Chairman Cockpit"
+  ],
+  "vorgehen": [
+   "Verhandlung auf Basis des GL-beschlossenen Mandats führen (Lead AFR, harte Key-Account-Verhandlung)",
+   "KPI-Nachweis DUS aus WS-OE als Argument in die Verhandlungsrunden einbringen",
+   "Berichtspflicht an AFR + CGO über den Verhandlungsfortschritt einhalten (laut Risikoregister zusätzlich Berichtspflicht an CEO)",
+   "Vertragsverlängerung vor Fristablauf 31.01.27 abschliessen",
+   "Ergebnis im CRM Cockpit dokumentieren (Renewal-Status, Aktivitäts-Log)"
+  ],
+  "beteiligte": "Owner: Haeffner (CCO, laut projekt.yaml; ownt das Dossier operativ); Mitwirkende: AFR (Verhandlungs-Lead, harte Key-Account-Verhandlung — Kernrolle); Matthei (Ops-KPI-Nachweis); CGO (öffentliches Gesicht/Kundenentscheide); DRS (Kontrolle)",
+  "risiken": [
+   "R3 Eurowings-Klumpenrisiko (Eintritt: hoch bewertete Schadenshöhe): Nichtverlängerung träfe 14% des Forecasts — grösster kommerzieller Einzelschaden des Programms",
+   "Abhängigkeit von WS4-04 (Dossier + Mandat): Verzug dort komprimiert das Verhandlungsfenster bis 31.01.27",
+   "Qualitätsverschlechterung als Renewal-Killer: SGHA 60-Tage-Kündbarkeit bei Qualitätsmängeln — SLA-Schutzschirm (WS-OE) muss halten"
+  ],
+  "erfolgsmessung": "Bis 31.01.2027: Verlängerung Eurowings DUS Ramp (EUR 26.26 Mio) abgeschlossen (ja/nein).",
+  "grounding": "projekt.yaml WS4-09 (due 31.01.27, critical, dep WS4-04); RUBICON-Doc §4 WS4 Renewal-Tabelle (Prio #1) + Risikoregister R3 + §5 Roadmap 31.01.27; WS-Paket WS4 KPI Cliff-2027-Coverage."
+ },
+ {
+  "id": "WS4-10",
+  "kontext": "D6 schliesst den Regelkreis von der Kundenstimme zurück in die Vertragsarbeit: Eine strukturierte Kundenfeedback-Schleife über die Top-20-Accounts plus ein Claims-Log liefern Fakten für die Renewal-Dossiers — statt Bauchgefühl. Zyklus 1 geht laut Roadmap im Feb 27 an die GL und speist direkt die Cliff-2027-Bearbeitung (Zielnachweis WS4-11).",
+  "leistung": [
+   "Kundenfeedback-Schleife Top-20-Accounts aufgesetzt und Zyklus 1 abgeschlossen",
+   "Claims-Log etabliert und befüllt",
+   "Zyklus-1-Ergebnisse an die GL berichtet; Erkenntnisse in die Renewal-Dossiers eingespeist"
+  ],
+  "vorgehen": [
+   "Feedback-Format und Top-20-Auswahl definieren (auf Basis Beziehungspflege-Matrix aus WS4-05)",
+   "Feedback-Erhebung Zyklus 1 durchführen; Ergebnisse im CRM Cockpit dokumentieren (Aktivitäts-Log)",
+   "Claims-Log als laufendes Register aufbauen und mit den Kunden-Dossiers verknüpfen",
+   "Ergebnisbericht Zyklus 1 an die GL (laut WS-Paket-Reporting: nach Zyklus-Abschluss, Feb 27)",
+   "Erkenntnisse als Standard-Baustein in die Renewal-/Cliff-Dossiers überführen"
+  ],
+  "beteiligte": "Owner: Haeffner (CCO); Mitwirkende: GL (Berichtsempfänger Zyklus 1); Stationsleiter (lokale Kundenschnittstelle via Commercial Cafés); AFR + CGO (Steuerung)",
+  "risiken": [
+   "Feedback ohne Konsequenz: Wenn Erkenntnisse nicht nachweisbar in Renewal-Dossiers einfliessen, bleibt D6 Formalismus — Kopplung an Dossier-Standard sicherstellen",
+   "Claims-Log kann rechtlich sensible Sachverhalte enthalten (SGHA-Haftungs-KPIs) — Abstimmung mit Legal (Charisius) bei haftungsrelevanten Claims; Detailregelung «zu klären»",
+   "Terminvorbehalt: due 28.02.27 ist Annahme (date_assumed: true)"
+  ],
+  "erfolgsmessung": "Bis 28.02.2027 (Annahme): Zyklus 1 über Top-20 abgeschlossen und an GL berichtet (ja/nein); Claims-Log aktiv (ja/nein); Nachweis der Einspeisung in mindestens die laufenden Renewal-Dossiers (ja/nein).",
+  "grounding": "projekt.yaml WS4-10 (due 28.02.27 assumed); RUBICON-Doc §4 WS4-D6 + §5 Roadmap Feb 27; WS-Paket WS4 Reporting «Kundenfeedback-Zyklus (Top-20) + Claims-Log»."
+ },
+ {
+  "id": "WS4-11",
+  "kontext": "D7 ist der Zielnachweis von WS4 zum Ende der 8-Monats-Kernumsetzung (30.04.27): Cliff-2027-Coverage ≥40% (von 97 Verträgen / EUR 109.3 Mio), Desired Endstate E1–E10 selbsttragend (gelebt/sanktioniert, nicht nur «Daten sauber») und der formale VR-Report über die bestehende Governance TRAK-2026-0007 — keine Parallel-Governance. Baut auf M21 (30%-Sicherungsziel des €107M-Volumens bis Q4/2026) auf.",
+  "leistung": [
+   "Cliff-2027-Coverage ≥40% nachgewiesen (CRM-Cockpit-Messung, Stand Apr 27)",
+   "Endstate E1–E10 selbsttragend (Ausgangslage 30.06.26: E5 erreicht, E2/E3/E4/E9 teilweise, 5 offen)",
+   "VR-Report Endstate-Fortschritt + Masterplan-Ampel über TRAK-2026-0007 geliefert (formale Reviews Q4-VR Dez 26 und Q1-VR Mär 27, Pre-Read T−14 via Sherpany)"
+  ],
+  "vorgehen": [
+   "Coverage-Pfad vom M21-Zwischenziel (30% bis Q4/26) auf ≥40% bis Apr 27 weitertreiben (Renewal-War-Room, Dossier-Standard mit Ops-KPI- und Feedback-Bausteinen)",
+   "E1–E10-Statusreview: verbleibende offene Endstates auf «gelebt/sanktioniert/selbsttragend» führen (E6–E10)",
+   "Masterplan-Ampel (43 Milestones, masterplan.json) aktuell halten — nie von Hand editieren",
+   "VR-Report für Q1-VR (Mär 27) und Zielnachweis Apr 27 erstellen; Einbettung in den Gesamt-Zielbild-Nachweis Apr 27 (Review DRS)",
+   "Monatliche Cliff-Coverage-Meldung als Gate-Kennzahl ins Chairman Cockpit"
+  ],
+  "beteiligte": "Owner: Haeffner (CCO); Mitwirkende: AFR + CGO (treiben; Zielbild-Nachweis Apr 27 laut Roadmap AFR/CGO mit Review DRS); Petric (E10-Kopplung); VR (Report-Empfänger via Sherpany); DRS (Kontrolle)",
+  "risiken": [
+   "Abhängigkeit M21: Wird das 30%-Zwischenziel bis Q4/26 verfehlt, ist der ≥40%-Pfad bis Apr 27 gefährdet — frühzeitige Eskalation an AFR + CGO",
+   "Eurowings-Anteil dominiert die Coverage (EUR 26.26 Mio von 109.3 Mio) — Scheitern von WS4-09 reisst den Zielnachweis",
+   "«Selbsttragend» ist anspruchsvoller als «Daten sauber» — Endstate-Bewertung braucht harte Kriterien je E, sonst Ampel-Kosmetik (Datenehrlichkeits-Regel gilt auch hier); Terminvorbehalt due 30.04.27 (date_assumed: true)"
+  ],
+  "erfolgsmessung": "Bis 30.04.2027 (Annahme): Cliff-2027-Coverage ≥40% im CRM Cockpit nachgewiesen (ja/nein); E1–E10 selbsttragend bestätigt (ja/nein je Endstate); VR-Report über TRAK-2026-0007 geliefert (ja/nein).",
+  "grounding": "projekt.yaml WS4-11 (due 30.04.27 assumed, dep M21); RUBICON-Doc §4 WS4-D7 + Metrik-Tabelle + §5 Roadmap Apr 27; WS-Paket WS4 Reporting TRAK-2026-0007 + KPI Cliff-2027-Coverage."
+ },
+ {
+  "id": "WS4-12",
+  "kontext": "Nachlauf-Milestone (Q2/27, nach Ende der 8-Monats-Kernumsetzung): Der Pfad zur vollen Cliff-2027-Sicherung ≥70% (12-Monats-Ziel laut WS-Paket) wird bestätigt, und die Commercial-Steuerung geht aus dem Programm-Modus in die Linie über — WS4 muss ohne RUBICON-Sondersteuerung weiterlaufen (Endstate-Logik «selbsttragend»).",
+  "leistung": [
+   "Cliff-2027-Coverage-Pfad ≥70% bestätigt (Fortschreibung ab dem ≥40%-Stand aus WS4-11)",
+   "Übergabe der Commercial-Steuerung in die Linie vollzogen (CRM Cockpit, Rituale, Reporting-Kadenzen laufen im Regelbetrieb)",
+   "Fortbestand der Governance über TRAK-2026-0007 und der Regel-Reportings (Monthly Business Review, Chairman Cockpit) gesichert"
+  ],
+  "vorgehen": [
+   "Coverage-Fortschreibung im CRM Cockpit prüfen: verbleibende 2027-Cliff-Verträge auf dem ≥70%-Pfad (12M) bestätigen oder Abweichung eskalieren",
+   "Übergabe-Paket in die Linie definieren: Ownership, Rituale (Commercial Cafés, Feedback-Schleife), Reporting-Kadenzen, CRM-Datenpflege-Regeln",
+   "Selbsttragende Endstate-Mechanik (E6–E10: gelebt/sanktioniert) im Regelbetrieb verifizieren",
+   "Abschlussbestätigung an AFR + CGO und DRS; formale Entlassung aus der RUBICON-Programmsteuerung"
+  ],
+  "beteiligte": "Owner: Haeffner (CCO); Mitwirkende: CGO (Linienverantwortung nach Übergabe); AFR (Restbestand harte Verhandlungen); Petric (E10-Regelbetrieb); DRS (Abnahme der Übergabe, Kontrolle via VR/TRAK-2026-0007)",
+  "risiken": [
+   "Rückfall-Risiko nach Programm-Ende: ohne RUBICON-Tracking-Druck können Datenehrlichkeit und Ritual-Kadenz erodieren — Absicherung über in der Linie verankerte Kadenzen und TRAK-2026-0007",
+   "≥70% ist das 12-Monats-Ziel — per 30.06.27 wird der PFAD bestätigt, nicht zwingend der Endstand; die genaue Abgrenzung Pfad vs. Ist-Stand per Stichtag ist «zu klären»",
+   "Kontinuität WS4-Lead bleibt auch im Nachlauf relevant (Deputy-Regelung Matthei, Talent-Pipeline WS5)"
+  ],
+  "erfolgsmessung": "Bis 30.06.2027: Coverage-Pfad ≥70% im CRM Cockpit bestätigt (ja/nein); Übergabe-Paket an die Linie abgenommen (ja/nein, Abnahme AFR + CGO/DRS).",
+  "grounding": "projekt.yaml WS4-12 (due 30.06.27, nachlauf: true); RUBICON-Doc §4 WS4 Metrik (≥70% / 12M) + KPI-Baum B9; WS-Paket WS4 KPI Cliff-2027-Coverage + Ziel (Einbettung, nicht Neuerfindung)."
+ },
+ {
+  "id": "WS5-01",
+  "kontext": "Die BR-Landkarte DE/AT/ES ist heute eine Datenlücke — ohne sie ist keine mitbestimmungskonforme Umsetzung von Commitment-Tracking, Plattform-Rollout oder Restrukturierungsbegleitung möglich. WS5 liefert damit das Mitbestimmungs-Fundament, an dem WS1–WS3, WS-OE und WS2 hängen (Gate-G4-Logik: BR-/KBR-Konsultation vor DE/AT-Umsetzung). Für Spanien gilt zusätzlich: keine ES-Massnahme vor dem Zaforesa-Check.",
+  "leistung": [
+   "Auftrag für die BR-Landkarte DE/AT/ES erteilt (Gremien, Zuständigkeiten, KBR-Strukturen je Standort)",
+   "ES-Assessment (Zaforesa) nachweislich gestartet — harter Liefertermin 15.11.2026",
+   "Grundlage für BR-Partner-Roadmap (WS5-07) und Mitbestimmungs-Vorbehalte der übrigen Ströme gelegt"
+  ],
+  "vorgehen": [
+   "Scope der BR-Landkarte definieren (alle DE/AT/ES-Betriebe, BR-/KBR-Ebenen, laufende Vereinbarungen)",
+   "Auftrag an interne HR-/Legal-Linie bzw. externen Partner erteilen (Beratermandats-Freeze >EUR 25k beachten: CEO+CFO-Doppelfreigabe)",
+   "Zaforesa-Assessment ES beauftragen und Kickoff dokumentieren, Liefertermin 15.11.26 fixieren",
+   "Zwischenstand im GL-Weekly (Commitment-Review) berichten, Vollzugsnachweis bis 30.09.26"
+  ],
+  "beteiligte": "Owner: Charisius (CHRO & Legal, Sitz DUS, rapportiert an CEO); Mitwirkende: Wüst (Richtlinien), Zaforesa (ES-Assessment, extern); Steuerung/Kontrolle: DRS (Chairman)",
+  "risiken": [
+   "BR-Landkarte ist heute komplette Datenlücke — Verzug blockiert nachgelagert WS5-05/-07 und die G4-Freigaben aller DE/AT-Massnahmen",
+   "ES-Assessment verspätet (harter Liefertermin 15.11.26) — bis dahin keine ES-Massnahme zulässig",
+   "Beauftragung externer Unterstützung kollidiert mit Berater-Freeze >EUR 25k (WS3) — Doppelfreigabe CEO+CFO nötig"
+  ],
+  "erfolgsmessung": "BR-Landkarte-Auftrag erteilt UND Zaforesa-Assessment nachweislich gestartet (bis 30.09.2026)",
+  "grounding": "projekt.yaml WS5-01; RUBICON-Doc §4 WS5 D5/Risiken; WS-Paket WS5 Phase 0 (messbar-Spalte)"
+ },
+ {
+  "id": "WS5-02",
+  "kontext": "Die Mitarbeiterplattform ist eine der Fusions-Doppelspurigkeiten (Diagnose A): AHS ist nicht angebunden, Beekeeper ist sehr teuer und vom KBR noch nicht genehmigt (nicht abgelehnt). Stossrichtung laut Plan: günstigere Alternative TCO-evaluieren statt Ressourcen in die Beekeeper-Durchsetzung zu stecken — Vertragslaufzeit/Kündigungsfrist Beekeeper (Sunk-Cost) ist eine Phase-0-Datenlücke.",
+  "leistung": [
+   "TCO-Vergleich Beekeeper vs. günstigere Alternative(n) vorliegend",
+   "Beekeeper-Vertragslaufzeit und Kündigungsfrist dokumentiert (Sunk-Cost-Klärung)",
+   "Entscheidungsgrundlage für den Plattform-Entscheid (WS5-09, Dez 26) vorbereitet"
+  ],
+  "vorgehen": [
+   "Beekeeper-Vertrag beschaffen und Laufzeit/Kündigungsfrist/Kosten dokumentieren",
+   "Anforderungsprofil einheitliche Mitarbeiter-Kommunikation definieren (Reichweite AAS+AHS, alle ~15 Stationen)",
+   "TCO-Vergleich mit mindestens einer günstigeren Alternative erstellen (Support: Didit)",
+   "Ergebnis als Entscheidungsvorlage Richtung GL-Plattform-Entscheid (WS5-09) aufbereiten"
+  ],
+  "beteiligte": "Owner: Charisius (CHRO); Mitwirkende: Didit (Plattform-Support/IT); Steuerung/Kontrolle: DRS (Chairman)",
+  "risiken": [
+   "Beekeeper-Vertragslaufzeit/Kündigungsfrist = Datenlücke — lange Restlaufzeit kann den Business Case der Alternative kippen",
+   "KBR-Genehmigung (§87 BetrVG) steht für jede gewählte Lösung aus — Evaluation ohne frühe KBR-Einbindung riskiert spätere Blockade (s. WS5-10)",
+   "Abhängigkeit von Didit/Ein-Mann-IT (Bus-Faktor Suchomski, WS1-Risiko) für technische Bewertung"
+  ],
+  "erfolgsmessung": "TCO-Vergleich vorliegend UND Beekeeper-Kündigungsfrist dokumentiert (bis 30.09.2026)",
+  "grounding": "projekt.yaml WS5-02; RUBICON-Doc §2 Diagnose A + §4 WS5 D6; WS-Paket WS5 Phase 0"
+ },
+ {
+  "id": "WS5-03",
+  "kontext": "Spielregel «Vorbild vor Kaskade»: Die GL=6 (inkl. Pajor CFO-Stv) setzt eigene Quartals-Commitments zuerst und unterwirft sich demselben Konsequenz-Regelwerk wie alle anderen — keine Ausnahme für die Spitze. Ohne dieses sichtbare GL-Vorbild trägt die spätere Commitment-Kaskade auf Directors (WS5-05) nicht. Voraussetzung ist die formale GL-Bereinigung auf 6 per 18.09.2026 (WS2-01).",
+  "leistung": [
+   "Publizierte Selbst-Commitments aller 6 GL-Mitglieder (je eigene Commitments, öffentlich nachgehalten)",
+   "Kickoff-Kommunikation an die Führungskräfte versendet",
+   "Symbolische Vorbild-Signale angestossen (z.B. Mail-Domain-Migration GL auf @axs.aero als sichtbares Symbol, Kopplung WS1)"
+  ],
+  "vorgehen": [
+   "GL=6-Publikation (18.09., WS2-01) abwarten und Commitment-Format mit AFR/WS2 abstimmen (Andocken an Gruppen-Commitment-Tracker, kein neues Gefäss)",
+   "Selbst-Commitments je GL-Mitglied einsammeln und publizieren (CGO als Vorbild/Rollenmodell auf GL-Ebene voran)",
+   "Kickoff-Kommunikation an Führungskräfte formulieren und versenden (Sequenz-Regel beachten: BR vor Belegschaft)",
+   "Nachhaltung über den wöchentlichen Commitment-Review im GL-Weekly"
+  ],
+  "beteiligte": "Owner: Charisius (CHRO); Mitwirkende: CGO Gökcöl (Vorbild/Rollenmodell GL-Ebene), CEO-Office (Tracker-Betrieb via WS2); Steuerung/Kontrolle + Vorbild Gremienebene: DRS",
+  "risiken": [
+   "GL-Bereinigung auf 6 (18.09., WS2-01) verzögert sich — ohne publizierte GL keine glaubwürdigen Selbst-Commitments",
+   "Commitments bleiben appellativ statt messbar — Kopplung an den Gruppen-Commitment-Tracker (WS2) mit Konsequenz-Mechanik zwingend",
+   "Kommunikations-Sequenzbruch (Belegschaft/Medien vor BR) beschädigt die BR-Partnerschaft (§79-Vertraulichkeitsregime)"
+  ],
+  "erfolgsmessung": "GL = 6 hat je publizierte Commitments; Kickoff-Kommunikation versendet (bis 30.09.2026)",
+  "grounding": "projekt.yaml WS5-03; RUBICON-Doc §4 WS5 Kernmassnahmen (Vorbildfunktion GL); WS-Paket WS5 Phase 0 + Spielregel 3"
+ },
+ {
+  "id": "WS5-04",
+  "kontext": "Aus zwei Herkunftsorganisationen (AAS + AHS) soll eine AXS-Identität werden — der Charter (1 Seite DE/EN, D1) und die Change-Story je Land (CH/DE/AT/ES inkl. BR-Fassung, D4) sind die Verhaltens-Grundlage, ohne die WS1–WS4 und WS-OE nicht halten. Die Change-Story muss die Restrukturierungen (BER, AAS Technics) ehrlich adressieren; sie leitet sich aus dem Kommunikationskonzept V1.0 ab (Owner DRS+Charisius, geplant Aug 26).",
+  "leistung": [
+   "AXS-Identitäts-Charter, 1 Seite DE/EN, publiziert (Charter-Workshop 0.5 Tag, keine Hochglanz-Broschüre)",
+   "Change-Story für alle 4 Länder (CH/DE/AT/ES) inkl. je einer BR-Fassung",
+   "Kommunikations-Leitplanken verankert: Sequenz strikt BR → Belegschaft → Medien; CH-Sonderspur PR june/Meroni"
+  ],
+  "vorgehen": [
+   "Statusabfrage Kommunikationskonzept V1.0 vor Projektstart; bei Verzug Fallback 1-Seiten-Minimalbotschaft aktivieren",
+   "Charter-Workshop (0.5 Tag) mit GL durchführen und 1-Seiter DE/EN finalisieren",
+   "Change-Story je Land ableiten, Restrukturierungen (BER, AAS Technics) ehrlich adressieren, BR-Fassungen erstellen (§79-Vertraulichkeitsregime)",
+   "Publikation unter Beachtung des Botschaften-Freeze um das Closing (31.10.) takten"
+  ],
+  "beteiligte": "Owner: Charisius (CHRO, interne Kommunikation); Mitwirkende: DRS (Co-Owner Kommunikationskonzept V1.0), CGO (Vorbild GL-Ebene), june/Meroni (PR CH-Sonderspur); BR als Erst-Adressat je Land",
+  "risiken": [
+   "Kommunikationskonzept V1.0 (geplant Aug 26) verzögert sich — Fallback: 1-Seiten-Minimalbotschaft (im Plan vorgesehen)",
+   "Botschaften-Freeze um das Closing 31.10. kollidiert mit dem Termin — Publikationsfenster eng takten",
+   "Sequenzbruch BR → Belegschaft → Medien bei den heiklen Restrukturierungs-Botschaften (BER/AAS Technics) gefährdet BR-Partnerschaft und CH-Verfahren (keine Kommunikation zu laufenden Verfahren)"
+  ],
+  "erfolgsmessung": "Charter publiziert; Change-Story für alle 4 Länder inkl. BR-Fassung vorhanden (bis 31.10.2026; Termin = Annahme lt. projekt.yaml)",
+  "grounding": "projekt.yaml WS5-04; RUBICON-Doc §4 WS5 D1+D4 + Kernmassnahmen/Risiken; WS-Paket WS5 Phase 1"
+ },
+ {
+  "id": "WS5-05",
+  "kontext": "Das Commitment-Board macht Führungs-Commitments öffentlich nachgehalten: GL=6 und alle Directors mit je 3 publizierten Quartals-Commitments — die Verhaltens-Kaskade nach dem GL-Vorbild (WS5-03). Es dockt an den Gruppen-Commitment-Tracker (WS2, Backbone aller 7 Ströme) an, kein neues Gefäss. Die Erweiterung auf Station-Manager DE/AT ist mitbestimmungspflichtig und erfolgt erst nach Betriebsvereinbarung.",
+  "leistung": [
+   "Commitment-Board live: GL=6 + alle Directors mit je 3 publizierten Quartals-Commitments online",
+   "Andockung an den Gruppen-Commitment-Tracker (WS2) inkl. Konsequenz-Mechanik (48h-Reminder, ROT-Eskalation)",
+   "BV-Fahrplan für die spätere Station-Manager-Erweiterung DE/AT vorbereitet (§87 BetrVG / §96 ArbVG)"
+  ],
+  "vorgehen": [
+   "Board-Format und Betrieb mit AFR (WS2) und CEO-Office abstimmen (ein führendes System, kein Parallel-Reporting)",
+   "Quartals-Commitments der GL=6 und aller Directors einsammeln, qualitätssichern (messbar, je 3) und publizieren",
+   "Mitbestimmungs-Grenze sauber ziehen: Station-Manager DE/AT ausklammern, BV-Verhandlung parallel anstossen (Basis: BR-Landkarte aus WS5-01)",
+   "Review-Kadenz etablieren: wöchentlicher Commitment-Review im GL-Weekly, Monats-Status ins Chairman Cockpit"
+  ],
+  "beteiligte": "Owner: Charisius (CHRO); Mitwirkende: AFR (WS2/Tracker-Governance), CEO-Office (Betrieb), CGO (Vorbild), Directors; Steuerung/Kontrolle: DRS",
+  "risiken": [
+   "Mitbestimmungs-Vorbehalt: namentliches Tracking unterhalb GL/Directors in DE/AT erst nach Betriebsvereinbarung (§87 Abs. 1 Nr. 1/6 BetrVG / §96 ArbVG); Station-Manager sind i.d.R. keine leitenden Angestellten (§5 Abs. 3 BetrVG)",
+   "Abhängigkeit vom Gruppen-Commitment-Tracker-Go-live (WS2-04, Okt 26) — ohne Backbone kein nachgehaltenes Board",
+   "Directors liefern nur Alibi-Commitments — Qualitätssicherung (messbar, konsequenzbewehrt) nötig, sonst bleibt Execution appellativ"
+  ],
+  "erfolgsmessung": "GL-6 + alle Directors mit je 3 publizierten Quartals-Commitments online (bis 30.11.2026; Termin = Annahme lt. projekt.yaml)",
+  "grounding": "projekt.yaml WS5-05; RUBICON-Doc §4 WS5 D2; WS-Paket WS5 Phase 1 + Spielregel 5 (Mitbestimmung)"
+ },
+ {
+  "id": "WS5-06",
+  "kontext": "Konsequenz-Management ist heute nicht durchgesetzt (Diagnose D: keine Eskalation, kein «2× = CEO-Gespräch»). Das 3-Stufen-Regelwerk (Klärungsgespräch → Verantwortungsentzug → Rollenwechsel) mit automatischem Trigger bei 2× Nichtlieferung macht Konsequenz mechanisch statt ermessensabhängig — und muss je Land arbeitsrechtlich halten. Parallel startet mit Puls #1 die Change-Barometer-Messung (Baseline M3, heute Datenlücke).",
+  "leistung": [
+   "Konsequenz-Management-Regelwerk (3 Stufen, automatischer Trigger 2× Nichtlieferung) GL-beschlossen",
+   "Arbeitsrechtliche Prüfung je Land (CH/DE/AT/ES) dokumentiert",
+   "Change-Barometer Puls #1 gemessen (Baseline; Instrument aus Phase 0 vorbereitet)"
+  ],
+  "vorgehen": [
+   "Regelwerk-Entwurf erstellen (3 Stufen, Trigger ohne Ermessen; GL=6 unterwirft sich demselben Regelwerk)",
+   "Arbeitsrechtliche Länder-Prüfung durchführen (DE §613a/KSchG, AT ArbVG, ES nach Zaforesa-Assessment, CH Art. 335f OR) und dokumentieren",
+   "GL-Beschluss herbeiführen und Regelwerk mit der Tracker-Konsequenz-Mechanik (WS2) verzahnen; Integritäts-KPI im Cockpit aufsetzen",
+   "Change-Barometer Puls #1 durchführen und Baseline einfrieren"
+  ],
+  "beteiligte": "Owner: Charisius (CHRO & Legal, Arbeitsrecht); Mitwirkende: Wüst (Richtlinien), CGO (Rollenmodell GL-Ebene), AFR (WS2-Konsequenz-Regelwerk-Prüfung, vgl. WS2-08); Steuerung/Kontrolle: DRS",
+  "risiken": [
+   "Kernrisiko des Stroms: das Regelwerk wird im ersten Ernstfall nicht durchgezogen — Gegenmittel: automatischer Trigger ohne Ermessen + Integritäts-KPI im Cockpit",
+   "Arbeitsrechtliche Grenzen je Land (insb. ES vor Zaforesa-Lieferung 15.11.26) können Stufen 2/3 einschränken — Prüfvorbehalt je Land dokumentieren",
+   "Kein Nachfolger = keine harte Personalentscheidung — Kopplung an Talent-Pipeline (WS5-08) zwingend"
+  ],
+  "erfolgsmessung": "Regelwerk GL-beschlossen; arbeitsrechtliche Prüfung CH/DE/AT/ES dokumentiert; Change-Barometer Puls #1 gemessen (bis 30.11.2026; Termin = Annahme lt. projekt.yaml)",
+  "grounding": "projekt.yaml WS5-06; RUBICON-Doc §4 WS5 D3 + Stromspezifische Risiken; WS-Paket WS5 Phase 1"
+ },
+ {
+  "id": "WS5-07",
+  "kontext": "Betriebsräte sollen Partner der Transformation werden, nicht Blockierer: Die BR-Partner-Roadmap institutionalisiert Quartals-Regeltermine mit 100% Abdeckung in DE/AT/ES (heute uneinheitlich) und setzt die Richtlinie «Informationsverfahren Arbeitnehmerausschüsse» in Kraft — die heute nur als leeres Template existiert. Grundlage ist die BR-Landkarte aus WS5-01.",
+  "leistung": [
+   "Quartals-Regeltermine mit 100% aller BR-Gremien DE/AT/ES terminiert",
+   "Richtlinie «Informationsverfahren Arbeitnehmerausschüsse» verabschiedet und in Kraft (heute leeres Template)",
+   "BR-Partner-Roadmap dokumentiert (auf Basis der BR-Landkarte aus WS5-01)"
+  ],
+  "vorgehen": [
+   "BR-Landkarte (WS5-01) auswerten: vollständige Gremienliste DE/AT/ES als Terminierungs-Basis",
+   "Quartals-Regeltermine je Gremium vereinbaren und im Kalender fixieren (100%-Abdeckung ab M4)",
+   "Richtlinie Informationsverfahren ausformulieren, mit Wüst (Richtlinien-Governance) abstimmen und in Kraft setzen",
+   "Regeltermin-Abdeckung als Monats-KPI ins Monthly Business Review und Chairman Cockpit aufnehmen"
+  ],
+  "beteiligte": "Owner: Charisius (CHRO & Legal, BR-Partnerschaft); Mitwirkende: Wüst (Richtlinien); BR-Gremien DE/AT/ES als Partner; Steuerung/Kontrolle: DRS",
+  "risiken": [
+   "Verzug bei der BR-Landkarte (WS5-01) verschiebt die Terminierung — 100%-Abdeckung ab M4 gefährdet",
+   "ES-Gremien erst nach Zaforesa-Assessment (Liefertermin 15.11.26) belastbar kartiert — ES-Termine ggf. nachgelagert",
+   "Ohne gelebte Regeltermine fehlt das Vertrauensfundament für die kritischen BV-Verhandlungen (Commitment-Board WS5-05, Plattform WS5-10) und die Restrukturierungs-Begleitung (WS5-12)"
+  ],
+  "erfolgsmessung": "BR-Regeltermine 100% DE/AT/ES terminiert; Richtlinie verabschiedet und in Kraft (bis 31.12.2026; Termin = Annahme lt. projekt.yaml)",
+  "grounding": "projekt.yaml WS5-07; RUBICON-Doc §4 WS5 D5; WS-Paket WS5 Phase 1 + KPI BR-Regeltermin-Abdeckung"
+ },
+ {
+  "id": "WS5-08",
+  "kontext": "Es gibt heute keine stehende Talent-Pipeline für die zwei erfolgskritischen Funktionen (Commercial-Lead + starke Stationsleiter) — eine Datenlücke, die das Konsequenz-Management direkt blockiert: kein Nachfolger = keine harte Personalentscheidung. Der stille Dauer-Search hält die Pipeline permanent gefüllt (auch ohne akute Vakanz); das interne Aufbauprogramm ist die zweite Schiene. Governance-Prinzip: Trennung und Search laufen parallel, nicht nacheinander.",
+  "leistung": [
+   "Stiller Dauer-Search für Commercial-Lead + starke Stationsleiter live (professionell, diskret, dauerhaft aktiv)",
+   "Konzept internes Aufbauprogramm (2. Schiene: eigene Führungskräfte für Schlüsselpositionen entwickeln) vorliegend",
+   "Zielpfad definiert: ≥2 qualifizierte Kandidaten je Kernfunktion bis Feb 27; Time-to-Fill ≤90 Tage bis Apr 27 (Vorschlag zur Validierung)"
+  ],
+  "vorgehen": [
+   "Suchprofile für die zwei Kernfunktionen definieren (inkl. Branchenstars-Strategie; Präzedenz: gezielte Senior-Hires ins AI-Office)",
+   "Search-Setup diskret aufsetzen (Vertraulichkeit; Beratermandats-Freeze >EUR 25k: CEO+CFO-Doppelfreigabe beachten)",
+   "Aufbauprogramm-Konzept erstellen (interne Kandidaten identifizieren, Entwicklungspfade)",
+   "Pipeline-Status als Monats-KPI ins Monthly Business Review; Kopplung an Konsequenz-Regelwerk (WS5-06) sicherstellen"
+  ],
+  "beteiligte": "Owner: Charisius (CHRO, Talent-Acquisition); Mitwirkende: CGO (GL-Ebene), ggf. externer Search-Partner (zu klären, Freeze-Regel beachten); Steuerung/Kontrolle: DRS. Sensible Einzelfälle ausschliesslich über den HR-Sensitive-Kanal",
+  "risiken": [
+   "Talent-Lücke blockiert das Konsequenz-Management (WS5-06) — genau das soll der Dauer-Search vorab entschärfen; Verzug wirkt doppelt",
+   "Vertraulichkeitsbruch beim stillen Search beschädigt amtierende Führungskräfte und die BR-Partnerschaft — strikte Trennung Board-Doc vs. HR-Sensitive-Kanal",
+   "Externe Search-Kosten kollidieren mit dem Berater-Freeze >EUR 25k (WS3) — Doppelfreigabe CEO+CFO einplanen"
+  ],
+  "erfolgsmessung": "Dauer-Search aktiv nachweisbar; Aufbauprogramm-Konzept vorliegend (bis 31.12.2026; Termin = Annahme lt. projekt.yaml)",
+  "grounding": "projekt.yaml WS5-08; RUBICON-Doc §4 WS5 D7 + Kernmassnahmen Top-Personal; WS-Paket WS5 Phase 1 + KPI Talent-Pipeline"
+ },
+ {
+  "id": "WS5-09",
+  "kontext": "Nach der TCO-Evaluation (WS5-02) muss der Plattform-Entscheid formal fallen: gewählte günstigere Lösung vs. Beekeeper. Der Entscheid ist Voraussetzung für den KBR-Genehmigungsprozess (§87 BetrVG) und den Rollout-Pfad bis 100% Reichweite (M8) — eine der 6 Fusions-Doppelspurigkeiten aus WS1-D9 (Fallback dort: 4/6 + Plattform M8, falls KBR-Genehmigung aussteht).",
+  "leistung": [
+   "Plattform-Entscheid GL-beschlossen (gewählte Lösung vs. Beekeeper, auf Basis TCO-Vergleich aus WS5-02)",
+   "KBR-Genehmigungsprozess für die gewählte Lösung eingeleitet",
+   "Rollout-Planung Welle 1 (AHS-Anbindung) vorbereitet, konditioniert auf KBR-Einigung"
+  ],
+  "vorgehen": [
+   "Entscheidungsvorlage aus TCO-Vergleich + Beekeeper-Kündigungsfrist (WS5-02) finalisieren",
+   "GL-Beschluss herbeiführen und dokumentieren",
+   "KBR formell einbinden und Genehmigungsprozess für die gewählte Lösung starten (§87 BetrVG; Lehre aus Beekeeper: Genehmigung war nie erteilt)",
+   "Rollout-Fahrplan mit Didit (Delivery) und WS1 (Doppelspurigkeits-Abbau D9) synchronisieren"
+  ],
+  "beteiligte": "Owner: Charisius (CHRO); Mitwirkende: Didit (Plattform-Delivery), GL (Beschluss), KBR (Genehmigung), AFR (WS1-Schnittstelle Doppelspurigkeiten); Steuerung/Kontrolle: DRS",
+  "risiken": [
+   "Verzug bei WS5-02 (TCO/Kündigungsfrist) verschiebt den Entscheid und komprimiert den KBR-Pfad bis Feb 27 (WS5-10)",
+   "KBR-Genehmigung ist mitbestimmungspflichtig und nicht erzwingbar auf dem kurzen Weg — bei Blockade droht der Einigungsstellen-Pfad (WS5-10) und der WS1-Fallback (4/6 Items + Plattform M8)",
+   "Beekeeper-Restlaufzeit erzeugt Doppelkosten während der Migration (Sunk-Cost) — im Beschluss transparent ausweisen"
+  ],
+  "erfolgsmessung": "Plattform-Entscheid GL-beschlossen; KBR-Genehmigungsprozess für gewählte Lösung eingeleitet (bis 31.12.2026; Termin = Annahme lt. projekt.yaml)",
+  "grounding": "projekt.yaml WS5-09; RUBICON-Doc §4 WS5 D6 + WS1-D9-Fallback; WS-Paket WS5 Phase 1 (Plattform-Entscheid)"
+ },
+ {
+  "id": "WS5-10",
+  "kontext": "Die KBR-Vereinbarung ist das mitbestimmungsrechtliche Gate für den Plattform-Rollout (§87 BetrVG): Ohne sie keine 100%-Reichweite bis M8 (WS5-11) und kein Abbau der Doppelspurigkeit «eine Mitarbeiterplattform» (WS1-D9). Scheitert die Einigung, ist der Einigungsstellen-Pfad der definierte Alternativweg — mit dem Fallback aus WS1 (4/6 Items + Plattform M8).",
+  "leistung": [
+   "KBR-Vereinbarung zur gewählten Kommunikationsplattform unterzeichnet — ODER Einigungsstellen-Pfad dokumentiert eingeleitet",
+   "Rollout-Freigabe für Welle 1 (AHS-Anbindung, Mär 27) hergestellt, sofern Einigung",
+   "Dokumentierter Verhandlungsstand als Gate-Status für Chairman Cockpit und WS1-D9"
+  ],
+  "vorgehen": [
+   "KBR-Verhandlung auf Basis des eingeleiteten Genehmigungsprozesses (WS5-09) führen; BR-Regeltermine (WS5-07) als Vertrauensbasis nutzen",
+   "Vereinbarungsentwurf arbeitsrechtlich absichern (Charisius Legal; Wüst Richtlinien-Anschluss)",
+   "Bei Nichteinigung: Einigungsstellen-Pfad formal einleiten und dokumentieren; WS1-Fallback (Plattform M8) aktivieren",
+   "Bei Einigung: Rollout Welle 1 (AHS-Anbindung) für Mär 27 mit Didit auslösen"
+  ],
+  "beteiligte": "Owner: Charisius (CHRO & Legal); Mitwirkende: KBR (Verhandlungspartner), Didit (Delivery), Wüst (Richtlinien), AFR (WS1-Schnittstelle); Steuerung/Kontrolle: DRS (Eskalations-Endpunkt bei blockierter KBR-Genehmigung)",
+  "risiken": [
+   "KBR-Blockade: Genehmigung war schon bei Beekeeper nie erteilt — Einigungsstellen-Pfad kostet Zeit und gefährdet den 100%-Rollout bis M8 (Fallback lt. Plan einkalkuliert)",
+   "Verhandlung fällt in die Phase eingeleiteter Restrukturierungen (BER/AAS Technics ab Q1/27) — Klima-Risiko; saubere Trennung der Dossiers und §79-Vertraulichkeitsregime nötig",
+   "Verzug kaskadiert direkt in WS5-11 (Zielnachweis) und WS1-D9 (Doppelspurigkeits-Abbau ≥5/6)"
+  ],
+  "erfolgsmessung": "KBR-Vereinbarung unterzeichnet ODER Einigungsstellen-Pfad dokumentiert eingeleitet (bis 28.02.2027; Termin = Annahme lt. projekt.yaml)",
+  "grounding": "projekt.yaml WS5-10; RUBICON-Doc §4 WS5 D6 + Metrik Plattform-Reichweite; WS-Paket WS5 Phase 2 (messbar-Spalte)"
+ },
+ {
+  "id": "WS5-11",
+  "kontext": "Der Zielnachweis des Stroms zum Programmende (baseline_end 30.04.2027): WS5 weist nach, dass die Verhaltens-Grundlage steht — Plattform-Reichweite 100%, Execution-Rate ≥90% über 2 Monate (von Baseline höchstens ~50%), Change-Barometer Puls #3 mit gehaltenem steigendem Trend und Talent-Pipeline mit Time-to-Fill ≤90 Tagen. Damit ist der WS5-Beitrag zum RUBICON-Endzustand (Merkmal 4: Execution-Disziplin) erbracht und übergabefähig.",
+  "leistung": [
+   "Plattform-Rollout 100% der gewählten Lösung (Fallback M8 lt. WS1-D9 dokumentiert, falls KBR-Pfad verzögert)",
+   "Execution-Rate ≥90% über 2 aufeinanderfolgende Monate aus dem Gruppen-Tracker belegt",
+   "Change-Barometer Puls #3 gemessen (steigender Trend gehalten); BR-Regeltermine 100% gehalten",
+   "Talent-Pipeline verankert: Time-to-Fill Schlüsselposition ≤90 Tage (Vorschlag zur Validierung); internes Aufbauprogramm operativ"
+  ],
+  "vorgehen": [
+   "Rollout-Abschluss der Plattform (nach KBR-Einigung WS5-10) treiben und Reichweite messen",
+   "Execution-Rate-Nachweis über 2 Monate aus dem Gruppen-Commitment-Tracker ziehen (gemeinsam mit WS2-13)",
+   "Puls #3 durchführen und Trend gegen Baseline (Puls #1, M3) ausweisen; BR-Abdeckung bestätigen",
+   "Time-to-Fill-Zielwert validieren/nachweisen; Kultur-/Konsequenz-System für die Übergabe in die Linie vorbereiten (MOS-Audit-Anschluss)",
+   "Zielnachweis als Pre-Read ins Chairman Cockpit / VR einliefern"
+  ],
+  "beteiligte": "Owner: Charisius (CHRO); Mitwirkende: AFR (WS2, Execution-Nachweis), CEO-Office (Tracker-Daten), Didit (Plattform), CGO (GL-Vorbild); Steuerung/Kontrolle: DRS (Abnahme via Cockpit/VR)",
+  "risiken": [
+   "Execution ≥90% ist gruppenweite Grösse (WS2-geteilt) — WS5 kann sie nicht allein liefern; Abhängigkeit von Tracker-Disziplin aller Ströme",
+   "KBR-Verzug (WS5-10) drückt den Plattform-Rollout an den M8-Fallback-Rand — 100% Reichweite dann knapp",
+   "Time-to-Fill ≤90 Tage ist ein Vorschlag zur Validierung, noch kein bestätigter Zielwert — vor Zielnachweis formal validieren (zu klären)"
+  ],
+  "erfolgsmessung": "Plattform-Reichweite 100%; Execution-Rate ≥90% zwei Monate in Folge belegt; Puls #3 gemessen mit gehaltenem Trend; BR-Abdeckung 100%; Time-to-Fill ≤90 Tage erreicht/validiert (bis 30.04.2027; Termin = Annahme lt. projekt.yaml)",
+  "grounding": "projekt.yaml WS5-11; RUBICON-Doc §4 WS5 D6 + Metriktabelle (8 Monate); WS-Paket WS5 Phase 3 + Erfolgskriterien"
+ },
+ {
+  "id": "WS5-12",
+  "kontext": "Die bis April 2027 eingeleiteten Restrukturierungen (BER, AAS Technics/KEL — WS3-12) werden erst im gesetzlichen Nachlauf Q2/27 wirksam (§111/§17 KSchG-Verfahren). WS5 begleitet sie BR- und kommunikationsseitig bis zur Wirksamkeit — mit strikter Sequenz BR → Belegschaft → Medien und §79-Vertraulichkeitsregime. Der Milestone zählt als Nachlauf nicht gegen das Kern-Projektende (baseline_end 30.04.2027).",
+  "leistung": [
+   "BR-/kommunikationsseitige Begleitung der eingeleiteten Restrukturierungen (BER, KEL) bis zur gesetzlichen Wirksamkeit — ohne Sequenzbruch",
+   "Konsequenz-/Kultur-Verankerung in der Linie (Übergabe, im MOS-Audit bestätigt)",
+   "Abschluss-Status an GL/VR (Anschluss an WS2-14-Schlussbericht)"
+  ],
+  "vorgehen": [
+   "Begleitfahrplan je Verfahren (BER, KEL) aus den BR-Fahrplänen von WS3 ableiten; Regeltermine (WS5-07) als Kanal nutzen",
+   "Kommunikation je Verfahrensschritt strikt sequenzieren (BR → Belegschaft → Medien; §79-Vertraulichkeitsregime; keine Kommunikation zu laufenden CH-Verfahren)",
+   "Kultur-/Konsequenz-System in die Linie übergeben und Bestätigung über das MOS-Audit (WS2-14) einholen",
+   "Wirksamkeits-Status der Verfahren bis Q2/27 nachhalten und ins Chairman Cockpit rapportieren"
+  ],
+  "beteiligte": "Owner: Charisius (CHRO & Legal); Mitwirkende: AFR (Restrukturierungs-Lead AAS Technics, WS3-12), Rohde (WS3-Owner), BR-Gremien BER/KEL, CGO (öffentliches Gesicht); PR-Support wo einschlägig (CH: june/Meroni); Steuerung/Kontrolle: DRS",
+  "risiken": [
+   "Gesetzlich gebundene Fristen (§111/§17 KSchG, §613a BGB) bestimmen den Takt — Wirksamkeit ist nicht beschleunigbar; Abhängigkeit von fristgerechter Einleitung bis Mär 27 (WS3-12, kritischer Pfad G4)",
+   "Sequenzbruch oder Leak während der Verfahren beschädigt BR-Partnerschaft und Closing-/PR-Lage nachhaltig",
+   "Parallele KBR-Plattform-Verhandlung und Restrukturierungs-Begleitung belasten dieselbe BR-Beziehung — Dossier-Trennung nötig"
+  ],
+  "erfolgsmessung": "Kommunikations-/BR-Begleitung durchgeführt ohne Sequenzbruch; Übergabe Kultur-/Konsequenz-System in die Linie im MOS-Audit bestätigt (bis 30.06.2027, Nachlauf — zählt nicht gegen baseline_end)",
+  "grounding": "projekt.yaml WS5-12 (nachlauf: true); RUBICON-Doc §4 WS5 Change-Story/CH-Sonderspur; WS-Paket WS5 Nachlauf Q2/27 (messbar-Spalte)"
+ },
+ {
+  "id": "WS6-01",
+  "kontext": "Vor Programmstart 01.09.2026 sind zwei Grundlagen des AI-Stroms ungeklärt: Der Vertragsstatus des Delivery-Leads Petric ist nicht final dokumentiert (stromspezifisches Risiko laut RUBICON-Doc), und die AI-Budget-Währung ist CHF/EUR-inkonsistent (Datenlücke). Ohne beides fehlt WS6 die personelle und finanzielle Startbasis.",
+  "leistung": [
+   "Vertragsstatus Delivery-Lead Petric final geklärt und dokumentiert — Konditionen ausschliesslich bilateral CEO/CHRO",
+   "AI-Budget in einer Währung konsistent bereinigt (CHF/EUR-Inkonsistenz beseitigt)"
+  ],
+  "vorgehen": [
+   "Bilaterale Klärung des Vertragsstatus zwischen CEO (Gökcöl) und CHRO (Charisius) — keine Behandlung im Board-Dokument",
+   "AI-Budget-Positionen sichten und auf eine Währung konsolidieren (Input IN-16, Owner Petric, bis 30.09.)",
+   "Ergebnis im Programm-Kickoff KW36 dokumentieren (Roadmap-Zeile KW36)"
+  ],
+  "beteiligte": "Owner: CGO (CEO Gökcöl); Mitwirkende: Charisius (CHRO, bilaterale Vertragsklärung), Petric (Budget-Währungsbereinigung, IN-16)",
+  "risiken": [
+   "Vertragsstatus nicht rechtzeitig final → Delivery-Start des gesamten WS6 per 01.09.2026 gefährdet",
+   "Vertraulichkeit: Konditionen dürfen ausschliesslich bilateral CEO/CHRO laufen, nicht im Board-Dokument",
+   "Währungs-Inkonsistenz verfälscht die Bottom-up-Validierung der EUR-5'000k-Targets (WS6-02)"
+  ],
+  "erfolgsmessung": "Vertragsstatus bilateral CEO/CHRO final dokumentiert UND Budget in einer Währung konsistent (ja/nein) — bis 04.09.2026",
+  "grounding": "projekt.yaml WS6-01 + Input IN-16; RUBICON-Doc §4 WS6 (stromspezifische Risiken, Roadmap KW36); WS-Paket WS6 Phase 0"
+ },
+ {
+  "id": "WS6-02",
+  "kontext": "Die acht AI@AXS-Initiativen tragen ein Hard-Goal von min. EUR 5 Mio p.a. / 30% Overhead-Reduktion bis Ende 2027 — realisiert per Q3/2026: 0, die Targets existieren bisher nur top-down (25.05.2026). Das AI-Transformations-Mapping (D1) macht daraus ein priorisiertes, ExBoD-beschlossenes Programm und verankert «Elysium 3.0 = AI@AXS = ein Programm» unter TRAK-2026-0010.",
+  "leistung": [
+   "ExBoD-Beschluss mit Priorisierung A/B/C: A = Data Foundation + #2 Finance-Automation (1'500k) + #6 Action-Item-Tracking (600k, vorgezogen); B = #3 HR-Bot (700k), #8 Knowledge-Mgmt (300k), #4 Procurement (500k), #5 Legal-Bot (400k); C = #1 Commercial Agent (läuft in WS4), #7 Workforce Co-Pilot (kein Vorziehen)",
+   "Nicht-verfolgen-Liste beschlossen: Computer-Vision-Turnaround-Monitoring, General-Purpose-Assistent für ~5'000 MA, kundenseitiger Chatbot",
+   "Bottom-up-Validierung der EUR-5'000k-Targets (bisher nur Top-Down 25.05.)"
+  ],
+  "vorgehen": [
+   "Je Initiative Bottom-up-Gegenrechnung der Einsparungs-Targets erstellen (Kopplung IN-16)",
+   "Reconcile «Elysium 3.0 = AI@AXS = ein Programm» ausdrücklich festhalten (gemeinsame Governance TRAK-2026-0010)",
+   "A/B/C-Liste und Nicht-verfolgen-Liste als ExBoD-Vorlage aufbereiten",
+   "ExBoD-Beschluss bis 30.09.2026 herbeiführen und dokumentieren"
+  ],
+  "beteiligte": "Owner: Petric (Delivery-Lead WS6); Mitwirkende: DRS (Chairman of AI, steuert/kontrolliert) und CGO (operativer Sponsor) als Sponsoren, Rohde (Finance-Sicht, Roadmap-Zeile 30.09.)",
+  "risiken": [
+   "Targets halten der Bottom-up-Prüfung nicht stand → Zielwerte müssen ehrlich angepasst werden (Datenehrlichkeit: Top-Down ist kein Ergebnis)",
+   "Init #7 Workforce Co-Pilot: Confidence NIEDRIG, KBR-Risiko, zwingend mitbestimmungspflichtig — darf nicht vorgezogen werden",
+   "Abhängigkeit von WS6-01 (Budget-Währung bereinigt) für belastbare Zahlen"
+  ],
+  "erfolgsmessung": "ExBoD-Beschluss dokumentiert; A/B/C-Liste + Nicht-verfolgen-Liste vorhanden; Top-Down-Target bottom-up gegengerechnet (ja/nein) — bis 30.09.2026",
+  "grounding": "projekt.yaml WS6-02; RUBICON-Doc §4 WS6-D1 + Priorisierung A/B/C + «Bewusst nicht verfolgt»; WS-Paket WS6 Phase 0"
+ },
+ {
+  "id": "WS6-03",
+  "kontext": "Damit der KI-Einsatz in der Gruppe gesteuert statt wildwüchsig erfolgt, braucht WS6 einen verbindlichen Zonen-Rahmen (D8). Die No-/High-AI-Zones definieren, wo KI erste Wahl ist, wo sie ausgeschlossen bleibt und wo sie nur mit Human-in-the-Loop und Mitbestimmung zulässig ist — verankert in der AI-Governance TRAK-2026-0010.",
+  "leistung": [
+   "Zonen-Katalog mit drei Klassen: High-AI-Zone (Admin/Support, Finance-Automation, Reporting, Action-Item-Tracking, Inquiry Manager, Ops-Analytics), No-AI-Zone (sicherheitskritische Ops-Freigaben, arbeitsrechtlich sensible Personalentscheide, Vertrags-/Haftungsentscheide ohne Human-in-the-Loop), Guarded-Zone (leistungs-/verhaltensbezogene MA-Daten nach §87 BetrVG/§96 ArbVG, Kundenkommunikation)",
+   "ExBoD-Beschluss über den Zonen-Katalog",
+   "Verankerung in TRAK-2026-0010 (eine Governance, kein neues Gremium)"
+  ],
+  "vorgehen": [
+   "Zonen-Katalog auf Basis der drei Klassen High/No/Guarded ausarbeiten",
+   "Rechts-/Mitbestimmungs-Sicht einholen (Guarded-Zone berührt §87 BetrVG / §96 ArbVG — Loop Charisius)",
+   "ExBoD-Beschluss herbeiführen",
+   "Katalog in TRAK-2026-0010 ablegen und als verbindlichen Rahmen für Zielsystem-Entscheide (WS6-05) kommunizieren"
+  ],
+  "beteiligte": "Owner: Petric (Delivery-Lead WS6); Mitwirkende: DRS (Chairman of AI, Sponsor), CGO (operativer Sponsor), Charisius (Mitbestimmungs-/Rechts-Sicht Guarded-Zone)",
+  "risiken": [
+   "Guarded-Zone berührt Mitbestimmung (DE §87 BetrVG / AT §96 ArbVG) — ohne saubere Abgrenzung drohen Blockaden bei HR-Bot und Action-Item-Tracking",
+   "Verzögerter Beschluss blockiert nachgelagerte Zielsystem-Entscheide mit KI-Ersatz-Brille (WS6-05)"
+  ],
+  "erfolgsmessung": "Zonen-Katalog (High/No/Guarded) ExBoD-beschlossen und in TRAK-2026-0010 abgelegt (ja/nein) — bis 31.10.2026 (Termin = Annahme laut projekt.yaml)",
+  "grounding": "projekt.yaml WS6-03; RUBICON-Doc §4 WS6-D8 + Tabelle No-/High-AI-Zones; WS-Paket WS6 Phase 0 + Spielregeln"
+ },
+ {
+  "id": "WS6-04",
+  "kontext": "Die Data Foundation blockiert 6 der 8 AI@AXS-Initiativen — ohne kanonische Identifier und eine Single Source of Truth für Finance/HR ist keine AI-Skalierung zulässig (Sequenz-Gate G3). Zusätzlich hängt das Datenfundament am Ein-Mann-IT-Risiko Didit/Suchomski, das über die WS1-Schnittstelle (IT-/Didit-Zielorganisation) grundlegend adressiert wird.",
+  "leistung": [
+   "Kanonische Identifier + SSOT Finance/HR produktiv (Data-Foundation-Gate G3 erfüllt)",
+   "GL-CoS-Agenten 8/8 produktiv",
+   "Bus-Faktor Didit/Suchomski entschärft: Stellvertretung + Dokumentation, externer Backup-Partner"
+  ],
+  "vorgehen": [
+   "Kanonische Identifier und Ontologie (Data Foundation Layer 2) aufbauen; Finance-Identifier zuerst live",
+   "SSOT Finance/HR produktiv setzen",
+   "Didit-Stellvertretung + Doku verpflichtend bis M2 etablieren; externen Backup-Partner anbinden",
+   "Kopplung an WS1-Deliverable «IT-/Didit-Zielorganisation bereinigen» (D7) sicherstellen — geteilte, nicht doppelte Baustelle",
+   "G3-Status laufend in den Gruppen-Commitment-Tracker melden (CEO-Office)"
+  ],
+  "beteiligte": "Owner: Petric (Delivery-Lead WS6); Mitwirkende: Didit/Suchomski (IT), Rohde (Finance-Daten), Charisius (HR-Daten), AFR (WS1-Kopplung IT-/Didit-Zielorganisation)",
+  "risiken": [
+   "Bus-Faktor Didit/Suchomski (Ein-Mann-IT) blockiert Data Foundation und AI-Hosting (Vertex) — Stellvertretung bis M2 ist Pflicht",
+   "G3-Verletzung: ohne Datenfundament darf keine Initiative ausgerollt werden — Verzug kaskadiert auf 6/8 Initiativen",
+   "Owner-Klärung Didit/Suchomski (heute unter AI@AXS geführt) noch offen — zu klären über WS1-D7"
+  ],
+  "erfolgsmessung": "SSOT Finance/HR produktiv; Didit-Stellvertretung dokumentiert; GL-CoS-Agenten 8/8 produktiv (ja/nein) — bis 30.11.2026 (Gate G3)",
+  "grounding": "projekt.yaml WS6-04 (Gate G3); RUBICON-Doc §4 WS6-D2 + stromspezifische Risiken; WS-Paket WS6 Phase 1 + Spielregel G3"
+ },
+ {
+  "id": "WS6-05",
+  "kontext": "Aus der unvollendeten Fusion existieren zwei grosse Ops-System-Welten. Leitprinzip von D7: nicht blind auf ein Bestandssystem konsolidieren, wenn KI Teile in 12–18 Monaten ablöst — je Ops-Bereich ein expliziter Entscheid «konsolidieren vs. auf KI-Lösung überspringen». Die Systemlandkarte ist ein geteiltes WS1↔WS6-Artefakt; Entscheid ≠ Migration.",
+  "leistung": [
+   "Systemlandkarte komplett: Systeme, Vertragslaufzeiten/Kündigungsfristen, Verortung der 2 Ops-Welten",
+   "Dokumentierter Zielsystem-Entscheid mit KI-Ersatz-Brille für 100% der Ops-Bereiche",
+   "Kopplung an Data Foundation Layer 2 (Ontologie) und No-/High-AI-Zones (TRAK-2026-0010) nachgewiesen"
+  ],
+  "vorgehen": [
+   "Systemlandkarte erstellen (Matthei/Pajor) — inkl. Vertragslaufzeiten/Kündigungsfristen der Bestandssysteme (Phase-0-Datenlücke schliessen)",
+   "Je Ops-Bereich die Entscheid-Brille anwenden: konsolidieren auf Bestandssystem vs. auf KI-Lösung überspringen",
+   "Entscheide an Data Foundation Layer 2 und No-/High-AI-Zones koppeln (kein Entscheid gegen den Zonen-Rahmen)",
+   "Entscheide je Bereich dokumentieren und mit WS1 (IT-/Didit-Zielorganisation) abgleichen — ein geteiltes Artefakt, nicht zwei"
+  ],
+  "beteiligte": "Owner: Matthei (COO); Mitwirkende: Pajor (CFO-Stv, Systemlandkarte), Petric (KI-Ersatz-Brille, Data-Foundation-Kopplung), AFR (WS1-Schnittstelle IT/Didit)",
+  "risiken": [
+   "Zielsystem-Entscheid ohne Kenntnis der Vertragslaufzeiten/Kündigungsfristen = Sunk-Cost-/Fehlentscheid-Risiko (Datenlücke Phase 0, u.a. Beekeeper via IN-05)",
+   "Der KI-Ersatz-Entscheid ist nur so gut wie die kanonischen Identifier — Abhängigkeit von WS6-04 (D2)",
+   "«One World»-Erwartung: nur der Entscheid je Bereich ist bis zur Frist machbar, die Migration nicht — Erwartungsmanagement nötig"
+  ],
+  "erfolgsmessung": "100% der Ops-Bereiche mit dokumentiertem Zielsystem-Entscheid (Entscheid ≠ Migration) — bis 31.12.2026",
+  "grounding": "projekt.yaml WS6-05; RUBICON-Doc §4 WS6-D7 + Abschnitt «Zielsystem-Entscheid mit KI-Ersatz-Brille»; WS-Paket WS6 Phase 1; Input IN-05"
+ },
+ {
+  "id": "WS6-06",
+  "kontext": "Die Execution-Rate der Gruppe liegt bei höchstens ~50% — Root Cause ist primär fehlendes Tracking. Das Action-Item-Tracking (Document-Intelligence Modul 1, Prio A, vorgezogen aus Q1/27 als Vorschlag) liefert den automatisierten Feed in den WS2-Gruppen-Commitment-Tracker und ist damit direkter Hebel auf das Programmziel Execution ≥90%.",
+  "leistung": [
+   "Action-Item-Tracking MVP produktiv — Scope: nur Gremienebene, ohne MA-Personenbezug",
+   "Automatischer Feed der Action-Items in den Gruppen-Commitment-Tracker (WS2-Backbone)"
+  ],
+  "vorgehen": [
+   "Document-Intelligence Modul 1 als MVP vorziehen (Prio A, #6, 600k)",
+   "Scope strikt auf Gremienebene begrenzen; §87-BetrVG-Prüfung bei Transkription (Kopplung WS2-K10, Loop Charisius)",
+   "Integration in den Gruppen-Commitment-Tracker mit dem CEO-Office (Tracker-Betrieb) umsetzen",
+   "Pilotlauf und produktive Schaltung bis Nov 26 (M3)"
+  ],
+  "beteiligte": "Owner: Petric (Delivery-Lead WS6); Mitwirkende: CEO-Office (Tracker-Betrieb, Integration), AFR (WS2-Owner Gruppen-Tracker), Charisius (§87-Prüfung bei Transkription)",
+  "risiken": [
+   "DE §87 BetrVG: Transkription/Dokumenten-Auswertung ist Mitbestimmungs-Trigger — unterhalb Gremienebene keine Ausweitung ohne Betriebsvereinbarung",
+   "Abhängigkeit vom Go-Live des Gruppen-Commitment-Trackers (WS2, Okt 26) als Ziel-System des Feeds"
+  ],
+  "erfolgsmessung": "MVP produktiv; Action-Items fliessen in den Gruppen-Commitment-Tracker (ja/nein) — bis 30.11.2026",
+  "grounding": "projekt.yaml WS6-06; RUBICON-Doc §4 WS6-D3 + WS2-K10 (§87 bei Transkription); WS-Paket WS6 Phase 1"
+ },
+ {
+  "id": "WS6-07",
+  "kontext": "WS6 muss aus Top-Down-Targets CFO-testierte Einsparungen machen — nur vom CFO testierte Effekte zählen, ohne Doppelzählung mit WS3. AI-Ramp-Gate 1 ist der erste harte Nachweis (0 → ≥ EUR 1'000k Run-Rate Q4/26) und zugleich Stop-or-Go-Punkt je Initiative; parallel starten Knowledge-Mgmt und Procurement-Bot (Prio B).",
+  "leistung": [
+   "CFO-testierte Q4/26-Einsparungs-Run-Rate ≥ EUR 1'000k",
+   "Dokumentierter Stop-or-Go-Entscheid je Initiative am Gate",
+   "Knowledge-Mgmt (#8) + Procurement-Bot (#4) gestartet; Forecasting mit AAS+AHS-Daten (laut WS-Paket)"
+  ],
+  "vorgehen": [
+   "Einsparungs-Tracker mit gemeinsamer Einsparungs-Brücke zu WS3 führen — jeder Effekt genau einmal, nur CFO-Testat zählt",
+   "Effekte je Initiative bottom-up erheben und durch CFO Rohde testieren lassen",
+   "Gate-Review Dez 26: Stop-or-Go je Initiative durch AFR + CGO/CFO entscheiden und dokumentieren",
+   "Welle-B-Start Knowledge-Mgmt + Procurement-Bot auslösen (nur bei erfülltem Data-Foundation-Gate G3)"
+  ],
+  "beteiligte": "Owner: Rohde (CFO — Testat und Gate); Mitwirkende: Petric (Delivery), Wüst (Procurement-Bot), AFR + CGO (Stop-or-Go-Steuerung), DRS (Kontrolle via Chairman Cockpit)",
+  "risiken": [
+   "Doppelzählungs-Risiko mit WS3-Einsparungen — gemeinsame Brücke zwingend, sonst ist das Testat wertlos",
+   "Run-Rate < EUR 1'000k → Stop-or-Go greift; einzelne Initiativen werden gestoppt",
+   "Abhängigkeit von Data Foundation (G3, WS6-04): ohne Datenfundament keine skalierbaren Effekte"
+  ],
+  "erfolgsmessung": "CFO-testierte Run-Rate ≥ EUR 1'000k; Stop-or-Go je Initiative dokumentiert (ja/nein) — bis 31.12.2026",
+  "grounding": "projekt.yaml WS6-07; RUBICON-Doc §4 WS6-D6 + Metrik (0 → ≥1'000k Q4/26); WS-Paket WS6 Phase 1 + KPI P8"
+ },
+ {
+  "id": "WS6-08",
+  "kontext": "Knowledge-Mgmt (Initiative #8, Prio B, 300k) wird am AI-Ramp-Gate 1 gestartet und muss als Welle 1 produktiv gehen — ein Baustein des Entblockungs-Pfads von 2/8 auf 6/8 Initiativen bis M6 (Feb 27).",
+  "leistung": [
+   "Knowledge-Mgmt Welle 1 produktiv",
+   "Beitrag zum Entblockungs-Status im Standing-Traktandum Transformation ausgewiesen"
+  ],
+  "vorgehen": [
+   "Start per Ramp-Gate 1 (Dez 26, WS6-07) nach Stop-or-Go-Freigabe",
+   "Aufbau auf der Data Foundation (kanonische Identifier + SSOT, G3 aus WS6-04)",
+   "Welle 1 ausrollen und produktiv schalten bis Jan 27",
+   "Status im GL-Weekly (7-WS-Ampel) und Chairman Cockpit rapportieren"
+  ],
+  "beteiligte": "Owner: Petric (Delivery-Lead WS6); Mitwirkende: Rohde (CFO-Testat der Effekte), CEO-Office (Tracker-Reporting)",
+  "risiken": [
+   "Abhängigkeit vom Data-Foundation-Gate G3 (WS6-04) — kein Ausrollen ohne Datenfundament",
+   "Effekte zählen nur CFO-testiert in die Einsparungs-Brücke; sonst kein Beitrag zum Ramp-Pfad"
+  ],
+  "erfolgsmessung": "Knowledge-Mgmt Welle 1 produktiv (ja/nein) — bis 31.01.2027",
+  "grounding": "projekt.yaml WS6-08; RUBICON-Doc §4 WS6 Priorisierung B (#8 Knowledge-Mgmt 300k); WS-Paket WS6 Phase 2"
+ },
+ {
+  "id": "WS6-09",
+  "kontext": "Die Chairman-Automationen (u.a. Morning Scan, ExBoD-Prep, Dashboards — laut WS2) laufen heute auf dem DRS-Mac und bilden damit einen Single Point of Failure. Die Überführung in den GL-getragenen Vertex-Stack beseitigt den SPoF und ist zugleich Voraussetzung für die Chairman-Unabhängigkeit, die das MOS-Audit (WS2) prüft. Spiegel-Milestone: WS2-12 (gleicher Inhalt, gleiche Frist).",
+  "leistung": [
+   "Alle Chairman-Automationen im GL-getragenen Vertex-Betrieb produktiv",
+   "SPoF DRS-Mac nachweislich beseitigt (Betrieb unabhängig vom DRS-Mac)"
+  ],
+  "vorgehen": [
+   "Inventar der Chairman-Automationen erstellen (Morning Scan, ExBoD-Prep, Dashboards)",
+   "Portierung auf den Vertex-Stack (Konzern-AI-Hosting)",
+   "Betriebsverantwortung in die GL-Linie übergeben; Parallelbetrieb auf dem DRS-Mac beenden",
+   "Nachweis der Unabhängigkeit für das MOS-Audit (WS2) dokumentieren"
+  ],
+  "beteiligte": "Owner: Petric (Delivery-Lead WS6); Mitwirkende: AFR (WS2-Kopplung, MOS-Audit-Kriterium), CEO-Office (Betrieb), Didit (Hosting-Infrastruktur)",
+  "risiken": [
+   "Bus-Faktor Didit/Suchomski beim Vertex-Hosting — Abhängigkeit von der Entschärfung in WS6-04/WS1-D7",
+   "Nicht vollzogene Überführung gefährdet das Bestehen des MOS-Audits (Chairman-Unabhängigkeit, WS2-14)"
+  ],
+  "erfolgsmessung": "Automationen laufen auf dem Vertex-Stack, unabhängig vom DRS-Mac (ja/nein) — bis 28.02.2027",
+  "grounding": "projekt.yaml WS6-09 (Spiegel: WS2-12); RUBICON-Doc §4 WS2 Phase 2 (Vertex-Überführung); WS-Paket WS6 Phase 2 + Schnittstelle WS2"
+ },
+ {
+  "id": "WS6-10",
+  "kontext": "Der Monthly Report kommt heute verspätet (JAN erst 11.03., FEB erst 24.03.) und ohne Bilanz/Cashflow — ein Kernbefund der fehlenden Konzern-Wahrheit. D4 automatisiert das Reporting über die Finance-Automation (Initiative #2, Prio A, 1'500k) und weist parallel den Entblockungs-Fortschritt 6/8 der AI@AXS-Initiativen nach.",
+  "leistung": [
+   "P&L + Liquidität pünktlich bis zum 20. des Folgemonats — 3 Monate in Folge",
+   "Entblockungs-Fortschritt ≥6/8 AI@AXS-Initiativen bestätigt (von 2/8 heute)"
+  ],
+  "vorgehen": [
+   "Finance-Automation (#2) auf die WINGMAN-basierte Reporting-Pyramide aufsetzen (mit Rohde)",
+   "Monatliche Pünktlichkeits-Messung Report ≤ 20. etablieren und die Serie über 3 Monate nachweisen",
+   "Entblockungs-Status der Initiativen im Standing-Traktandum / Chairman Cockpit ausweisen",
+   "Ergebnisse in die gemeinsame Einsparungs-Brücke mit WS3 einspeisen (nur CFO-testiert)"
+  ],
+  "beteiligte": "Owner: Rohde (CFO); Mitwirkende: Petric (Delivery Reporting-Automatisierung), CEO-Office (Reporting-Kadenz)",
+  "risiken": [
+   "Datenqualität: ohne SSOT Finance (G3, WS6-04) keine belastbare Automatisierung",
+   "Serienbedingung «3 Monate in Folge» — ein einziger verspäteter Monat setzt den Zähler zurück",
+   "Entblockung 6/8 hängt an vorgelagerten Gates (G3, Ramp-Gate 1) — Verzug kaskadiert"
+  ],
+  "erfolgsmessung": "3 aufeinanderfolgende Monate Report ≤ 20. pünktlich UND ≥6/8 Initiativen entblockt (ja/nein) — bis 28.02.2027",
+  "grounding": "projekt.yaml WS6-10; RUBICON-Doc §4 WS6-D4 + Metrik (Entblockung 6/8 M6) + Diagnose B (Report verspätet); WS-Paket WS6 Phase 2"
+ },
+ {
+  "id": "WS6-11",
+  "kontext": "Phase-3-Zielnachweis des AI-Stroms: Die Bot-Welle (HR/Legal/Procurement) ist produktiv und die Data Foundation vollständig. Der HR-Bot (Initiative #3, 700k) darf in DE erst nach abgeschlossenem BetrVG-Prozess ausgerollt werden — Gate G4 (Rechts-/Mitbestimmungs-Vorbehalt, Owner Charisius) ist harte Vorbedingung.",
+  "leistung": [
+   "HR-Bot Welle 1 an ≥2 DE-Standorten produktiv — nach abgeschlossenem BetrVG-Prozess (G4)",
+   "Legal-Bot (#5) und Procurement-Bot (#4) produktiv",
+   "Data Foundation 8/8 im Chairman Cockpit ausgewiesen; AI@AXS-Initiativen 8/8 entblockt"
+  ],
+  "vorgehen": [
+   "BetrVG-Prozess für den HR-Bot mit Charisius (Gate G4) abschliessen — keine Umsetzung DE/AT vor Konsultation",
+   "HR-Bot Welle 1 an ≥2 DE-Standorten ausrollen",
+   "Legal- und Procurement-Bot produktiv schalten (Funktions-Owner Charisius bzw. Wüst)",
+   "Data-Foundation-Vollausbau 8/8 nachweisen und im Chairman Cockpit ausweisen",
+   "Einhaltung der No-/High-AI-Zones (Guarded-Zone bei MA-Daten) dokumentieren"
+  ],
+  "beteiligte": "Owner: Petric (Delivery-Lead WS6); Mitwirkende: Charisius (HR-/Legal-Bot, BetrVG-Prozess/G4), Wüst (Procurement-Bot), Rohde (CFO-Testat der Effekte), CGO (operativer Sponsor)",
+  "risiken": [
+   "BetrVG-/Mitbestimmungs-Verfahren verzögert die HR-Bot-Welle 1 (Gate G4) — ohne Abschluss kein DE-Rollout",
+   "No-/High-AI-Zones: HR-Bot berührt die Guarded-Zone (MA-Daten §87 BetrVG) — Human-in-the-Loop + Mitbestimmung zwingend",
+   "Data Foundation 8/8 hängt an der vollständigen Entblockungs-Kette (G3 → Ramp-Gate 1 → 6/8) — Verzug kaskadiert auf den Zielnachweis"
+  ],
+  "erfolgsmessung": "HR-Bot an ≥2 DE-Standorten produktiv (BetrVG abgeschlossen); Legal-Bot + Procurement-Bot produktiv; Data Foundation 8/8 (ja/nein) — bis 30.04.2027 (Gate G4)",
+  "grounding": "projekt.yaml WS6-11 (Gate G4); RUBICON-Doc §4 WS6-D5 + Priorisierung B; WS-Paket WS6 Phase 3 + Erfolgskriterien"
+ },
+ {
+  "id": "WS6-12",
+  "kontext": "Nachlauf ausserhalb der 8-Monats-Kernumsetzung: AI-Ramp-Gate 2 weist die Q2/27-Einsparungsstufe nach. Die Hard-Goal-Deadline (EUR 5'000k p.a. Q4/27) liegt ausserhalb des Programms — WS6 schuldet den belastbaren, CFO-gestützten Pfadnachweis, nicht die volle Zielerreichung.",
+  "leistung": [
+   "CFO-testierte AI-Einsparungen ≥ EUR 3'500k (Ramp-Gate 2, Q2/27)",
+   "Dokumentierter, CFO-gestützter Pfad zum Hard-Goal ≥ EUR 5'000k p.a. bis Q4/27"
+  ],
+  "vorgehen": [
+   "Einsparungs-Brücke mit WS3 konsolidieren — jeder Effekt genau einmal, nur CFO-Testat zählt",
+   "Gate-2-Review durchführen: Run-Rate je Initiative testieren, Stop-or-Go wo nötig",
+   "Pfad-Dokumentation ≥ EUR 5'000k Q4/27 erstellen und an GL/VR rapportieren (VR-Rhythmus, Pre-Read T−14)"
+  ],
+  "beteiligte": "Owner: Rohde (CFO — Testat Ramp-Gate 2); Mitwirkende: Petric (Delivery), AFR + CGO (Steuerung), DRS (Kontrolle via Chairman Cockpit + VR)",
+  "risiken": [
+   "Doppelzählung mit WS3-Einsparungen entwertet das Testat — gemeinsame Brücke bleibt zwingend",
+   "Kopplung an WS3-Nachlauf: die EBITDA-Run-Rate ≥12'372 (WS3-14) referenziert Gate 2 AI — Verfehlung in einem Strom belastet beide",
+   "Verfehlte Q2/27-Stufe → Stop-or-Go durch CFO; Pfad zum Hard-Goal Q4/27 müsste neu belegt werden"
+  ],
+  "erfolgsmessung": "CFO-testierte Einsparungen ≥ EUR 3'500k erreicht UND belastbarer, CFO-gestützter Pfad ≥ EUR 5'000k Q4/27 dokumentiert (ja/nein) — bis 30.06.2027 (Nachlauf)",
+  "grounding": "projekt.yaml WS6-12 (nachlauf: true) + WS3-14 (Gate 2 AI); RUBICON-Doc §4 WS6-D6 + Metrik; WS-Paket WS6 Nachlauf Q2/27"
+ },
+ {
+  "id": "WS2-15",
+  "kontext": "DRS-Ergänzung 13.07.2026: Vor dem Programmstart 01.09. prüft das Steuerungs-Trio (DRS/AFR/CGO) den gesamten RUBICON-Plan — alle 7 Workstreams, alle Phase-0-Milestones und die daraus abgeleiteten Handlungen (Tower-Tab «Aufgaben»). Ziel: der Plan, auf den sich anschliessend alle verpflichten, ist von der Spitze validiert.",
+  "leistung": [
+   "Je Trio-Mitglied: Gesamtplan analysiert und Freigabe erteilt ODER Anpassungsbedarf konkret erfasst (Milestone/Handlung, gewünschte Änderung)",
+   "Erfasste Anpassungen sind in projekt.yaml/tasks.json eingearbeitet"
+  ],
+  "vorgehen": [
+   "Jedes Trio-Mitglied geht Kontrollturm + Aufgaben-Tab durch (eigene Sicht via Owner-Filter)",
+   "Anpassungen direkt an CoS melden (Sitzung erfassen oder Zuruf) — Einarbeitung deterministisch über die bestehenden Write-Pfade",
+   "Freigabe = Abhaken der eigenen Handlung (Owner-Scoping: nur die Person selbst kann abhaken)"
+  ],
+  "beteiligte": "Owner: DRS (Steuerung); Trio: DRS, AFR (Vice Chairman), CGO Gökcöl; CoS arbeitet Anpassungen ein.",
+  "risiken": [
+   "Review bleibt liegen → Programmstart 01.09. ohne validierten Plan; Gegenmassnahme: Termin 19.08. hart vor WS2-16/17",
+   "Anpassungen mündlich statt erfasst → gehen verloren; Regel: nur über die Write-Pfade"
+  ],
+  "erfolgsmessung": "Binär per 19.08.2026: alle 3 Trio-Freigaben abgehakt, gemeldete Anpassungen eingearbeitet.",
+  "grounding": "DRS-Ergänzung Phase 0, 13.07.2026 (Session); Tower-Datenstand projekt.yaml/tasks.json."
+ },
+ {
+  "id": "WS2-16",
+  "kontext": "DRS-Ergänzung 13.07.2026: Nach der Trio-Freigabe (WS2-15) prüft jede verantwortliche Person ihren eigenen Wirkungsbereich — den eigenen Workstream bzw. die eigenen Milestones und Handlungen — und gibt frei oder meldet Anpassungen. Damit ist der Plan von denen validiert, die ihn liefern müssen.",
+  "leistung": [
+   "Je Verantwortlicher (alle 9): eigener Strom/eigene Milestones + Handlungen analysiert, Freigabe erteilt ODER Anpassungsbedarf erfasst",
+   "Anpassungen eingearbeitet"
+  ],
+  "vorgehen": [
+   "Einstieg über Tab «Aufgaben» (startet als Owner vorgefiltert) + eigene Milestones im Kontrollturm",
+   "Anpassungen an CoS melden → Einarbeitung über die Write-Pfade",
+   "Freigabe = Abhaken der eigenen Handlung"
+  ],
+  "beteiligte": "Owner: AFR (Vice Chairman treibt den Review); alle 9 Verantwortlichen: Fritthum, Gökcöl, Matthei, Rohde, Pajor, Haeffner, Charisius, Petric, Streuli.",
+  "risiken": [
+   "Einzelne Owner geben nicht frei → Commitment (WS2-17) verzögert sich; Eskalation über AFR/CGO",
+   "Owner passen still an statt zu melden → Plan-Drift; Regel: Änderungen nur über CoS/Write-Pfade"
+  ],
+  "erfolgsmessung": "Binär per 28.08.2026: alle 9 Owner-Freigaben abgehakt, Anpassungen eingearbeitet.",
+  "grounding": "DRS-Ergänzung Phase 0, 13.07.2026 (Session); abhängig von WS2-15."
+ },
+ {
+  "id": "WS2-17",
+  "kontext": "DRS-Ergänzung 13.07.2026: Nach Trio- und Owner-Freigabe verpflichten sich alle Verantwortlichen formell auf den RUBICON-Plan (Read & Sign). Das Abhaken der eigenen Handlung im Tower IST die Unterschrift — durch das Owner-Scoping kann sie nur die Person selbst (oder CoS) setzen; Zeitstempel wird persistiert.",
+  "leistung": [
+   "Je Verantwortlicher (alle 9): Read & Sign dokumentiert — «Plan gelesen, verpflichte mich zur Einhaltung»"
+  ],
+  "vorgehen": [
+   "Voraussetzung: WS2-15 und WS2-16 abgeschlossen (Plan final)",
+   "Jede Person hakt ihre Read-&-Sign-Handlung selbst ab (digitale Unterschrift mit erledigt_am-Stempel)",
+   "Ab Vollzug gilt der Plan als verbindlich; Abweichungen laufen über die Entscheids-/Blocker-Pfade, nicht formlos"
+  ],
+  "beteiligte": "Owner: DRS (Chairman nimmt die Commitments entgegen); alle 9 Verantwortlichen.",
+  "risiken": [
+   "Sign ohne echtes Read → Schein-Commitment; Gegenmassnahme: WS2-16 erzwingt vorher die inhaltliche Analyse je Owner",
+   "Einzelne verweigern → offen eskalieren statt still starten (Chairman-Gespräch)"
+  ],
+  "erfolgsmessung": "Binär per 28.08.2026: 9/9 Read-&-Sign-Handlungen abgehakt.",
+  "grounding": "DRS-Ergänzung Phase 0, 13.07.2026 (Session); abhängig von WS2-15 + WS2-16."
+ }
+]

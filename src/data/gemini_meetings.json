@@ -1,0 +1,7 @@
+{
+  "_comment": "meeting_id → Suchbegriffe, um die Gemini-«Notizen von Gemini»-Google-Doc im Drive zu finden. Der Doc-Titel = der Google-Calendar-Event-Titel (NICHT die RUBICON-meeting_id), darum diese explizite Brücke. match = alle Begriffe müssen (case-insensitive) im Doc-Titel vorkommen. Nach dem ersten Gemini-Erfassen eines Meetings hier ergänzen (Titel via `import_gemini_doc.py --list` ablesen).",
+  "gl-weekly": {
+    "label": "Wöchentlicher Austausch Dieter / Andreas / Cüneyt",
+    "match": ["Austausch", "Andreas", "Cüneyt"]
+  }
+}

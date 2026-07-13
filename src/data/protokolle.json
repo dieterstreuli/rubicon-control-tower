@@ -1,0 +1,81 @@
+{
+  "protokolle": [
+    {
+      "id": "P-2026-07-13-gl-weekly-1",
+      "meeting_id": "gl-weekly",
+      "meeting_name": "wöchentlicher Austausch Dieter / Andreas / Cüneyt",
+      "datum": "2026-07-13",
+      "vorsitz": "Dieter Streuli",
+      "erfasst_von": "Gemini (Google Meet) → import_gemini_doc.py",
+      "source": "gemini",
+      "gemini_doc_id": "1G6xL7Uyypt3MNI-oIGhik4vddLr7lwZohvfL2RtRKS0",
+      "gemini_doc_url": "https://docs.google.com/document/d/1G6xL7Uyypt3MNI-oIGhik4vddLr7lwZohvfL2RtRKS0/edit",
+      "eintraege": [
+        {
+          "typ": "notiz",
+          "text": "Zusammenfassung (Gemini): Das Treffen behandelte operative Herausforderungen sowie Finanzplanung und strategische Prozesssteuerung für eine verbesserte Unternehmenseffizienz. Operative und finanzielle Lage Die finanzielle Situation stabilisiert sich durch erfolgreiche Gehaltsabrechnungen und 1 freigegebene Zahlung an Sozialversicherungsträger. Trotz operativer Schwierigkeiten bei Partnern bleibt der Fokus auf der Sicherung der Betriebsstabilität. Eurowings und strategische Ausrichtung Die Zusammenarbeit erfordert klarere Prozesssteuerung und Verantwortungsdefinition, um operative Engpässe zu überwinden. Das Unternehmen konzentriert sich nun verstärkt auf eine profitable Abbildung der Dienstleistungen und effiziente Personalverwaltung. Rechtsfall und digitale Transformation Ein Versäumnisurteil wurde durch bestehende Zahlungspläne abgefedert. Es wurde beschlossen, eine neue digitale Plattform zur zentralen Steuerung der Transformationsagenda und operativer Prozesse einzuführen."
+        },
+        {
+          "typ": "commitment",
+          "text": "Lizenzbesprechung terminieren: Kontaktieren Sie Bruno und Bisser Ende Juli bezüglich des Lizenzstatus. Klären Sie dabei die weiteren Schritte zur Sicherung der Lizenz.",
+          "owner": "Andreas Fritthum",
+          "bis": null
+        },
+        {
+          "typ": "commitment",
+          "text": "Entscheidungsprozess definieren: Erarbeiten Sie einen klaren Prozess zur Entscheidungsfindung. Implementieren Sie klare Vorgaben zur Steuerung und Klarheit.",
+          "owner": "Die Gruppe",
+          "bis": null
+        },
+        {
+          "typ": "commitment",
+          "text": "Key Account Manager bestimmen: Bestimmen Sie einen Key Account Manager für Eurowings. Kommunizieren Sie diese Entscheidung erst nach einer finalen Zusage.",
+          "owner": "Die Gruppe",
+          "bis": null
+        },
+        {
+          "typ": "commitment",
+          "text": "Commercial-Prozessbesprechung Zürich: Besprechen Sie den neuen Prozess während des Treffens in Zürich in der ersten Augustwoche. Bauen Sie die neuen Konzepte entsprechend ein.",
+          "owner": "Michael Haeffner · Cüneyt Gökcöl",
+          "bis": null
+        },
+        {
+          "typ": "commitment",
+          "text": "Kontakt Aeropoint: Kontaktiere Aeropoint am Mittwoch bezüglich des aktuellen Status.",
+          "owner": "Andreas Fritthum",
+          "bis": null
+        },
+        {
+          "typ": "commitment",
+          "text": "Aufgabenplattform prüfen: Überprüfe die Aufgabenplattform heute Abend zur Vorbereitung auf das morgige Meeting.",
+          "owner": "Andreas Fritthum",
+          "bis": null
+        },
+        {
+          "typ": "commitment",
+          "text": "Aufgaben- und Steuerungstermin: Besprecht morgen die Aufgabenverteilung, Zieldaten und Steuerungsmechanismen.",
+          "owner": "The group",
+          "bis": null
+        },
+        {
+          "typ": "commitment",
+          "text": "Tailscale Registrierung: Registriere dich heute Abend für den Dienst Tailscale.",
+          "owner": "Andreas Fritthum",
+          "bis": null
+        },
+        {
+          "typ": "commitment",
+          "text": "Filterfunktion implementieren: Füge der Aufgabenplattform eine Filterfunktion hinzu, um Aufgabenlisten besser nach Personen verwalten zu können.",
+          "owner": "Dieter Streuli",
+          "bis": null
+        }
+      ],
+      "export": {
+        "pdf": "/protokolle/P-2026-07-13-gl-weekly-1.pdf",
+        "doc_id": "1_RFeRx3f5KMy2mnnDoxNCxaEkTLSL6ZGpRsPhBulz7E",
+        "doc_url": "https://docs.google.com/document/d/1_RFeRx3f5KMy2mnnDoxNCxaEkTLSL6ZGpRsPhBulz7E/edit",
+        "stand": "13.07.2026 11:05"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1665 @@
+// App.jsx — RUBICON Control Tower. Liest AUSSCHLIESSLICH aus dem Loader
+// (einzige Wahrheitsquelle projekt.yaml). Session-Eingaben (Aktions-Log,
+// gemeldeter Fortschritt, Input-Status, Reminder) sind flüchtige Overlays und
+// klar als «Session — nicht persistiert» markiert; sie duplizieren keinen Zustand.
+import React, { useEffect, useMemo, useState } from 'react'
+import {
+  Radar, Layers, ListChecks, Inbox, ShieldCheck, Diamond, AlertTriangle,
+  Clock, Send, CalendarClock, Siren, CheckCircle2, Filter, Lock, FileText, X, Compass,
+  ClipboardList, FilePlus, Plus, Trash2, Save, Sun, Moon, BarChart3, Circle,
+} from 'lucide-react'
+import { T, STATUS_META, ROLES, applyTheme, initialTheme } from './lib/theme.js'
+import { loadProject } from './lib/loader.js'
+import BRIEFINGS from './data/briefings.json'
+import FR from './data/fuehrungsrhythmus.json'
+import TRAKT_DOCS from './data/traktanden_docs.json'
+import PROTO from './data/protokolle.json'
+import AGENDAS from './data/traktanden.json'
+import REPORTS from './data/reports_index.json'
+import TASKS from './data/tasks.json'
+import {
+  statusOf, slipDays, projectedEnd, counts, overallStatus, allMilestones,
+  parseDate, fmtDate, daysBetween, hardEdgeBreaches,
+} from './lib/status.js'
+
+const { data: BASE, issues: ISSUES } = loadProject()
+const NOW = parseDate(BASE.meta.today)
+
+// ---------- Handlungen (Tasks, «treibend» 13.07.) ----------
+// tasks.json = aus Milestones abgeleitete, binär abhakbare Handlungen. Bei
+// progress_source:'tasks' wird der Milestone-Fortschritt daraus VERDIENT
+// (Roll-up serverseitig in rubicon-api.js — hier nur Anzeige + Abhak-Aktion).
+// Überfällig ist ABGELEITET: due < meta.today UND offen (nie manuell gesetzt).
+const ALL_TASKS = TASKS.tasks || []
+// Milestone-Metadaten für die Aufgabenliste (Phase/WS/Fälligkeit je ms_id)
+const MS_META = Object.fromEntries(BASE.workstreams.flatMap(w =>
+  (w.milestones || []).map(m => [m.id, { ws: w.code, phase: m.phase, name: m.name, due: m.due }])))
+const tasksFor = (msId) => ALL_TASKS.filter(t => t.ms_id === msId)
+const tnr = (t) => 'T-' + String(t.nr || 0).padStart(3, '0')   // kurze Referenz-Nummer (dauerhaft, nie neu vergeben)
+const taskOverdue = (t) => t.status === 'offen' && !!t.due && !!NOW && parseDate(t.due) < NOW
+const TASK_STATS = {
+  total: ALL_TASKS.length,
+  offen: ALL_TASKS.filter(t => t.status === 'offen').length,
+  erledigt: ALL_TASKS.filter(t => t.status === 'erledigt').length,
+  ueberfaellig: ALL_TASKS.filter(taskOverdue).length,
+}
+
+// ---------- kleine Bausteine ----------
+const Pill = ({ st }) => {
+  const m = STATUS_META[st] || STATUS_META.unknown
+  return (
+    <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold whitespace-nowrap"
+      style={{ background: m.color + '22', color: m.color, border: `1px solid ${m.color}55`, fontFamily: T.mono }}>
+      {m.label}
+    </span>
+  )
+}
+
+const Bar = ({ v }) => (
+  <div className="w-full h-2 rounded" style={{ background: T.line }}>
+    {typeof v === 'number'
+      ? <div className="h-2 rounded" style={{ width: Math.min(100, v) + '%', background: v >= 100 ? T.blue : T.green }} />
+      : <div className="h-2 rounded w-full flex items-center justify-center text-[9px]" style={{ color: T.grey }}>·· unbekannt ··</div>}
+  </div>
+)
+
+const Kpi = ({ label, value, color, sub }) => (
+  <div className="rounded-xl p-4 border" style={{ background: T.panel, borderColor: T.line }}>
+    <div className="text-[11px] uppercase tracking-wider" style={{ color: T.inkDim }}>{label}</div>
+    <div className="text-3xl font-bold mt-1" style={{ color, fontFamily: T.mono }}>{value}</div>
+    {sub && <div className="text-[11px] mt-1" style={{ color: T.inkFaint }}>{sub}</div>}
+  </div>
+)
+
+// Phasen — kanonische Reihenfolge, Farbe (analog Intro) und Kurzlabel.
+const PHASE_ORDER = ['Phase 0', 'Phase 1', 'Phase 2', 'Phase 3', 'Nachlauf Q2/27']
+const phaseColor = (p) => {
+  if (!p) return T.grey
+  if (p.startsWith('Masterplan')) return T.inkFaint
+  return { 'Phase 0': T.brass, 'Phase 1': T.green, 'Phase 2': T.blue, 'Phase 3': T.brass, 'Nachlauf Q2/27': T.red }[p] || T.inkDim
+}
+const phaseShort = (p) => !p ? '—' : p.startsWith('Masterplan') ? p.replace('Masterplan · ', 'MP · ') : p
+const FR_COL = { grey: '#64748b', green: '#34d399', blue: '#60a5fa', brass: '#d4a95c' }
+const PhaseTag = ({ p }) => (
+  <span className="px-1.5 py-0.5 rounded text-[10px] whitespace-nowrap"
+    style={{ color: phaseColor(p), background: phaseColor(p) + '1e', border: `1px solid ${phaseColor(p)}44`, fontFamily: T.mono }}>
+    {phaseShort(p)}
+  </span>
+)
+
+// ---------- App ----------
+export default function App() {
+  const [role, setRole] = useState('CoS')
+  const [me, setMe] = useState('Andreas Fritthum') // aktive Identität in Rolle «Owner» (volle Namen, 13.07.)
+  const [theme, setTheme] = useState(() => { const m = initialTheme(); applyTheme(m); return m })
+  const toggleTheme = () => { const next = theme === 'dark' ? 'light' : 'dark'; applyTheme(next); setTheme(next) }
+  const [tab, setTab] = useState(() => sessionStorage.getItem('rubicon_tab') || 'intro')
+  // Bestätigung nach Speichern (überlebt den HMR-Reload via sessionStorage)
+  const [savedInfo] = useState(() => {
+    const s = sessionStorage.getItem('rubicon_saved')
+    if (s) { sessionStorage.removeItem('rubicon_saved'); sessionStorage.removeItem('rubicon_tab'); try { return JSON.parse(s) } catch { return null } }
+    return null
+  })
+  const [wsFilter, setWsFilter] = useState('alle')
+  const [phaseFilter, setPhaseFilter] = useState('alle')
+  const [ownerFilter, setOwnerFilter] = useState('alle')
+  const [clock, setClock] = useState(new Date())
+  const [showIntegrity, setShowIntegrity] = useState(false)
+
+  // Session-Overlays (flüchtig, nicht persistiert — Wahrheit bleibt projekt.yaml)
+  const [overlay, setOverlay] = useState({})       // id -> {progress?, slip?}
+  const [inputState, setInputState] = useState({}) // id -> {status?, last_reminder?}
+  const [actions, setActions] = useState([])       // Aktions-Log
+  const [autoLog, setAutoLog] = useState([])       // CoS-Automations-Log (simuliert)
+  const [selMs, setSelMs] = useState(null)         // Milestone-Detail-Modal
+
+  useEffect(() => {
+    const onKey = e => { if (e.key === 'Escape') setSelMs(null) }
+    window.addEventListener('keydown', onKey); return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
+  // Tab überlebt den Reload (HMR nach Daten-Writes) — konsistent mit Erfassen/Export.
+  useEffect(() => { sessionStorage.setItem('rubicon_tab', tab) }, [tab])
+  // Nach Task-Abhaken (Reload) das Milestone-Modal wieder öffnen — nahtloses Weiterarbeiten.
+  useEffect(() => {
+    const id = sessionStorage.getItem('rubicon_selms')
+    if (id) {
+      sessionStorage.removeItem('rubicon_selms')
+      const found = ms.find(x => x.id === id)
+      if (found) setSelMs(found)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => { const t = setInterval(() => setClock(new Date()), 1000); return () => clearInterval(t) }, [])
+
+  // effektive Daten = YAML + Session-Overlay
+  const data = useMemo(() => ({
+    ...BASE,
+    workstreams: BASE.workstreams.map(ws => ({
+      ...ws,
+      milestones: ws.milestones.map(m => {
+        const o = overlay[m.id]
+        return o ? { ...m, progress: o.progress ?? m.progress, reported_slip_days: o.slip ?? m.reported_slip_days } : m
+      }),
+    })),
+    inputs: BASE.inputs.map(i => ({ ...i, ...(inputState[i.id] || {}) })),
+  }), [overlay, inputState])
+
+  const ms = useMemo(() => allMilestones(data), [data])
+  const cnt = useMemo(() => counts(data), [data])
+  const proj = useMemo(() => projectedEnd(data), [data])
+  const overall = useMemo(() => overallStatus(data), [data])
+  const breaches = useMemo(() => hardEdgeBreaches(data), [data])
+  const canEdit = role === 'CoS' || role === 'Owner'
+  const canEditMs = (m) => role === 'CoS' || (role === 'Owner' && (m.owner === me || m._wsOwner === me))
+  const nErr = ISSUES.filter(i => i.level === 'FEHLER').length
+  const nGap = ISSUES.filter(i => i.level === 'LÜCKE').length
+
+  // Aktion erfassen: Wirkung deterministisch vorher/nachher berechnen + loggen
+  function recordAction(mId, kind, value) {
+    const before = { st: statusOf(ms.find(x => x.id === mId), NOW), end: proj.projected }
+    const next = { ...overlay, [mId]: { ...(overlay[mId] || {}) } }
+    if (kind === 'progress') next[mId].progress = value
+    else next[mId].slip = value
+    // Wirkung auf Basis der neuen Overlays berechnen
+    const dataAfter = {
+      ...BASE,
+      workstreams: BASE.workstreams.map(ws => ({
+        ...ws,
+        milestones: ws.milestones.map(m => {
+          const o = next[m.id]
+          return o ? { ...m, progress: o.progress ?? m.progress, reported_slip_days: o.slip ?? m.reported_slip_days } : m
+        }),
+      })),
+    }
+    const mAfter = allMilestones(dataAfter).find(x => x.id === mId)
+    const after = { st: statusOf(mAfter, NOW), end: projectedEnd(dataAfter).projected }
+    setOverlay(next)
+    const endShift = before.end && after.end ? daysBetween(before.end, after.end) : 0
+    setActions(a => [{
+      ts: new Date(), who: role === 'Owner' ? me : role, mId,
+      what: kind === 'progress' ? `Fortschritt gemeldet: ${value}%` : `Blocker gemeldet: +${value} Tage Verzug`,
+      effect: `Status ${STATUS_META[before.st].label} → ${STATUS_META[after.st].label}` +
+              (endShift !== 0 ? ` · Projektende ${endShift > 0 ? '+' : ''}${endShift} Tage` : ' · Projektende unverändert'),
+    }, ...a])
+  }
+
+  function remind(input, kind) {
+    const stamp = fmtDate(BASE.meta.today) + ' ' + clock.toTimeString().slice(0, 5)
+    setInputState(s => ({ ...s, [input.id]: { ...(s[input.id] || {}), last_reminder: stamp } }))
+    setAutoLog(l => [{
+      ts: new Date(),
+      msg: `[SIMULIERT] ${kind} an ${input.owner} — «${input.item}» (fällig ${fmtDate(input.due)})`,
+    }, ...l])
+  }
+
+  const tabs = [
+    { id: 'intro', label: 'Intro', icon: Compass },
+    { id: 'tower', label: 'Kontrollturm', icon: Radar },
+    { id: 'aufgaben', label: 'Aufgaben', icon: CheckCircle2 },
+    { id: 'streams', label: 'Arbeitsströme', icon: Layers },
+    ...(canEdit ? [{ id: 'erfassen', label: 'Sitzung erfassen', icon: FilePlus }] : []),
+    { id: 'protokolle', label: 'Protokolle', icon: ClipboardList },
+    { id: 'reports', label: 'Reports', icon: BarChart3 },
+    { id: 'log', label: 'Aktions-Log', icon: ListChecks },
+    { id: 'inputs', label: 'Input-Pflichten', icon: Inbox },
+    ...(role === 'CoS' ? [{ id: 'cos', label: 'CoS-Steuerung', icon: ShieldCheck }] : []),
+  ]
+
+  const rubPhases = PHASE_ORDER.filter(ph => ms.some(m => m.phase === ph))
+  const mpPhases = [...new Set(ms.filter(m => (m.phase || '').startsWith('Masterplan')).map(m => m.phase))].sort()
+  const matchPhase = (m) => phaseFilter === 'alle'
+    || (phaseFilter === 'MP-ALL' ? (m.phase || '').startsWith('Masterplan') : m.phase === phaseFilter)
+  const owners = [...new Set(ms.map(m => m.owner).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'de'))
+  const filtered = ms.filter(m => (wsFilter === 'alle' || m._ws === wsFilter) && matchPhase(m)
+    && (ownerFilter === 'alle' || m.owner === ownerFilter))
+  const sorted = [...filtered].sort((a, b) => (a.due || '9999') < (b.due || '9999') ? -1 : 1)
+
+  // Erfüllungsgrad je Phase (erledigt = progress ≥ 100). Deckt alle 131 MS ab:
+  // 5 RUBICON-Phasen + Commercial-Masterplan (aggregiert alle «Masterplan · …»).
+  const PHASE_TILES = [
+    ...PHASE_ORDER.map(ph => ({ key: ph, label: ph, match: m => m.phase === ph })),
+  ].map(p => {
+    const list = ms.filter(p.match)
+    const done = list.filter(m => typeof m.progress === 'number' && m.progress >= 100).length
+    return { key: p.key, label: p.label, total: list.length, done, pct: list.length ? Math.round(done / list.length * 100) : 0 }
+  }).filter(p => p.total > 0)
+  const alarms = ms.filter(m => ['delayed', 'atRisk'].includes(statusOf(m, NOW)))
+    .sort((a, b) => slipDays(b, NOW) - slipDays(a, NOW))
+  const overdueInputs = data.inputs.filter(i => i.status === 'offen' && parseDate(i.due) && daysBetween(parseDate(i.due), NOW) > 0)
+
+  return (
+    <div className="min-h-screen" style={{ background: T.bg, color: T.ink, fontFamily: T.sans }}>
+      {/* ── Header ── */}
+      <header className="border-b px-4 md:px-6 py-3" style={{ borderColor: T.line, background: T.panel }}>
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          <div>
+            <div className="text-lg font-bold tracking-wide" style={{ fontFamily: T.mono }}>
+              RUBICON <span style={{ color: T.brass }}>CONTROL TOWER</span>
+            </div>
+            <div className="text-[11px] italic" style={{ color: T.inkFaint }}>« Alea iacta est. » · {BASE.meta.projekt}</div>
+          </div>
+          <div className="flex items-center gap-2 text-[12px]" style={{ fontFamily: T.mono, color: T.inkDim }}>
+            <Clock size={14} /> Steuerungsdatum <b style={{ color: T.ink }}>{fmtDate(BASE.meta.today)}</b>
+            <span style={{ color: T.inkFaint }}>· Uhr {clock.toLocaleTimeString('de-CH')}</span>
+          </div>
+          <div className="flex items-center gap-2 text-[12px]">
+            <span style={{ color: T.inkDim }}>Gesamtstatus</span> <Pill st={overall} />
+          </div>
+          <div className="text-[12px]" style={{ fontFamily: T.mono }}>
+            <span style={{ color: T.inkDim }}>Kern-Ende </span>
+            <b>{fmtDate(proj.base)}</b>
+            {proj.slip > 0 && <b style={{ color: T.red }}> → {fmtDate(proj.projected)} (+{proj.slip} T)</b>}
+            {proj.slip === 0 && <span style={{ color: T.green }}> · auf Basislinie</span>}
+            <span style={{ color: breaches.length ? T.red : T.brass }}> · HARD EDGE {fmtDate(BASE.meta.hard_edge)}{breaches.length ? ` — ${breaches.length} VERLETZUNG(EN)!` : ' ✓'}</span>
+          </div>
+          <div className="ml-auto flex items-center gap-2">
+            <button onClick={toggleTheme} aria-label="Hell/Dunkel umschalten" title={theme === 'dark' ? 'Hell-Modus' : 'Dunkel-Modus'}
+              className="p-1.5 rounded border" style={{ borderColor: T.line, color: T.brass }}>
+              {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+            </button>
+            <button onClick={() => setShowIntegrity(v => !v)}
+              className="text-[11px] px-2 py-1 rounded border"
+              style={{ borderColor: nErr ? T.red : T.line, color: nErr ? T.red : T.inkDim, fontFamily: T.mono }}>
+              Integrität: {nErr} Fehler · {nGap} Lücken
+            </button>
+            <select value={role} onChange={e => setRole(e.target.value)}
+              className="text-[12px] rounded px-2 py-1 border bg-transparent"
+              style={{ borderColor: T.line, color: T.ink, background: T.panelSoft }}>
+              {ROLES.map(r => <option key={r} value={r} style={{ color: '#111' }}>Rolle: {r}</option>)}
+            </select>
+            {role === 'Owner' && (
+              <select value={me} onChange={e => setMe(e.target.value)}
+                className="text-[12px] rounded px-2 py-1 border bg-transparent"
+                style={{ borderColor: T.line, color: T.ink, background: T.panelSoft }}>
+                {(BASE.meta.owners || []).map(o => <option key={o} value={o} style={{ color: '#111' }}>{o}</option>)}
+              </select>
+            )}
+          </div>
+        </div>
+        {showIntegrity && (
+          <div className="mt-2 max-h-40 overflow-auto rounded border p-2 text-[11px]"
+            style={{ borderColor: T.line, background: T.bg, fontFamily: T.mono, color: T.inkDim }}>
+            {ISSUES.length === 0 ? 'Keine Befunde.' : ISSUES.map((i, k) => (
+              <div key={k} style={{ color: i.level === 'FEHLER' ? T.red : i.level === 'WARNUNG' ? T.amber : T.grey }}>
+                [{i.level}] {i.where}: {i.msg}
+              </div>
+            ))}
+          </div>
+        )}
+        <nav className="flex gap-1 mt-3 overflow-x-auto">
+          {tabs.map(t => (
+            <button key={t.id} onClick={() => setTab(t.id)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-t text-[13px] whitespace-nowrap"
+              style={tab === t.id
+                ? { background: T.bg, color: T.brass, borderBottom: `2px solid ${T.brass}` }
+                : { color: T.inkDim }}>
+              <t.icon size={14} /> {t.label}
+            </button>
+          ))}
+        </nav>
+      </header>
+
+      {/* Rollen-Kontextband — macht den Rollenwechsel sofort sichtbar (welche
+          Perspektive aktiv ist + was sie darf). */}
+      {(() => {
+        const info = {
+          CoS: { c: T.brass, t: 'CoS — Projektleitung', d: 'Volle Steuerung: Fortschritt/Blocker erfassen, Inputs abhaken, Durchsetzungs-Queue (Reminder/Kalender/Eskalation).' },
+          Chairman: { c: T.blue, t: 'Chairman (DRS) — steuert & kontrolliert', d: 'Nur-Lesen-Aufsicht über alle 7 Ströme. Steuerung erfolgt über Cockpit + VR, nicht durch Editieren im Tool.' },
+          Owner: { c: T.green, t: `Owner — ${me}`, d: 'Editierbar sind nur die eigenen Meilensteine; die übrigen Ströme sind sichtbar (Nur-Lesen).' },
+          Teilnehmer: { c: T.grey, t: 'Teilnehmer', d: 'Nur-Lesen-Ansicht des gesamten Programms.' },
+        }[role]
+        return (
+          <div className="px-4 md:px-6 py-1.5 flex items-center gap-2 text-[11.5px] border-b"
+            style={{ background: info.c + '14', borderColor: info.c + '44', color: T.ink }}>
+            {role === 'CoS' ? <ShieldCheck size={13} style={{ color: info.c }} />
+              : role === 'Owner' ? <ListChecks size={13} style={{ color: info.c }} />
+              : <Lock size={13} style={{ color: info.c }} />}
+            <b style={{ color: info.c }}>Aktive Rolle: {info.t}</b>
+            <span style={{ color: T.inkDim }}>· {info.d}</span>
+          </div>
+        )
+      })()}
+
+      <main className="p-4 md:p-6 space-y-5">
+        {savedInfo && (
+          <div className="rounded-lg border px-4 py-2 text-[12px] flex items-center gap-2"
+            style={{ borderColor: T.green + '88', background: T.green + '14', color: T.green }}>
+            <CheckCircle2 size={14} /> Sitzung erfasst ({savedInfo.id}).
+            {savedInfo.applied?.length ? ` Übernommen: ${savedInfo.applied.join(' · ')}.` : ' Keine Milestone-Änderung.'}
+            {' '}Ampel &amp; Erfüllungsgrad sind aktualisiert.
+          </div>
+        )}
+        {/* ══ 0 · INTRO ══ */}
+        {tab === 'intro' && <IntroView data={data} goStreams={() => setTab('streams')} />}
+
+        {/* ══ SITZUNG ERFASSEN ══ */}
+        {tab === 'erfassen' && (canEdit
+          ? <ErfassungView ms={ms} today={BASE.meta.today} role={role} me={me} />
+          : <div className="text-[13px]" style={{ color: T.inkDim }}><Lock size={14} className="inline mr-1" /> Rolle «{role}» darf nicht erfassen.</div>)}
+
+        {/* ══ AUFGABEN ══ */}
+        {tab === 'aufgaben' && <AufgabenView role={role} me={me} onOpenMs={(id) => { const m = ms.find(x => x.id === id); if (m) setSelMs(m) }} />}
+
+        {/* ══ PROTOKOLLE ══ */}
+        {tab === 'protokolle' && <ProtokolleView role={role} me={me} />}
+
+        {/* ══ REPORTS ══ */}
+        {tab === 'reports' && <ReportsView canEdit={canEdit} today={BASE.meta.today} />}
+
+        {/* ══ 1 · KONTROLLTURM ══ */}
+        {tab === 'tower' && (<>
+          <div className={TASK_STATS.total > 0 ? 'grid grid-cols-2 md:grid-cols-5 gap-3' : 'grid grid-cols-2 md:grid-cols-4 gap-3'}>
+            <Kpi label="Gesamtstatus" value={STATUS_META[overall].label} color={STATUS_META[overall].color}
+              sub={`${cnt.total} Meilensteine · ${cnt.done} erledigt · ${cnt.unknown} unbekannt`} />
+            <Kpi label="Auf Kurs" value={cnt.onTrack} color={T.green} />
+            <Kpi label="Gefährdet" value={cnt.atRisk} color={T.amber} />
+            <Kpi label="Verzug" value={cnt.delayed} color={T.red}
+              sub={proj.drivers.length ? `Treiber: ${proj.drivers.map(d => d.id).join(', ')}` : 'kein kritischer Verzug'} />
+            {TASK_STATS.total > 0 && (
+              <Kpi label="Handlungen offen" value={TASK_STATS.offen}
+                color={TASK_STATS.ueberfaellig > 0 ? T.red : TASK_STATS.offen > 0 ? T.amber : T.green}
+                sub={`${TASK_STATS.ueberfaellig} überfällig · ${TASK_STATS.erledigt} erledigt · treiben den Fortschritt`} />
+            )}
+          </div>
+
+          {/* Erfüllungsgrad je Phase */}
+          <div>
+            <div className="text-[10px] uppercase tracking-widest mb-2" style={{ color: T.inkFaint, fontFamily: T.mono }}>
+              Erfüllungsgrad je Phase (erledigt = 100 % · Programmstart 01.09.2026)
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+              {PHASE_TILES.map(p => {
+                const col = phaseColor(p.key)
+                return (
+                  <div key={p.key} className="rounded-xl p-3 border" style={{ background: T.panel, borderColor: T.line, borderTop: `2.5px solid ${col}` }}>
+                    <div className="text-[10px] font-semibold truncate" style={{ color: col }}>{p.key === 'Masterplan' ? 'Masterplan' : p.label}</div>
+                    <div className="text-2xl font-bold mt-0.5" style={{ fontFamily: T.mono, color: T.ink }}>{p.pct}<span className="text-[13px]" style={{ color: T.inkDim }}> %</span></div>
+                    <div className="w-full h-1.5 rounded mt-1" style={{ background: T.line }}>
+                      <div className="h-1.5 rounded" style={{ width: p.pct + '%', background: col }} />
+                    </div>
+                    <div className="text-[10px] mt-1.5" style={{ fontFamily: T.mono, color: T.inkFaint }}>
+                      <b style={{ color: T.ink }}>{p.done}</b> / {p.total} erledigt
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Hard-Edge-Verletzungen */}
+          {breaches.length > 0 && (
+            <div className="rounded-xl border p-4" style={{ background: T.red + '10', borderColor: T.red }}>
+              <div className="flex items-center gap-2 mb-2 text-[13px] font-semibold" style={{ color: T.red }}>
+                <Siren size={15} /> HARD-EDGE-VERLETZUNG — Termin über 30.06.2027 (alles muss bis dahin abgeschlossen sein)
+              </div>
+              <div className="space-y-1 text-[12px]">
+                {breaches.map(b => (
+                  <div key={b.id} className="flex flex-wrap items-center gap-2">
+                    <span style={{ fontFamily: T.mono, color: T.red }}>{b.id}</span>
+                    <span className="flex-1 min-w-[200px]">{b.name}</span>
+                    <span style={{ fontFamily: T.mono }}>{b.owner}</span>
+                    <b style={{ fontFamily: T.mono, color: T.red }}>+{b.days} T über der Kante</b>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Frühwarn-/Verzugsliste */}
+          {alarms.length > 0 && (
+            <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
+              <div className="flex items-center gap-2 mb-2 text-[13px] font-semibold" style={{ color: T.amber }}>
+                <AlertTriangle size={15} /> Frühwarn- &amp; Verzugsliste
+              </div>
+              <div className="space-y-1 text-[12px]">
+                {alarms.slice(0, 8).map(m => {
+                  const st = statusOf(m, NOW); const s = slipDays(m, NOW)
+                  return (
+                    <div key={m.id} className="flex flex-wrap items-center gap-2">
+                      {m.critical && <Diamond size={11} style={{ color: T.brass }} fill={T.brass} />}
+                      <span style={{ fontFamily: T.mono, color: T.inkDim }}>{m.id}</span>
+                      <span className="flex-1 min-w-[200px]">{m.name}</span>
+                      <Pill st={st} />
+                      <span style={{ fontFamily: T.mono, color: st === 'delayed' ? T.red : T.amber }}>
+                        {st === 'delayed'
+                          ? (m.critical && !m.nachlauf ? `kritischer Pfad: Kern-Ende +${s} T` : `+${s} T (nicht endterminwirksam)`)
+                          : `fällig ${fmtDate(m.due)}`}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Abflugtafel */}
+          <div className="rounded-xl border overflow-hidden" style={{ background: T.panel, borderColor: T.line }}>
+            <div className="flex items-center justify-between px-4 py-2 border-b" style={{ borderColor: T.line }}>
+              <div className="text-[13px] font-semibold tracking-widest" style={{ fontFamily: T.mono, color: T.brass }}>
+                ── ABFLUGTAFEL · MEILENSTEINE ──
+              </div>
+              <div className="flex items-center gap-1.5 text-[12px] flex-wrap justify-end" style={{ color: T.inkDim }}>
+                <Filter size={13} />
+                <select value={wsFilter} onChange={e => setWsFilter(e.target.value)}
+                  className="bg-transparent border rounded px-1.5 py-0.5"
+                  style={{ borderColor: T.line, background: T.panelSoft, color: T.ink }}>
+                  <option value="alle" style={{ color: '#111' }}>alle Ströme</option>
+                  {BASE.workstreams.map(w => <option key={w.code} value={w.code} style={{ color: '#111' }}>{w.code} — {w.name?.slice(0, 40)}</option>)}
+                </select>
+                <select value={phaseFilter} onChange={e => setPhaseFilter(e.target.value)}
+                  className="bg-transparent border rounded px-1.5 py-0.5"
+                  style={{ borderColor: T.line, background: T.panelSoft, color: T.ink }}>
+                  <option value="alle" style={{ color: '#111' }}>alle Phasen</option>
+                  {rubPhases.map(ph => <option key={ph} value={ph} style={{ color: '#111' }}>{ph}</option>)}
+                  {mpPhases.length > 0 && <option value="MP-ALL" style={{ color: '#111' }}>Masterplan (alle)</option>}
+                  {mpPhases.map(ph => <option key={ph} value={ph} style={{ color: '#111' }}>{'  ' + phaseShort(ph)}</option>)}
+                </select>
+                <select value={ownerFilter} onChange={e => setOwnerFilter(e.target.value)}
+                  className="bg-transparent border rounded px-1.5 py-0.5"
+                  style={{ borderColor: T.line, background: T.panelSoft, color: T.ink }}>
+                  <option value="alle" style={{ color: '#111' }}>alle Verantwortlichen</option>
+                  {owners.map(o => <option key={o} value={o} style={{ color: '#111' }}>{o.length > 34 ? o.slice(0, 34) + '…' : o}</option>)}
+                </select>
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-[12px]">
+                <thead>
+                  <tr className="text-left" style={{ color: T.inkFaint, fontFamily: T.mono }}>
+                    <th className="px-3 py-1.5 w-6"></th><th className="px-2 py-1.5">CODE</th>
+                    <th className="px-2 py-1.5">MEILENSTEIN</th><th className="px-2 py-1.5">PHASE</th><th className="px-2 py-1.5">OWNER</th>
+                    <th className="px-2 py-1.5">FÄLLIG</th><th className="px-2 py-1.5 w-36">FORTSCHRITT</th>
+                    <th className="px-2 py-1.5">HANDLUNGEN</th>
+                    <th className="px-2 py-1.5">STATUS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sorted.map(m => {
+                    const st = statusOf(m, NOW)
+                    return (
+                      <tr key={m.id} className={(st === 'delayed' ? 'row-delayed ' : '') + 'cursor-pointer hover:opacity-80'}
+                        onClick={() => setSelMs(m)} title="Klicken für Aufgaben-Definition (Briefing)"
+                        style={{ borderTop: `1px solid ${T.line}` }}>
+                        <td className="px-3 py-1.5">{m.critical && <Diamond size={11} style={{ color: T.brass }} fill={T.brass} />}</td>
+                        <td className="px-2 py-1.5" style={{ fontFamily: T.mono, color: T.inkDim }}>
+                          {m.id}{m.nachlauf && <span title="gesetzlicher Nachlauf Q2/27" style={{ color: T.brass }}> ⏳</span>}
+                          {m.gate && <span className="ml-1 text-[10px]" style={{ color: T.brass }}>{m.gate}</span>}
+                        </td>
+                        <td className="px-2 py-1.5">{m.name}{m.date_assumed && <span title="Termin = Monatsende (Annahme)" style={{ color: T.inkFaint }}> *</span>}</td>
+                        <td className="px-2 py-1.5"><PhaseTag p={m.phase} /></td>
+                        <td className="px-2 py-1.5" style={{ fontFamily: T.mono }}>{m.owner || <span style={{ color: T.grey }}>—</span>}</td>
+                        <td className="px-2 py-1.5" style={{ fontFamily: T.mono }}>{fmtDate(m.due)}</td>
+                        <td className="px-2 py-1.5" title={m.progress_source === 'tasks' ? 'Fortschritt VERDIENT — Roll-up aus Handlungen' : undefined}><Bar v={m.progress} /></td>
+                        <td className="px-2 py-1.5" style={{ fontFamily: T.mono }}>{(() => {
+                          const ts = tasksFor(m.id)
+                          if (!ts.length) return <span style={{ color: T.grey }}>—</span>
+                          const d = ts.filter(t => t.status === 'erledigt').length
+                          const ov = ts.filter(taskOverdue).length
+                          return (
+                            <span title={`${d} von ${ts.length} Handlungen erledigt${ov ? ` · ${ov} überfällig` : ''}${m.progress_source === 'tasks' ? ' — treiben den Fortschritt' : ''}`}
+                              style={{ color: ov ? T.red : d === ts.length ? T.blue : T.inkDim }}>
+                              ☑ {d}/{ts.length}{ov ? ' ⚠' : ''}
+                            </span>
+                          )
+                        })()}</td>
+                        <td className="px-2 py-1.5"><Pill st={st} /></td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+            <div className="px-4 py-1.5 text-[10px] border-t" style={{ borderColor: T.line, color: T.inkFaint }}>
+              ◆ = kritischer Pfad · ⏳ = gesetzlicher Nachlauf Q2/27 (zählt nicht gegen Kern-Ende) · * = Termin Monatsende (Annahme) · G1–G7 = Sequenz-Gates · ☑ x/y = Handlungen erledigt (bei aktiviertem Roll-up treiben sie den Fortschritt) · Filter oben: Strom × Phase
+            </div>
+          </div>
+        </>)}
+
+        {/* ══ 2 · ARBEITSSTRÖME ══ */}
+        {tab === 'streams' && (
+          <div className="grid md:grid-cols-2 gap-4">
+            {data.workstreams.map(ws => {
+              const list = ws.milestones
+              const withP = list.filter(m => typeof m.progress === 'number')
+              const agg = withP.length ? Math.round(withP.reduce((a, m) => a + m.progress, 0) / withP.length) : null
+              const phases = [...new Set(list.map(m => m.phase))]
+              return (
+                <div key={ws.code} className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <div className="font-semibold" style={{ fontFamily: T.mono, color: T.brass }}>{ws.code}</div>
+                      <div className="text-[13px] font-medium">{ws.name}</div>
+                      <div className="text-[11px]" style={{ color: T.inkDim }}>Owner: <b>{ws.owner}</b>{ws.support && ` · ${ws.support.slice(0, 70)}`}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xl font-bold" style={{ fontFamily: T.mono, color: agg === null ? T.grey : T.green }}>
+                        {agg === null ? '—' : agg + '%'}
+                      </div>
+                      <div className="text-[10px]" style={{ color: T.inkFaint }}>{list.length} MS{withP.length < list.length && ` · ${list.length - withP.length}× Lücke`}</div>
+                      <a href={`/pakete/${ws.code}.pdf`} target="_blank" rel="noreferrer"
+                        className="inline-flex items-center gap-1 mt-1 text-[10px] px-2 py-0.5 rounded border"
+                        style={{ borderColor: T.brass, color: T.brass }}>
+                        <FileText size={11} /> Owner-Paket (PDF)
+                      </a>
+                    </div>
+                  </div>
+                  <div className="mt-3 space-y-2 max-h-72 overflow-auto pr-1">
+                    {phases.map(ph => (
+                      <div key={ph || 'ohne'}>
+                        {ph && <div className="text-[10px] uppercase tracking-wider mt-1 mb-0.5 sticky top-0 py-0.5"
+                          style={{ color: T.brass, background: T.panel }}>{ph}</div>}
+                        {list.filter(m => m.phase === ph).map(m => {
+                          const st = statusOf(m, NOW)
+                          return (
+                            <div key={m.id} onClick={() => setSelMs({ ...m, _ws: ws.code, _wsName: ws.name })}
+                              title="Klicken für Aufgaben-Definition (Briefing)"
+                              className={`flex items-center gap-2 text-[11.5px] rounded px-1.5 py-1 cursor-pointer hover:opacity-80 ${st === 'delayed' ? 'row-delayed' : ''}`}>
+                              {m.critical ? <Diamond size={10} style={{ color: T.brass }} fill={T.brass} /> : <span className="w-[10px]" />}
+                              <span style={{ fontFamily: T.mono, color: T.inkFaint }}>{m.id}</span>
+                              <span className="flex-1 truncate" title={m.name}>{m.name}</span>
+                              <span style={{ fontFamily: T.mono, color: T.inkDim }}>{fmtDate(m.due)}</span>
+                              <Pill st={st} />
+                            </div>
+                          )
+                        })}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+
+        {/* ══ 3 · AKTIONS-LOG ══ */}
+        {tab === 'log' && (
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
+              <div className="text-[13px] font-semibold mb-2">Aktion erfassen <span className="text-[10px]" style={{ color: T.inkFaint }}>(Session — nicht persistiert)</span></div>
+              {!canEdit
+                ? <div className="flex items-center gap-2 text-[12px]" style={{ color: T.inkDim }}><Lock size={13} /> Rolle «{role}» ist nur lesend.</div>
+                : <ActionForm ms={ms} canEditMs={canEditMs} onSubmit={recordAction} />}
+            </div>
+            <div className="md:col-span-2 rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
+              <div className="text-[13px] font-semibold mb-2">Chronologie</div>
+              {actions.length === 0 && <div className="text-[12px]" style={{ color: T.inkFaint }}>Noch keine Aktionen in dieser Session.</div>}
+              <div className="space-y-2">
+                {actions.map((a, k) => (
+                  <div key={k} className="text-[12px] rounded border p-2" style={{ borderColor: T.line, background: T.panelSoft }}>
+                    <span style={{ fontFamily: T.mono, color: T.inkFaint }}>{a.ts.toLocaleTimeString('de-CH')}</span>
+                    {' · '}<b>{a.who}</b> · <span style={{ fontFamily: T.mono, color: T.brass }}>{a.mId}</span> — {a.what}
+                    <div style={{ color: T.inkDim }}>Wirkung: {a.effect}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ══ 4 · INPUT-PFLICHTEN ══ */}
+        {tab === 'inputs' && (
+          <div className="rounded-xl border overflow-hidden" style={{ background: T.panel, borderColor: T.line }}>
+            <div className="px-4 py-2 text-[13px] font-semibold border-b flex flex-wrap items-center justify-between gap-2" style={{ borderColor: T.line }}>
+              <span>Input-Pflichten <span className="text-[10px]" style={{ color: T.inkFaint }}>— Zulieferungen, die das Programm braucht ({overdueInputs.length} überfällig)</span></span>
+              {BASE.meta.datenlieferungen_url && (
+                <a href={BASE.meta.datenlieferungen_url} target="_blank" rel="noreferrer"
+                  className="text-[11px] px-2 py-1 rounded border font-normal"
+                  style={{ borderColor: T.brass, color: T.brass }}
+                  title="Ablage-Konvention: Daten-Artefakte hierhin liefern (WS-Unterordner; Baseline-Pakete → _Baseline-Datenpakete G2)">
+                  📁 Ablage: RUBICON — Datenlieferungen ↗
+                </a>
+              )}
+            </div>
+            <table className="w-full text-[12px]">
+              <thead><tr className="text-left" style={{ color: T.inkFaint, fontFamily: T.mono }}>
+                <th className="px-3 py-1.5">VERANTWORTLICH</th><th className="px-2 py-1.5">INPUT</th>
+                <th className="px-2 py-1.5">FÄLLIG</th><th className="px-2 py-1.5">STATUS</th>
+                <th className="px-2 py-1.5">LETZTE ERINNERUNG</th><th className="px-2 py-1.5">AKTION</th>
+              </tr></thead>
+              <tbody>
+                {data.inputs.map(i => {
+                  const overdue = i.status === 'offen' && parseDate(i.due) && daysBetween(parseDate(i.due), NOW) > 0
+                  return (
+                    <tr key={i.id} className={overdue ? 'row-delayed' : ''} style={{ borderTop: `1px solid ${T.line}` }}>
+                      <td className="px-3 py-1.5" style={{ fontFamily: T.mono }}>{i.owner || '—'}</td>
+                      <td className="px-2 py-1.5">{i.item}</td>
+                      <td className="px-2 py-1.5" style={{ fontFamily: T.mono, color: overdue ? T.red : T.ink }}>{fmtDate(i.due)}</td>
+                      <td className="px-2 py-1.5">{i.status === 'geliefert'
+                        ? <span style={{ color: T.green }}><CheckCircle2 size={13} className="inline mr-1" />geliefert</span>
+                        : <span style={{ color: overdue ? T.red : T.amber }}>offen</span>}</td>
+                      <td className="px-2 py-1.5" style={{ fontFamily: T.mono, color: T.inkDim }}>{i.last_reminder || '—'}</td>
+                      <td className="px-2 py-1.5">
+                        {(i.liefer_tasks || []).length > 0
+                          ? <span className="text-[10.5px]" style={{ fontFamily: T.mono, color: T.brass }}
+                              title={`auto-geliefert, sobald erledigt: ${i.liefer_tasks.join(' + ')}`}>
+                              ⚙ auto ← {i.liefer_tasks.map(id2 => { const tk = ALL_TASKS.find(x => x.id === id2); return tk ? tnr(tk) : id2 }).join(' + ')}
+                            </span>
+                          : (i.status === 'offen' && canEdit &&
+                            <button onClick={() => setInputState(s => ({ ...s, [i.id]: { ...(s[i.id] || {}), status: 'geliefert' } }))}
+                              className="text-[11px] px-2 py-0.5 rounded border"
+                              style={{ borderColor: T.green + '88', color: T.green }}>
+                              Als geliefert markieren
+                            </button>)}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* ══ 5 · CoS-STEUERUNG ══ */}
+        {tab === 'cos' && role === 'CoS' && (
+          <div className="space-y-4">
+            <div className="rounded-lg border px-4 py-2 text-[12px] flex items-center gap-2"
+              style={{ borderColor: T.amber + '88', background: T.amber + '14', color: T.amber }}>
+              <Siren size={14} /> Durchsetzungs-Aktionen sind im Prototyp <b>SIMULIERT</b>. Reale Reminder-/Kalender-/Eskalations-Writes
+              laufen ausschliesslich über die MCP-Bridge mit einmaligem Freigabe-Token (mcp/calendar_bridge.md).
+            </div>
+            <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-[13px] font-semibold">Durchsetzungs-Queue — überfällige Inputs ({overdueInputs.length})</div>
+                <button onClick={() => overdueInputs.forEach(i => remind(i, 'Reminder'))}
+                  disabled={!overdueInputs.length}
+                  className="text-[12px] px-3 py-1 rounded border flex items-center gap-1.5"
+                  style={{ borderColor: T.brass, color: T.brass, opacity: overdueInputs.length ? 1 : .4 }}>
+                  <Send size={13} /> Alle Reminder senden
+                </button>
+              </div>
+              {overdueInputs.length === 0 && <div className="text-[12px]" style={{ color: T.green }}>Keine überfälligen Inputs. ✓</div>}
+              <div className="space-y-2">
+                {overdueInputs.map(i => (
+                  <div key={i.id} className="flex flex-wrap items-center gap-2 text-[12px] rounded border p-2"
+                    style={{ borderColor: T.red + '55', background: T.red + '0d' }}>
+                    <b style={{ fontFamily: T.mono }}>{i.owner}</b>
+                    <span className="flex-1 min-w-[220px]">{i.item}</span>
+                    <span style={{ fontFamily: T.mono, color: T.red }}>{fmtDate(i.due)} (+{daysBetween(parseDate(i.due), NOW)} T)</span>
+                    <button onClick={() => remind(i, 'Reminder')} className="px-2 py-0.5 rounded border text-[11px]"
+                      style={{ borderColor: T.line, color: T.ink }}><Send size={11} className="inline mr-1" />Reminder</button>
+                    <button onClick={() => remind(i, 'Kalender-Koordination')} className="px-2 py-0.5 rounded border text-[11px]"
+                      style={{ borderColor: T.line, color: T.ink }}><CalendarClock size={11} className="inline mr-1" />Kalender</button>
+                    <button onClick={() => remind(i, 'ESKALATION (Stufe +1)')} className="px-2 py-0.5 rounded border text-[11px]"
+                      style={{ borderColor: T.red + '88', color: T.red }}><Siren size={11} className="inline mr-1" />Eskalieren</button>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
+              <div className="text-[13px] font-semibold mb-2">Automations-Log <span className="text-[10px]" style={{ color: T.inkFaint }}>(Session)</span></div>
+              {autoLog.length === 0 && <div className="text-[12px]" style={{ color: T.inkFaint }}>Noch keine Automationen ausgelöst.</div>}
+              <div className="space-y-1 text-[12px]" style={{ fontFamily: T.mono }}>
+                {autoLog.map((l, k) => (
+                  <div key={k} style={{ color: T.inkDim }}>
+                    {l.ts.toLocaleTimeString('de-CH')} · {l.msg}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
+
+      {selMs && <BriefingModal m={selMs} role={role} me={me} onClose={() => setSelMs(null)} />}
+
+      <footer className="px-6 py-3 text-[10px] border-t" style={{ borderColor: T.line, color: T.inkFaint, fontFamily: T.mono }}>
+        RUBICON Control Tower · Wahrheitsquelle: src/data/projekt.yaml · Statuslogik deterministisch (status.js) ·
+        Erfasste Sitzungen/Reports werden persistiert · Reminder/Kalender/Eskalation simuliert · Vertraulich ExBoD/VR
+      </footer>
+    </div>
+  )
+}
+
+// ── INTRO-PAGE: Sinn & Zweck · WS-Übersicht (grafisch, Live-Ampeln) · Zeitachse ──
+// Inhalte aus RUBICON-Doc v2 (Sektionen 1–3, 7); Ströme/Status live aus projekt.yaml.
+function IntroView({ data, goStreams }) {
+  const now = parseDate(data.meta.today)
+  const ZIELE = [
+    { v: "≥12'372", l: 'EBITDA-Run-Rate CHF k (Ambition 15’000) — heute FY25A +323' },
+    { v: '−30%', l: 'Zentralkosten auf ≤ ~2’800 TEUR (Ratio ~1.4% → ~1.0%)' },
+    { v: '−50%', l: 'Run-Rate Top-3-Verlustquellen (FY25A ≈ −10’302 TEUR)' },
+    { v: '≥90%', l: 'Execution-Rate Commitments (heute ≤50%)' },
+  ]
+  const MERKMALE = [
+    ['Eine Gruppe, eine Wahrheit', 'Art.-963-Konzernkonsolidierung; eine Finance-Linie, eine Plattform, eine Mail-Domain'],
+    ['Kostenführerschaft', 'Zentralkosten −30%; Cost-per-Turn transparent; Verlustquellen entschieden & halbiert'],
+    ['Klare Accountability', 'Ein P&L-Owner je Einheit; GL = 6; JD-Kaskade aus dem Chairman-2-Pager'],
+    ['Execution-Disziplin', 'Tracking auf dem Gruppen-Tracker; Entscheids-Queue; Konsequenz-Mechanik'],
+    ['Guter, stabiler Ground Handler', 'Ops-Excellence-Scorecard je Station; SLA-Schutzschirm; Kundennähe gesichert'],
+  ]
+  // Zeitachse Jul 26 – Jun 27 (12 Monate); Position = Monatsanteil in %
+  const MONTHS = ['Jul 26', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez', 'Jan 27', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun 27']
+  const pos = (m, frac = 0) => ((m + frac) / 12 * 100).toFixed(1) + '%'
+  const MS = [
+    { p: pos(1, .4), lbl: '15.08. Zielsystem-Entscheide', top: 6 },
+    { p: pos(1, .9), lbl: '28.08. Gates AAST/BER', top: 24 },
+    { p: pos(2, .03), lbl: '01.09. Kickoff (M1)', top: 6, brass: true },
+    { p: pos(3, .5), lbl: '15.10. Diagnose-Review G2', top: 13 },
+    { p: pos(3, .97), lbl: '31.10. Closing (G6)', top: 6, red: true },
+    { p: pos(5, .5), lbl: 'Dez · Q4-VR: TOM', top: 13 },
+    { p: pos(6, .97), lbl: '31.01. Eurowings DUS', top: 6, red: true },
+    { p: pos(8, .5), lbl: 'Mär · §111/§17 eingeleitet', top: 13 },
+    { p: pos(9, .95), lbl: 'Ende Apr · Zielnachweis + Übergabe', top: 6, brass: true },
+    { p: pos(11, .97), lbl: '30.06. HARD EDGE — alles abgeschlossen', top: 24, red: true, right: true },
+  ]
+  // Phasen mit Ziel je Phase (aus RUBICON-Doc §5.2–5.5.1). matchPhase = welche
+  // projekt.yaml-Phasenwerte zu dieser Karte gehören (für den Live-MS-Zähler).
+  const PHASEN = [
+    { nr: '0', c: T.brass, name: 'Diagnose & Baseline', span: 'Sep–Okt 26 · M1–M2',
+      ziel: 'Ehrliche Ausgangsbasis schaffen — alles cash-neutral. Datenlücken schliessen, GL = 6 bereinigen, Führungsrhythmus scharfstellen. Kein Zielwert vor validierter Baseline (Gate G2, 15.10.).',
+      match: ['Phase 0'] },
+    { nr: '1', c: T.green, name: 'Design', span: 'Okt–Dez 26 · M2–M4',
+      ziel: 'Verbindliche Zielstruktur beschliessen: TOM-Blueprint (Elysium 2.0) VR-genehmigt, Organigramm v2 + JD-Kaskade, P&L-Owner-Matrix, Commitment-Tracker live. Finanzierungs-Closing (G6) = ab hier cash-wirksame Schritte.',
+      match: ['Phase 1'] },
+    { nr: '2', c: T.blue, name: 'Implementierung', span: 'Jan–Mär 27 · M5–M7',
+      ziel: 'Struktur wird real, Kosten sinken: eine Finance-Linie operativ, DE-GF-Entflechtung, Zentralkosten −30% entschieden, Execution-Rate ≥ 80 %. Restrukturierungs-Verfahren (§111/§17) eingeleitet; Eurowings verlängert.',
+      match: ['Phase 2'] },
+    { nr: '3', c: T.brass, name: 'Zielnachweis & Verankerung', span: 'Apr 27 · M8',
+      ziel: 'Programm liefert und geht in den Linienbetrieb: Zielbild-Nachweis (Kosten −30 %, Execution ≥ 90 %), MOS-Audit (Chairman-Unabhängigkeit), Übergabe in die Linie, Schlussbericht an GL/VR.',
+      match: ['Phase 3'] },
+    { nr: '⏳', c: T.red, name: 'Gesetzlicher Nachlauf', span: 'bis 30.06.27 · HARD EDGE',
+      ziel: 'Alles komplett abgeschlossen: arbeitsrechtlich gebundene Effekte werden wirksam (BER-/AAS-Technics-Restrukturierung, Entity-Bereinigung, voller EBITDA-Run-Rate) — bis Apr 27 eingeleitet, gesetzlich nicht früher realisierbar.',
+      match: ['Nachlauf Q2/27'] },
+  ]
+  const allMs = data.workstreams.flatMap(w => w.milestones)
+  const phaseCount = (match) => allMs.filter(m => match.some(x => (m.phase || '').includes(x))).length
+  const heute = pos(0, .2)
+  return (
+    <div className="space-y-5 max-w-6xl">
+      {/* ── 1 · Sinn & Zweck ── */}
+      <div className="rounded-xl border p-5" style={{ background: T.panel, borderColor: T.brass + '55' }}>
+        <div className="text-[11px] uppercase tracking-widest mb-1" style={{ color: T.inkFaint, fontFamily: T.mono }}>
+          Sinn &amp; Zweck · «Alea iacta est.»
+        </div>
+        <div className="text-[15px] leading-relaxed" style={{ color: T.ink }}>
+          Projekt RUBICON macht AXS in <b>8 Monaten</b> (01.09.2026 → 30.04.2027, alles abgeschlossen bis
+          <b style={{ color: T.red }}> HARD EDGE 30.06.2027</b>) zu einer <b>integriert geführten, kostenschlanken
+          Gruppe mit einer klaren Organisation und eindeutiger Accountability</b> — aus eigener Kraft, unabhängig
+          vom Finanzierungsprozess (Projekt #98 = Parallel-Achse). Es konsolidiert <b>alle</b> bisherigen Pläne
+          und Tools — Transformationsagenda, Chairman-Tracker, Commercial-Masterplan — in <b>einem Programm auf
+          dieser einen Plattform</b>. Voraussetzung für die Gruppenstrategie Top-3 EU 2030 (&gt;EUR 600 Mio).
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+          {ZIELE.map((z, i) => (
+            <div key={i} className="rounded-lg border p-3" style={{ background: T.panelSoft, borderColor: T.line, borderTop: `2.5px solid ${T.brass}` }}>
+              <div className="text-2xl font-bold" style={{ fontFamily: T.mono, color: T.brass }}>{z.v}</div>
+              <div className="text-[10.5px] mt-1" style={{ color: T.inkDim }}>{z.l}</div>
+            </div>
+          ))}
+        </div>
+        <div className="grid md:grid-cols-5 gap-2 mt-3">
+          {MERKMALE.map(([t, d], i) => (
+            <div key={i} className="rounded border p-2" style={{ borderColor: T.line }}>
+              <div className="text-[11px] font-bold" style={{ color: T.ink }}><span style={{ color: T.brass, fontFamily: T.mono }}>{i + 1}</span> · {t}</div>
+              <div className="text-[10px] mt-0.5" style={{ color: T.inkFaint }}>{d}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── 2 · Arbeitsströme (grafisch, Live-Status) ── */}
+      <div className="rounded-xl border p-5" style={{ background: T.panel, borderColor: T.line }}>
+        <div className="text-[11px] uppercase tracking-widest mb-3" style={{ color: T.inkFaint, fontFamily: T.mono }}>
+          Programmarchitektur — DRS steuert &amp; kontrolliert · AFR + CGO treiben · GL-6 liefert
+        </div>
+        <div className="rounded-lg border px-4 py-2 text-center text-[12px] mb-2" style={{ borderColor: T.brass, color: T.ink, background: T.panelSoft }}>
+          <b style={{ color: T.brass }}>DRS — Eigentümer &amp; Chairman:</b> steuert + kontrolliert (Cockpit + VR) — über dem Maschinenraum
+        </div>
+        <div className="text-center text-[10px]" style={{ color: T.inkFaint }}>▼</div>
+        <div className="rounded-lg px-4 py-2 text-center text-[12px] mb-2" style={{ background: T.brass, color: '#0b1220' }}>
+          <b>AFR + CGO — treiben die Umsetzung</b> · CGO = Ops-Energie + öffentliches Gesicht · AFR = Struktur / Disziplin / Finanz / Verhandlung
+        </div>
+        <div className="text-center text-[10px] mb-2" style={{ color: T.inkFaint }}>▼ GL-6-Funktions-Owner liefern ▼</div>
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
+          {data.workstreams.map(ws => {
+            const sts = ws.milestones.map(m => statusOf(m, now))
+            const worst = ['delayed', 'atRisk', 'unknown', 'onTrack', 'done'].find(s => sts.includes(s)) || 'unknown'
+            const done = sts.filter(s => s === 'done').length
+            return (
+              <button key={ws.code} onClick={goStreams}
+                className="rounded-lg border p-2.5 text-left hover:opacity-85"
+                style={{ background: T.panelSoft, borderColor: STATUS_META[worst].color + '66', borderTop: `3px solid ${STATUS_META[worst].color}` }}>
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-[12px]" style={{ fontFamily: T.mono, color: T.brass }}>{ws.code}</span>
+                  <Pill st={worst} />
+                </div>
+                <div className="text-[10.5px] mt-1 leading-tight" style={{ color: T.ink }}>{ws.name.split('(')[0].trim()}</div>
+                <div className="text-[10px] mt-1" style={{ fontFamily: T.mono, color: T.inkDim }}>{ws.owner} · {ws.milestones.length} MS · {done} ✓</div>
+              </button>
+            )
+          })}
+        </div>
+        <div className="text-[9.5px] mt-2" style={{ color: T.inkFaint }}>
+          Ampel je Strom = schlechtester Milestone-Status (live aus projekt.yaml) · Klick öffnet die Strom-Detailsicht
+        </div>
+      </div>
+
+      {/* ── 3 · Phasen (Ziel je Phase) ── */}
+      <div className="rounded-xl border p-5" style={{ background: T.panel, borderColor: T.line }}>
+        <div className="text-[11px] uppercase tracking-widest mb-3" style={{ color: T.inkFaint, fontFamily: T.mono }}>
+          Die 4 Phasen + Nachlauf — Ziel je Phase
+        </div>
+        <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-3">
+          {PHASEN.map(ph => (
+            <div key={ph.nr} className="rounded-lg border p-3 flex flex-col" style={{ background: T.panelSoft, borderColor: ph.c + '55', borderTop: `3px solid ${ph.c}` }}>
+              <div className="flex items-center gap-2">
+                <span className="flex items-center justify-center rounded-full text-[13px] font-bold"
+                  style={{ width: 24, height: 24, background: ph.c + '22', color: ph.c, fontFamily: T.mono }}>{ph.nr}</span>
+                <div>
+                  <div className="text-[12px] font-bold" style={{ color: T.ink }}>{ph.nr === '⏳' ? '' : 'Phase '}{ph.name}</div>
+                  <div className="text-[9.5px]" style={{ fontFamily: T.mono, color: ph.c }}>{ph.span}</div>
+                </div>
+              </div>
+              <div className="text-[10.5px] mt-2 leading-snug flex-1" style={{ color: T.inkDim }}>{ph.ziel}</div>
+              <div className="text-[9px] mt-2 pt-1.5 border-t" style={{ borderColor: T.line, fontFamily: T.mono, color: T.inkFaint }}>{phaseCount(ph.match)} Meilensteine</div>
+            </div>
+          ))}
+        </div>
+        <div className="text-[9.5px] mt-2" style={{ color: T.inkFaint }}>
+          Führungslogik quer über alle Phasen: <b style={{ color: T.brass }}>DRS steuert &amp; kontrolliert</b> · AFR + CGO treiben · GL-6 liefert.
+        </div>
+      </div>
+
+      {/* ── 4 · Zeitachse ── */}
+      <div className="rounded-xl border p-5" style={{ background: T.panel, borderColor: T.line }}>
+        <div className="text-[11px] uppercase tracking-widest mb-3" style={{ color: T.inkFaint, fontFamily: T.mono }}>
+          Zeitachse — 8-Monats-Kernumsetzung + Nachlauf bis Hard Edge
+        </div>
+        <div className="grid text-[9px]" style={{ gridTemplateColumns: 'repeat(12,1fr)', color: T.inkFaint, fontFamily: T.mono }}>
+          {MONTHS.map(mo => <div key={mo} className="text-center border-l" style={{ borderColor: T.line + '88' }}>{mo}</div>)}
+        </div>
+        <div className="relative mt-1" style={{ height: '12px' }}>
+          {[['Vorlauf', 0, 16.7, T.grey], ['Phase 0', 16.7, 12.5, T.brass], ['Phase 1', 29.2, 20.8, T.green],
+            ['Phase 2', 50, 25, T.blue], ['Phase 3 · Zielnachweis', 75, 8.3, T.brass], ['Nachlauf', 83.3, 16.7, T.red]]
+            .map(([l, x, w, c]) => (
+              <div key={l} className="absolute h-3 rounded-sm flex items-center justify-center overflow-visible"
+                style={{ left: x + '%', width: w + '%', background: c + '33', border: `1px solid ${c}`, fontSize: 8, color: c, whiteSpace: 'nowrap' }}>
+                {l}
+              </div>
+            ))}
+        </div>
+        <div className="relative mt-1" style={{ height: '64px' }}>
+          {/* Heute-Marker */}
+          <div className="absolute" style={{ left: heute, top: 0, bottom: 0, width: 1.5, background: T.green }} />
+          <div className="absolute text-[8.5px]" style={{ left: heute, top: 46, color: T.green, fontFamily: T.mono }}>▲ heute ({fmtDate(data.meta.today)})</div>
+          {MS.map((m, i) => (
+            <React.Fragment key={i}>
+              <div className="absolute w-2 h-2" style={{ left: m.p, top: 2, transform: 'rotate(45deg)', background: m.red ? T.red : m.brass ? T.brass : T.inkDim }} />
+              <div className="absolute text-[8.5px] leading-tight" style={{ left: m.p, top: m.top + 6, width: '9%', minWidth: 64, color: m.red ? T.red : T.inkDim, ...(m.right ? { transform: 'translateX(-92%)', textAlign: 'right' } : {}) }}>{m.lbl}</div>
+            </React.Fragment>
+          ))}
+        </div>
+        <div className="text-[9.5px]" style={{ color: T.inkFaint }}>
+          Rot = harte externe Kanten · Basislinie Kern-Ende {fmtDate(data.meta.baseline_end)} · <b style={{ color: T.red }}>HARD EDGE {fmtDate(data.meta.hard_edge)} — alles komplett abgeschlossen (DRS)</b>
+        </div>
+      </div>
+
+      {/* ── 5 · Führungsrhythmus ── */}
+      <FuehrungsrhythmusCard />
+    </div>
+  )
+}
+
+// Führungsrhythmus-One-Pager auf der Frontseite (welche Meetings · mit wem · wann ·
+// Output-Erwartung). Native Tabelle + druckbare PDF-Fassung. Quelle: fuehrungsrhythmus.json.
+function FuehrungsrhythmusCard() {
+  return (
+    <div className="rounded-xl border p-5" style={{ background: T.panel, borderColor: T.brass + '55' }}>
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <div className="text-[11px] uppercase tracking-widest" style={{ color: T.inkFaint, fontFamily: T.mono }}>
+            Führungsrhythmus (MOS) — welche Meetings · mit wem · wann · welcher Output
+          </div>
+          <div className="text-[11px] mt-0.5" style={{ color: T.inkDim }}>{FR.untertitel}</div>
+        </div>
+        <a href="/fuehrungsrhythmus.pdf" target="_blank" rel="noreferrer"
+          className="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded border whitespace-nowrap"
+          style={{ borderColor: T.brass, color: T.brass }}>
+          <FileText size={13} /> One-Pager als PDF
+        </a>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-[11px]" style={{ minWidth: 820 }}>
+          <thead>
+            <tr className="text-left" style={{ color: T.inkFaint, fontFamily: T.mono }}>
+              <th className="px-2 py-1.5">MEETING</th><th className="px-2 py-1.5">WANN</th>
+              <th className="px-2 py-1.5">MIT WEM</th><th className="px-2 py-1.5">ZWECK</th>
+              <th className="px-2 py-1.5">OUTPUT-ERWARTUNG → WOHIN</th>
+              <th className="px-2 py-1.5">TRAKTANDENLISTE</th>
+            </tr>
+          </thead>
+          <tbody>
+            {FR.gruppen.map(g => (
+              <React.Fragment key={g.kadenz}>
+                <tr>
+                  <td colSpan={5} className="px-2 py-1" style={{ background: T.panelSoft }}>
+                    <span className="inline-block w-2 h-2 rounded-full mr-2 align-middle" style={{ background: FR_COL[g.farbe] }} />
+                    <b style={{ color: FR_COL[g.farbe], fontFamily: T.mono, fontSize: 10 }}>{g.kadenz.toUpperCase()}</b>
+                  </td>
+                </tr>
+                {g.meetings.map((m, i) => (
+                  <tr key={i} style={{ borderTop: `1px solid ${T.line}` }}>
+                    <td className="px-2 py-1.5" style={{ color: T.ink, fontWeight: 600 }}>{m.name}</td>
+                    <td className="px-2 py-1.5" style={{ fontFamily: T.mono, color: T.inkDim }}>{m.wann}</td>
+                    <td className="px-2 py-1.5" style={{ color: T.inkDim }}>{m.teilnehmer}</td>
+                    <td className="px-2 py-1.5" style={{ color: T.inkDim }}>{m.zweck}</td>
+                    <td className="px-2 py-1.5" style={{ color: T.brass }}>{m.output}</td>
+                    <td className="px-2 py-1.5">
+                      <div className="flex flex-col gap-1" style={{ minWidth: 58 }}>
+                        <a href={`/traktanden/${m.id}.pdf`} target="_blank" rel="noreferrer"
+                          className="inline-flex items-center justify-center gap-1 px-2 py-1 rounded border text-[10px]"
+                          style={{ borderColor: T.brass, color: T.brass }}>
+                          <FileText size={10} /> PDF
+                        </a>
+                        {TRAKT_DOCS[m.id] && (
+                          <a href={`https://docs.google.com/document/d/${TRAKT_DOCS[m.id]}/edit`} target="_blank" rel="noreferrer"
+                            className="inline-flex items-center justify-center gap-1 px-2 py-1 rounded border text-[10px]"
+                            style={{ borderColor: T.blue, color: T.blue }}>
+                            <FileText size={10} /> Doc
+                          </a>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </React.Fragment>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="mt-3 rounded p-2.5 text-[10.5px]" style={{ background: T.panelSoft, borderLeft: `2.5px solid ${T.brass}` }}>
+        <b style={{ color: T.brass }}>Grundsätze:</b>
+        <ul className="mt-1 space-y-0.5" style={{ color: T.inkDim }}>
+          {FR.grundsaetze.map((p, i) => <li key={i}>· {p}</li>)}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+// ── SITZUNG ERFASSEN — Sitzungs-Output strukturiert erfassen (5 Typen),
+// schreibt via /api/sitzung in projekt.yaml (Fortschritt/Blocker) + protokolle.json.
+const AGENDA_BY_ID = Object.fromEntries((AGENDAS.agendas || []).map(a => [a.meeting_id, a]))
+const FR_MEETINGS = FR.gruppen.flatMap(g => g.meetings.map(m => ({ id: m.id, name: m.name })))
+const TYP_LABEL = { fortschritt: 'Fortschritt (%)', commitment: 'Commitment', entscheid: 'Entscheid', blocker: 'Blocker/Verzug', notiz: 'Notiz' }
+
+async function saveSitzung(payload) {
+  const r = await fetch('/api/sitzung', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+  const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
+  if (j.ok) {
+    sessionStorage.setItem('rubicon_saved', JSON.stringify({ id: j.id, applied: j.applied }))
+    sessionStorage.setItem('rubicon_tab', 'protokolle')
+    window.location.reload()
+  } else {
+    alert('Speichern fehlgeschlagen: ' + (j.error || 'unbekannt'))
+  }
+}
+
+function ErfassungView({ ms, today, role, me }) {
+  const [meetingId, setMeetingId] = useState(FR_MEETINGS[0]?.id || '')
+  const [datum, setDatum] = useState(today)
+  const agenda = AGENDA_BY_ID[meetingId]
+  const [vorsitz, setVorsitz] = useState(agenda?.vorsitz || '')
+  const [erfasstVon, setErfasstVon] = useState('CoS')
+  const [eintraege, setEintraege] = useState([])
+  const [busy, setBusy] = useState(false)
+
+  // Vorsitz nachziehen, wenn Meeting wechselt
+  useEffect(() => { setVorsitz(AGENDA_BY_ID[meetingId]?.vorsitz || '') }, [meetingId])
+
+  const addEintrag = (typ) => setEintraege(e => [...e, { typ, text: '', ...(typ === 'fortschritt' ? { ms_id: '', wert: 50 } : typ === 'blocker' ? { ms_id: '', slip: 7 } : typ === 'commitment' ? { owner: '', bis: '', ms_id: '' } : typ === 'entscheid' ? { status: 'getroffen', ebene: 'GL' } : {}) }])
+  const upd = (i, patch) => setEintraege(e => e.map((x, k) => k === i ? { ...x, ...patch } : x))
+  const del = (i) => setEintraege(e => e.filter((_, k) => k !== i))
+
+  const submit = async () => {
+    setBusy(true)
+    await saveSitzung({
+      meeting_id: meetingId, meeting_name: FR_MEETINGS.find(m => m.id === meetingId)?.name || meetingId,
+      datum, vorsitz, erfasst_von: erfasstVon, eintraege, role, me,
+    })
+    setBusy(false)
+  }
+
+  const inp = { background: T.panelSoft, borderColor: T.line, color: T.ink }
+  return (
+    <div className="max-w-4xl space-y-4">
+      <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.brass + '55' }}>
+        <div className="text-[11px] uppercase tracking-widest mb-3" style={{ color: T.inkFaint, fontFamily: T.mono }}>
+          Sitzung erfassen — Output entlang der Traktandenliste → schreibt in den Tower
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-[12px]">
+          <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>Meeting</span>
+            <select value={meetingId} onChange={e => setMeetingId(e.target.value)} className="rounded border px-2 py-1" style={inp}>
+              {FR_MEETINGS.map(m => <option key={m.id} value={m.id} style={{ color: '#111' }}>{m.name}</option>)}
+            </select></label>
+          <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>Datum</span>
+            <input type="date" value={datum} onChange={e => setDatum(e.target.value)} className="rounded border px-2 py-1" style={{ ...inp, fontFamily: T.mono }} /></label>
+          <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>Vorsitz</span>
+            <input value={vorsitz} onChange={e => setVorsitz(e.target.value)} className="rounded border px-2 py-1" style={inp} /></label>
+          <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>Erfasst von</span>
+            <input value={erfasstVon} onChange={e => setErfasstVon(e.target.value)} className="rounded border px-2 py-1" style={inp} /></label>
+        </div>
+      </div>
+
+      {/* Agenda als Leitfaden */}
+      {agenda && (
+        <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-[11px] uppercase tracking-widest" style={{ color: T.inkFaint, fontFamily: T.mono }}>Traktanden dieser Sitzung (Leitfaden)</div>
+            <a href={`/traktanden/${meetingId}.pdf`} target="_blank" rel="noreferrer" className="text-[11px]" style={{ color: T.brass }}><FileText size={11} className="inline mr-1" />Agenda-PDF</a>
+          </div>
+          <ol className="list-decimal pl-5 text-[11.5px] space-y-0.5" style={{ color: T.inkDim }}>
+            {(agenda.traktanden || []).map((t, i) => <li key={i}>{t.titel} <span style={{ color: T.inkFaint }}>— {t.output}</span></li>)}
+          </ol>
+        </div>
+      )}
+
+      {/* Ergebnisse erfassen */}
+      <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
+        <div className="flex items-center flex-wrap gap-2 mb-3">
+          <span className="text-[12px] font-semibold" style={{ color: T.ink }}>Ergebnisse</span>
+          {Object.entries(TYP_LABEL).map(([typ, lbl]) => (
+            <button key={typ} onClick={() => addEintrag(typ)} className="flex items-center gap-1 text-[11px] px-2 py-1 rounded border"
+              style={{ borderColor: T.line, color: T.brass }}><Plus size={11} /> {lbl}</button>
+          ))}
+        </div>
+        {eintraege.length === 0 && <div className="text-[12px]" style={{ color: T.inkFaint }}>Noch nichts erfasst — oben einen Ergebnistyp hinzufügen.</div>}
+        <div className="space-y-2">
+          {eintraege.map((e, i) => (
+            <div key={i} className="rounded border p-2.5 flex flex-wrap items-start gap-2" style={{ borderColor: T.line, background: T.panelSoft }}>
+              <span className="text-[10px] px-2 py-1 rounded" style={{ background: T.brass + '22', color: T.brass, fontFamily: T.mono }}>{TYP_LABEL[e.typ]}</span>
+              {(e.typ === 'fortschritt' || e.typ === 'blocker') && (
+                <select value={e.ms_id} onChange={ev => upd(i, { ms_id: ev.target.value })} className="rounded border px-2 py-1 text-[11px]" style={inp}>
+                  <option value="" style={{ color: '#111' }}>— Milestone —</option>
+                  {ms.map(m => <option key={m.id} value={m.id} style={{ color: '#111' }}>{m.id} · {m.name.slice(0, 44)}</option>)}
+                </select>
+              )}
+              {e.typ === 'fortschritt' && (
+                <input type="number" min={0} max={100} value={e.wert} onChange={ev => upd(i, { wert: +ev.target.value })}
+                  className="w-20 rounded border px-2 py-1 text-[11px]" style={{ ...inp, fontFamily: T.mono }} title="Fortschritt %" />
+              )}
+              {e.typ === 'blocker' && (
+                <input type="number" min={0} max={365} value={e.slip} onChange={ev => upd(i, { slip: +ev.target.value })}
+                  className="w-24 rounded border px-2 py-1 text-[11px]" style={{ ...inp, fontFamily: T.mono }} title="Verzug in Tagen" />
+              )}
+              {e.typ === 'commitment' && (<>
+                <input placeholder="Owner" value={e.owner} onChange={ev => upd(i, { owner: ev.target.value })} className="w-28 rounded border px-2 py-1 text-[11px]" style={inp} />
+                <input type="date" value={e.bis} onChange={ev => upd(i, { bis: ev.target.value })} className="rounded border px-2 py-1 text-[11px]" style={{ ...inp, fontFamily: T.mono }} title="bis wann" />
+                <select value={e.ms_id || ''} onChange={ev => upd(i, { ms_id: ev.target.value })} className="rounded border px-2 py-1 text-[11px]" style={inp}
+                  title="Optional: an Milestone koppeln — wird dann als treibende Handlung gespiegelt">
+                  <option value="" style={{ color: '#111' }}>— optional: Milestone —</option>
+                  {ms.map(m => <option key={m.id} value={m.id} style={{ color: '#111' }}>{m.id} · {m.name.slice(0, 44)}</option>)}
+                </select>
+              </>)}
+              {e.typ === 'entscheid' && (<>
+                <select value={e.status} onChange={ev => upd(i, { status: ev.target.value })} className="rounded border px-2 py-1 text-[11px]" style={inp}>
+                  <option value="getroffen" style={{ color: '#111' }}>getroffen</option>
+                  <option value="offen" style={{ color: '#111' }}>offen (Entscheids-Queue)</option>
+                </select>
+                <select value={e.ebene} onChange={ev => upd(i, { ebene: ev.target.value })} className="rounded border px-2 py-1 text-[11px]" style={inp} title="Eskalationsebene — VR erscheint im VR-Report">
+                  <option value="GL" style={{ color: '#111' }}>Ebene GL</option>
+                  <option value="VR" style={{ color: '#111' }}>Ebene VR</option>
+                </select>
+              </>)}
+              <input placeholder={e.typ === 'notiz' ? 'Notiz …' : 'Beschreibung …'} value={e.text} onChange={ev => upd(i, { text: ev.target.value })}
+                className="flex-1 min-w-[180px] rounded border px-2 py-1 text-[11px]" style={inp} />
+              <button onClick={() => del(i)} className="p-1 rounded" style={{ color: T.red }} title="entfernen"><Trash2 size={13} /></button>
+            </div>
+          ))}
+        </div>
+        <div className="flex items-center gap-3 mt-4">
+          <button onClick={submit} disabled={busy || !eintraege.length}
+            className="flex items-center gap-1.5 px-4 py-2 rounded font-semibold text-[13px]"
+            style={{ background: eintraege.length ? T.brass : T.line, color: '#0b1220', opacity: busy ? 0.6 : 1 }}>
+            <Save size={15} /> {busy ? 'Speichert…' : 'Sitzung speichern → Tower'}
+          </button>
+          <span className="text-[11px]" style={{ color: T.inkFaint }}>Fortschritt/Blocker aktualisieren Milestones (Ampel folgt automatisch); alles landet im Protokoll.</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── AUFGABEN — flache, filterbare Liste ALLER Handlungen (Phase × WS × Person ×
+// Status), sortiert nach Fälligkeit. Beantwortet «was muss ICH bis wann tun?» —
+// das Gegenstück zur Milestone-Sicht des Kontrollturms. Abhaken wie überall:
+// /api/task/status, CoS alles / Owner nur eigene, Ampel bleibt abgeleitet.
+function AufgabenView({ role, me, onOpenMs }) {
+  const [fPhase, setFPhase] = useState('alle')
+  const [fWs, setFWs] = useState('alle')
+  const [fOwner, setFOwner] = useState(role === 'Owner' ? me : 'alle')
+  const [fStatus, setFStatus] = useState('offen')
+  const [busy, setBusy] = useState(null)
+
+  const rows = ALL_TASKS.map(t => ({ ...t, _m: t.ms_id ? MS_META[t.ms_id] : null }))
+  const owners = [...new Set(rows.map(t => t.owner).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'de'))
+  const wss = [...new Set(rows.map(t => t._m?.ws).filter(Boolean))].sort()
+  const phases = PHASE_ORDER.filter(p => rows.some(t => t._m?.phase === p))
+
+  const filtered = rows.filter(t =>
+    (fPhase === 'alle' || (fPhase === 'ohne' ? !t._m : t._m?.phase === fPhase))
+    && (fWs === 'alle' || (fWs === 'ohne' ? !t._m : t._m?.ws === fWs))
+    && (fOwner === 'alle' || t.owner === fOwner)
+    && (fStatus === 'alle' || (fStatus === 'ueberfaellig' ? taskOverdue(t) : t.status === fStatus))
+  ).sort((a, b) => {
+    if (a.status !== b.status) return a.status === 'offen' ? -1 : 1
+    if (!a.due && !b.due) return a.id.localeCompare(b.id)
+    if (!a.due) return 1
+    if (!b.due) return -1
+    return a.due.localeCompare(b.due)
+  })
+  const nOffen = filtered.filter(t => t.status === 'offen').length
+  const nOver = filtered.filter(taskOverdue).length
+  const mayToggle = (t) => role === 'CoS' || (role === 'Owner' && t.owner === me)
+  const toggle = async (t) => {
+    if (busy || !mayToggle(t)) return
+    setBusy(t.id)
+    try {
+      const r = await fetch('/api/task/status', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role, me, id: t.id, status: t.status === 'erledigt' ? 'offen' : 'erledigt' }),
+      })
+      const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
+      if (j.ok) { window.location.reload() }
+      else { alert('Abhaken fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(null) }
+    } catch (e) { alert('Abhaken fehlgeschlagen: ' + e); setBusy(null) }
+  }
+  const sel = { background: T.panelSoft, borderColor: T.line, color: T.ink }
+  return (
+    <div className="space-y-3">
+      <div className="rounded-xl border overflow-hidden" style={{ background: T.panel, borderColor: T.line }}>
+        <div className="flex items-center justify-between flex-wrap gap-2 px-4 py-2 border-b" style={{ borderColor: T.line }}>
+          <div className="text-[13px] font-semibold tracking-widest" style={{ fontFamily: T.mono, color: T.brass }}>
+            ── AUFGABEN · ALLE HANDLUNGEN ──
+            <span className="ml-2 text-[11px] font-normal" style={{ color: T.inkDim }}>{nOffen} offen{nOver ? ` · ${nOver} überfällig ⚠` : ''} · {filtered.length} angezeigt / {rows.length} gesamt</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-[12px] flex-wrap justify-end" style={{ color: T.inkDim }}>
+            <Filter size={13} />
+            <select value={fStatus} onChange={e => setFStatus(e.target.value)} className="bg-transparent border rounded px-1.5 py-0.5" style={sel}>
+              <option value="offen" style={{ color: '#111' }}>offen</option>
+              <option value="ueberfaellig" style={{ color: '#111' }}>überfällig ⚠</option>
+              <option value="erledigt" style={{ color: '#111' }}>erledigt</option>
+              <option value="alle" style={{ color: '#111' }}>alle Status</option>
+            </select>
+            <select value={fPhase} onChange={e => setFPhase(e.target.value)} className="bg-transparent border rounded px-1.5 py-0.5" style={sel}>
+              <option value="alle" style={{ color: '#111' }}>alle Phasen</option>
+              {phases.map(p => <option key={p} value={p} style={{ color: '#111' }}>{p}</option>)}
+              <option value="ohne" style={{ color: '#111' }}>ohne Milestone</option>
+            </select>
+            <select value={fWs} onChange={e => setFWs(e.target.value)} className="bg-transparent border rounded px-1.5 py-0.5" style={sel}>
+              <option value="alle" style={{ color: '#111' }}>alle Ströme</option>
+              {wss.map(w => <option key={w} value={w} style={{ color: '#111' }}>{w}</option>)}
+            </select>
+            <select value={fOwner} onChange={e => setFOwner(e.target.value)} className="bg-transparent border rounded px-1.5 py-0.5" style={sel}>
+              <option value="alle" style={{ color: '#111' }}>alle Verantwortlichen</option>
+              {owners.map(o => <option key={o} value={o} style={{ color: '#111' }}>{o.length > 30 ? o.slice(0, 30) + '…' : o}</option>)}
+            </select>
+          </div>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-[12px]">
+            <thead>
+              <tr className="text-left" style={{ color: T.inkFaint, fontFamily: T.mono }}>
+                <th className="px-3 py-1.5 w-8"></th>
+                <th className="px-2 py-1.5 w-16">NR</th>
+                <th className="px-2 py-1.5">HANDLUNG</th>
+                <th className="px-2 py-1.5">VERANTWORTLICH</th>
+                <th className="px-2 py-1.5">FÄLLIG</th>
+                <th className="px-2 py-1.5">MILESTONE</th>
+                <th className="px-2 py-1.5">PHASE</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.length === 0 && (
+                <tr><td colSpan={7} className="px-4 py-6 text-[12px]" style={{ color: T.inkFaint }}>Keine Handlungen für diese Filter.</td></tr>
+              )}
+              {filtered.map(t => {
+                const ov = taskOverdue(t)
+                const can = mayToggle(t)
+                return (
+                  <tr key={t.id} style={{ borderTop: `1px solid ${T.line}`, opacity: t.status === 'erledigt' ? 0.55 : 1 }}>
+                    <td className="px-3 py-1.5">
+                      <button onClick={() => toggle(t)} disabled={!can || !!busy}
+                        title={can ? (t.status === 'erledigt' ? 'wieder öffnen' : 'abhaken') : 'Rolle darf diese Handlung nicht abhaken'}
+                        style={{ cursor: can ? 'pointer' : 'not-allowed', opacity: busy === t.id ? 0.4 : 1 }}>
+                        {t.status === 'erledigt'
+                          ? <CheckCircle2 size={15} style={{ color: T.green }} />
+                          : <Circle size={15} style={{ color: can ? T.brass : T.grey }} />}
+                      </button>
+                    </td>
+                    <td className="px-2 py-1.5 whitespace-nowrap" title={t.id} style={{ fontFamily: T.mono, color: T.brass }}>{tnr(t)}</td>
+                    <td className="px-2 py-1.5" style={{ textDecoration: t.status === 'erledigt' ? 'line-through' : 'none' }}>{t.text}</td>
+                    <td className="px-2 py-1.5 whitespace-nowrap" style={{ fontFamily: T.mono }}>{t.owner || '—'}</td>
+                    <td className="px-2 py-1.5 whitespace-nowrap" style={{ fontFamily: T.mono, color: ov ? T.red : T.ink }}>
+                      {t.due ? fmtDate(t.due) : '—'}{ov ? ' ⚠' : ''}
+                    </td>
+                    <td className="px-2 py-1.5 whitespace-nowrap" style={{ fontFamily: T.mono }}>
+                      {t.ms_id
+                        ? <button onClick={() => onOpenMs(t.ms_id)} title={t._m?.name || t.ms_id} style={{ color: T.brass }}>{t.ms_id}</button>
+                        : <span style={{ color: T.grey }}>—</span>}
+                    </td>
+                    <td className="px-2 py-1.5">{t._m ? <PhaseTag p={t._m.phase} /> : <span style={{ color: T.grey, fontSize: 10 }}>—</span>}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div className="px-4 py-1.5 text-[10px] border-t" style={{ borderColor: T.line, color: T.inkFaint }}>
+          Quelle tasks.json · Abhaken = persistent, gekoppelte Handlungen treiben den Milestone-Fortschritt (Ampel bleibt abgeleitet) · überfällig = fällig &lt; Steuerungsdatum {fmtDate(BASE.meta.today)} · Milestone-Klick öffnet das Briefing
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── PROTOKOLLE — erfasste Sitzungen + aggregierte offene Commitments/Entscheide.
+const TYP_ICON = { fortschritt: '▲', commitment: '☑', entscheid: '⚖', blocker: '⛔', notiz: '·' }
+function ProtokolleView({ role, me }) {
+  const protos = PROTO.protokolle || []
+  const [busy, setBusy] = useState(null)
+  const exportP = async (id) => {
+    setBusy(id)
+    try {
+      const r = await fetch('/api/protokoll/export', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) })
+      const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
+      if (j.ok) { sessionStorage.setItem('rubicon_tab', 'protokolle'); window.location.reload() }
+      else { alert('Export fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(null) }
+    } catch (e) { alert('Export fehlgeschlagen: ' + e); setBusy(null) }
+  }
+  // Commitments = gespiegelte Tasks (Schnitt 2) — status-bewusst: erledigte fallen raus.
+  const commitmentTasks = ALL_TASKS.filter(t => t.source === 'sitzung' || t.source === 'gemini')
+  const offeneCommitments = commitmentTasks.filter(t => t.status === 'offen')
+  const nErledigt = commitmentTasks.length - offeneCommitments.length
+  const mayToggle = (t) => role === 'CoS' || (role === 'Owner' && t.owner === me)
+  const erledige = async (t) => {
+    if (busy || !mayToggle(t)) return
+    setBusy(t.id)
+    try {
+      const r = await fetch('/api/task/status', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role, me, id: t.id, status: 'erledigt' }),
+      })
+      const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
+      if (j.ok) { window.location.reload() }
+      else { alert('Erledigen fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(null) }
+    } catch (e) { alert('Erledigen fehlgeschlagen: ' + e); setBusy(null) }
+  }
+  const offeneEntscheide = protos.flatMap(p => (p.eintraege || []).filter(e => e.typ === 'entscheid' && e.status === 'offen').map(e => ({ ...e, _m: p.meeting_name, _d: p.datum })))
+  return (
+    <div className="max-w-5xl space-y-4">
+      <div className="grid md:grid-cols-2 gap-4">
+        <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
+          <div className="text-[11px] uppercase tracking-widest mb-2" style={{ color: T.inkFaint, fontFamily: T.mono }}>
+            Offene Commitments ({offeneCommitments.length}){nErledigt > 0 && <span style={{ color: T.green }}> · {nErledigt} erledigt ✓</span>}
+          </div>
+          {offeneCommitments.length === 0 && <div className="text-[12px]" style={{ color: T.inkFaint }}>{commitmentTasks.length ? 'alle erledigt ✓' : 'keine erfasst'}</div>}
+          {offeneCommitments.map((c, i) => {
+            const ov = taskOverdue(c)
+            const can = mayToggle(c)
+            return (
+              <div key={c.id} className="text-[12px] py-1 flex items-start gap-2" style={{ borderTop: i ? `1px solid ${T.line}` : 'none' }}>
+                <button onClick={() => erledige(c)} disabled={!can || !!busy} className="mt-0.5 shrink-0"
+                  title={can ? 'als erledigt abhaken' : 'Rolle darf dieses Commitment nicht abhaken'}
+                  style={{ cursor: can ? 'pointer' : 'not-allowed', opacity: busy === c.id ? 0.4 : 1 }}>
+                  <Circle size={14} style={{ color: can ? T.brass : T.grey }} />
+                </button>
+                <div className="flex-1 min-w-0">
+                  <span title={c.id} style={{ fontFamily: T.mono, color: T.brass, fontSize: 11 }}>{tnr(c)} </span>
+                  <b style={{ color: T.ink }}>{c.owner || '—'}</b> <span style={{ color: T.inkDim }}>{c.text}</span>
+                  {c.due && <span style={{ fontFamily: T.mono, color: ov ? T.red : T.amber }}> · bis {fmtDate(c.due)}{ov ? ' ⚠' : ''}</span>}
+                  {c.ms_id && <span style={{ fontFamily: T.mono, color: T.brass }} title="an Milestone gekoppelt — treibt dessen Fortschritt"> · ▸ {c.ms_id}</span>}
+                  <span style={{ color: T.inkFaint }}> · {c.origin || ''}</span>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+        <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
+          <div className="text-[11px] uppercase tracking-widest mb-2" style={{ color: T.inkFaint, fontFamily: T.mono }}>Offene Entscheide ({offeneEntscheide.length})</div>
+          {offeneEntscheide.length === 0 && <div className="text-[12px]" style={{ color: T.inkFaint }}>keine offen</div>}
+          {offeneEntscheide.map((c, i) => (
+            <div key={i} className="text-[12px] py-1" style={{ borderTop: i ? `1px solid ${T.line}` : 'none', color: T.inkDim }}>
+              {c.text} <span style={{ color: T.inkFaint }}>· {c._m} ({fmtDate(c._d)})</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-xl border overflow-hidden" style={{ background: T.panel, borderColor: T.line }}>
+        <div className="px-4 py-2 text-[13px] font-semibold border-b" style={{ borderColor: T.line }}>
+          Sitzungsprotokolle <span className="text-[10px]" style={{ color: T.inkFaint }}>({protos.length} — neueste zuerst; Quelle protokolle.json)</span>
+        </div>
+        {protos.length === 0 && <div className="px-4 py-6 text-[12px]" style={{ color: T.inkFaint }}>Noch keine Sitzung erfasst. → Tab «Sitzung erfassen».</div>}
+        <div className="divide-y" style={{ borderColor: T.line }}>
+          {protos.map(p => (
+            <div key={p.id} className="px-4 py-3" style={{ borderTop: `1px solid ${T.line}` }}>
+              <div className="flex flex-wrap items-center gap-2 text-[12px]">
+                <b style={{ color: T.brass }}>{p.meeting_name}</b>
+                <span style={{ fontFamily: T.mono, color: T.inkDim }}>{fmtDate(p.datum)}</span>
+                {p.vorsitz && <span style={{ color: T.inkFaint }}>· Vorsitz {p.vorsitz}</span>}
+                {p.erfasst_von && <span style={{ color: T.inkFaint }}>· erfasst: {p.erfasst_von}</span>}
+                <span style={{ fontFamily: T.mono, color: T.inkFaint }}>· {p.id}</span>
+                <span className="flex-1" />
+                {p.export?.pdf ? (
+                  <span className="flex items-center gap-1.5">
+                    <a href={p.export.pdf} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.brass, color: T.brass }}><FileText size={10} /> PDF</a>
+                    {p.export.doc_url && <a href={p.export.doc_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.blue, color: T.blue }}><FileText size={10} /> Doc</a>}
+                    <button onClick={() => exportP(p.id)} disabled={busy === p.id} className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.line, color: T.inkFaint }} title="neu erzeugen">{busy === p.id ? '…' : '↻'}</button>
+                  </span>
+                ) : (
+                  <button onClick={() => exportP(p.id)} disabled={busy === p.id} className="inline-flex items-center gap-1 px-2 py-1 rounded border text-[10px]" style={{ borderColor: T.brass, color: T.brass }}>
+                    <FileText size={10} /> {busy === p.id ? 'erzeugt… (~15s)' : 'Protokoll erzeugen (PDF + Doc)'}
+                  </button>
+                )}
+              </div>
+              <div className="mt-1.5 space-y-1">
+                {(p.eintraege || []).map((e, i) => (
+                  <div key={i} className="text-[11.5px] flex gap-2">
+                    <span style={{ color: T.brass, width: 14 }}>{TYP_ICON[e.typ] || '·'}</span>
+                    <span style={{ color: T.inkDim }}>
+                      <b style={{ color: T.ink }}>{TYP_LABEL[e.typ]}:</b>{' '}
+                      {e.ms_id && <span style={{ fontFamily: T.mono }}>{e.ms_id} </span>}
+                      {e.typ === 'fortschritt' && <b style={{ color: T.green }}>{e.wert}% </b>}
+                      {e.typ === 'blocker' && <b style={{ color: T.red }}>+{e.slip} T </b>}
+                      {e.text}
+                      {e.owner && <span> — {e.owner}</span>}
+                      {e.bis && <span style={{ fontFamily: T.mono, color: T.amber }}> (bis {fmtDate(e.bis)})</span>}
+                      {e.typ === 'entscheid' && <span style={{ color: e.status === 'offen' ? T.amber : T.green }}> [{e.status}]</span>}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── REPORTS — verdichtete Standard-Reports (Woche/Monat/Quartal), auto-generiert
+// aus projekt.yaml + protokolle.json via /api/report/generate. Kein Neu-Erfassen.
+const LVL_LABEL = { woche: 'Wochen-Report', monat: 'Monats-Report', vr: 'VR-Report (Quartal)' }
+function ReportsView({ canEdit, today }) {
+  const reports = REPORTS.reports || []
+  const qOf = (d) => `${d.slice(0, 4)}-Q${Math.ceil(parseInt(d.slice(5, 7), 10) / 3)}`
+  const defP = (lvl) => lvl === 'woche' ? today : lvl === 'monat' ? today.slice(0, 7) : qOf(today)
+  const [level, setLevel] = useState('vr')
+  const [period, setPeriod] = useState(defP('vr'))
+  const [comment, setComment] = useState('')
+  const [busy, setBusy] = useState(false)
+  const changeLevel = (l) => { setLevel(l); setPeriod(defP(l)); setComment('') }
+  const gen = async () => {
+    setBusy(true)
+    try {
+      if (comment.trim()) await fetch('/api/report/comment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: `${level}:${period}:programm`, text: comment.trim() }) })
+      const r = await fetch('/api/report/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ level, period }) })
+      const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
+      if (j.ok) { sessionStorage.setItem('rubicon_tab', 'reports'); window.location.reload() }
+      else { alert('Report fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(false) }
+    } catch (err) { alert('Report fehlgeschlagen: ' + err); setBusy(false) }
+  }
+  const badge = { woche: T.green, monat: T.blue, vr: T.brass }
+  const inp = { background: T.panelSoft, borderColor: T.line, color: T.ink }
+  return (
+    <div className="max-w-5xl space-y-4">
+      <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.brass + '55' }}>
+        <div className="text-[11px] uppercase tracking-widest mb-1" style={{ color: T.inkFaint, fontFamily: T.mono }}>
+          Verdichtete Reports — Woche → Monat → Quartal aus einer Datenbasis
+        </div>
+        <div className="text-[11px] mb-3" style={{ color: T.inkDim }}>
+          Kein Zusammentragen: jeder Report wird aus den erfassten Sitzungen + dem Milestone-Stand berechnet. VR-getaggte Entscheide wandern automatisch ins VR-Pack.
+        </div>
+        <div className="flex flex-wrap items-end gap-3">
+          <label className="flex flex-col gap-1 text-[12px]"><span style={{ color: T.inkDim }}>Ebene</span>
+            <select value={level} onChange={e => changeLevel(e.target.value)} className="rounded border px-2 py-1" style={inp}>
+              <option value="woche" style={{ color: '#111' }}>Woche (GL-Weekly)</option>
+              <option value="monat" style={{ color: '#111' }}>Monat (MBR)</option>
+              <option value="vr" style={{ color: '#111' }}>Quartal (VR)</option>
+            </select>
+          </label>
+          <label className="flex flex-col gap-1 text-[12px]"><span style={{ color: T.inkDim }}>Periode</span>
+            {level === 'woche' && <input type="date" value={period} onChange={e => setPeriod(e.target.value)} className="rounded border px-2 py-1" style={{ ...inp, fontFamily: T.mono }} />}
+            {level === 'monat' && <input type="month" value={period} onChange={e => setPeriod(e.target.value)} className="rounded border px-2 py-1" style={{ ...inp, fontFamily: T.mono }} />}
+            {level === 'vr' && (
+              <select value={period} onChange={e => setPeriod(e.target.value)} className="rounded border px-2 py-1" style={inp}>
+                {['2026-Q3', '2026-Q4', '2027-Q1', '2027-Q2'].map(q => <option key={q} value={q} style={{ color: '#111' }}>{q}</option>)}
+              </select>
+            )}
+          </label>
+          <label className="flex flex-col gap-1 text-[12px] flex-1 min-w-[240px]"><span style={{ color: T.inkDim }}>{level === 'vr' ? 'Chairman-Statement (optional)' : 'Programm-Kommentar (optional)'}</span>
+            <input value={comment} onChange={e => setComment(e.target.value)} placeholder="das Urteil, das die Daten nicht liefern …" className="rounded border px-2 py-1" style={inp} />
+          </label>
+          {canEdit
+            ? <button onClick={gen} disabled={busy} className="flex items-center gap-1.5 px-4 py-2 rounded font-semibold text-[13px]" style={{ background: T.brass, color: '#0b1220', opacity: busy ? 0.6 : 1 }}><BarChart3 size={15} /> {busy ? 'erzeugt… (~15s)' : `${LVL_LABEL[level]} erzeugen`}</button>
+            : <span className="text-[11px]" style={{ color: T.inkFaint }}><Lock size={12} className="inline mr-1" />nur Lesen</span>}
+        </div>
+      </div>
+
+      <div className="rounded-xl border overflow-hidden" style={{ background: T.panel, borderColor: T.line }}>
+        <div className="px-4 py-2 text-[13px] font-semibold border-b" style={{ borderColor: T.line }}>
+          Erzeugte Reports <span className="text-[10px]" style={{ color: T.inkFaint }}>({reports.length} — neueste zuerst; Quelle reports_index.json)</span>
+        </div>
+        {reports.length === 0 && <div className="px-4 py-6 text-[12px]" style={{ color: T.inkFaint }}>Noch kein Report erzeugt.</div>}
+        <div className="divide-y" style={{ borderColor: T.line }}>
+          {reports.map(r => (
+            <div key={r.id} className="px-4 py-2.5 flex flex-wrap items-center gap-2 text-[12px]" style={{ borderTop: `1px solid ${T.line}` }}>
+              <span className="px-1.5 py-0.5 rounded text-[10px]" style={{ background: (badge[r.level] || T.grey) + '22', color: badge[r.level] || T.grey, fontFamily: T.mono }}>{LVL_LABEL[r.level] || r.level}</span>
+              <b style={{ color: T.ink }}>{r.label}</b>
+              <span className="muted" style={{ color: T.inkFaint, fontFamily: T.mono }}>Stand {r.stand}</span>
+              <span className="flex-1" />
+              <a href={r.pdf} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.brass, color: T.brass }}><FileText size={10} /> PDF</a>
+              {r.doc_url && <a href={r.doc_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.blue, color: T.blue }}><FileText size={10} /> Doc</a>}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Handlungen im Milestone-Modal — abhakbar (CoS alles, Owner nur eigene; sonst lesend).
+// Abhaken schreibt via POST /api/task/status (atomar, serverseitiges Owner-Scoping);
+// der Roll-up VERDIENT den Fortschritt, HMR lädt neu, Modal öffnet sich wieder.
+function TaskSection({ m, role, me }) {
+  const ts = tasksFor(m.id)
+  const [busy, setBusy] = useState(null)
+  if (!ts.length) return null
+  const done = ts.filter(t => t.status === 'erledigt').length
+  const driving = m.progress_source === 'tasks'
+  const mayToggle = (t) => role === 'CoS' || (role === 'Owner' && t.owner === me)
+  const anyToggle = ts.some(mayToggle)
+  const toggle = async (t) => {
+    if (busy || !mayToggle(t)) return
+    setBusy(t.id)
+    // Modal-Wiederöffnung VOR dem Write vormerken — der HMR-Reload nach dem
+    // Datei-Write kann schneller sein als die Fetch-Antwort.
+    sessionStorage.setItem('rubicon_selms', m.id)
+    try {
+      const r = await fetch('/api/task/status', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role, me, id: t.id, status: t.status === 'erledigt' ? 'offen' : 'erledigt' }),
+      })
+      const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
+      if (j.ok) { window.location.reload() }
+      else { sessionStorage.removeItem('rubicon_selms'); alert('Abhaken fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(null) }
+    } catch (e) { sessionStorage.removeItem('rubicon_selms'); alert('Abhaken fehlgeschlagen: ' + e); setBusy(null) }
+  }
+  return (
+    <div className="mx-5 mt-3 rounded-xl border overflow-hidden" style={{ borderColor: T.brass + '55' }}>
+      <div className="px-3 py-2 flex flex-wrap items-center gap-2 text-[11px] font-bold tracking-wide"
+        style={{ background: T.panelSoft, color: T.brass, fontFamily: T.mono }}>
+        <ListChecks size={13} />
+        HANDLUNGEN — {done}/{ts.length} ERLEDIGT
+        {driving
+          ? <span className="px-1.5 py-0.5 rounded" style={{ background: T.brass + '22', border: `1px solid ${T.brass}55` }}>treiben den Fortschritt: {m.progress}% verdient</span>
+          : <span style={{ color: T.inkFaint, fontWeight: 'normal' }}>(informativ — Fortschritt manuell)</span>}
+      </div>
+      <div className="divide-y" style={{ borderColor: T.line }}>
+        {ts.map(t => {
+          const ov = taskOverdue(t)
+          const can = mayToggle(t)
+          return (
+            <div key={t.id} className="px-3 py-2 flex items-start gap-2.5 text-[12px]">
+              <button onClick={() => toggle(t)} disabled={!can || !!busy}
+                title={can ? (t.status === 'erledigt' ? 'wieder öffnen' : 'als erledigt abhaken') : 'Rolle darf diese Handlung nicht abhaken'}
+                className="mt-0.5 shrink-0" style={{ cursor: can ? 'pointer' : 'not-allowed', opacity: busy === t.id ? 0.4 : 1 }}>
+                {t.status === 'erledigt'
+                  ? <CheckCircle2 size={17} style={{ color: T.green }} />
+                  : <Circle size={17} style={{ color: can ? T.brass : T.grey }} />}
+              </button>
+              <div className="flex-1 min-w-0">
+                <span style={{ color: t.status === 'erledigt' ? T.inkFaint : T.ink, textDecoration: t.status === 'erledigt' ? 'line-through' : 'none' }}>
+                  {t.text}
+                </span>
+                <div className="flex flex-wrap gap-x-3 text-[10.5px] mt-0.5" style={{ fontFamily: T.mono, color: T.inkFaint }}>
+                  <span title={t.id} style={{ color: T.brass }}>{tnr(t)}</span>
+                  {t.owner && <span>{t.owner}</span>}
+                  {t.due
+                    ? <span style={{ color: ov ? T.red : T.inkFaint }}>fällig {fmtDate(t.due)}{ov ? ' ⚠ überfällig' : ''}</span>
+                    : <span>fällig — (Datenlücke)</span>}
+                  {t.erledigt_am && <span style={{ color: T.green }}>erledigt {fmtDate(t.erledigt_am)}</span>}
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+      <div className="px-3 py-1.5 text-[10px] border-t flex items-center gap-1.5" style={{ borderColor: T.line, color: T.inkFaint }}>
+        {anyToggle
+          ? <>Abhaken schreibt persistent (tasks.json{driving ? ' + verdienter Fortschritt in projekt.yaml' : ''}) · Ampel bleibt abgeleitet</>
+          : <><Lock size={11} /> Rolle «{role}» ist hier nur lesend{role === 'Owner' ? ' (keine eigene Handlung)' : ''}</>}
+      </div>
+    </div>
+  )
+}
+
+// Milestone-Detail-Modal — ausführliche Aufgaben-Definition (Briefing),
+// Struktur analog Commercial-Masterplan (KONTEXT/LEISTUNG/VORGEHEN/KPI/RISIKEN)
+// + eingebettetes Briefing-PDF (public/briefings/<id>.pdf).
+function BriefingModal({ m, role, me, onClose }) {
+  const b = BRIEFINGS[m.id] || {}
+  const st = statusOf(m, NOW)
+  const Sect = ({ title, children }) => (
+    <div className="mt-3">
+      <div className="text-[11px] font-bold tracking-wide" style={{ color: T.brass }}>{title}</div>
+      <div className="text-[12px] mt-0.5" style={{ color: T.ink }}>{children}</div>
+    </div>
+  )
+  const pdfUrl = `/briefings/${m.id}.pdf`
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-8"
+      style={{ background: '#000a' }} onClick={onClose}>
+      <div className="w-full max-w-3xl max-h-full overflow-auto rounded-xl border shadow-2xl"
+        style={{ background: T.panel, borderColor: T.brass + '66' }} onClick={e => e.stopPropagation()}>
+        {/* Kopf */}
+        <div className="sticky top-0 px-5 py-3 border-b flex items-start gap-3"
+          style={{ background: T.panel, borderColor: T.line }}>
+          <div className="flex-1">
+            <div className="flex flex-wrap items-center gap-2 text-[11px]" style={{ fontFamily: T.mono, color: T.inkDim }}>
+              <b style={{ color: T.brass }}>{m.id}</b>
+              <span>{m._wsName || m._ws}</span>
+              {m.prio && <b style={{ color: T.red }}>Priorität {m.prio}</b>}
+              <Pill st={st} />
+              <span>{m.quarter || m.phase || ''}</span>
+              {m.critical && <span style={{ color: T.brass }}>◆ kritischer Pfad</span>}
+              {m.nachlauf && <span style={{ color: T.brass }}>⏳ Nachlauf Q2/27</span>}
+              {m.gate && <span style={{ color: T.brass }}>Gate {m.gate}</span>}
+            </div>
+            <div className="text-[16px] font-bold mt-1" style={{ color: T.ink }}>{m.name}</div>
+          </div>
+          <a href={pdfUrl} target="_blank" rel="noreferrer"
+            className="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded border whitespace-nowrap"
+            style={{ borderColor: T.brass, color: T.brass }}>
+            <FileText size={13} /> PDF öffnen
+          </a>
+          <button onClick={onClose} aria-label="Schliessen"
+            className="p-1.5 rounded border" style={{ borderColor: T.line, color: T.inkDim }}>
+            <X size={15} />
+          </button>
+        </div>
+        {/* Meta */}
+        <div className="px-5 pt-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-1.5 text-[11.5px] rounded p-3"
+            style={{ background: T.panelSoft }}>
+            <div><span style={{ color: T.inkFaint }}>Owner</span><br /><b style={{ fontFamily: T.mono }}>{m.owner || 'zu klären'}</b></div>
+            <div><span style={{ color: T.inkFaint }}>Fällig bis</span><br /><b style={{ fontFamily: T.mono }}>{fmtDate(m.due)}{m.date_assumed ? ' *' : ''}</b></div>
+            <div><span style={{ color: T.inkFaint }}>Start</span><br /><b style={{ fontFamily: T.mono }}>{m.start ? fmtDate(m.start) : '—'}</b></div>
+            <div><span style={{ color: T.inkFaint }}>Abhängig von</span><br /><b style={{ fontFamily: T.mono }}>{(m.depends_on || []).join(', ') || '—'}</b></div>
+          </div>
+          {b.beteiligte && <div className="text-[11.5px] mt-2" style={{ color: T.inkDim }}><b style={{ color: T.brass }}>Beteiligte:</b> {b.beteiligte}</div>}
+        </div>
+        {/* Handlungen (abhakbar — treiben bei aktiviertem Roll-up den Fortschritt) */}
+        <TaskSection m={m} role={role} me={me} />
+        {/* Briefing-Sektionen */}
+        <div className="px-5 pb-4">
+          {Object.keys(b).length === 0 && (
+            <div className="mt-3 text-[12px] rounded border p-2"
+              style={{ borderColor: T.amber + '88', color: T.amber }}>
+              Für diesen Meilenstein liegt noch kein Briefing vor (Datenlücke) — Generierung läuft bzw. via
+              scripts/build_projekt_yaml.py + rubicon_briefings.json nachziehen.
+            </div>
+          )}
+          {b.kontext && <Sect title="KONTEXT — WARUM DIESER MILESTONE">{b.kontext}</Sect>}
+          {(b.leistung || []).length > 0 && <Sect title="ERWARTETE LEISTUNG (DELIVERABLES)">
+            <ul className="list-disc pl-4">{b.leistung.map((x, i) => <li key={i}>{x}</li>)}</ul></Sect>}
+          {(b.vorgehen || []).length > 0 && <Sect title="VORGEHEN">
+            <ol className="list-decimal pl-4">{b.vorgehen.map((x, i) => <li key={i}>{x}</li>)}</ol></Sect>}
+          {(b.erfolgsmessung || m.kpi) && <Sect title="ERFOLGSMESSUNG (KPI)">{b.erfolgsmessung || m.kpi}</Sect>}
+          {(b.risiken || []).length > 0 && <Sect title="RISIKEN & ABHÄNGIGKEITEN">
+            <ul className="list-disc pl-4">{b.risiken.map((x, i) => <li key={i}>{x}</li>)}</ul></Sect>}
+          {b.grounding && <Sect title="DATENGRUNDLAGE"><span style={{ color: T.inkDim }}>{b.grounding}</span></Sect>}
+          {/* Eingebettetes Briefing-PDF: klickbare Seiten-1-Vorschau (PNG lädt überall
+              zuverlässig; Klick öffnet die vollständige PDF). */}
+          <div className="mt-4 rounded border overflow-hidden" style={{ borderColor: T.line }}>
+            <div className="px-3 py-1.5 text-[10px] flex items-center justify-between"
+              style={{ background: T.panelSoft, color: T.inkDim, fontFamily: T.mono }}>
+              <span className="flex items-center gap-1.5"><FileText size={11} /> Briefing-PDF — {m.id}.pdf (automatisch generiert, aktueller Stand)</span>
+              <a href={pdfUrl} target="_blank" rel="noreferrer" style={{ color: T.brass }}>vollständig öffnen →</a>
+            </div>
+            <a href={pdfUrl} target="_blank" rel="noreferrer" title="Vollständige PDF öffnen"
+              className="block" style={{ maxHeight: '58vh', overflow: 'auto', background: '#fff' }}>
+              <img src={`/briefings/${m.id}.png`} alt={`Briefing ${m.id} — Seite 1`}
+                className="w-full" style={{ display: 'block' }} />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Formular «Aktion erfassen»
+function ActionForm({ ms, canEditMs, onSubmit }) {
+  const editable = ms.filter(canEditMs)
+  const [mId, setMId] = useState(editable[0]?.id || '')
+  const [kind, setKind] = useState('progress')
+  const [val, setVal] = useState(50)
+  if (!editable.length) return <div className="text-[12px]" style={{ color: T.inkDim }}>Kein Strom für diese Identität editierbar.</div>
+  return (
+    <div className="space-y-2 text-[12px]">
+      <select value={mId} onChange={e => setMId(e.target.value)} className="w-full rounded border px-2 py-1"
+        style={{ borderColor: T.line, background: T.panelSoft, color: T.ink }}>
+        {editable.map(m => <option key={m.id} value={m.id} style={{ color: '#111' }}>{m.id} — {m.name.slice(0, 60)}</option>)}
+      </select>
+      <div className="flex gap-2">
+        <select value={kind} onChange={e => setKind(e.target.value)} className="rounded border px-2 py-1"
+          style={{ borderColor: T.line, background: T.panelSoft, color: T.ink }}>
+          <option value="progress" style={{ color: '#111' }}>Fortschritt melden (%)</option>
+          <option value="blocker" style={{ color: '#111' }}>Blocker melden (+Tage Verzug)</option>
+        </select>
+        <input type="number" value={val} min={0} max={kind === 'progress' ? 100 : 365}
+          onChange={e => setVal(+e.target.value)}
+          className="w-24 rounded border px-2 py-1" style={{ borderColor: T.line, background: T.panelSoft, color: T.ink, fontFamily: T.mono }} />
+      </div>
+      <button onClick={() => onSubmit(mId, kind, val)}
+        className="w-full py-1.5 rounded font-semibold text-[12px]"
+        style={{ background: T.brass, color: '#0b1220' }}>
+        Erfassen &amp; Wirkung berechnen
+      </button>
+    </div>
+  )
+}

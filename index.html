@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RUBICON Control Tower</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Kontrollturm-Basis ausserhalb Tailwind: Puls fuer Verzug, FIDS-Mono */
+      @keyframes tower-pulse { 0%,100% { background-color: rgba(244,63,94,.10); } 50% { background-color: rgba(244,63,94,.22); } }
+      .row-delayed { animation: tower-pulse 2.4s ease-in-out infinite; }
+      @media (prefers-reduced-motion: reduce) { .row-delayed { animation: none; background-color: rgba(244,63,94,.16); } }
+      :focus-visible { outline: 2px solid #d4a95c; outline-offset: 2px; }
+      ::selection { background: #d4a95c55; }
+      body { background: #0b1220; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

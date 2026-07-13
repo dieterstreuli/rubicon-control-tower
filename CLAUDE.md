@@ -1,0 +1,101 @@
+# RUBICON Control Tower — Grundregeln
+
+Kontrollturm für Projekt RUBICON («Alea iacta est.») — Transformationsplan
+AXS Group 2026/27. 8-Monats-Kernumsetzung (01.09.2026 → 30.04.2027) +
+gesetzlicher Nachlauf Q2/27.
+
+## Architektur-Grundregeln (verbindlich)
+
+1. **Einzige Wahrheitsquelle:** alle Projektdaten leben in `src/data/projekt.yaml`.
+   Kein Zustand wird anderswo dupliziert. UI liest NUR aus `src/lib/loader.js`.
+   Session-Eingaben (Aktions-Log, gemeldeter Fortschritt, Reminder-Stempel) sind
+   flüchtige Overlays und klar so markiert.
+   AUSNAHME (Modul «Sitzung erfassen», 08.07.): erfasste Sitzungen schreiben
+   PERSISTENT via `POST /api/sitzung` (plugins/rubicon-api.js) — Fortschritt/Blocker
+   → projekt.yaml, vollständiges Protokoll → protokolle.json. Ampel bleibt ABGELEITET
+   (nie manuell). Vite-HMR lädt nach dem Write neu → Tower zeigt neuen Stand.
+2. **Determinismus statt Ermessen:** Status, Verzug, kritischer Pfad und
+   Projektende folgen reinen Regeln in `src/lib/status.js` — keine Heuristik.
+   Steuerungsdatum = `meta.today` (bewusst manuell, für reproduzierbare Sichten;
+   bei jeder Steuerungssitzung aktualisieren; überlebt den Rebuild).
+   **Start-bewusste atRisk-Regel (13.07.):** vor `m.start` ist fehlender
+   Fortschritt KEIN Risikosignal (Arbeitsfenster noch nicht begonnen → onTrack);
+   `start` der task-getriebenen MS = früheste Handlung, in Progress-Preserve.
+   Jede status.js-Änderung ZWINGEND 1:1 in gen_report.status_of spiegeln +
+   Fixture in test_status_parity.py (aktuell 16 Fälle).
+3. **Nie raten:** fehlende Werte bleiben `null` und werden als Datenlücke
+   gemeldet (Loader + `scripts/validate.py`) — niemals erfunden.
+4. **Menschliche Kontrolle über Writes:** reale Reminder-/Kalender-/Eskalations-
+   Writes nur über die MCP-Bridge mit einmaligem, payload-gebundenem
+   Freigabe-Token (`mcp/calendar_bridge.md`). Im Prototyp: simuliert.
+
+## RUBICON-Spezifika
+
+- **7 Programm-Ströme** (WS1 TOM/AFR · WS2 MOS/AFR · WS3 Kosten/Rohde ·
+  WS4 Commercial/Haeffner · OE Operational Excellence/CGO · WS5 Kultur/Charisius ·
+  WS6 AI/Petric). **Der Commercial-Masterplan (43 MS, 1:1 aus
+  `~/Chief/crm/cockpit/masterplan.json`) ist in WS4 GEMERGT** (DRS 07.07.):
+  RUBICON-Deliverables = Programm-Gates; die 43 Masterplan-MS sind (DRS 07.07.)
+  VOLL in die RUBICON-Phasen 0–3/Nachlauf integriert — Phase termin-getrieben aus
+  dem due (`rubicon_phase()`), kein separater «Masterplan»-Bucket. Redundanz
+  WS4-03 entfernt (→M10), Kopplungen via depends_on (WS4-01→M03, WS4-05→M06,
+  WS4-08→M10, WS4-11→M21) — alles deterministisch in
+  `scripts/build_projekt_yaml.py` (MERGE_DROP/MERGE_LINKS/rubicon_phase).
+- **nachlauf: true** = arbeitsrechtlich gebundener Q2/27-Effekt (BER/AAST u.a.);
+  zählt NIE gegen das Kern-Projektende (`baseline_end` 2027-04-30).
+- **gate: G1..G7** = Sequenz-Gates; **critical: true** = kritischer Pfad
+  (Kette: G1 12.09. → G2 15.10. → G6 Closing 31.10. → TOM Q4-VR → Verfahren
+  eingeleitet → Zielnachweis Apr 27).
+- Führungsmodell: DRS steuert/kontrolliert · AFR + CGO treiben · GL-6 liefert
+  (Begriff «Power-Duo» ist aus dem Dashboard/den Briefings entfernt, DRS 07.07.).
+  Rollen im UI: CoS (voll) · Owner (eigener Strom) · Chairman/Teilnehmer (lesend).
+- Keine Daten-Duplikation zu CRM-Cockpit (:8600) / Chairman-Tracker /
+  Agenda — Integration per Referenz bzw. spätere Sync-Stufe (Bridge Stufe 3).
+
+## Dateikarte
+
+| Datei | Zweck |
+|---|---|
+| `src/data/projekt.yaml` | EINZIGE Wahrheitsquelle (meta, workstreams, inputs) |
+| `src/lib/status.js` | deterministische Statuslogik (rein, testbar) |
+| `src/lib/loader.js` | YAML parsen, normalisieren, Datenlücken markieren |
+| `src/lib/theme.js` | Design-Tokens (Ops-Center dunkel, Messing=kritisch) |
+| `src/App.jsx` | Views + Rollen-Gating; liest nur aus dem Loader. **Tab «Aufgaben» (13.07.):** flache Liste ALLER Handlungen aus tasks.json, filterbar Status×Phase×WS×Verantwortlicher, sortiert nach Fälligkeit (offene zuerst, null-due zuletzt); Abhaken inline (gleiches Gating/Endpoint wie überall); Milestone-Klick öffnet das Briefing-Modal; Rolle Owner startet vorgefiltert auf sich selbst |
+| `scripts/validate.py` | Integritäts-Gate (Exit != 0 bei Fehlern) |
+| `scripts/build_projekt_yaml.py` | Assembly Masterplan(1:1)+RUBICON → projekt.yaml + briefings.json |
+| `scripts/gen_briefing_pdfs.py` | Briefing-PDF je MS → `public/briefings/<id>.pdf` |
+| `scripts/gen_pdf_previews.py` | Seite-1-PNG je PDF → `public/*/<name>.png` (Modal-Vorschau; iframe rendert PDF im Preview nicht) |
+| `src/data/fuehrungsrhythmus.json` | Führungsrhythmus-Daten (Meetings/Kadenz/Output) — Quelle für Frontseite + PDF |
+| `scripts/gen_fuehrungsrhythmus_pdf.py` | Führungsrhythmus-One-Pager (A4 quer) → `public/fuehrungsrhythmus.pdf` + `.png` |
+| `src/data/traktanden.json` | Standard-Traktandenlisten je Meeting (aus Workflow) — Quelle für die Agenda-PDFs |
+| `scripts/gen_traktanden_pdfs.py` | Traktandenliste je Meeting → `public/traktanden/<meeting_id>.pdf` |
+| `scripts/gen_traktanden_docs.py` | Traktandenliste je Meeting als Google Doc (via md_to_gdoc) → Drive `RUBICON — Traktandenlisten` |
+| `src/data/traktanden_docs.json` | Map meeting_id → Google-Doc-ID (speist die Doc-Links im UI; idempotenter Re-Run) |
+| `src/data/protokolle.json` | erfasste Sitzungsprotokolle (Write-Back-Ziel; via /api/sitzung) |
+| `plugins/rubicon-api.js` | Vite-Middleware: POST /api/sitzung · /api/protokoll/export · /api/report/generate · /api/report/comment (Write-Back + shellt Python-Renderer) |
+| `scripts/gen_protokoll.py` | Sitzungsprotokoll → PDF (`public/protokolle/<id>.pdf`) + Google Doc (Drive: RUBICON — Sitzungsprotokolle); schreibt export-Links in protokolle.json |
+| `scripts/import_gemini_doc.py` | Gemini-«Notizen für mich»-Meet-Notiz (Google Doc) → RUBICON-`/api/sitzung`-Payload. **Dry-Run per Default**, `--post` = scharf. **Doc-ID optional** — ohne sie Auto-Suche im Drive via `--meeting-id` (+`--on YYYY-MM-DD`/`--days N`; `--list` zeigt alle Gemini-Docs); genau 1 Treffer → weiter, mehrdeutig → Kandidaten statt raten. Parst nur den Notiz-Teil (oberhalb `📖 Transkript`): Zusammenfassung→notiz, «Nächste Schritte» `- [ ] \[Owner\] …`→commitment (Owner auf volle Namen normalisiert). Erzeugt NIE fortschritt/blocker aus Prosa → `projekt.yaml` bleibt unangetastet, solange die Notiz keinen Prozentwert nennt. `source:'gemini'`+Doc-Beleg. |
+| `src/data/gemini_meetings.json` | Brücke `meeting_id → Suchbegriffe` (Gemini-Doc-Titel = Kalender-Event-Titel, ≠ meeting_id). `match`=alle Begriffe müssen im Titel vorkommen. Neue Meetings nach 1. Gemini-Erfassung ergänzen (Titel via `--list`). |
+| `src/data/tasks.json` | **Handlungen (Tasks, 13.07. «treibend»)**: aus Milestones abgeleitete, binär abhakbare Handlungen `{id, nr, ms_id, text, owner, due, status offen\|erledigt, erledigt_am, source zerlegung\|sitzung\|gemini, origin, created_at}`. **`nr` = kurze laufende Referenz-Nummer (Anzeige «T-###»)** — vergibt der Server monoton in `mergeTasks()`, Upsert erhält sie; validate erzwingt Pflicht+Eindeutigkeit. Menschen referenzieren per T-Nummer («T-042 erledigt»), technischer Schlüssel bleibt `id`. Write NUR via `/api/task/*`. |
+| `scripts/gen_report.py` | Verdichtete Reports Woche/Monat/Quartal → PDF (`public/reports/`) + Google Doc (Drive: RUBICON — Reports); Eskalations-Filter GL/VR |
+| `src/data/reports_index.json` · `report_comments.json` | Report-Index (Links) + optionale Freitext-Kommentare je Ebene:Periode:Scope |
+| `scripts/reports_cron.sh` + Plist `ch.streuli.chief.rubicon-reports` | launchd-Cron: Mo 06:00 + Monatsanfang → `gen_report.py --auto` (Woche/Monat/Quartal aus meta.today) → Reports liegen vor der Sitzung bereit |
+| `scripts/test_status_parity.py` + `_parity_node.mjs` | Golden-Master-Paritätstest JS↔Python-Statuslogik (Audit #1); Exit≠0 bei Drift |
+| `mcp/calendar_bridge.md` | Spez. realer Writes (Freigabe-Token) |
+
+## Arbeitsregeln für Änderungen
+
+- Datenänderungen IMMER in `projekt.yaml`, danach `npm run validate`.
+- Statuslogik nie im UI «interpretieren» — nur `status.js` erweitern (rein halten).
+- **Build self-contained (13.07.):** Die Quell-Dateien liegen jetzt im Repo unter `scripts/_sources/` (tower_daten.json, rubicon_briefings.json, masterplan.FROZEN.json — 13.07. aus projekt.yaml+briefings.json rekonstruiert, **Round-Trip-verifiziert**: reiner Quell-Build reproduziert projekt.yaml+briefings.json semantisch identisch). `build_projekt_yaml.py` läuft damit wieder. Normaler Workflow bleibt: Datenänderungen DIREKT in projekt.yaml (SSOT) + `npm run validate`; ein Rebuild erhält gepflegte Felder via Progress-Preserve. Owner-Normalisierung (DRS 13.07.): **9 volle Namen** (Vorname Nachname, keine Kürzel) via `OWNER_NORMALIZE` (läuft NACH Preserve). Regeln: Commercial-Team→Michael Haeffner · Didit/Tine→Tine Petric · Wüst (nicht in GL)→Amélie Charisius. Map deckt Roh-Namen (Masterplan) UND Kürzel ab.
+- **Nach Änderung von Briefings/PDFs IMMER PNGs neu generieren:** `python3 scripts/gen_briefing_pdfs.py` → dann `python3 scripts/gen_pdf_previews.py` (das Modal zeigt die PNG-Vorschau, weil Chrome PDFs im verschachtelten iframe nicht rendert).
+- **Audit-Härtung 08.07.2026 (KRITISCH/HOCH behoben):** statusOf null-hart + done nur ohne gemeldeten Verzug (status.js); Python-Statuslogik 1:1 an status.js (bool-sicher) + Paritätstest (`test_status_parity.py`); alle Datei-Writes atomar (temp+rename); /api-Endpoints mit Origin/Content-Type-Guard + serverseitiger Rollen-/Owner-Durchsetzung in /api/sitzung; validate.py prüft progress 0–100; Report-«Stand» aus meta.today (deterministisch). NB: role/me clientseitig = Defense-in-Depth, keine echte Auth (Single-User-Localhost).
+- **Input↔Task-Kopplung (13.07., DRS «auto-geliefert»):** Inputs können `liefer_tasks: [task_ids]` tragen — Status wird dann ABGELEITET: `geliefert` sobald ALLE gekoppelten Handlungen erledigt (Sync in `/api/task/status`; Wiederöffnen ⇒ zurück auf `offen`). 14/16 gekoppelt; **IN-02 (Finanzierungsbetrag, externe #98-Achse) + IN-08 (Cottbus-Verfahren) bewusst ungekoppelt** (manueller Button bleibt). validate.py erzwingt Referenz-Existenz + Status-Konsistenz (Drift=FEHLER); Kopplung+Status überleben den Rebuild (Input-Preserve). UI: ⚙-Marker mit T-Nummern statt Manuell-Button.
+- **Task-getriebener Fortschritt (13.07.2026, DRS: «treibend aufsetzen»):** Milestones können per `progress_source: 'tasks'` auf verdienten Fortschritt umgestellt werden — `progress` wird dann DETERMINISTISCH aus den Handlungen gerechnet (`erledigt/gesamt`, half-up; `rollupMs()` in rubicon-api.js, Parität in validate.py = FEHLER bei Drift). Ohne Flag bleibt `progress` manuell (kein Big Bang über 131 MS; Umstellung je MS als bewusster Akt NACH DRS-Freigabe der Zerlegung via `activate_ms`). Status-Kette: Ampel (status.js, UNVERÄNDERT) ← progress ← erledigte Handlungen. Endpoints: `/api/task/upsert` (nur CoS; UPSERT erhält status/erledigt_am) · `/api/task/status` (CoS immer, Owner nur eigene — analog Audit #3). `progress_source` überlebt den Rebuild (Progress-Preserve-Liste) UND den Loader (loader.js reicht es durch). **UI (13.07.):** `TaskSection` im Milestone-Modal (App.jsx) = Handlungsliste mit Abhak-Buttons (rollen-gesichert, Chairman/Teilnehmer lesend mit Lock-Hinweis); Abflugtafel-Spalte «HANDLUNGEN» (☑ x/y, ⚠ überfällig=due<meta.today) + KPI-Kachel «Handlungen offen». Abhaken merkt `rubicon_selms` VOR dem Fetch in sessionStorage (HMR-Reload kann schneller sein als die Antwort) → Modal öffnet nach Reload wieder; Tab wird generell in sessionStorage persistiert. Zerlegungen KI-gestützt aus dem Briefing ableiten, aber IMMER als Entwurf mit menschlicher Freigabe; due-Vorschläge nie als Fakt (Datenehrlichkeit).
+- **Commitment→Handlung-Spiegel (13.07.2026, Schnitt 2):** `/api/sitzung` spiegelt jedes `typ:'commitment'` automatisch als Task in tasks.json (`mergeTasks()`-UPSERT — erhält status/erledigt_am; leerer Text wird übersprungen). **ID-Stabilität = De-Dup:** Gemini-Quelle → `G-<gemini_doc_id>-C<idx>` (Re-Import aktualisiert statt dupliziert; idx = Position im eintraege-Array), sonst `<protokoll_id>-C<idx>`. Optionale Milestone-Kopplung: Commitment-Eintrag in Modul B hat ms_id-Dropdown → gekoppelte Commitments treiben bei `progress_source:'tasks'` den Fortschritt (Nenner wächst — gewollt: Sitzung fügt dem MS Arbeit hinzu). `ms_id=null` erlaubt (validate: LÜCKE bei source sitzung/gemini, FEHLER bei zerlegung). «Offene Commitments» im Protokolle-Tab liest jetzt aus tasks.json (status-bewusst, Abhak-Kreis CoS/Owner-gated, ⚠ überfällig, ▸ms_id-Marker); erledigte fallen raus statt ewig offen zu stehen. Gemini-Import setzt NIE ms_id (nie raten) — Kopplung nachträglich via `/api/task/upsert`.
+- **Gemini-Meet-Ingest (13.07.2026):** `import_gemini_doc.py` speist Google-Meet-Notizen über denselben `/api/sitzung`-Pfad wie Modul B ein — Dry-Run-Default, menschliche Freigabe (`--post`) vor jedem Write. `/api/sitzung` schreibt `projekt.yaml` jetzt NUR bei echten Milestone-Änderungen (`applied.length`), sonst bleibt die SSOT bytegleich stabil. Quellenbindung `source:'gemini'`+`gemini_doc_id/url` im Protokoll-Datensatz. **VERTRAULICHKEIT:** protokolle.json wird auf :8621 serviert = **für Andreas via Tailnet sichtbar** → HR-/Personal-sensible Meetings NICHT in den Tower erfassen (bis der Sensitiv-Filter aus «Option 3» steht).
+- **CUTOVER 07.07.2026:** Der Commercial-Masterplan wird AUSSCHLIESSLICH hier
+  (projekt.yaml) getrackt — masterplan.json ist EINGEFROREN (Snapshot
+  `masterplan.FROZEN-20260707-rubicon-cutover.json`). Progress/Termine der
+  M01–M43 direkt in projekt.yaml pflegen; der Rebuild (build_projekt_yaml.py)
+  liest nur den Snapshot und ERHÄLT gepflegte Felder (Progress-Preserve).

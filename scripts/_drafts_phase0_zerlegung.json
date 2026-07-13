@@ -1,0 +1,1943 @@
+{
+ "today": "2026-07-13",
+ "batches": [
+  {
+   "ws": "WS1",
+   "label": "WS1",
+   "ids": [
+    "WS1-01",
+    "WS1-02"
+   ],
+   "final": {
+    "zerlegungen": [
+     {
+      "ms_id": "WS1-01",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Systeminventar je Ops-Bereich dokumentiert (alle Systeme, Verortung der 2 Ops-Welten AAS/AHS)",
+        "owner": "Florian Matthei",
+        "due_vorschlag": "2026-07-24",
+        "due_begruendung": "Erster Vorgehens-Schritt; ~3 Wochen Vorlauf vor MS-due 15.08., damit Entscheid-Brille und Sunk-Cost-Prüfung darauf aufsetzen können",
+        "grounding": "vorgehen[0] + leistung[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Vertragslaufzeiten/Kündigungsfristen Beekeeper + Kernsysteme erhoben und im Inventar dokumentiert (Phase-0-Datenlücke geschlossen)",
+        "owner": "Thomas Pajor",
+        "due_vorschlag": "2026-07-31",
+        "due_begruendung": "Explizit als Phase-0-Datenlücke geführt (risiken[0]); muss vor der Sunk-Cost-Prüfung vorliegen; Erhebung laut vorgehen[0] Matthei/Pajor — Vertragsdaten bei CFO-Stv Pajor",
+        "grounding": "vorgehen[0] + risiken[0] + leistung[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Entscheid-Brille (Bewertungsraster Bestandssystem-Konsolidierung vs. KI-Sprung) pro Ops-Bereich angelegt und dokumentiert",
+        "owner": "Florian Matthei",
+        "due_vorschlag": "2026-07-31",
+        "due_begruendung": "Zweiter Vorgehens-Schritt, parallel zur Vertragsdaten-Erhebung möglich; Grundlage für die Entscheide bis 15.08.",
+        "grounding": "vorgehen[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "WS6-Abgleich dokumentiert: Kopplung an Data Foundation/Ontologie (Layer 2) und No-/High-AI-Zones (TRAK-2026-0010) je Ops-Bereich",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-08-07",
+        "due_begruendung": "Abgleich mit WS6/Petric laut vorgehen[1]; muss vor Entscheid-Dokumentation (15.08.) abgeschlossen sein, da verspätete Ontologie-Klärung KI-Ersatz-Optionen verzögert (risiken[1])",
+        "grounding": "vorgehen[1] + leistung[2] + beteiligte (Petric = WS6-Schnittstelle)",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Sunk-Cost-Prüfung Beekeeper + übrige Kernsysteme durchgeführt und in die Entscheid-Vorlagen eingearbeitet",
+        "owner": "Florian Matthei",
+        "due_vorschlag": "2026-08-07",
+        "due_begruendung": "Setzt Vertragsdaten (seq 2) voraus; eine Woche Puffer vor Entscheid-Dokumentation am 15.08.",
+        "grounding": "vorgehen[2] + risiken[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 6,
+        "text": "Zielsystem-Entscheid je Ops-Bereich dokumentiert (konsolidieren vs. KI-Ersatz) — 100% der Ops-Bereiche abgedeckt, inkl. Einplanung der Umsetzung ab M1 (Sep 26)",
+        "owner": "Florian Matthei",
+        "due_vorschlag": "2026-08-15",
+        "due_begruendung": "Deckungsgleich mit MS-due und erfolgsmessung (100% Entscheide bis 15.08.2026); Einplanung ab M1 ist Teil desselben Dokumentationsschritts (vorgehen[3])",
+        "grounding": "vorgehen[3] + leistung[1] + erfolgsmessung",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "100% = 6/6 Handlungen im Normal-Zweig; erfolgsmessung (dokumentierter Zielsystem-Entscheid für 100% der Ops-Bereiche bis 15.08.) wird mit seq 6 erfüllt, seq 1–5 sind die treibenden Vorstufen entlang der 4 vorgehen-Punkte. Scope ist bewusst nur der Entscheid, nicht die Migration (risiken[2]) — Migrations-Handlungen gehören NICHT in diesen MS, sondern ab M1 (Sep 26). Keine bedingten Zweige im Briefing; keine Überschneidung mit gekoppelten Commitment-Tasks."
+     },
+     {
+      "ms_id": "WS1-02",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "FTE-Baseline erhoben und FTE-Lücke via Looker/EPG-Zugang (OE-01) geschlossen — FTE-Datensatz dokumentiert",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Datenerhebung startet lt. Briefing ab Programmstart 01.09. (M1–M2); EPG-/Looker-Zugang hängt an OE-01/G1 (12.09.); Abschluss Ende September lässt 2 Wochen bis G2",
+        "grounding": "vorgehen[0] + leistung[0] + risiken[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Echte Holding-Kostenbasis erhoben — ersetzt den FC26-Recharge-Proxy (≈ 3'984 TEUR); verbleibende Datenlücken explizit dokumentiert, nicht geschönt",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Parallel zur FTE-Erhebung ab 01.09. (M1–M2); muss vor Paket-Konsolidierung und G2-Vorlage stehen",
+        "grounding": "vorgehen[1] + kontext (Recharge-Proxy) + risiken[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Reporting-Linien inkl. Finance-Geografie VIE↔HAM kartiert und dokumentiert",
+        "owner": "Thomas Pajor",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Teil der Datenerhebung M1–M2; Pajor (CFO-Stv, VIE, cross-border) ist laut beteiligte die führende Person für die VIE-Seite der Kartierung",
+        "grounding": "leistung[0] + vorgehen[0] + beteiligte",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Finance-Kompetenz-/Besetzungs-Assessment durchgeführt (Aufstellung Rohde/Lesch/Pajor vs. Zielbild eine konsolidierte Finance-Linie) — Ergebnis dokumentiert",
+        "owner": "Andreas Fritthum",
+        "due_vorschlag": "2026-10-02",
+        "due_begruendung": "Muss ins Paket vor G2 (15.10.); AFR als WS1-Owner/Finanz-Challenge, da die zu Beurteilenden (Rohde/Lesch/Pajor) das Assessment nicht selbst ownen können",
+        "grounding": "vorgehen[2] + leistung[1] + beteiligte (AFR = Finanz-Challenge)",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Baseline-Datenpaket WS1 konsolidiert und finalisiert (FTE + Holding-Kostenbasis + Reporting-Linien + Assessment) — G2-Vorlage versandt",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-10-08",
+        "due_begruendung": "Eine Woche vor Diagnose-Review G2 (15.10.), damit GL die Vorlage prüfen kann",
+        "grounding": "leistung[0-1] + vorgehen[3]",
+        "bedingt": null
+       },
+       {
+        "seq": 6,
+        "text": "Paket im Diagnose-Review GL (G2) vorgelegt und abgenommen; Zentralkosten-IST als Basis für das −30%-Ziel fixiert (beschlossen)",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-10-15",
+        "due_begruendung": "Deckungsgleich mit Gate G2 = MS-due 15.10.2026",
+        "grounding": "vorgehen[3] + leistung[2] + erfolgsmessung",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "100% = 6/6 Handlungen im Normal-Zweig (OE-01/G1 liefert am 12.09. den EPG-/Looker-Zugang). Bedingter Zweig aus risiken[0]: bleibt der Zugang aus, wird ersatzweise «FTE-Interim-Baseline aus AHM-730-Rohdaten erstellen» bzw. «Eskalation Stufe 3 auslösen» erst bei Eintritt als bedingte Handlung nachgetragen (Muster OE-01) — initial nicht angelegt, damit der Normal-Zweig 100% erreicht. Individuelle Personalentscheide aus dem Assessment (risiken[2]) laufen über den HR-Sensitive-Kanal und sind bewusst KEINE Handlung dieses MS. Keine Überschneidung mit den gekoppelten Commitment-Tasks (WS2-02/M05)."
+     }
+    ]
+   }
+  },
+  {
+   "ws": "WS2",
+   "label": "WS2",
+   "ids": [
+    "WS2-01",
+    "WS2-02",
+    "WS2-03"
+   ],
+   "final": {
+    "zerlegungen": [
+     {
+      "ms_id": "WS2-01",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Beschlussvorlage «GL-Bereinigung auf 6» (CEO Gökcöl, CFO Rohde, CFO-Stv Pajor, COO Matthei, CCO Haeffner, CHRO Charisius) inkl. Ebenen-Trennung GL / Vice Chairman / Chairman (Fritthum = Chairman-Stellvertreter, kein Linien-/GL-Mandat; DRS = Chairman separat) und Berichtsweg Charisius → CEO mit Gökcöl abgestimmt und finalisiert",
+        "owner": "Andreas Fritthum",
+        "due_vorschlag": "2026-08-14",
+        "due_begruendung": "Rückwärts vom due 18.09.: Vorlage inkl. Ebenen-Rahmung muss vor VR-Traktandierung und Beschluss stehen; ~5 Wochen Puffer für Traktandierung, Beschluss und Publikation.",
+        "grounding": "vorgehen[0], vorgehen[1], leistung[0-2]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Einheitliche Sprachregelung zur Aussen-Rahmung der Rollen AFR (Vice Chairman) und CGO (CEO verantwortet Ergebnisse öffentlich) dokumentiert und mit AFR abgestimmt",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-08-28",
+        "due_begruendung": "Muss vor der gruppenweiten Publikation (18.09.) stehen; nach Finalisierung der Vorlage (14.08.).",
+        "grounding": "risiken[0], beteiligte (CGO = Umsetzungsmotor)",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "GL-Bereinigung als Traktandum auf die VR-Agenda gesetzt (Traktandierung schriftlich dokumentiert)",
+        "owner": "Dieter Streuli",
+        "due_vorschlag": "2026-08-28",
+        "due_begruendung": "Traktandierung braucht Vorlauf vor der VR-Sitzung; die Sitzung muss vor dem due 18.09. liegen.",
+        "grounding": "vorgehen[2], beteiligte (DRS Steuerung via VR)",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Formaler VR-Beschluss GL=6 inkl. Ebenen-Trennung gefasst und im VR-Protokoll dokumentiert",
+        "owner": "Dieter Streuli",
+        "due_vorschlag": null,
+        "due_begruendung": "Konkreter VR-Sitzungstermin ist in projekt.yaml/Briefing nicht enthalten — Datenehrlichkeit: DRS terminiert bei Freigabe (muss vor 18.09.2026 liegen).",
+        "grounding": "vorgehen[2], erfolgsmessung («VR-Beschluss dokumentiert»)",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Gruppenweite Publikation der bereinigten Aufstellung (GL=6, Ebenen-Trennung, Berichtsweg Charisius → CEO) versandt",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-09-18",
+        "due_begruendung": "Fixtermin aus Briefing und projekt.yaml: Publikation bis 18.09.2026.",
+        "grounding": "vorgehen[3], leistung[0-2], erfolgsmessung",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "5 treibende Handlungen, alle im Normal-Zweig — 100% erreichbar ohne Bedingungen. Roll-up: progress = erledigte/5. Kette: Vorlage inkl. Ebenen-Rahmung (1) → Aussen-Framing + Traktandierung (2-3) → VR-Beschluss (4) → Publikation (5). Keine bedingten Zweige im Briefing; das Risiko «VR-Traktandierung verzögert» ist über seq 3/4 direkt als Handlung abgedeckt, nicht als Bedingung."
+     },
+     {
+      "ms_id": "WS2-02",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Standing-Traktandum «Transformation» im wöchentlichen ExBoD/GL-Weekly verankert (Agenda-Template angepasst, AFR als Agenda-Owner Transformation ausgewiesen)",
+        "owner": "Andreas Fritthum",
+        "due_vorschlag": "2026-08-07",
+        "due_begruendung": "Rückwärts vom due 30.09.: früh verankern, damit der Rhythmus vor Stichtag mehrere Wochen nachweislich läuft.",
+        "grounding": "vorgehen[0], leistung[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Monatlicher Agenda-Ampel-Review als Serientermin terminiert (Kalendereintrag/Einladung versandt)",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-08-14",
+        "due_begruendung": "Kadenz-Administration liegt beim CEO-Office (führend: CGO als Vorsitz GL-Weekly); Terminierung vor erstem Monatsreview im Sept.",
+        "grounding": "leistung[0], beteiligte (CEO-Office Kadenz-Administration, CGO Vorsitz)",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Entscheids-Queue («offene Entscheide» mit Liegedauer) als GL-Instrument aufgesetzt und erstmals befüllt (Pflege durch CEO-Office geregelt)",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-08-31",
+        "due_begruendung": "Queue muss vor dem due 30.09. mehrere Wochen wöchentlich geführt sein (siehe seq 7); Aufsetzen bis Ende August.",
+        "grounding": "vorgehen[1], leistung[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Leitsatz «10 Entscheide/Tag, 2 falsche sind morgen korrigierbar» als GL-Norm beschlossen und im GL-Protokoll dokumentiert",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-09-11",
+        "due_begruendung": "Beschluss in einem ordentlichen GL-Weekly (Vorsitz CGO) vor dem due 30.09.; rückwärts mit Puffer terminiert.",
+        "grounding": "vorgehen[2], leistung[2]",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "13-Wochen-Liquiditätsreport auf WINGMAN-Basis erstmals erstellt und in der Reporting-Pyramide verankert (Support Lesch)",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-09-04",
+        "due_begruendung": "Erfolgsmessung verlangt «wöchentlich verfügbar» bis 30.09. — Erstausgabe Anfang Sept. lässt mehrere Wochen Nachweis vor Stichtag; zudem zeitkritisch wegen Finanzierungs-Closing 31.10.",
+        "grounding": "vorgehen[3], leistung[3], kontext (Diagnose B)",
+        "bedingt": null
+       },
+       {
+        "seq": 6,
+        "text": "Wöchentliche Verfügbarkeit des 13-Wochen-Liquiditätsreports seit Erstausgabe per Report-Ablage/Verteiler-Historie zum Stichtag 30.09. nachgewiesen",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Deckt die Erfolgsmessung «13-Wochen-Liquidität wöchentlich verfügbar — bis 30.09.» zum MS-due ab; Nachweis erst nach Betrieb möglich.",
+        "grounding": "erfolgsmessung, leistung[3]",
+        "bedingt": null
+       },
+       {
+        "seq": 7,
+        "text": "Wöchentliche Führung der Entscheids-Queue seit Aufsetzen per GL-Protokoll/Queue-Historie zum Stichtag 30.09. nachgewiesen",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Deckt die Erfolgsmessung «wird wöchentlich geführt» zum MS-due ab; Nachweis erst nach Betrieb möglich.",
+        "grounding": "erfolgsmessung, leistung[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 8,
+        "text": "One-in-one-out dokumentiert: für jedes neu eingeführte Format das gestrichene bestehende Format in einer GL-protokollierten Streichliste ausgewiesen",
+        "owner": "Andreas Fritthum",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Abschluss-Check zum MS-due, da abhängig davon, welche Formate bis dahin eingeführt wurden.",
+        "grounding": "vorgehen[4], risiken[0] (Meeting-Inflation)",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "8 treibende Handlungen, alle im Normal-Zweig — 100% ohne Bedingungen erreichbar; progress = erledigte/8. Aufsetzen (1-5) und Betriebs-Nachweise (6-7) sind symmetrisch getrennt: Queue und Liquiditätsreport haben je eine Einrichtungs- und eine Nachweis-Handlung zum Stichtag. Der gekoppelte Commitment-Task «Aufgaben- und Steuerungstermin» (Weekly 13.07.) übernimmt den Kickoff/die Aufgabenverteilung und wurde bewusst NICHT dupliziert. Die Deckel-Fixierung Meetingzeit ist in WS2-03 seq 7 verortet; die Kalibrierung der Erzwingungs-Schwelle der Queue (risiken[1], Wert = Annahme) ist bewusst KEINE Handlung dieser Zerlegung, da nicht erfolgsmessungs-relevant — sie gehört inhaltlich in den Diagnose-Review 15.10. (G2) und wird dort behandelt."
+     },
+     {
+      "ms_id": "WS2-03",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Messmethodik je Zielgrösse (Execution-Rate, Durchlaufzeit, Meetingzeit, Reporting-Pünktlichkeit) inkl. Datenquellen (Chairman-Aufträge-Tracker-Historie, GL-/VR-Protokolle, Report-Eingangsdaten) schriftlich festgelegt",
+        "owner": "Andreas Fritthum",
+        "due_vorschlag": "2026-08-21",
+        "due_begruendung": "Rückwärts vom Gate G2 (15.10.): Methodik muss vor Beginn der Erhebung stehen; AFR verantwortet Struktur.",
+        "grounding": "vorgehen[0], vorgehen[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Execution-Rate-Baseline erhoben und eingefroren (Commitments termingerecht, VR-/GL-Action-Items; Datenlücken explizit ausgewiesen, nicht geschätzt)",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-09-25",
+        "due_begruendung": "Erhebung durch CEO-Office (führend: CGO); Abschluss ~3 Wochen vor G2 für Paketierung und Review.",
+        "grounding": "leistung[0], vorgehen[1], risiken[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Entscheidungs-Durchlaufzeit-Baseline für Gruppe-B-Aufträge erfasst (nominal 30 Tage, Ist erstmals gemessen)",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-09-25",
+        "due_begruendung": "Teil derselben CEO-Office-Erhebung wie seq 2; gleicher Abschlusstermin vor Paketierung.",
+        "grounding": "leistung[1], vorgehen[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Ist-Meetingzeit je Führungsrolle gemessen und dokumentiert (Grundlage für den Meeting-Deckel)",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-09-25",
+        "due_begruendung": "Teil der CEO-Office-Erhebung; muss vor der Deckel-Fixierung (seq 7) und dem G2-Review vorliegen.",
+        "grounding": "leistung[2], vorgehen[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Reporting-Pünktlichkeits-Baseline dokumentiert (IST-Referenz: JAN geliefert 11.03., FEB 24.03.; Report-Eingangsdaten)",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-09-25",
+        "due_begruendung": "Rohde liefert die Reporting-Daten laut beteiligte; gleicher Abschlusstermin wie übrige Erhebungen.",
+        "grounding": "leistung[3], beteiligte (Rohde Reporting-Daten)",
+        "bedingt": null
+       },
+       {
+        "seq": 6,
+        "text": "Baseline-Datenpaket WS2 abgenommen und abnahmereif erklärt (alle vier Baselines vollständig, Datenlücken explizit markiert)",
+        "owner": "Andreas Fritthum",
+        "due_vorschlag": "2026-10-08",
+        "due_begruendung": "AFR verantwortet Abnahmereife; eine Woche Puffer vor dem Diagnose-Review G2 am 15.10.",
+        "grounding": "vorgehen[2], vorgehen[1], risiken[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 7,
+        "text": "Meetingzeit-Deckel je Rolle auf Basis der Ist-Messung fixiert und dokumentiert",
+        "owner": "Andreas Fritthum",
+        "due_vorschlag": "2026-10-15",
+        "due_begruendung": "Fixierung setzt die Ist-Messung (seq 4) voraus; erfolgsmessung verlangt Deckel fixiert und im Diagnose-Review G2 bestätigt bis 15.10.2026 — daher auf das Gate-Datum terminiert (vorgehen[4], erfolgsmessung, Gate G2).",
+        "grounding": "vorgehen[4], erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 8,
+        "text": "Baseline im Diagnose-Review GL (Gate G2) bestätigt — Bestätigungsbeschluss im GL-Protokoll dokumentiert",
+        "owner": "Andreas Fritthum",
+        "due_vorschlag": "2026-10-15",
+        "due_begruendung": "Fixtermin: Gate G2 = MS-due 15.10.2026 laut projekt.yaml und Briefing.",
+        "grounding": "vorgehen[3], erfolgsmessung, kontext (Gate G2)",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "8 treibende Handlungen, alle im Normal-Zweig — 100% ohne Bedingungen erreichbar; progress = erledigte/8. Kritischer Pfad (G2 15.10. → G6 Closing 31.10.): Verzug einer Erhebung (seq 2-5) verschiebt Abnahme (6) und Gate-Bestätigung (8) — deshalb 3 Wochen Puffer eingebaut. Die Fixierung der Zielwerte selbst (≥80%/≥90%, ≤30 Tage — Vorschläge zur Validierung, risiken[2]) erfolgt laut Briefing bewusst ERST NACH G2 und darf vorher nicht als fix kommuniziert werden; sie ist daher keine Handlung dieses Milestones. Keine bedingten Zweige; das Datenlücken-Risiko ist als explizite Ausweis-Pflicht in seq 2 und 6 integriert."
+     }
+    ]
+   }
+  },
+  {
+   "ws": "WS3",
+   "label": "WS3",
+   "ids": [
+    "WS3-01",
+    "WS3-02",
+    "WS3-03"
+   ],
+   "final": {
+    "zerlegungen": [
+     {
+      "ms_id": "WS3-01",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Interims-Zentralkostendeckel auf FC26-Proxy-Niveau (≈ 3'984 TEUR) fixiert und FC27-Recharge-Pfad AAS-only (−4'355 TEUR) gestoppt; AHS-FC27-Recharge als Datenlücke markiert (Beschluss dokumentiert)",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-09-11",
+        "due_begruendung": "Erster Schritt des Sofortpakets; früh in Phase 0 (Record-Feld), rückwärts vom MS-due 30.09., damit Publikation und Tracker folgen können",
+        "grounding": "vorgehen[0] / leistung[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Freeze-Regel für Beratermandate > EUR 25k mit CEO+CFO-Doppelfreigabe als Entwurf formuliert und dokumentiert",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-09-11",
+        "due_begruendung": "Regelentwurf muss vor dem INS-001-Nachtrag (Richtlinien-Prozess) vorliegen; rückwärts vom MS-due 30.09.",
+        "grounding": "vorgehen[1] / leistung[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "INS-001-Nachtrag zur Freeze-Regel über den Richtlinien-Prozess beauftragt (Auftrag an Wüst erteilt und dokumentiert)",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-18",
+        "due_begruendung": "Folgt auf den Regelentwurf (Seq 2); Puffer für Publikation bis 30.09.; Wüst (nicht GL) läuft gemäss Owner-Normalisierung über Charisius",
+        "grounding": "vorgehen[1] / beteiligte (Wüst: INS-001-Nachtrag)",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "P&L-Owner-Interimsliste für 100% der Einheiten (43 LE / ~15 Stationen) erstellt und mit AFR/WS1 abgestimmt (Liste dokumentiert)",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-09-18",
+        "due_begruendung": "Muss vor der GL-weiten Publikation (Seq 5) abgestimmt sein; rückwärts vom MS-due 30.09.",
+        "grounding": "vorgehen[2] / leistung[2]",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Sofortpaket-Regeln (Deckel, Freeze-Regel, Interimsliste) GL-weit publiziert (Versand dokumentiert)",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Abschlussschritt gemäss Erfolgsmessung («publiziert bis 30.09.2026») = MS-due",
+        "grounding": "vorgehen[3] / erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 6,
+        "text": "Sofortpaket-Regeln auf den Gruppen-Commitment-Tracker gesetzt (48h-Reminder und Ampel aktiviert)",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Parallel zur Publikation als letzter Schritt des Vorgehens; MS-due 30.09.",
+        "grounding": "vorgehen[3]",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "6 Handlungen, alle im Normal-Zweig — 100% erreichbar ohne Bedingungen. Alle 4 vorgehen-Punkte abgedeckt (Punkt 2 in Entwurf+Beauftragung gesplittet, Punkt 4 in Publikation+Tracker). Risiken (Proxy-Datenlücke bis WS3-04, formaler Beschluss der 25k-Schwelle, Cash-Neutralität) sind Rahmenbedingungen, keine bedingten Handlungen. Wüst→Amélie Charisius gemäss Owner-Normalisierung (Repo-Regel: Wüst nicht in GL)."
+     },
+     {
+      "ms_id": "WS3-02",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Umsetzungs-Kickoff AAS Technics (KEL: 37 MA, Abbau ~10–12 FTE = §17-anzeigepflichtig) durchgeführt und dokumentiert",
+        "owner": "Andreas Fritthum",
+        "due_vorschlag": "2026-09-11",
+        "due_begruendung": "Gates 28.08. verlangen sofortigen Kickoff; früh in Phase 0, rückwärts vom MS-due 30.09.",
+        "grounding": "vorgehen[0] / leistung[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "BER-FTE-Zahlen erhoben und Datenlücke für die Schwellenprüfung geschlossen (Zahlengrundlage dokumentiert)",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-09-11",
+        "due_begruendung": "Input für die §17/§18-Schwellenprüfung (Seq 3); rückwärts von deren Termin 25.09.",
+        "grounding": "vorgehen[1] (BER-FTE als Datenlücke in Phase 0 schliessen) / beteiligte (Rohde: Zahlengrundlage/BER-Owner)",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "BR-Fahrplan inkl. §17/§18-KSchG-Schwellenprüfung je DE-Betrieb (BER, KEL) erstellt und schriftlich dokumentiert",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-25",
+        "due_begruendung": "Erfolgsmessung verlangt «Schwellenprüfung je Betrieb vorliegend» bis 30.09.; kleiner Puffer vor MS-due",
+        "grounding": "vorgehen[1] / leistung[1] / beteiligte (Charisius: Arbeitsrecht, BR-Fahrplan)",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "§613a-BGB-Check je geplanter Verlagerung dokumentiert",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-25",
+        "due_begruendung": "Parallel zur Schwellenprüfung durch dieselbe Fachverantwortliche; vor MS-due 30.09.",
+        "grounding": "vorgehen[2] / leistung[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Umsetzungs-Kickoff BER + MUC durchgeführt und dokumentiert",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Briefing nennt explizit den «Kickoff 30.09.» = MS-due; CGO in charge BER/MUC gemäss Briefing-Zuteilung",
+        "grounding": "vorgehen[0] / leistung[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 6,
+        "text": "MUC-Personalwirksamkeit binär entschieden (ja/nein), Entscheid protokolliert",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Briefing verlangt Klärung im Kickoff 30.09. = MS-due; separates binäres Kriterium der Erfolgsmessung",
+        "grounding": "vorgehen[3] / leistung[2] / erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 7,
+        "text": "Kickoff- und Prüfergebnisse als Input für die Beschlussvorlagen (WS3-08) gesichert und abgelegt",
+        "owner": "Andreas Fritthum",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Abschlussschritt nach allen Kickoffs/Prüfungen; MS-due 30.09.",
+        "grounding": "vorgehen[4]",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "7 Handlungen, alle im Normal-Zweig — 100% ohne Bedingungseintritt erreichbar. Bedingte Folgezweige des MUC-Entscheids (Seq 6) werden NICHT initial angelegt (Muster OE-01): falls JA → §111/§17-Fahrplan analog BER nachtragen; falls NEIN → Quelle der −50%-Run-Rate-Annahme nachliefern. Nach Entscheid die zutreffende Folgehandlung als neuen Task ergänzen. Alle 5 vorgehen-Punkte abgedeckt (Kickoffs auf AFR/CGO gemäss Briefing-Zuteilung gesplittet; Kickoff BER+MUC und MUC-Entscheid als separate binäre Kriterien der Erfolgsmessung getrennt abhakbar)."
+     },
+     {
+      "ms_id": "WS3-03",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "OE-01-Datenzugang (EPG-GHS/Looker) zum G1-Stichtag geprüft und Zugangsstatus dokumentiert",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-09-12",
+        "due_begruendung": "G1-Stichtag 12.09. ist im Briefing explizit genannt (Abhängigkeit OE-01)",
+        "grounding": "vorgehen[1] / risiken[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Station-P&L-/FTE-Datenbasis inkl. Station→Director-Zuordnung im Kern-Paket befüllt",
+        "owner": "Thomas Pajor",
+        "due_vorschlag": "2026-10-02",
+        "due_begruendung": "Datenfelder müssen vor Konsolidierung (Seq 5) und GL-Review (15.10., Gate G2) vorliegen; rückwärts terminiert",
+        "grounding": "vorgehen[0] / leistung[0] / beteiligte (Pajor: Datenbasis Station-P&L)",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Berater-Spend der letzten 12 Monate erhoben und ins Baseline-Paket eingestellt",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-10-02",
+        "due_begruendung": "Parallel zu Seq 2, vor Konsolidierung; Wüst (nicht GL) läuft gemäss Owner-Normalisierung über Charisius",
+        "grounding": "vorgehen[0] / leistung[0] / beteiligte (Wüst: Berater-Spend)",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "§17-Schwellen je DE-Betrieb (Ergebnis aus WS3-02) und ZRH-Residual-Headcount (Art.-335d-OR-Check) ins Baseline-Paket eingestellt",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-10-02",
+        "due_begruendung": "Parallel zu Seq 2/3, vor Konsolidierung; §17-Ergebnisse aus WS3-02 (30.09.) liegen dann vor",
+        "grounding": "vorgehen[0] / leistung[0] / beteiligte (Charisius: §17-Schwellen, ZRH-Headcount)",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Baseline-Datenpaket (inkl. Zentralkosten) konsolidiert: alle gelisteten Kern-Paket-Datenfelder vollständig befüllt (keine offene Datenlücke im Kern-Paket); allfällige Lücken ausserhalb des Kern-Pakets explizit markiert — nie geschönt (Paket dokumentiert)",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-10-09",
+        "due_begruendung": "Konsolidierung nach Datenlieferungen (02.10.), mit Puffer vor dem GL-Review am 15.10. (Gate G2)",
+        "grounding": "vorgehen[0]+[2] / leistung[0] / erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 6,
+        "text": "Diagnose-Review GL durchgeführt: Zielwerte (−30%/−5%/−50%/−20%) je KPI validiert oder begründet angepasst",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-10-15",
+        "due_begruendung": "Gate G2 = MS-due 15.10.2026",
+        "grounding": "vorgehen[3] / leistung[1] / erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 7,
+        "text": "GL-Protokoll mit fixierten (oder begründet angepassten) Zielwerten je KPI gesichert und abgelegt",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-10-15",
+        "due_begruendung": "Protokollsicherung am Review-Tag; Erfolgsmessung verlangt GL-Protokoll bis 15.10. (Gate G2)",
+        "grounding": "vorgehen[3] / erfolgsmessung",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "7 Handlungen, alle im Normal-Zweig — 100% ohne Bedingungseintritt erreichbar. Bedingter Zweig aus vorgehen[1] wird NICHT initial angelegt (Muster OE-01): falls der EPG-GHS-/Looker-Zugang zum G1-Stichtag 12.09. fehlt (Seq 1 ergibt «kein Zugang»), zwei Handlungen nachtragen: G1-Eskalation Stufe 3 an DRS + Interim-Erhebung aus AHM-730-Rohdaten. Alle 4 vorgehen-Punkte abgedeckt (Datenfelder nach Zulieferern gesplittet; Lücken-Markierung aus vorgehen[2] bezieht sich auf Lücken ausserhalb des Kern-Pakets — im Kern-Paket verlangt die Erfolgsmessung Vollständigkeit, Seq 5). Seq 4 dupliziert die §17-Prüfung aus WS3-02 nicht: Inkrement ist nur die Übernahme ins Baseline-Paket plus der ZRH-Check. Wüst→Amélie Charisius gemäss Owner-Normalisierung."
+     }
+    ]
+   }
+  },
+  {
+   "ws": "OE",
+   "label": "OE",
+   "ids": [
+    "OE-02"
+   ],
+   "final": {
+    "zerlegungen": [
+     {
+      "ms_id": "OE-02",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Kickoff-Termin WS-OE mit Matthei fixiert — Kalendereinladung versandt, Termin liegt spätestens am 30.09.",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-08-31",
+        "due_begruendung": "Rückwärts vom MS-due 30.09.: Termin muss ~4 Wochen vor Durchführung stehen, damit KPI-Ableitung und Mitbestimmungs-Vorklärung davor abgeschlossen werden können.",
+        "grounding": "vorgehen[0] («Kickoff-Termin WS-OE bis 30.09. ansetzen (CGO mit Matthei)»)",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "KPI-Kandidatenliste aus AHM 730 / IATA Delay Codes (G31–39, DG52 als Haftungs-KPIs) schriftlich dokumentiert — inkl. Pünktlichkeit/Turnaround, Ground Damage, Baggage Mishandling, Safety/Audit, Shift-Fill, optional SLA-Compliance",
+        "owner": "Florian Matthei",
+        "due_vorschlag": "2026-09-15",
+        "due_begruendung": "Rückwärts terminiert: Kandidatenliste muss ~2 Wochen vor Kickoff (spätestens 30.09.) vorliegen, damit das KPI-Set dort beschlossen werden kann. Matthei ist laut Briefing Delivery/Scorecard-Design.",
+        "grounding": "vorgehen[1] + leistung[0] (KPI-Set 5–6 je Station)",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Mitbestimmungs-Rahmen schriftlich vorgeklärt: Notiz liegt vor, dass Stations-KPIs strikt aggregiert und ohne MA-Personenbezug geführt werden",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-22",
+        "due_begruendung": "Rückwärts terminiert: Vorklärung muss vor dem Kickoff (spätestens 30.09.) abgeschlossen sein; Charisius ist laut beteiligte für die Mitbestimmungs-Vorprüfung zuständig.",
+        "grounding": "vorgehen[4] + beteiligte (Charisius: Mitbestimmungs-Vorprüfung)",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Kickoff WS-OE durchgeführt (Termin hat stattgefunden)",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Direkt aus erfolgsmessung: «Binär per 30.09.2026: Kickoff durchgeführt».",
+        "grounding": "erfolgsmessung («Kickoff durchgeführt»)",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "KPI-Set mit hartem Deckel beschlossen: 5–6 Kern-KPIs je Station schriftlich festgehalten, weitere Metriken nur nachgeordnet",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Direkt aus erfolgsmessung: «KPI-Set (5–6) … schriftlich vorliegend» per 30.09.2026; Beschluss erfolgt am Kickoff.",
+        "grounding": "vorgehen[2] + leistung[0] (KPI-Set 5–6 je Station) + erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 6,
+        "text": "Liste «Top-3 ungeregelte Prozesse» von CGO persönlich benannt und schriftlich dokumentiert",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Direkt aus erfolgsmessung: Top-3-Prozessliste muss per 30.09.2026 schriftlich vorliegen; Benennung erfolgt am/mit dem Kickoff.",
+        "grounding": "vorgehen[3] + leistung[1] + erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 7,
+        "text": "Kickoff-Dokumentation als Auftakt WS-OE im Gruppen-Commitment-Tracker erfasst",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Abschluss-Artefakt des Kickoffs; muss mit dem MS-due 30.09. vorliegen (leistung[2]).",
+        "grounding": "leistung[2] (Kickoff-Dokumentation im Gruppen-Commitment-Tracker)",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "100% im Normal-Zweig = 7/7 Handlungen: Termin fixiert (1) → Vorbereitungen KPI-Kandidaten (2) und Mitbestimmung (3) → Kickoff durchgeführt (4) mit KPI-Set-Beschluss inkl. hartem Deckel (5), Top-3-Prozessliste (6) und Tracker-Dokumentation (7). Alle 5 vorgehen-Punkte sind abgedeckt (Deckel-Festlegung aus vorgehen[2] ist Beschluss-Kriterium der Handlung 5). Bedingter Zweig aus risiken[1] NICHT initial angelegt: Falls G1 (OE-01) am Kickoff-Termin noch offen ist, wird die Handlung «Scorecard-Design auf Interim-AHM-730-Basis rahmen» erst bei Eintritt nachgetragen. Keine Überschneidung mit den gekoppelten Commitment-Tasks (WS2-02/M05 betreffen andere Milestones)."
+     }
+    ]
+   }
+  },
+  {
+   "ws": "WS4",
+   "label": "WS4-1",
+   "ids": [
+    "WS4-01",
+    "WS4-02",
+    "M01",
+    "M02",
+    "M03",
+    "M04"
+   ],
+   "final": {
+    "zerlegungen": [
+     {
+      "ms_id": "WS4-01",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Bestandsaufnahme W1 dokumentiert: Status-Validierung der CRM-Cockpit-Daten (129 Accounts, 338 Verträge, Renewal-Heatmap 36 Monate) gegen den Stand Ende Juni abgeschlossen",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-09-04",
+        "due_begruendung": "Vorgehen nennt explizit «W1» nach Start 01.09.; erste Arbeitswoche endet 04.09.",
+        "grounding": "vorgehen[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Renewal-Status je Vertrag geprüft, validiert und Abgleich mit dem OPEN-Register (M03) dokumentiert",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-09-14",
+        "due_begruendung": "Baut auf Bestandsaufnahme W1 auf; rückwärts vor Alert-Konfiguration und Go-live 30.09. terminiert",
+        "grounding": "vorgehen[1] / leistung[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "<120-Tage-Alert mit Eskalationsmechanik im CRM Cockpit konfiguriert und Test erfolgreich protokolliert (Alert aktiv geschaltet)",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-09-21",
+        "due_begruendung": "Technische CRM-Anbindung laut beteiligte bei Petric (Support laut Roadmap 30.09.26); vor Go-live-Meldung nötig",
+        "grounding": "vorgehen[2] / leistung[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Datenehrlichkeits-Regel («fehlendes Aktivitäts-Log = grau, nie grün») als verbindliche Spielregel kommuniziert (Kommunikation dokumentiert)",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-09-25",
+        "due_begruendung": "Organisatorische Verankerung (leistung[2]) muss vor Go-live-Meldung erfolgt sein",
+        "grounding": "vorgehen[3] / leistung[2]",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Datenehrlichkeits-Regel im Data-Quality-Audit-Layer des CRM Cockpit technisch aktiviert",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-09-25",
+        "due_begruendung": "Technische Verankerung (erfolgsmessung: Regel im Audit-Layer aktiv) liegt laut beteiligte bei Petric (CRM-/AI-Anbindung); vor Go-live-Meldung",
+        "grounding": "leistung[2] / beteiligte / erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 6,
+        "text": "Go-live-Meldung des Kunden-Schutzschirms als Commitment im Gruppen-Commitment-Tracker (GL-Weekly) eingetragen",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Abschlusshandlung am MS-due 30.09.26",
+        "grounding": "vorgehen[4] / erfolgsmessung",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "6 Handlungen decken alle 5 vorgehen-Punkte und die drei ja/nein-Kriterien der erfolgsmessung ab (Status validiert = H1–2, Alert aktiv = H3, Datenehrlichkeits-Regel organisatorisch = H4 und technisch = H5, Go-live = H6) — 100% im Normal-Zweig erreichbar. Die Datenehrlichkeits-Regel ist bewusst in zwei separat abhakbare Handlungen gesplittet (leistung[2]: «technisch und organisatorisch verankert»; technische Seite laut beteiligte bei Petric). Bedingter Zweig NICHT angelegt: Bei Verzug von M03 (Abhängigkeit) verschiebt sich Handlung 2; bei Kontinuitätsrisiko WS4-Lead übernimmt Deputy Matthei interimistisch — beides erst bei Eintritt als Handlung nachtragen."
+     },
+     {
+      "ms_id": "WS4-02",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Datenqualitäts-Extrakt aus dem CRM Cockpit (Data-Quality-Audit-Layer) erstellt, inkl. Bestätigung des Strukturierungsstands 98% von EUR 283 Mio FC2026",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-09-25",
+        "due_begruendung": "Ausgangsartefakt; rückwärts vom G2-Termin 15.10. mit Puffer für Abgleich und Zulieferung",
+        "grounding": "vorgehen[0] / leistung[2]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Nachfass Lücke Haeffner (9 Verträge / EUR 2.6 Mio: SWP, Scoot, Air Uniqon, Thai, ASL, DAT, NetJets Europe, BAE, Star East) dokumentiert inkl. ausgewiesenem Schliessungspfad bis M2",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Offener Punkt (a) muss vor Zulieferung an Rohde quantifiziert vorliegen; Schliessungspfad-Horizont «bis M2» aus vorgehen[1] passt zum M02-Termin 30.09.",
+        "grounding": "vorgehen[1] / leistung[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Abgleich Contract-Inventory ↔ Renewal-Pipeline durchgeführt; Gap (~73 Kunden / 150–169 Station×Service-Kombis, v.a. VIE/ZRH/Cargo/Full) quantifiziert ausgewiesen",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-10-05",
+        "due_begruendung": "Offener Punkt (b); hängt von Stations-Zulieferung ab, daher mit Puffer vor Zulieferung an Rohde",
+        "grounding": "vorgehen[2] / leistung[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "CRM-Datenqualitäts-Stand termingerecht an Rohde (Gesamtowner Baseline-Datenpaket) zugeliefert",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-10-09",
+        "due_begruendung": "Vorgehen verlangt Zulieferung «termingerecht vor dem 15.10.26» — letzter Arbeitstag der Vorwoche",
+        "grounding": "vorgehen[3] / leistung[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Präsentationsfähige Aufbereitung für das Diagnose-Review G2 der GL erstellt und versandt",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-10-14",
+        "due_begruendung": "Muss zum Diagnose-Review am Gate-Termin 15.10.26 vorliegen",
+        "grounding": "vorgehen[4]",
+        "bedingt": null
+       },
+       {
+        "seq": 6,
+        "text": "CRM-Datenqualitäts-Stand im Diagnose-Review G2 der GL behandelt, inkl. beider quantifizierter offener Punkte (Behandlung protokolliert)",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-10-15",
+        "due_begruendung": "Zweites ja/nein-Kriterium der erfolgsmessung («im Diagnose-Review GL (G2) behandelt»); Gate-Termin = MS-due 15.10.26",
+        "grounding": "erfolgsmessung / risiken[0] / kontext",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "6 Handlungen decken alle 5 vorgehen-Punkte und beide ja/nein-Kriterien der erfolgsmessung: (1) Stand im Baseline-Paket enthalten = H1–4, offene Punkte quantifiziert = H2–3; (2) im Diagnose-Review G2 behandelt = H6 — 100% im Normal-Zweig erreichbar. Bedingter Zweig NICHT angelegt: Eskalation an AFR + CGO nur bei Verzug des Nachfasses (H2, risiken[1]) — erst bei Eintritt nachtragen. Kritischer Gate-Milestone G2: Verzug blockiert das gesamte Diagnose-Review der GL."
+     },
+     {
+      "ms_id": "M01",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Entity-Resolution/Key-Mapping-Tabelle aus dem CRM-Cockpit exportiert und Vollständigkeit validiert (129 Kunden, 338 Verträge)",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-07-24",
+        "due_begruendung": "Erster Schritt der 5-stufigen Kette; rückwärts vom due 15.08. mit Zeit für Trockenlauf, Konflikt-Bereinigung und Produktiv-Write",
+        "grounding": "vorgehen[0] / leistung[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Trockenlauf gegen Odoo-Sandbox durchgeführt: Trockenlauf-Protokoll mit Differenzliste und Duplikat-Report erzeugt",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-07-29",
+        "due_begruendung": "Sandbox-Simulation direkt nach Export; Protokoll ist eigenständiges Artefakt vor der Konflikt-Bereinigung",
+        "grounding": "vorgehen[1] / leistung[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Alle im Trockenlauf identifizierten Mapping-Konflikte bereinigt (0 offene Konflikte)",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-08-04",
+        "due_begruendung": "Konflikt-Bereinigung ist laut risiken[0] (LH-Gruppe ~34% Volumen) der Timeline-Treiber — separat trackbar mit eigenem Puffer vor dem Snapshot",
+        "grounding": "vorgehen[1] / risiken[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Rollback-Snapshot der Odoo-Produktionsumgebung erstellt, dokumentiert und archiviert (Zuständigkeit mit IT-Ops geklärt)",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-08-07",
+        "due_begruendung": "Zwingende Voraussetzung unmittelbar vor Batch-Write; erfolgsmessung verlangt dokumentierten Snapshot",
+        "grounding": "vorgehen[2] / erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Produktiver Batch-Write in Odoo-Produktion durchgeführt; Fehlerlog ausgewertet und Ergebnis dokumentiert (keine offenen kritischen Fehler)",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-08-10",
+        "due_begruendung": "Nach Snapshot; lässt Zeit für Reconciliation und doppelte Abnahme bis 15.08.",
+        "grounding": "vorgehen[3] / leistung[2]",
+        "bedingt": null
+       },
+       {
+        "seq": 6,
+        "text": "Reconciliation-Report erstellt: 100% ID-Abdeckung (338 Verträge, 129 Kunden), 0 unaufgelöste Duplikate",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-08-12",
+        "due_begruendung": "Abnahmedokument muss vor den Freigaben durch Pajor und Haeffner vorliegen",
+        "grounding": "vorgehen[4] / leistung[3] / erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 7,
+        "text": "Datenabnahme Finance: Reconciliation-Report durch Pajor abgenommen (Abnahme dokumentiert)",
+        "owner": "Thomas Pajor",
+        "due_vorschlag": "2026-08-14",
+        "due_begruendung": "Erfolgsmessung verlangt Abnahme bis 15.08.; letzter Werktag davor",
+        "grounding": "vorgehen[4] / beteiligte / erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 8,
+        "text": "Fachliche Abnahme CCO: Reconciliation-Report durch Haeffner abgenommen (Abnahme dokumentiert)",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-08-14",
+        "due_begruendung": "Erfolgsmessung verlangt Abnahme durch Haeffner und Pajor bis 15.08.",
+        "grounding": "vorgehen[4] / beteiligte / erfolgsmessung",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "8 Handlungen decken alle 5 vorgehen-Punkte plus die doppelte Abnahme (Pajor/Haeffner) aus der erfolgsmessung — 100% im Normal-Zweig erreichbar. Trockenlauf-Protokoll (H2) und Konflikt-Bereinigung (H3) sind bewusst getrennt abhakbar, da die Bereinigung laut risiken[0] der Timeline-Treiber ist. Bedingter Zweig NICHT angelegt: Rollback-Auslösung nur «bei kritischen Fehlern» im Batch-Write (vorgehen[3]) — erst bei Eintritt als Handlung nachtragen. Owner-Mapping: Briefing-Kurzform «Didit/Tine» = Tine Petric."
+     },
+     {
+      "ms_id": "M02",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Priorisierte Liste der 72 Kunden ohne €-Wert erstellt, sortiert nach geschätztem Volumen (Quelle: Forecast/Pajor)",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-07-31",
+        "due_begruendung": "Startartefakt der Kette; früh terminiert, da M03 (due 15.08.) auf dem koordinierten €-Wert-Prozess aufbaut",
+        "grounding": "vorgehen[0] / leistung[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Abgleich der 72er-Liste gegen den Odoo-Forecast durch Finance dokumentiert; grösste Wertlücken identifiziert",
+        "owner": "Thomas Pajor",
+        "due_vorschlag": "2026-08-14",
+        "due_begruendung": "Folgt direkt auf die priorisierte Liste; liefert Priorisierung für die Vertragsextraktion",
+        "grounding": "vorgehen[1] / leistung[2]",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Basic-Rate und Additionals je Vertrag aus den Vertragsunterlagen der 72 Kunden extrahiert und in einer Extraktionsliste dokumentiert (72/72)",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-09-04",
+        "due_begruendung": "Aufwändigster Schritt (72 Kunden); rückwärts vom due 30.09. mit Zeit für Odoo-Nachtrag und Abschlusskontrolle",
+        "grounding": "vorgehen[2] / leistung[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Nachtrag aller extrahierten €-Werte in Odoo abgeschlossen (regionale Erfassung DE/ES/weitere über Himm/Eslava/Strauß koordiniert)",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-09-18",
+        "due_begruendung": "Nach Extraktion; Puffer vor Abschlusskontrolle am MS-due",
+        "grounding": "vorgehen[3] / beteiligte",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Abschlusskontrolle dokumentiert: 72 → 0 Kunden mit €-losen Verträgen, ≥95% des Forecast-Volumens vertraglich beziffert",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Abschlussmessung am MS-due 30.09.26 gemäss erfolgsmessung",
+        "grounding": "vorgehen[4] / erfolgsmessung / leistung[3]",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "5 Handlungen decken alle 5 vorgehen-Punkte und beide KPI der erfolgsmessung — 100% im Normal-Zweig erreichbar. H3 (Extraktionsliste als Artefakt) und H4 (Odoo-Nachtrag) sind sauber abgegrenzt: der Systemnachtrag liegt exklusiv bei H4. Bedingter Zweig NICHT angelegt: Einzelne Kunden mit unvollständigen Vertragsunterlagen (€-Wert «zu klären», risiken[1]) erst bei Eintritt als Klärungs-Handlung nachtragen. Owner-Mapping: Regionale Owner Himm/Eslava/Strauß sind nicht im Kanon — der Odoo-Nachtrag läuft unter dem im Briefing führenden Owner Haeffner (Koordination). Abhängigkeit M01 (eindeutige Odoo-IDs) beachten."
+     },
+     {
+      "ms_id": "M03",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "CRM/Odoo-Export aller 148 OPEN-Verträge als Ausgangsbasis erstellt",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-07-24",
+        "due_begruendung": "Startartefakt; rückwärts vom due 15.08. mit vier Anreicherungs-Schritten dahinter",
+        "grounding": "vorgehen[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Fehlende €-Werte für alle 148 OPEN-Verträge ergänzt (koordiniert mit M02-Prozess): 0 Verträge ohne €-Wert im OPEN-Set",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-08-05",
+        "due_begruendung": "Kern-KPI der erfolgsmessung; braucht den grössten Teil der verbleibenden Laufzeit",
+        "grounding": "vorgehen[1] / leistung[1] / erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Ablaufdatum und Renewal-Wahrscheinlichkeit je Vertrag im Register eingetragen (148/148)",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-08-07",
+        "due_begruendung": "Anreicherung parallel/nach €-Werten; vor Finalisierung des Registers (Freitag statt Samstag 08.08. — Werktags-Prinzip)",
+        "grounding": "vorgehen[2] / leistung[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "CPI/CBA-Indexklausel je Vertrag geprüft und als Flag hinterlegt; Indexierungslücken explizit geflaggt",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-08-11",
+        "due_begruendung": "Letzter Anreicherungs-Schritt vor der verbindlichen Hinterlegung; KPI «Index-Flag 148/148»",
+        "grounding": "vorgehen[3] / leistung[2] / erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Account-Owner je Vertrag im Register zugewiesen (148/148)",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-08-13",
+        "due_begruendung": "Registerfeld-Vollständigkeit (leistung[0]) muss vor dem Abschluss-Akt der Verbindlich-Hinterlegung stehen",
+        "grounding": "vorgehen[4] / leistung[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 6,
+        "text": "OPEN-Register in Odoo/CRM-Cockpit als verbindliche Datenquelle hinterlegt",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-08-14",
+        "due_begruendung": "Abschluss-Akt; letzter Werktag vor MS-due 15.08. (Samstag)",
+        "grounding": "vorgehen[4] / leistung[0]",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "6 Handlungen decken alle 5 vorgehen-Punkte und die erfolgsmessung (148/148 mit €-Wert und Index-Flag) — 100% im Normal-Zweig erreichbar. Account-Owner-Zuweisung (H5, Datenfeld) und Verbindlich-Hinterlegung (H6, Governance-Akt) sind getrennt abhakbar. Bedingter Zweig NICHT angelegt: Verträge, deren Indexierungsstatus nicht aus vorhandenen Unterlagen ableitbar ist (risiken[2]), erst bei Eintritt als Klärungs-Handlung nachtragen. Abhängigkeiten: M01 (eindeutige IDs gegen Dopplungen) und enge Abstimmung mit M02 zur Vermeidung von Doppelarbeit."
+     },
+     {
+      "ms_id": "M04",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Alle 94 Cliff-2027-Verträge aus CRM/Odoo exportiert und nach den aktuell in CRM/Odoo verfügbaren €-Werten absteigend gerankt; Verträge ohne €-Wert explizit geflaggt (94/94 in der Liste)",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-07-17",
+        "due_begruendung": "MS-due 31.07. ist eng; Ranking (Koordination €-Werte laut beteiligte bei Haeffner) muss in Woche 1 stehen — datenehrlich auf Basis der verfügbaren Werte, da vollständige €-Werte erst mit M03 (15.08.) vorliegen",
+        "grounding": "vorgehen[0] / leistung[0] / erfolgsmessung / risiken[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Top-Wert-Cluster identifiziert und dokumentiert (insbesondere LH-Group-Anteil)",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-07-21",
+        "due_begruendung": "Direkt nach dem Ranking; Grundlage für Owner-/Sponsor-Zuordnung",
+        "grounding": "vorgehen[1] / risiken[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Verhandlungs-Owner und strategischer Sponsor für alle Top-30-Verträge (ca. 80% des €107M) benannt und im CRM hinterlegt",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-07-24",
+        "due_begruendung": "Kern-KPI der erfolgsmessung; muss vor Battlecards und GL-Bestätigung stehen",
+        "grounding": "vorgehen[2] / leistung[1] / erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Renewal-Battlecard je Top-30-Vertrag im CRM-Cockpit erstellt und verfügbar",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-07-29",
+        "due_begruendung": "Nach Owner-/Sponsor-Zuordnung; vor der abschliessenden Vorstellung am MS-due",
+        "grounding": "vorgehen[3] / leistung[2]",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Owner-/Sponsor-Zuteilung in ExBoD- oder GL-Runde vorgestellt und Bestätigung protokolliert",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-07-31",
+        "due_begruendung": "Abschlusshandlung am MS-due 31.07.26; protokollierte Gremien-Bestätigung als eindeutiges Ereignis",
+        "grounding": "vorgehen[4]",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "5 Handlungen decken alle 5 vorgehen-Punkte und beide KPI der erfolgsmessung (94/94 gerankt, Top-30 mit Owner+Sponsor) — 100% im Normal-Zweig erreichbar. ACHTUNG Quell-Inkonsistenz zur Klärung bei Freigabe DRS: M04 (due 31.07.26) hängt laut projekt.yaml/risiken[0] von M03 ab (due 15.08.26) — die Termine sind invertiert; das Ranking läuft daher datenehrlich auf Basis der aktuell verfügbaren €-Werte mit explizit geflaggten Lücken (H1), Alternative wäre M04 zu verschieben — Entscheid DRS. Owner-Mapping: Briefing nennt «Commercial (Cüneyt/Himm/Eslava)» als Owner — führende Kanon-Person ist Cüneyt Gökcöl; das Export/Ranking liegt wegen der €-Wert-Koordination beim YAML-Owner Haeffner. Sponsor-Personen (DRS, Fritthum, weitere C-Level «zu klären je Cluster») werden in H3 benannt, nicht hier vorweggenommen. Kein bedingter Zweig im Briefing. Der gekoppelte Commitment-Task zu M05 (KAM Eurowings) betrifft M04 nicht — keine Überschneidung."
+     }
+    ]
+   }
+  },
+  {
+   "ws": "WS4",
+   "label": "WS4-2",
+   "ids": [
+    "M05",
+    "M06",
+    "M07",
+    "M08",
+    "M09",
+    "M10"
+   ],
+   "final": {
+    "zerlegungen": [
+     {
+      "ms_id": "M05",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Vollständiges LH-Group-Vertragsinventar aus CRM/Odoo extrahiert, auf Vollständigkeit geprüft (€-Wert, Laufzeit, Indexklausel) UND identifizierte Lücken bei €-Wert/Renewal-Datum nachgetragen — 100% der LH-Verträge mit €-Wert und Renewal-Datum erfasst, Inventarliste dokumentiert",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-08-14",
+        "due_begruendung": "Nach M04-Abschluss (31.07.) als erste Datengrundlage inkl. Lückenschliessung; ~2 Wochen Puffer, damit die Folgeschritte bis 30.09. Platz haben",
+        "grounding": "vorgehen[0] + leistung[0] + erfolgsmessung (100% der LH-Verträge mit €-Wert und Renewal-Datum); beteiligte: Haeffner für Datenbasis",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Beziehungs-Landkarte AXS ↔ LH-Procurement dokumentiert (wer auf AXS-Seite spricht mit welchem LH-Ansprechpartner)",
+        "owner": "Andreas Fritthum",
+        "due_vorschlag": "2026-08-28",
+        "due_begruendung": "Baut auf dem Vertragsinventar auf; muss vor dem Account-Plan stehen",
+        "grounding": "vorgehen[1] + leistung[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "LH-Account-Plan ausgearbeitet und freigegeben (Renewal-Zeitachse, Rate-/Indexierungsstatus, strategische Ziele)",
+        "owner": "Andreas Fritthum",
+        "due_vorschlag": "2026-09-11",
+        "due_begruendung": "Kernartefakt des MS; ~3 Wochen vor MS-due, damit der Touchpoint noch vor 30.09. stattfinden kann",
+        "grounding": "vorgehen[2] + leistung[2] + erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Kick-off-Termin mit LH-Procurement fixiert (Terminbestätigung liegt vor)",
+        "owner": "Andreas Fritthum",
+        "due_vorschlag": "2026-09-11",
+        "due_begruendung": "Terminfixierung parallel zum Account-Plan; externes Zeitrisiko (LH-Verfügbarkeit) verlangt frühe Fixierung, damit der Touchpoint bis 30.09. durchführbar bleibt",
+        "grounding": "vorgehen[3]; risiken[1] (externe Verfügbarkeit)",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Erster strategischer Touchpoint mit LH-Procurement durchgeführt und dokumentiert",
+        "owner": "Andreas Fritthum",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Letzter Schritt der Kette, deckungsgleich mit MS-due und KPI",
+        "grounding": "vorgehen[4] + leistung[3] + erfolgsmessung",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "5 Handlungen = 100%, alle im Normal-Zweig erreichbar. Kein bedingter Zweig; das Risiko der LH-Terminverfügbarkeit (risiken[1]) ist ein Zeitrisiko und durch die frühe Terminfixierung (seq 4) adressiert. Abhängigkeit M04 (due 31.07.) ist in seq 1 zeitlich eingepreist; seq 1 trägt neu auch die Lückenschliessung, damit der KPI '100% der LH-Verträge mit €-Wert und Renewal-Datum erfasst' im Normal-Zweig abgedeckt ist. Der an M05 gekoppelte Commitment-Task 'Key Account Manager Eurowings bestimmen' (Weekly 13.07.) ist mit keiner der 5 Handlungen inhaltlich deckungsgleich — operative KAM-Bestimmung ≠ C-Level-Sponsor-Governance, Beziehungs-Landkarte und Account-Plan; kein vorgehen-Punkt verlangt eine KAM-Bestimmung — und wird daher bewusst nicht dupliziert; er zählt als gekoppelter Task zusätzlich in den M05-Roll-up."
+     },
+     {
+      "ms_id": "M06",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Top-30-Accounts aus den 112 sponsorlosen Kunden nach Forecast-Wert selektiert — priorisierte Liste dokumentiert",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-08-05",
+        "due_begruendung": "Direkt nach M04-Abschluss (31.07., Cliff-2027-Wertliste als Ableitungsbasis gem. risiken[0])",
+        "grounding": "vorgehen[0] + leistung[0]; beteiligte: Commercial (Haeffner) für Datenbasis",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Sponsor-Zuteilungsvorschlag ausgearbeitet und dokumentiert (LH-Group → Fritthum, BA → DRS, TUIfly → Rohde, Türkei-Cluster → Gökcöl, Rest verteilt) inkl. Erwartungshaltung und Kapazitätsabklärung je Sponsor",
+        "owner": "Dieter Streuli",
+        "due_vorschlag": "2026-08-10",
+        "due_begruendung": "Kurz nach der Top-30-Liste, damit der GL-Beschluss noch vor Ende August fällt",
+        "grounding": "vorgehen[1]; risiken[1] (Erwartungshaltung/Kapazität)",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Sponsor-Zuteilung in ExBoD/GL-Runde vorgestellt und GL-Beschluss protokolliert",
+        "owner": "Dieter Streuli",
+        "due_vorschlag": "2026-08-19",
+        "due_begruendung": "Rückwärts vom MS-due 29.08.: Beschluss muss vor der CRM-Hinterlegung stehen",
+        "grounding": "vorgehen[2] + leistung[3] + erfolgsmessung (GL-Beschluss dokumentiert)",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Sponsor-Zuteilung im CRM-Cockpit als Pflichtfeld hinterlegt — 30/30 Top-Accounts mit namentlichem C-Level-Sponsor erfasst",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-08-25",
+        "due_begruendung": "Nach GL-Beschluss, vor MS-due; erfüllt den KPI 30/30 im CRM",
+        "grounding": "vorgehen[3] + leistung[1]+[2] + erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Erstkontakt-/Übergabe-Terminplan je Sponsor und Account erstellt und an die Sponsoren versandt",
+        "owner": "Dieter Streuli",
+        "due_vorschlag": "2026-08-29",
+        "due_begruendung": "Im Briefing als Folgeschritt markiert; als Planungs-Artefakt noch bis MS-due machbar",
+        "grounding": "vorgehen[4] (Folgeschritt)",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "5 Handlungen = 100% im Normal-Zweig. Kein bedingter Zweig. Abhängigkeit M04 (due 31.07.) ist in seq 1 terminlich berücksichtigt. Der Commitment-Task 'Key Account Manager Eurowings bestimmen' (Weekly 13.07.) ist an M05 gekoppelt und für M06 nicht relevant; keine der 5 Handlungen dupliziert ihn (C-Level-Sponsor-Zuteilung Top-30 ≠ operative KAM-Bestimmung)."
+     },
+     {
+      "ms_id": "M07",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Neugeschäfts-Zielableitung dokumentiert: Mindest-Pipeline aus Cliff-2027 (€107M) + erwartetem Churn hergeleitet (Zielpapier mit Rechenweg)",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-07-24",
+        "due_begruendung": "Keine Abhängigkeiten; erste Vorleistung für den GL-Beschluss, ~5 Wochen vor MS-due 31.08.",
+        "grounding": "vorgehen[0]; grounding: CLIFF-2027 €107M / 94 Verträge",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Pipeline-€-Ziel bis EOY 2027 (mind. €30M neue jährliche Vertragswerte) in ExBoD/GL beschlossen und schriftlich fixiert",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-08-07",
+        "due_begruendung": "Beschluss nach Zielableitung; Freigabe laut Briefing durch Gökcöl/DRS — Gökcöl führend genannt",
+        "grounding": "vorgehen[1] + leistung[0] + erfolgsmessung; beteiligte: Freigabe Gölcöl/DRS",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "4-Stufen-Trichter (Lead → Qualified → Proposal → Won) in Odoo konfiguriert und aktiv — Pflichtfelder €-Wert und Abschlusswahrscheinlichkeit systemseitig erzwungen",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-08-14",
+        "due_begruendung": "Technische Umsetzung muss vor der Prospect-Erfassung stehen; laut Briefing Didit/Tine",
+        "grounding": "vorgehen[2] + leistung[2]; beteiligte: Technische Umsetzung Odoo Didit/Tine",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Alle 21 bestehenden Prospects je Trichterstufe einsortiert und mit €-Wert in Odoo erfasst (21/21)",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-08-24",
+        "due_begruendung": "Nach Trichter-Konfiguration, mit Puffer vor MS-due für die KPI-Berechnung",
+        "grounding": "vorgehen[3] + leistung[1] + erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Gewichteter Pipeline-Wert berechnet und als KPI im CRM-Cockpit sichtbar geschaltet",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-08-31",
+        "due_begruendung": "Abschluss-Artefakt, deckungsgleich mit MS-due und KPI",
+        "grounding": "vorgehen[4] + leistung[3] + erfolgsmessung",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "5 Handlungen = 100% im Normal-Zweig, kein bedingter Zweig. Das Qualifizierungs-Risiko der 21 Prospects (risiken[0]) ist kein eigener Zweig — es betrifft die Aussagekraft des gewichteten Werts (seq 5), nicht die Abhakbarkeit. Sollte eine Nachqualifizierung nötig werden, als zusätzliche Handlung nachtragen. Abhak-Kriterium seq 3 ist das binär prüfbare Systemkriterium (Trichter aktiv, Pflichtfelder erzwungen) — keine separate Abnahme nötig."
+     },
+     {
+      "ms_id": "M08",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Sync-Architektur spezifiziert und dokumentiert: Datenpunkte (Prospects, Follow-ups, Churn-Status), Richtung bidirektional inkl. Konfliktauflösung, Frequenz nächtlich",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-08-14",
+        "due_begruendung": "Spezifikation vor MS-start 16.08. abschliessbar; Konfliktauflösung gem. risiken[1] gehört in die Spec",
+        "grounding": "vorgehen[0]; risiken[1] (Konfliktauflösung spezifizieren)",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Sync-Job entwickelt und in Staging-Umgebung getestet — Testprotokoll liegt vor",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-08-31",
+        "due_begruendung": "Nach MS-start 16.08. (M01-Abschluss 15.08.), ~2 Wochen Entwicklung/Test",
+        "grounding": "vorgehen[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Monitoring- und Alert-Mechanismus bei Sync-Fehler implementiert und aktiviert",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-09-07",
+        "due_begruendung": "Muss vor Produktivnahme stehen, damit Fehl-Sync-Tage messbar sind",
+        "grounding": "vorgehen[2] + leistung[3]",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Fachliche Abnahme der Commercial-Daten (337 Follow-ups, 32 Churn-Fälle) dokumentiert",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-09-14",
+        "due_begruendung": "Abnahme-Gate direkt vor Produktivnahme; Haeffner laut Briefing für die Commercial-Seite der Datenkorrektheit",
+        "grounding": "beteiligte: Fachliche Abnahme Haeffner (Commercial); leistung[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Fachliche Abnahme der Finance-Datenkorrektheit dokumentiert",
+        "owner": "Thomas Pajor",
+        "due_vorschlag": "2026-09-14",
+        "due_begruendung": "Abnahme-Gate direkt vor Produktivnahme; Pajor laut Briefing für die Finance-Seite der Datenkorrektheit",
+        "grounding": "beteiligte: Fachliche Abnahme Pajor (Finance); leistung[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 6,
+        "text": "Nächtlicher Sync-Job produktiv geschaltet (bidirektional: Cockpit-Massnahmen zurück nach Odoo)",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-09-15",
+        "due_begruendung": "Spätestmöglicher Go-live, damit die 2-Wochen-Überwachung bis MS-due 30.09. vollständig läuft",
+        "grounding": "vorgehen[3] + leistung[0]+[2]",
+        "bedingt": null
+       },
+       {
+        "seq": 7,
+        "text": "2-Wochen-Betriebsüberwachung abgeschlossen: 0 Fehl-Sync-Tage und Sync-Latenz < 24h im Abnahmeprotokoll bestätigt",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Abnahmekriterium gem. Briefing, deckungsgleich mit MS-due und KPI",
+        "grounding": "vorgehen[4] + erfolgsmessung",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "7 Handlungen = 100% im Normal-Zweig; die fachliche Abnahme ist gemäss Ein-Owner-Regel in Commercial (Haeffner, seq 4) und Finance (Pajor, seq 5) gesplittet — das Briefing nennt beide gleichrangig mit je eigenem Scope. Bedingter Zweig NICHT initial angelegt: Falls M01 (Key-Harmonisierung, due 15.08.) sich verzögert (risiken[0]+[2]), verschiebt sich die Produktivnahme (seq 6) und ggf. ist eine zusätzliche Handlung 'Duplikat-/Fehlzuordnungs-Bereinigung nach Sync-Start' nachzutragen — erst bei Eintritt der Blockade ergänzen."
+     },
+     {
+      "ms_id": "M09",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Aus der M04-Wertliste alle Cliff-2027-Verträge ohne €-Wert und/oder ohne Indexklausel gefiltert — Lückenliste dokumentiert",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-08-07",
+        "due_begruendung": "Direkt nach M04-Abschluss (31.07.) als Ausgangsbasis",
+        "grounding": "vorgehen[0]; depends_on M04",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Priorisierte Nacherfassungsliste erstellt (höchste Werte zuerst), mit M02 abgeglichen zur Vermeidung von Doppelarbeit",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-08-14",
+        "due_begruendung": "Eine Woche nach der Lückenliste; M02-Koordination gem. risiken[1] hier verankert",
+        "grounding": "vorgehen[1]; beteiligte/risiken[1] (Koordination M02)",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Freigabe-Mechanismus definiert und dokumentiert: kein Verhandlungsstart ohne vollständige Datenbasis je Vertrag",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-08-21",
+        "due_begruendung": "Muss VOR den ersten Renewal-Gesprächen stehen (Kontext: Verhandlungsfähigkeit sichern, bevor Gespräche beginnen), daher früh terminiert",
+        "grounding": "vorgehen[4] + leistung[3]",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Rate- und Wertdaten aus den Vertragsunterlagen extrahiert und in Odoo nachgetragen — 0 Cliff-2027-Verträge ohne €-Wert",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-09-18",
+        "due_begruendung": "Grösster Arbeitsblock (mit Commercial-Team für regionale Unterlagen); Puffer vor MS-due 30.09.",
+        "grounding": "vorgehen[2] + leistung[0]+[1] + erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "CPI/CBA-Indexierungsklausel je Cliff-2027-Vertrag geprüft und in Odoo als Pflicht-Traktandum für die Renewal-Verhandlung geflaggt",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Abschluss-Artefakt, deckungsgleich mit MS-due und KPI (Indexierungsklausel als Pflicht-Traktandum)",
+        "grounding": "vorgehen[3] + leistung[2] + erfolgsmessung",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "5 Handlungen = 100% im Normal-Zweig. Bedingter Zweig NICHT initial angelegt: Falls Vertragsunterlagen für einzelne Cliff-2027-Verträge nicht auffindbar sind (risiken[2]), ist die Handlung 'Verbleibende Lücken als zu-klären-Liste dokumentieren und Beschaffung anstossen' nachzutragen — erst bei Eintritt ergänzen, damit 100% ohne diesen Fall erreichbar bleibt."
+     },
+     {
+      "ms_id": "M10",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "OPEN-Register (148 Verträge / €91M) aus Odoo/Cockpit gezogen und nach €-Wert sowie Ablaufnähe sortiert — Cliff-2027-Verträge an oberster Position; Priorisierungsliste dokumentiert",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-08-21",
+        "due_begruendung": "Erste Woche nach MS-start 16.08. (Register aus M03, due 15.08., liegt dann vor)",
+        "grounding": "vorgehen[0] + leistung[2]; depends_on M03",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Wöchentliches Commercial-Standup mit Himm (DE), Roman Eslava (ES) und Strauß aufgesetzt — Serientermin versandt, erste Sitzung durchgeführt",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-08-21",
+        "due_begruendung": "Steuerungsrhythmus muss ab Woche 1 stehen, um 148 Verträge in ~6 Wochen zu schaffen (risiken[1])",
+        "grounding": "vorgehen[1]; risiken[1] (Kapazität)",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Cliff-2027-Anteil der OPEN-Verträge vorgezogen klassifiziert (RENEW / RE-PRICE / EXIT / UNCERTAIN) und in Odoo eingetragen",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-09-07",
+        "due_begruendung": "Vorgezogene Abarbeitung der Cliff-2027-Anteile gem. leistung[2]; halbe Laufzeit als Zwischenziel",
+        "grounding": "leistung[2] + vorgehen[2]; grounding: CLIFF-2027 €107M / 94 Verträge",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Alle 148 OPEN-Verträge einer der vier Kategorien zugeordnet und im CRM (Odoo) eingetragen (148/148)",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-09-21",
+        "due_begruendung": "Eine Woche Puffer vor MS-due 28.09. für die Abschlusskontrolle",
+        "grounding": "vorgehen[2] + leistung[0] + erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Operativer Account-Owner (Himm DE / Roman Eslava ES / Strauß) pro Vertrag benannt und im CRM hinterlegt (148/148)",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-09-21",
+        "due_begruendung": "Parallel zur Kategorisierung im Standup-Rhythmus; gleicher Puffer vor MS-due",
+        "grounding": "vorgehen[3] + leistung[1] + erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 6,
+        "text": "Abschlusskontrolle dokumentiert: 0 unklassifizierte Einträge, 148/148 mit Account-Owner, Prüfvermerk mit Kurzbegründung je UNCERTAIN-Vertrag im Abschlussprotokoll",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-09-28",
+        "due_begruendung": "Abschluss-Gate, deckungsgleich mit MS-due und KPI; Abhaken = Abschlussprotokoll liegt vor",
+        "grounding": "vorgehen[4] + erfolgsmessung; risiken[2] (UNCERTAIN-Qualitätskontrolle)",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "6 Handlungen = 100% im Normal-Zweig. Kein bedingter Zweig; das UNCERTAIN-Sammelkorb-Risiko (risiken[2]) ist als dokumentierter Prüfvermerk je UNCERTAIN-Vertrag in die Abschlusskontrolle (seq 6) integriert — die Sammelkorb-Bewertung ist Inhalt des Protokolls, nicht des Abhak-Kriteriums. Himm/Eslava/Strauß sind nicht in der Kanon-Owner-Liste — Haeffner trägt als Briefing-Owner alle Handlungen und steuert das operative Team über das Standup (seq 2)."
+     }
+    ]
+   }
+  },
+  {
+   "ws": "WS4",
+   "label": "WS4-3",
+   "ids": [
+    "M36",
+    "M37",
+    "M39"
+   ],
+   "final": {
+    "zerlegungen": [
+     {
+      "ms_id": "M36",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Prüfung der Standard-Indexierungsklausel (CPI/CBA) auf SGHA/IATA-Konformität formell gestartet (Prüfauftrag/Prüfplan dokumentiert)",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-07-24",
+        "due_begruendung": "Startbaustein; früh nach heute (13.07.) terminiert, damit die nachgelagerten Länderprüfungen bis 30.09. Platz haben",
+        "grounding": "vorgehen[0] / leistung[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "SGHA/IATA-Konformität der Klausel schriftlich bestätigt (Prüfergebnis dokumentiert)",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-08-28",
+        "due_begruendung": "Muss vor der finalen Freigabe/Dokumentation (30.09.) abgeschlossen sein; ~1 Monat Puffer rückwärts vom MS-due",
+        "grounding": "leistung[2] / vorgehen[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Kartellrechtliche Zulässigkeit der CBA-Weitergabe je Land (DE/AT/CH/ES) geprüft und Ergebnis je Land dokumentiert",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-11",
+        "due_begruendung": "Aufwendigster Prüfblock (4 Länder, ggf. externe Expertise); rückwärts terminiert mit ~3 Wochen Rest bis MS-due für Abstimmung und Freigabe",
+        "grounding": "vorgehen[1] / leistung[1] / risiken[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Klausel-Entwurf mit Michael Haeffner (Commercial) abgestimmt — Praktikabilität und Verhandelbarkeit bestätigt, Abstimmungsergebnis dokumentiert",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-18",
+        "due_begruendung": "Folgt auf die Rechtsprüfungen (Seq 2-3), muss vor finaler Dokumentation/Bereitstellung liegen",
+        "grounding": "vorgehen[2] / beteiligte",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Externe Kanzleien in DE/AT/ES mandatiert (Mandatierung dokumentiert)",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": null,
+        "due_begruendung": "Bedingter Zweig — Termin erst bei Eintritt der Bedingung sinnvoll setzbar (Datenehrlichkeit)",
+        "grounding": "vorgehen[3] / risiken[0]",
+        "bedingt": "Falls länderspezifische Rechtsexpertise intern fehlt (im Briefing explizit 'zu klären')"
+       },
+       {
+        "seq": 6,
+        "text": "Freigegebene, länderkonforme Standard-Indexierungsklausel final dokumentiert und in den Verhandlungsunterlagen für den CLIFF-2027-Rollout bereitgestellt",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Deckungsgleich mit MS-due und Erfolgsmessung (Klausel liegt bis 30.09.2026 einsatzbereit vor)",
+        "grounding": "vorgehen[4] / leistung[3] / erfolgsmessung",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "100% im Normal-Zweig = Seq 1-4 + 6 erledigt (Prüfstart → SGHA/IATA-Bestätigung → Kartellrecht 4 Länder → Commercial-Abstimmung → Freigabe/Bereitstellung); deckt 4 der 5 vorgehen-Punkte und alle 4 leistung-Punkte ab — vorgehen[3] (externe Kanzleien) läuft als bedingter Seq 5 (Muster OE-01) und zählt NICHT zum initialen Nenner. Seq 5 erst nachtragen, wenn die interne Expertise-Lücke in DE/AT/ES tatsächlich festgestellt wird."
+     },
+     {
+      "ms_id": "M37",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Kapazitätsanalyse dokumentiert: vollständige Milestone-Liste mit Owner-Zuordnung, Prioritäten und P1-Last je Owner (Haeffner ~13, übrige erhoben)",
+        "owner": "Dieter Streuli",
+        "due_vorschlag": "2026-07-20",
+        "due_begruendung": "Erste Woche nach heute; enge Frist 15.08. erfordert sofortigen Start (Risiko im Briefing explizit genannt)",
+        "grounding": "vorgehen[0] / leistung[0] / risiken[2]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Kapazitäts- und Kompetenzbewertung von Himm, Eslava und Strauß je Milestone-Typ dokumentiert",
+        "owner": "Dieter Streuli",
+        "due_vorschlag": "2026-07-24",
+        "due_begruendung": "Direkt nach der Kapazitätsanalyse; Voraussetzung für den Reallokationsvorschlag (Briefing: 'Kapazitätsprüfung ist Voraussetzung, nicht Formalität')",
+        "grounding": "vorgehen[1] / risiken[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Reallokationsvorschlag erstellt: Zuordnung Haeffner-Milestones auf mind. 2 neue Owner (Himm/Eslava/Strauß) mit Begründung, sodass kein Owner >6 P1-Milestones trägt",
+        "owner": "Dieter Streuli",
+        "due_vorschlag": "2026-07-31",
+        "due_begruendung": "Rückwärts vom 15.08.: zwei Wochen Rest für Alignment, Übergabe und Dokumentation",
+        "grounding": "vorgehen[2] / leistung[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Übergabe-Briefing mit den neuen Ownern durchgeführt und Übergabeprotokoll inkl. Wissenstransfer zu laufenden Vertragsdetails abgelegt",
+        "owner": "Michael Haeffner",
+        "due_vorschlag": "2026-08-07",
+        "due_begruendung": "Nach Erstellung des Reallokationsvorschlags (Seq 3, 31.07.), eine Woche vor Stichtag 15.08.; Haeffner als bisheriger Owner führt die Übergabe (Wissenstransfer explizit einplanen, risiken[1])",
+        "grounding": "vorgehen[3] / beteiligte / risiken[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Neue Owner-Zuordnung je Milestone schriftlich festgehalten und im Masterplan nachgeführt; Zählung bestätigt: kein Owner trägt >6 P1-Milestones parallel (Stichtag 15.08.2026)",
+        "owner": "Dieter Streuli",
+        "due_vorschlag": "2026-08-14",
+        "due_begruendung": "Letzter Werktag vor dem Stichtag 15.08.2026 der Erfolgsmessung (Zählung P1-Milestones je Owner)",
+        "grounding": "vorgehen[4] / leistung[2] / erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 6,
+        "text": "Freigabe operativer Ressourcen durch CEO erteilt (Eskalationsentscheid dokumentiert)",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": null,
+        "due_begruendung": "Bedingter Zweig — nur bei Kapazitätskonflikt nötig; Termin erst bei Eintritt setzbar",
+        "grounding": "beteiligte ('Ggf. Cüneyt Gölcöl — Eskalation/Freigabe operative Ressourcen')",
+        "bedingt": "Falls die Reallokation an Kapazitätsgrenzen von Himm/Eslava/Strauß scheitert und operative Ressourcen freigegeben werden müssen"
+       }
+      ],
+      "logik_hinweis": "100% im Normal-Zweig = Seq 1-5 (alle 5 vorgehen-Punkte und alle 3 leistung-Punkte abgedeckt); die Erfolgsmessung ist direkt in Seq 5 verankert (bestätigte Zählung: kein Owner >6 P1, Stichtag 15.08.). Seq 6 (CEO-Eskalation) ist bedingt und zählt NICHT zum initialen Nenner — erst nachtragen, wenn die Kapazitätsprüfung (Seq 2) zeigt, dass die Umverteilung ohne zusätzliche Ressourcen das Problem nur verschiebt (Muster OE-01). Himm/Eslava/Strauß sind keine Kanon-Owner, daher laufen ihre Mitwirkungs-Schritte unter Streuli (Programm-Owner) bzw. Haeffner (Übergabe)."
+     },
+     {
+      "ms_id": "M39",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Retention-Risikobasis analysiert und dokumentiert: Cliff-2027 (€107M/94 Verträge) + OPEN (€91M/148 Verträge) als quantifizierter Ausgangspunkt",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-07-24",
+        "due_begruendung": "Analytischer Startbaustein; früh terminiert, da der Abstimmungsbedarf (Risiko im Briefing) den Rest der Frist bis 31.08. beansprucht",
+        "grounding": "vorgehen[0] / kontext",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Net-Retention-Zielvorschlag abgeleitet (%-Satz des €278M-Forecasts) und Abgleich mit Konzernstrategie/Budget dokumentiert",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-08-07",
+        "due_begruendung": "Rückwärts vom 31.08.: der Vorschlag muss vor der Chairman/CEO-Abstimmung stehen, für die das Briefing Abstimmungsbedarf als Fristrisiko nennt",
+        "grounding": "vorgehen[1] / leistung[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Net-Retention-Ziel mit Dieter Streuli und Cüneyt Gökcöl abgestimmt und schriftlich fixiert (Beschluss oder Memo)",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-08-21",
+        "due_begruendung": "Rückwärts vom MS-due 31.08. mit Puffer für Tracking-Setup; Artefakt 'Beschluss/Memo' direkt aus der Erfolgsmessung",
+        "grounding": "vorgehen[2] / erfolgsmessung / beteiligte",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Monatliches Tracking-Format definiert und dokumentiert: wer berichtet, an wen, in welchem Report",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-08-28",
+        "due_begruendung": "Nach Zielfixierung, vor MS-due 31.08.; sichert die organisatorische Verankerung (Risiko 3 des Briefings)",
+        "grounding": "vorgehen[3] / leistung[1] / risiken[2]",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Net-Retention-KPI erstmals im Monthly Report ausgewiesen",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": null,
+        "due_begruendung": "Erfolgsmessung erlaubt Erstausweis 'August/September 2026' — der konkrete Report-Termin kann nach dem MS-due 31.08. liegen und ist damit nicht sauber innerhalb des Fensters ableitbar; DRS setzt das Datum bei Freigabe",
+        "grounding": "vorgehen[4] / erfolgsmessung",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "100% = Seq 1-5, alle im Normal-Zweig (keine bedingten Handlungen; alle 5 vorgehen-Punkte und beide leistung-Punkte abgedeckt). Kern-Roll-up bis MS-due 31.08. sind Seq 1-4 (Ziel fixiert + Tracking definiert = KPI-Wortlaut); Seq 5 (Erstausweis) darf gemäss Erfolgsmessung bis in den September rutschen, ohne dass der Normal-Zweig blockiert — daher due offen gelassen statt künstlich auf 31.08. gesetzt."
+     }
+    ]
+   }
+  },
+  {
+   "ws": "WS5",
+   "label": "WS5",
+   "ids": [
+    "WS5-01",
+    "WS5-02",
+    "WS5-03"
+   ],
+   "final": {
+    "zerlegungen": [
+     {
+      "ms_id": "WS5-01",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Scope-Papier BR-Landkarte DE/AT/ES dokumentiert (alle Betriebe, BR-/KBR-Ebenen, laufende Vereinbarungen)",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-04",
+        "due_begruendung": "Erste Arbeitswoche nach MS-Start 01.09.; Scope muss vor Beauftragung stehen",
+        "grounding": "vorgehen[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Auftrag BR-Landkarte an interne HR-/Legal-Linie bzw. externen Partner schriftlich erteilt",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-11",
+        "due_begruendung": "Eine Woche nach Scope-Fixierung; lässt bis 30.09. Puffer für Vollzugsnachweis",
+        "grounding": "vorgehen[1] / leistung[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "CEO+CFO-Doppelfreigabe für externes Mandat >EUR 25k eingeholt und dokumentiert",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-18",
+        "due_begruendung": "Muss spätestens zur jeweils auslösenden Beauftragung vorliegen (seq 2: 11.09. bzw. seq 4: 18.09.); terminiert auf den spätesten möglichen Auslöser",
+        "grounding": "vorgehen[1] / risiken[2]",
+        "bedingt": "Nur falls ein externes Mandat >EUR 25k vergeben wird (BR-Landkarte-Partner ODER Zaforesa) — Berater-Freeze WS3"
+       },
+       {
+        "seq": 4,
+        "text": "Zaforesa-Assessment ES schriftlich beauftragt, Liefertermin 15.11.26 im Auftrag fixiert",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-18",
+        "due_begruendung": "Rückwärts vom harten Liefertermin 15.11.26; parallel zur BR-Landkarte, lässt eine Woche Puffer für den Kickoff vor dem Vollzugsnachweis 30.09.",
+        "grounding": "vorgehen[2] / leistung[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Kickoff Zaforesa-Assessment durchgeführt und dokumentiert",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-25",
+        "due_begruendung": "Erfolgsmessung «nachweislich gestartet» hängt am Kickoff; Puffer vor Vollzugsnachweis 30.09.",
+        "grounding": "vorgehen[2] / leistung[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 6,
+        "text": "Zwischenstand im GL-Weekly (Commitment-Review) berichtet",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-25",
+        "due_begruendung": "Letztes GL-Weekly vor MS-due 30.09.",
+        "grounding": "vorgehen[3]",
+        "bedingt": null
+       },
+       {
+        "seq": 7,
+        "text": "Vollzugsnachweis (BR-Landkarte-Auftrag + Zaforesa-Start) abgelegt",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Deckt exakt die Erfolgsmessung per MS-due 30.09.26 ab",
+        "grounding": "vorgehen[3] / erfolgsmessung",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "Roll-up = erledigte/gesamte Handlungen. Normal-Zweig sind seq 1, 2, 4, 5, 6, 7 (6 Handlungen = 100% erreichbar); sie decken die Erfolgsmessung «Auftrag erteilt UND Zaforesa nachweislich gestartet bis 30.09.» vollständig ab (seq 2 = Auftrag, seq 5 = Kickoff/Start, seq 7 = Nachweis). Seq 3 (CEO+CFO-Doppelfreigabe) ist bedingt und wird erst in den Nenner aufgenommen, wenn tatsächlich ein externes Mandat >EUR 25k vergeben wird — egal ob für den BR-Landkarte-Partner oder Zaforesa; das due folgt dann der jeweils auslösenden Beauftragung (seq 2: 11.09. bzw. seq 4: 18.09.). Bei rein interner bzw. unter der Schwelle liegender Beauftragung entfällt sie ersatzlos (Muster OE-01). leistung[2] («Grundlage für BR-Partner-Roadmap WS5-07 und Mitbestimmungs-Vorbehalte gelegt») ist ein Folgezustand aus seq 2 (Auftrag erteilt) und seq 4/5 (Zaforesa beauftragt und gestartet) ohne eigenes abhakbares Artefakt — daher bewusst keine separate Handlung."
+     },
+     {
+      "ms_id": "WS5-02",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Beekeeper-Vertrag beschafft; Laufzeit, Kündigungsfrist und Kosten dokumentiert (Sunk-Cost-Klärung)",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-08-31",
+        "due_begruendung": "Datenlücke zuerst schliessen — lange Restlaufzeit kann den Business Case kippen; früher Start lässt 4 Wochen für TCO-Arbeit",
+        "grounding": "vorgehen[0] / leistung[1] / risiken[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Anforderungsprofil einheitliche Mitarbeiter-Kommunikation dokumentiert (Reichweite AAS+AHS, alle ~15 Stationen)",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-11",
+        "due_begruendung": "Voraussetzung für den TCO-Vergleich; rückwärts von seq 3 terminiert",
+        "grounding": "vorgehen[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "TCO-Vergleich Beekeeper vs. mindestens eine günstigere Alternative erstellt (technische Bewertung mit Didit-Support)",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-22",
+        "due_begruendung": "Kernartefakt der Erfolgsmessung; eine Woche Puffer vor MS-due für die Vorlagen-Aufbereitung",
+        "grounding": "vorgehen[2] / leistung[0] / erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Entscheidungsvorlage für den GL-Plattform-Entscheid (WS5-09, Dez 26) erstellt (Dokument liegt vor)",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Abschlussartefakt per MS-due; WS5-09 (Dez 26) hat danach ausreichend Vorlauf",
+        "grounding": "vorgehen[3] / leistung[2]",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "Alle 4 Handlungen sind unbedingt — 100% im Normal-Zweig erreichbar. Erfolgsmessung (TCO-Vergleich vorliegend UND Kündigungsfrist dokumentiert bis 30.09.) ist durch seq 1 und 3 abgedeckt; seq 2 und 4 sind die Vorgehens-Glieder davor/danach. Seq 4 ist bewusst auf das Artefakt «Dokument liegt vor» reduziert — das Briefing (vorgehen[3]) verlangt nur die Aufbereitung als Entscheidungsvorlage, kein Einreichungs-Gefäss; der eigentliche Entscheid gehört zu WS5-09. Die im Risiko genannte frühe KBR-Einbindung (§87 BetrVG) ist bewusst NICHT als Handlung angelegt — sie gehört zu WS5-10 und würde hier doppeln. Didit ist Mitwirkender ohne Kanon-Owner; führend bleibt Charisius."
+     },
+     {
+      "ms_id": "WS5-03",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Commitment-Format mit Andreas Fritthum/WS2 abgestimmt und Andocken an den Gruppen-Commitment-Tracker dokumentiert (kein neues Gefäss)",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-18",
+        "due_begruendung": "Am Tag der GL=6-Publikation (18.09., WS2-01) muss das Format stehen, damit die Einsammlung sofort startet",
+        "grounding": "vorgehen[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Eigenes Selbst-Commitment als GL-Rollenmodell publiziert (CGO voran)",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-09-21",
+        "due_begruendung": "Unmittelbar nach GL=6-Publikation 18.09., als sichtbarer erster Schritt vor den übrigen GL-Mitgliedern",
+        "grounding": "vorgehen[1] / beteiligte",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Selbst-Commitments der übrigen 5 GL-Mitglieder eingesammelt und im Gruppen-Commitment-Tracker publiziert (insgesamt 6/6 sichtbar)",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-25",
+        "due_begruendung": "Rückwärts vom MS-due: Publikation vor Kickoff-Versand, mit Puffer nach GL=6-Publikation 18.09. und CGO-Vorbild 21.09.",
+        "grounding": "vorgehen[1] / leistung[0] / erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "Kickoff-Kommunikation an Führungskräfte formuliert (Entwurf liegt vor)",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-25",
+        "due_begruendung": "Entwurf muss vor der BR-Vorabinformation (seq 5) und dem Versand (seq 6) stehen",
+        "grounding": "vorgehen[2]",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "BR-Vorabinformation zur Kickoff-Kommunikation erfolgt und dokumentiert (Sequenz-Regel: BR vor Belegschaft)",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-28",
+        "due_begruendung": "Muss dem Versand (seq 6) vorausgehen — Sequenzbruch beschädigt die BR-Partnerschaft (§79-Vertraulichkeitsregime)",
+        "grounding": "vorgehen[2] / risiken[2]",
+        "bedingt": null
+       },
+       {
+        "seq": 6,
+        "text": "Kickoff-Kommunikation an die Führungskräfte versendet",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Zweiter Teil der Erfolgsmessung, terminiert exakt auf MS-due 30.09.26",
+        "grounding": "vorgehen[2] / leistung[1] / erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 7,
+        "text": "Erster wöchentlicher Commitment-Review der GL-Selbst-Commitments im GL-Weekly durchgeführt (Nachhaltung aktiviert)",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Nachhaltungs-Mechanik muss vor MS-Abschluss laufen; erster Review bis 30.09. machbar nach Publikation 25.09.",
+        "grounding": "vorgehen[3]",
+        "bedingt": null
+       },
+       {
+        "seq": 8,
+        "text": "Symbolisches Vorbild-Signal angestossen: Mail-Domain-Migration GL auf @axs.aero beauftragt (Kopplung WS1)",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": null,
+        "due_begruendung": "Kopplung an WS1 ohne eigenen Termin im Briefing — Datum nicht sauber ableitbar, DRS setzt es bei Freigabe",
+        "grounding": "leistung[2]",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "Alle 8 Handlungen sind unbedingt — 100% im Normal-Zweig erreichbar. Die Erfolgsmessung (6 publizierte GL-Commitments + Kickoff versendet bis 30.09.) ist über seq 2 + seq 3 zusammen (CGO-Commitment plus die übrigen 5 = 6/6 sichtbar, keine Doppelzählung) und seq 6 (Versand) abgedeckt; seq 4 und 5 sind die abhakbaren Vorstufen des Versands in der zwingenden Reihenfolge Entwurf → BR-Vorabinformation → Versand. Kein bedingter Zweig angelegt: Das Risiko «GL-Bereinigung auf 6 verzögert sich» ist eine Abhängigkeit von WS2-01 (18.09.), keine Alternativ-Handlung — bei Verzug verschieben sich seq 1–3 entsprechend nach hinten, neue Handlungen entstehen nicht. Der bestehende Commitment-Task zu WS2-02 (Aufgaben-/Steuerungstermin) betrifft ein anderes MS und wurde nicht dupliziert."
+     }
+    ]
+   }
+  },
+  {
+   "ws": "WS6",
+   "label": "WS6",
+   "ids": [
+    "WS6-01",
+    "WS6-02",
+    "WS6-03"
+   ],
+   "final": {
+    "zerlegungen": [
+     {
+      "ms_id": "WS6-01",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Bilaterales Gespräch CEO/CHRO zum Vertragsstatus Delivery-Lead Petric durchgeführt (keine Behandlung im Board-Dokument)",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-08-28",
+        "due_begruendung": "Rückwärts vom MS-due 04.09.: Klärung muss vor dem Programm-Kickoff KW36 (ab 01.09.) abgeschlossen sein; ob die Konditionen geklärt sind, wird binär über seq 2 (finale Dokumentation) abgehakt",
+        "grounding": "vorgehen[0] + leistung[0] + risiken[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Vertragsstatus Petric final dokumentiert — Ablage ausschliesslich bilateral CEO/CHRO, ausserhalb des Board-Dokuments",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-09-02",
+        "due_begruendung": "Direkt nach dem bilateralen Gespräch, vor MS-due 04.09.; Charisius laut beteiligte Mitwirkende der bilateralen Vertragsklärung (CHRO)",
+        "grounding": "leistung[0] + beteiligte + risiken[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "AI-Budget-Positionen vollständig gesichtet und CHF/EUR-Inkonsistenzen inventarisiert (Input IN-16)",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-08-24",
+        "due_begruendung": "Vorstufe der Konsolidierung; rückwärts vom MS-due 04.09. terminiert (erfolgsmessung verlangt Konsistenz bis 04.09., nicht erst IN-16-Frist 30.09.)",
+        "grounding": "vorgehen[1] + leistung[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "AI-Budget auf eine Währung konsolidiert und bereinigte Fassung dokumentiert",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-09-02",
+        "due_begruendung": "Muss vor der Kickoff-Dokumentation (MS-due 04.09.) vorliegen; verhindert Verfälschung der Bottom-up-Validierung in WS6-02 (risiken[2])",
+        "grounding": "vorgehen[1] + leistung[1] + erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Beide Ergebnisse (Vertragsstatus geklärt + Budget-Währung bereinigt) im Programm-Kickoff KW36 dokumentiert (Roadmap-Zeile KW36)",
+        "owner": "Cüneyt Gökcöl",
+        "due_vorschlag": "2026-09-04",
+        "due_begruendung": "MS-due selbst; Kickoff KW36 endet laut Record am 04.09.2026",
+        "grounding": "vorgehen[2] + erfolgsmessung",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "5 Handlungen, alle im Normal-Zweig — 100% erreichbar über: Gespräch als Ereignis (1) → bilaterale Dokumentation als Artefakt der Klärung (2) parallel zu Budget-Sichtung (3) → Konsolidierung (4) → Kickoff-Dokumentation (5). Zwei Stränge (Vertrag: 1–2, Budget: 3–4) laufen parallel und werden in 5 zusammengeführt. Die inhaltliche Klärung der Konditionen wird nicht in 1 mitabgehakt, sondern binär über das Dokumentations-Artefakt in 2 festgestellt. Kein bedingter Zweig im Briefing; die Risiken (Verzögerung, Vertraulichkeitsverletzung) sind Constraints, keine Alternativ-Handlungen. Vertraulichkeits-Constraint: Handlungen 1–2 laufen ausschliesslich bilateral CEO/CHRO."
+     },
+     {
+      "ms_id": "WS6-02",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Bottom-up-Gegenrechnung der Einsparungs-Targets je Initiative erstellt (alle 8 AI@AXS-Initiativen, Kopplung IN-16)",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-09-11",
+        "due_begruendung": "Rückwärts vom MS-due 30.09.: braucht danach noch Finance-Plausibilisierung, Vorlagen-Aufbereitung und ExBoD-Termin; setzt bereinigte Budget-Währung aus WS6-01 (04.09.) voraus",
+        "grounding": "vorgehen[0] + leistung[2]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Finance-Plausibilisierung der Bottom-up-Gegenrechnungen dokumentiert",
+        "owner": "Stephanie Rohde",
+        "due_vorschlag": "2026-09-18",
+        "due_begruendung": "Nach Fertigstellung der Gegenrechnungen (11.09.), vor Aufbereitung der ExBoD-Vorlage; Rohde laut beteiligte mit Finance-Sicht auf der Roadmap-Zeile 30.09. — Zieldatum hier bewusst früher, damit die Plausibilisierung in die Vorlage einfliessen kann",
+        "grounding": "beteiligte (Rohde, Finance-Sicht, Roadmap-Zeile 30.09.) + vorgehen[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "Reconcile «Elysium 3.0 = AI@AXS = ein Programm» schriftlich festgehalten (gemeinsame Governance TRAK-2026-0010)",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-09-18",
+        "due_begruendung": "Muss in die ExBoD-Vorlage einfliessen; parallel zur Finance-Plausibilisierung terminierbar",
+        "grounding": "vorgehen[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "ExBoD-Vorlage mit Prio-A/B/C-Liste und Nicht-verfolgen-Liste (Computer-Vision-Turnaround, General-Purpose-Assistent ~5'000 MA, kundenseitiger Chatbot) versandt",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-09-22",
+        "due_begruendung": "Rückwärts vom Beschluss 30.09.: Vorlage muss vor der ExBoD-Behandlung bei den Sponsoren liegen",
+        "grounding": "vorgehen[2] + leistung[0] + leistung[1]",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Review der ExBoD-Vorlage als Chairman of AI durchgeführt und Review-Vermerk dokumentiert",
+        "owner": "Dieter Streuli",
+        "due_vorschlag": "2026-09-25",
+        "due_begruendung": "Zwischen Vorlagen-Versand (22.09.) und ExBoD-Beschluss (30.09.); DRS steuert/kontrolliert laut beteiligte — kein formales Freigabe-Gate: der Beschluss (seq 6) hängt nicht davon ab",
+        "grounding": "beteiligte (DRS Chairman of AI, steuert/kontrolliert)",
+        "bedingt": null
+       },
+       {
+        "seq": 6,
+        "text": "ExBoD-Beschluss zu Prio A/B/C + Nicht-verfolgen-Liste + bottom-up-validierten Targets herbeigeführt und dokumentiert",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "MS-due selbst; erfolgsmessung verlangt dokumentierten Beschluss bis 30.09.2026",
+        "grounding": "vorgehen[3] + erfolgsmessung",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "6 Handlungen, alle im Normal-Zweig — 100% erreichbar über: Gegenrechnung (1) → Plausibilisierung (2) parallel zu Reconcile (3) → Vorlage (4) → DRS-Review (5) → Beschluss (6). Das DRS-Review (5) ist eine dokumentierte Steuerungs-Handlung aus «steuert/kontrolliert», KEIN Freigabe-Gate — der ExBoD-Beschluss (6) ist davon nicht abhängig und bleibt auch ohne formale Freigabe abhakbar. Bedingter Zweig NICHT initial angelegt (Muster OE-01): Halten die Targets der Bottom-up-Prüfung nicht stand (risiken[0]), wird bei Eintritt eine Handlung «Zielwerte ehrlich angepasst und in der ExBoD-Vorlage ausgewiesen» nachgetragen (Datenehrlichkeit: Top-Down ist kein Ergebnis). Constraint, keine Handlung: Init #7 Workforce Co-Pilot darf nicht vorgezogen werden (Confidence niedrig, KBR-Risiko, mitbestimmungspflichtig)."
+     },
+     {
+      "ms_id": "WS6-03",
+      "handlungen": [
+       {
+        "seq": 1,
+        "text": "Zonen-Katalog-Entwurf mit drei Klassen ausgearbeitet: High-AI-Zone (Admin/Support, Finance-Automation, Reporting, Action-Item-Tracking, Inquiry Manager, Ops-Analytics), No-AI-Zone (sicherheitskritische Ops-Freigaben, arbeitsrechtlich sensible Personalentscheide, Vertrags-/Haftungsentscheide ohne Human-in-the-Loop), Guarded-Zone (leistungs-/verhaltensbezogene MA-Daten, Kundenkommunikation)",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-09-30",
+        "due_begruendung": "Rückwärts vom MS-due 31.10. (Termin = Annahme laut projekt.yaml): danach folgen Rechts-Sicht, Vorlage, Beschluss, Verankerung; sinnvoll gekoppelt an Abschluss WS6-02 (30.09.)",
+        "grounding": "vorgehen[0] + leistung[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 2,
+        "text": "Rechts-/Mitbestimmungs-Stellungnahme zur Guarded-Zone (§87 BetrVG / §96 ArbVG) schriftlich abgegeben",
+        "owner": "Amélie Charisius",
+        "due_vorschlag": "2026-10-09",
+        "due_begruendung": "Nach Katalog-Entwurf (30.09.), mit Puffer vor Vorlagen-Finalisierung; Charisius laut beteiligte für Mitbestimmungs-/Rechts-Sicht Guarded-Zone — Artefakt = schriftliche Stellungnahme",
+        "grounding": "vorgehen[1] + beteiligte + risiken[0]",
+        "bedingt": null
+       },
+       {
+        "seq": 3,
+        "text": "ExBoD-Beschlussvorlage Zonen-Katalog finalisiert (Charisius-Input eingearbeitet) und versandt",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-10-16",
+        "due_begruendung": "Nach Rechts-Stellungnahme (09.10.), rückwärts vom Beschlusstermin",
+        "grounding": "vorgehen[0] + vorgehen[2]",
+        "bedingt": null
+       },
+       {
+        "seq": 4,
+        "text": "ExBoD-Beschluss über den Zonen-Katalog (High/No/Guarded) herbeigeführt und dokumentiert",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-10-23",
+        "due_begruendung": "Rückwärts vom MS-due 31.10.: nach Beschluss bleiben Ablage in TRAK-2026-0010 und Kommunikation; Termin unter Vorbehalt (MS-due ist Annahme)",
+        "grounding": "vorgehen[2] + leistung[1] + erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 5,
+        "text": "Beschlossener Zonen-Katalog in TRAK-2026-0010 abgelegt (eine Governance, kein neues Gremium)",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-10-28",
+        "due_begruendung": "Direkt nach ExBoD-Beschluss, vor MS-due 31.10.",
+        "grounding": "vorgehen[3] + leistung[2] + erfolgsmessung",
+        "bedingt": null
+       },
+       {
+        "seq": 6,
+        "text": "Kommunikation des beschlossenen Zonen-Katalogs als verbindlicher Rahmen für Zielsystem-Entscheide (WS6-05) versandt und Versand dokumentiert",
+        "owner": "Tine Petric",
+        "due_vorschlag": "2026-10-31",
+        "due_begruendung": "MS-due selbst (Termin = Annahme laut projekt.yaml); entblockt nachgelagerte WS6-05-Entscheide (risiken[1]); Artefakt = dokumentierter Versand",
+        "grounding": "vorgehen[3] + risiken[1]",
+        "bedingt": null
+       }
+      ],
+      "logik_hinweis": "6 Handlungen, alle im Normal-Zweig — 100% erreichbar über die lineare Kette: Entwurf (1) → Rechts-Stellungnahme (2) → Vorlage (3) → ExBoD-Beschluss (4) → TRAK-Ablage (5) → Kommunikations-Versand (6). Offener Punkt für DRS bei Freigabe (Datenehrlichkeit): Die Adressaten der Kommunikation (6) sind aus Briefing/Record nicht ableitbar — Adressaten-Festlegung erfolgt durch DRS bei Freigabe; abgehakt wird der dokumentierte Versand. Bedingter Zweig NICHT initial angelegt (Muster OE-01): Signalisiert die Mitbestimmungs-Stellungnahme (2) Blockade-Risiken bei HR-Bot/Action-Item-Tracking (risiken[0]), wird bei Eintritt eine Handlung «Guarded-Zone-Abgrenzung nachgeschärft und mit Charisius erneut freigegeben» nachgetragen. Hinweis Datenehrlichkeit: MS-due 31.10. ist laut projekt.yaml eine Termin-Annahme (date_assumed) — alle due_vorschlaege stehen unter diesem Vorbehalt."
+     }
+    ]
+   }
+  }
+ ]
+}

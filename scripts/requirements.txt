@@ -1,0 +1,6 @@
+# Python-Abhängigkeiten der RUBICON-Skripte (Python >= 3.11)
+pyyaml
+google-api-python-client
+google-auth
+PyMuPDF          # fitz — PDF-Seitenvorschauen
+# html_to_pdf.py braucht zusätzlich einen headless Chrome/Chromium im PATH

@@ -1,0 +1,1725 @@
+{
+ "summary": "43 Milestones (34 Kern + 9 aus der Kritik) über 7 Workstreams (Q3/26–Q4/27). Logik: zuerst die Datenbasis sichern (Odoo-Harmonisierung, €-Wert-Lücken, OPEN-Register), dann parallel die €107M-Cliff-2027 proaktiv verlängern, das LH-Klumpenrisiko (34%/€96M) mehrjährig binden und die 112 Accounts ohne Sponsor absichern — flankiert von Pipeline-Aufbau und Indexierung gegen Preiserosion. 22 P1. Die 9 Punkte der Vollständigkeits-Kritik wurden als Milestones M35–M43 aufgenommen (verteilte Owner: Legal-Gate/Charisius, Cliff-2028-Pull-Forward, Haeffner-Entlastung, Net-Retention/Rohde, Marge/Finance, Frühwarn-Trigger, Marktbenchmark, LH-Kontingenzpfad).",
+ "gaps": [
+  "Alle 9 Vollständigkeits-Lücken wurden am 30.06. als Milestones M35–M43 in den Plan aufgenommen (verteilte Owner zur Entlastung)."
+ ],
+ "updated": "2026-06-30 | 07.07.2026: HARD EDGE 30.06.2027 (DRS) — alle Termine > 30.06.27 auf 30.06.27 vorgezogen: M29, M30, M31, M32, M33, M34, M35 | Start-Daten > Jun 27 auf 2027-06 gecappt (Hard Edge): M35",
+ "milestones": [
+  {
+   "id": "M01",
+   "seq": 1,
+   "quarter": "Q3/26",
+   "workstream": "WS7 Governance / Steuerung",
+   "title": "Key-Harmonisierung physisch in Odoo geschrieben",
+   "action": "Die im Cockpit erzeugte Entity-Resolution/Key-Mapping-Tabelle (kanonische Kunden- und Vertrags-IDs) per Batch-Write in Odoo persistieren, sodass die 129 Kunden und 338 Verträge im CRM eindeutig identifizierbar und deduped sind. Vorher Trockenlauf gegen eine Odoo-Sandbox, danach produktiver Write mit Rollback-Snapshot.",
+   "owner": "Didit/Tine",
+   "start": "sofort",
+   "due": "2026-08-15",
+   "kpi": "100% der 338 Verträge und 129 Kunden tragen eine kanonische ID in Odoo; 0 unaufgelöste Duplikate im Reconciliation-Report",
+   "depends_on": "",
+   "grounding": "129 Kunden · 338 Verträge im CRM-Cockpit",
+   "prio": "P1",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Die AXS Group verwaltet 129 Kunden und 338 Verträge im CRM-Cockpit, jedoch fehlen bislang kanonische IDs in Odoo, wodurch Duplikate und unklare Zuordnungen die kommerzielle Steuerung (Klumpenrisiko LH, Cliff-2027, Sponsor-Lücken) unterlaufen. Ohne saubere Entity-Resolution sind alle nachgelagerten Auswertungen – Churn-Analyse, Pipeline-Tracking, Vertragsablauf-Monitoring – datenqualitativ unsicher. M01 schafft die technische Datengrundlage für sämtliche weiteren Governance- und Commercial-Workstreams.",
+    "leistung": [
+     "Entity-Resolution/Key-Mapping-Tabelle aus dem CRM-Cockpit, die jedem der 129 Kunden und 338 Verträge eine eindeutige kanonische ID zuweist",
+     "Trockenlauf-Protokoll (Sandbox-Ergebnis) inkl. Differenzliste aller erkannten Duplikate und Mapping-Konflikte",
+     "Produktiver Batch-Write in Odoo-Produktion mit vorgängigem Rollback-Snapshot",
+     "Reconciliation-Report: 0 unaufgelöste Duplikate, 100% ID-Abdeckung als Abnahmedokument"
+    ],
+    "vorgehen": [
+     "1. Didit/Tine exportieren die aktuelle Entity-Resolution/Key-Mapping-Tabelle aus dem CRM-Cockpit und validieren Vollständigkeit (129 Kunden, 338 Verträge)",
+     "2. Trockenlauf gegen Odoo-Sandbox: Batch-Write simulieren, Differenzliste und Duplikat-Report erzeugen, Mapping-Konflikte identifizieren und bereinigen",
+     "3. Rollback-Snapshot der Odoo-Produktionsumgebung erstellen (Zeitpunkt und Verantwortlichkeit zu klären mit Tine/IT-Ops)",
+     "4. Produktiver Batch-Write in Odoo-Produktion durchführen, Fehlerlog überwachen, bei kritischen Fehlern Rollback auslösen",
+     "5. Reconciliation-Report erstellen und durch Pajor (Finance) sowie Haeffner (CCO) als datenverantwortliche Stakeholder abnehmen lassen"
+    ],
+    "beteiligte": "Owner: Didit/Tine (IT/Build) — Mitwirkende: Pajor (Finance, Datenabnahme), Haeffner (CCO, fachliche Abnahme); weitere IT-Ops-Verantwortung für Snapshot/Rollback zu klären",
+    "risiken": [
+     "Mapping-Konflikte bei Kunden mit mehreren Vertragsbeziehungen (z.B. LH-Gruppe mit ~34% Volumen) können den Batch-Write blockieren oder zu Fehlzuordnungen führen – Bereinigung verlängert Timeline",
+     "Rollback-Fähigkeit der Odoo-Produktionsumgebung ist vorausgesetzt, aber technische Machbarkeit und Zuständigkeit sind zum jetzigen Zeitpunkt zu klären",
+     "Ohne abgeschlossenes M01 sind alle nachgelagerten Milestones (Sponsor-Mapping, Cliff-Analyse, Churn-Tracking) auf inkonsistenter Datenbasis – Verzögerung hat Kaskadeneffekt auf gesamten Commercial-Workstream"
+    ],
+    "erfolgsmessung": "100% der 338 Verträge und 129 Kunden tragen eine kanonische ID in Odoo; Reconciliation-Report weist 0 unaufgelöste Duplikate aus; Rollback-Snapshot vor Produktiv-Write dokumentiert und archiviert; Abnahme durch Haeffner und Pajor bis 2026-08-15 erfolgt"
+   }
+  },
+  {
+   "id": "M02",
+   "seq": 2,
+   "quarter": "Q3/26",
+   "workstream": "WS6 Preis- & Datenqualität",
+   "title": "€-Wert-Lücken bei 72 Kunden schliessen",
+   "action": "Haeffner erstellt aus den Verträgen ohne €-Wert eine priorisierte Liste (nach geschätztem Volumen), Finance (Pajor) gleicht gegen Odoo/Forecast ab; je Vertrag Basic-Rate + Additionals nachtragen, sodass jeder aktive Vertrag einen belastbaren €-Wert trägt. Owner-Zuteilung an Himm (DE)/Eslava (ES)/Strauß je Region.",
+   "owner": "Michael Haeffner",
+   "start": "sofort",
+   "due": "2026-09-30",
+   "kpi": "72 → 0 Kunden mit €-losen Verträgen; ≥95% des Forecast-Volumens vertraglich beziffert",
+   "depends_on": "Key-Harmonisierung physisch in Odoo geschrieben",
+   "grounding": "72 Kunden mit Verträgen ohne €-Wert",
+   "prio": "P1",
+   "status": "offen",
+   "briefing": {
+    "kontext": "72 der 129 Kunden haben Verträge ohne erfassten €-Wert. Dadurch ist ein wesentlicher Teil des €278M-Forecasts nicht vertraglich unterlegt und damit weder steuerbar noch belastbar verhandelbar. Ohne bezifferte Vertragswerte fehlt auch die Grundlage für Preisgleitklausel-Analysen (CPI/CBA) und Renewal-Priorisierung.",
+    "leistung": [
+     "Priorisierte Liste aller 72 betroffenen Kunden nach geschätztem Volumen erstellt",
+     "Je Vertrag Basic-Rate und Additionals nachgetragen",
+     "Abgleich gegen Odoo/Forecast durch Finance (Pajor) dokumentiert",
+     "≥95% des Forecast-Volumens vertraglich beziffert"
+    ],
+    "vorgehen": [
+     "Haeffner erstellt priorisierte Liste der 72 Kunden ohne €-Wert, sortiert nach geschätztem Volumen (Quelle: Forecast/Pajor)",
+     "Finance (Pajor) gleicht Liste gegen Odoo-Forecast ab und identifiziert größte Wertlücken",
+     "Vertragsunterlagen je Kunde heranziehen und Basic-Rate sowie Additionals extrahieren",
+     "Nachtrag in Odoo je Region: Himm (DE), Eslava (ES), Strauß (zu klären für weitere Regionen)",
+     "Abschlusskontrolle: Anteil des bezifferten Volumens am Gesamtforecast messen"
+    ],
+    "beteiligte": "Owner: Michael Haeffner; Finance: Pajor; Regionale Owner: Himm (DE), Eslava (ES), Strauß (Region zu klären)",
+    "risiken": [
+     "M02 hängt von M01 ab (Key-Harmonisierung): ohne eindeutige Odoo-IDs können Vertragsnachträge fehlgeleitet werden",
+     "Für einzelne Kunden liegen Vertragsunterlagen möglicherweise nicht vollständig vor → €-Wert bleibt zu klären",
+     "Kapazitätsengpass bei Haeffner, da M02, M03 und M09 parallel laufen"
+    ],
+    "erfolgsmessung": "72 → 0 Kunden mit €-losen Verträgen; ≥95% des Forecast-Volumens vertraglich beziffert"
+   }
+  },
+  {
+   "id": "M03",
+   "seq": 3,
+   "quarter": "Q3/26",
+   "workstream": "WS2 OPEN entnebeln",
+   "title": "OPEN-Register aufbauen & Datenlücken schliessen",
+   "action": "Alle 148 OPEN-Verträge in ein einziges Klassifizierungs-Register überführen (Odoo/CRM-Export). Zuerst die 72 Kunden mit Verträgen ohne €-Wert bewerten und die Indexierungs-Lücken (fehlende CPI/CBA-Klausel) je Vertrag flaggen, damit OPEN-Volumen und Preiserosionsrisiko sauber messbar werden. Register mit Feldern: Ablaufdatum, €-Wert, Renewal-Wahrscheinlichkeit, Index-Klausel ja/nein, zuständiger Account-Owner.",
+   "owner": "Michael Haeffner",
+   "start": "sofort",
+   "due": "2026-08-15",
+   "kpi": "148/148 OPEN-Verträge mit €-Wert und Index-Flag im Register; 0 Verträge ohne €-Wert innerhalb des OPEN-Sets",
+   "depends_on": "Key-Harmonisierung physisch in Odoo geschrieben",
+   "grounding": "148 OPEN-Verträge / €91M; 72 Kunden mit Verträgen ohne €-Wert; Indexierungs-Lücken",
+   "prio": "P1",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Die 148 OPEN-Verträge mit einem Volumen von €91M sind derzeit nicht strukturiert erfasst: es fehlen €-Werte, Ablaufdaten, Renewal-Wahrscheinlichkeiten und Indexierungsklauseln (CPI/CBA). Ohne dieses Register ist das Risiko aus der OPEN-Masse weder mess- noch steuerbar und Verhandlungsprioritäten können nicht gesetzt werden.",
+    "leistung": [
+     "Register mit allen 148 OPEN-Verträgen, je mit Ablaufdatum, €-Wert, Renewal-Wahrscheinlichkeit, Index-Klausel (ja/nein) und Account-Owner",
+     "0 Verträge ohne €-Wert innerhalb des OPEN-Sets",
+     "Indexierungslücken je Vertrag explizit geflaggt"
+    ],
+    "vorgehen": [
+     "CRM/Odoo-Export aller 148 OPEN-Verträge als Ausgangsbasis",
+     "Fehlende €-Werte je Vertrag ergänzen (koordiniert mit M02-Prozess)",
+     "Ablaufdatum und Renewal-Wahrscheinlichkeit je Vertrag eintragen",
+     "CPI/CBA-Klausel je Vertrag prüfen und als Flag hinterlegen",
+     "Account-Owner je Vertrag zuweisen und Register in Odoo/CRM-Cockpit als verbindliche Datenquelle hinterlegen"
+    ],
+    "beteiligte": "Owner: Michael Haeffner; Koordination mit Finance (Pajor) für €-Wert-Abgleich; regionale Owner für Datennachtrag (zu klären)",
+    "risiken": [
+     "Abhängigkeit von M01 (Key-Harmonisierung): ohne eindeutige IDs entstehen Dopplungen im Register",
+     "Parallelarbeit mit M02 (€-Wert-Lücken) erfordert enge Abstimmung, um Doppelarbeit zu vermeiden",
+     "Indexierungsstatus einzelner Verträge ggf. nicht aus vorhandenen Unterlagen ableitbar → zu klären"
+    ],
+    "erfolgsmessung": "148/148 OPEN-Verträge mit €-Wert und Index-Flag im Register; 0 Verträge ohne €-Wert innerhalb des OPEN-Sets"
+   }
+  },
+  {
+   "id": "M04",
+   "seq": 4,
+   "quarter": "Q3/26",
+   "workstream": "WS1 Cliff-2027-Offensive",
+   "title": "Cliff-2027-Wertliste & Sponsor-Zuordnung fixieren",
+   "action": "Alle 94 Cliff-2027-Verträge nach €-Wert absteigend sortieren, Top-Wert-Cluster (v.a. LH-Group-Anteil) markieren und jedem der Top-30-Verträge einen Verhandlungs-Owner + strategischen Sponsor zuweisen. Ausgabe als priorisierte Renewal-Battlecard im CRM-Cockpit.",
+   "owner": "Commercial (Cüneyt/Himm/Eslava)",
+   "start": "sofort",
+   "due": "2026-07-31",
+   "kpi": "94/94 Verträge nach Wert gerankt; Top-30 (>ca. 80% des €107M) mit Owner+Sponsor belegt",
+   "depends_on": "OPEN-Register aufbauen & Datenlücken schliessen",
+   "grounding": "CLIFF-2027 €107M / 94 Verträge",
+   "prio": "P1",
+   "status": "offen",
+   "briefing": {
+    "kontext": "94 Verträge mit einem Gesamtvolumen von €107M laufen 2027 aus (Cliff-2027). Ohne eine nach €-Wert priorisierte Liste und klar zugeordnete Verhandlungs-Owner und strategische Sponsoren droht ein unkoordinierter, reaktiver Renewal-Prozess mit hohem Churn-Risiko. M04 schafft die Grundlage für die gesamte Cliff-2027-Offensive.",
+    "leistung": [
+     "Alle 94 Cliff-2027-Verträge nach €-Wert absteigend gerankt",
+     "Top-30-Verträge (ca. 80% des €107M-Volumens) mit Verhandlungs-Owner und strategischem Sponsor belegt",
+     "Priorisierte Renewal-Battlecard im CRM-Cockpit verfügbar"
+    ],
+    "vorgehen": [
+     "Alle 94 Cliff-2027-Verträge aus CRM/Odoo exportieren und nach €-Wert absteigend sortieren",
+     "Top-Wert-Cluster identifizieren (insbesondere LH-Group-Anteil)",
+     "Für die Top-30-Verträge Verhandlungs-Owner und strategischen Sponsor benennen und im CRM hinterlegen",
+     "Renewal-Battlecard je Top-30-Vertrag im CRM-Cockpit erstellen",
+     "Ergebnis in ExBoD oder GL-Runde vorstellen und Zuteilung bestätigen lassen"
+    ],
+    "beteiligte": "Owner: Commercial (Cüneyt/Himm/Eslava); Sponsoren: DRS, Fritthum und weitere C-Level (zu klären je Cluster); Koordination mit Haeffner für €-Werte",
+    "risiken": [
+     "Abhängigkeit von M03 (OPEN-Register): Verträge ohne €-Wert können nicht korrekt gerankt werden",
+     "LH-Group-Cluster dominiert das Volumen stark → Priorisierung auf Top-30 könnte Rest vernachlässigen",
+     "Kapazität Commercial-Team (Cüneyt/Himm/Eslava) für parallele Bearbeitung aller Milestones zu klären"
+    ],
+    "erfolgsmessung": "94/94 Verträge nach Wert gerankt; Top-30 (>ca. 80% des €107M) mit namentlichem Owner und Sponsor im CRM belegt"
+   }
+  },
+  {
+   "id": "M05",
+   "seq": 5,
+   "quarter": "Q3/26",
+   "workstream": "WS3 LH-Klumpen / Diversifikation",
+   "title": "LH-Group Sponsor-Governance & Account-Plan aktivieren",
+   "action": "Andreas Fritthum formalisiert seine Sponsorship für den LH-Group-Cluster mit einem strukturierten Account-Plan: Vertragsinventar aller LH-Verträge, Renewal-Zeitachse, Rate-/Indexierungsstatus und Beziehungs-Landkarte (wer spricht mit wem). Kick-off-Termin mit LH-Procurement fixieren, um die Beziehung von reaktiv auf strategisch zu heben, bevor in die Multi-Year-Verhandlung gegangen wird.",
+   "owner": "Andreas Fritthum",
+   "start": "sofort",
+   "due": "2026-09-30",
+   "kpi": "LH-Account-Plan fertig + 100% der LH-Verträge mit €-Wert und Renewal-Datum erfasst; mind. 1 dokumentierter strategischer Touchpoint mit LH-Procurement",
+   "depends_on": "Cliff-2027-Wertliste & Sponsor-Zuordnung fixieren",
+   "grounding": "LH-Group 34% / €96M des €278M-Forecasts; 112 von 129 Kunden ohne strategischen Sponsor",
+   "prio": "P1",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Die LH-Group macht 34% bzw. €96M des €278M-Forecasts aus und stellt damit ein massives Klumpenrisiko dar. Gleichzeitig fehlt für diesen Schlüsselkunden ein strukturierter Account-Plan und die Beziehung ist reaktiv statt strategisch. Ohne frühzeitige Governance-Struktur droht ein unkontrollierter Renewal-Prozess bei einem existenzkritischen Kunden.",
+    "leistung": [
+     "Vollständiges Vertragsinventar aller LH-Group-Verträge mit €-Wert, Renewal-Datum und Indexierungsstatus",
+     "Beziehungs-Landkarte (Ansprechpartner AXS ↔ LH-Procurement) dokumentiert",
+     "LH-Account-Plan fertiggestellt und freigegeben",
+     "Mindestens 1 dokumentierter strategischer Touchpoint mit LH-Procurement durchgeführt"
+    ],
+    "vorgehen": [
+     "Alle LH-Group-Verträge aus CRM/Odoo extrahieren und auf Vollständigkeit prüfen (€-Wert, Laufzeit, Indexklausel)",
+     "Beziehungs-Landkarte erstellen: wer auf AXS-Seite spricht mit welchem Ansprechpartner bei LH",
+     "LH-Account-Plan ausarbeiten (Renewal-Zeitachse, Rate-/Indexierungsstatus, strategische Ziele)",
+     "Kick-off-Termin mit LH-Procurement fixieren",
+     "Ersten strategischen Touchpoint durchführen und dokumentieren"
+    ],
+    "beteiligte": "Owner: Andreas Fritthum (formalisierte Sponsorship); Koordination mit Commercial (Cüneyt/Himm) für operative Vertragsdetails; Haeffner für Datenbasis",
+    "risiken": [
+     "Abhängigkeit von M04: ohne Cliff-2027-Priorisierung ist der LH-Account-Plan unvollständig",
+     "LH-Procurement-Termin von externer Verfügbarkeit abhängig → Zeitrisiko",
+     "Klumpenrisiko bleibt strukturell bestehen, solange Diversifikation (WS3) nicht greift"
+    ],
+    "erfolgsmessung": "LH-Account-Plan fertig; 100% der LH-Verträge mit €-Wert und Renewal-Datum erfasst; mind. 1 dokumentierter strategischer Touchpoint mit LH-Procurement"
+   }
+  },
+  {
+   "id": "M06",
+   "seq": 6,
+   "quarter": "Q3/26",
+   "workstream": "WS4 Beziehungspflege absichern",
+   "title": "Top-30-Accounts nach Wert: Sponsor zugewiesen",
+   "action": "Aus den 112 Kunden ohne Sponsor die Top-30 nach Forecast-Wert ziehen und jedem einen C-Level-Sponsor (DRS/Fritthum/Rohde/Gölcöl) fest zuordnen — LH-Group-Cluster an Fritthum, BA an DRS, TUIfly an Rohde, Türkei-Cluster an Gölcöl, Rest verteilt. Zuweisung im CRM-Cockpit als Feld hinterlegen und in einem GL-Beschluss festhalten.",
+   "owner": "Dieter Streuli",
+   "start": "sofort",
+   "due": "2026-08-29",
+   "kpi": "30 von 30 Top-Accounts mit namentlichem Sponsor im CRM hinterlegt",
+   "depends_on": "Cliff-2027-Wertliste & Sponsor-Zuordnung fixieren",
+   "grounding": "112 Kunden ohne Sponsor / €105M betroffen",
+   "prio": "P1",
+   "status": "offen",
+   "briefing": {
+    "kontext": "112 von 129 Kunden (entsprechend rund €105M) haben keinen zugeordneten strategischen Sponsor auf C-Level-Seite. Ohne Sponsorship-Struktur fehlt bei Renewal-Verhandlungen die Beziehungsebene oberhalb des operativen Commercial-Teams. M06 schließt diese Lücke für die wertvollsten 30 Accounts als erste Priorität.",
+    "leistung": [
+     "Top-30-Accounts nach Forecast-Wert aus den 112 sponsorlosen Kunden identifiziert",
+     "Jedem der Top-30-Accounts ein namentlicher C-Level-Sponsor zugewiesen",
+     "Sponsor-Zuteilung im CRM-Cockpit als Feld hinterlegt",
+     "GL-Beschluss zur Sponsor-Zuteilung festgehalten"
+    ],
+    "vorgehen": [
+     "Top-30-Accounts aus den 112 Kunden ohne Sponsor nach Forecast-Wert selektieren",
+     "Vorschlag zur Sponsor-Zuteilung ausarbeiten: LH-Group → Fritthum, BA → DRS, TUIfly → Rohde, Türkei-Cluster → Gölcöl, Rest verteilt",
+     "Vorschlag in ExBoD oder GL-Runde vorstellen und beschliessen lassen",
+     "Zuteilung im CRM-Cockpit als Pflichtfeld für jeden Account hinterlegen",
+     "Erstkontakt-/Übergabe-Termin je Sponsor und Account planen (Folgeschritt)"
+    ],
+    "beteiligte": "Owner: Dieter Streuli; Sponsoren: Andreas Fritthum, Cüneyt Gölcöl, Stephanie Rohde, DRS selbst; Commercial (Haeffner) für Datenbasis",
+    "risiken": [
+     "Abhängigkeit von M04: Priorisierungsliste der Top-30 muss aus der Cliff-2027-Wertliste abgeleitet sein",
+     "Sponsor-Zuteilung ohne klare Erwartungshaltung und Kapazitätsabklärung bei C-Level bleibt wirkungslos"
+    ],
+    "erfolgsmessung": "30 von 30 Top-Accounts mit namentlichem C-Level-Sponsor im CRM-Cockpit hinterlegt; GL-Beschluss dokumentiert"
+   }
+  },
+  {
+   "id": "M07",
+   "seq": 7,
+   "quarter": "Q3/26",
+   "workstream": "WS5 Neugeschäft / Pipeline",
+   "title": "Pipeline-€-Ziel & Prospect-Trichter aufsetzen",
+   "action": "Quantitatives Neugeschäfts-Ziel bis EOY 2027 definieren (mind. €30M neue jährliche Vertragswerte, um Cliff-2027 €107M + Churn abzufedern) und den bestehenden 21-Prospect-Bestand in Odoo in einen 4-Stufen-Trichter (Lead → Qualified → Proposal → Won) mit €-Wert und Wahrscheinlichkeit je Prospect strukturieren. Pflichtfeld €-Wert pro Prospect einführen.",
+   "owner": "Michael Haeffner",
+   "start": "sofort",
+   "due": "2026-08-31",
+   "kpi": "Pipeline-€-Ziel schriftlich fixiert; alle 21 Prospects mit €-Wert + Trichterstufe in Odoo erfasst; gewichteter Pipeline-Wert ausgewiesen",
+   "depends_on": "Pipeline-€-Ziel & Prospect-Trichter aufsetzen",
+   "grounding": "Akquise-Pipeline nur 21 Prospects; CLIFF-2027 €107M / 94 Verträge",
+   "prio": "P1",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Die Akquise-Pipeline umfasst lediglich 21 Prospects ohne strukturierte Trichterführung und ohne bezifferte €-Werte. Angesichts des Cliff-2027-Risikos von €107M und einer Churn-Rate von 32 Kunden reicht das bestehende Neugeschäftspotenzial nicht aus, um den Umsatz zu stabilisieren. M07 schafft die quantitative Basis und die Trichterstruktur für gesteuertes Neugeschäft.",
+    "leistung": [
+     "Quantitatives Neugeschäfts-Ziel bis EOY 2027 schriftlich fixiert (mind. €30M neue jährliche Vertragswerte)",
+     "Alle 21 bestehenden Prospects mit €-Wert und Trichterstufe in Odoo erfasst",
+     "4-Stufen-Trichter (Lead → Qualified → Proposal → Won) in Odoo implementiert",
+     "Gewichteter Pipeline-Wert ausgewiesen"
+    ],
+    "vorgehen": [
+     "Neugeschäfts-Zielsetzung ableiten: Cliff-2027 (€107M) + erwarteter Churn als Ausgangsgrösse für Mindest-Pipeline",
+     "Pipeline-€-Ziel bis EOY 2027 in ExBoD/GL beschliessen und schriftlich fixieren",
+     "4-Stufen-Trichter in Odoo konfigurieren mit Pflichtfeldern €-Wert und Abschlusswahrscheinlichkeit",
+     "Alle 21 bestehenden Prospects je Trichterstufe einsortieren und €-Wert erfassen",
+     "Gewichteten Pipeline-Wert berechnen und als KPI im CRM-Cockpit sichtbar machen"
+    ],
+    "beteiligte": "Owner: Michael Haeffner; Freigabe Pipeline-€-Ziel: Cüneyt Gölcöl/DRS; Technische Umsetzung Odoo: Didit/Tine",
+    "risiken": [
+     "21 Prospects möglicherweise ohne ausreichende Qualifizierung → gewichteter Pipeline-Wert gibt falsches Bild",
+     "Pipeline-Ziel €30M deckt Cliff-2027 nur partiell — strukturelle Diversifikation bleibt langfristig notwendig"
+    ],
+    "erfolgsmessung": "Pipeline-€-Ziel schriftlich fixiert; alle 21 Prospects mit €-Wert und Trichterstufe in Odoo erfasst; gewichteter Pipeline-Wert ausgewiesen"
+   }
+  },
+  {
+   "id": "M08",
+   "seq": 8,
+   "quarter": "Q3/26",
+   "workstream": "WS7 Governance / Steuerung",
+   "title": "Bidirektionaler Odoo-Cockpit-Sync scharf geschaltet",
+   "action": "Automatisierten Sync zwischen Odoo (Pipeline/Follow-ups/Churn) und dem CRM-Cockpit produktiv nehmen: nächtlicher Job, der die 21 Prospects, 337 offenen Follow-ups und den Churn-Status (18 Lost + 14 Inactive) live ins Cockpit spiegelt und Cockpit-Massnahmen zurück nach Odoo schreibt. Inkl. Monitoring/Alert bei Sync-Fehler.",
+   "owner": "Didit/Tine",
+   "start": "2026-08-16",
+   "due": "2026-09-30",
+   "kpi": "Sync-Latenz < 24h; 337 offene Follow-ups und 32 Churn-Fälle im Cockpit tagesaktuell; 0 Fehl-Sync-Tage über 2 Wochen",
+   "depends_on": "Key-Harmonisierung physisch in Odoo geschrieben",
+   "grounding": "21 Prospects · 337 offene Follow-ups · Churn 32 (18 Lost + 14 Inactive)",
+   "prio": "P1",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Aktuell gibt es keine automatisierte Verbindung zwischen Odoo (als System of Record) und dem CRM-Cockpit. Das bedeutet, dass 337 offene Follow-ups, 32 Churn-Fälle (18 Lost, 14 Inactive) und die 21 Prospects manuell synchron gehalten werden müssen — fehleranfällig und zeitverzögert. M08 aktiviert den bidirektionalen Sync als operative Grundlage für die tägliche Commercial-Steuerung.",
+    "leistung": [
+     "Nächtlicher automatisierter Sync-Job produktiv geschaltet",
+     "337 offene Follow-ups und 32 Churn-Fälle im Cockpit tagesaktuell verfügbar",
+     "Cockpit-Massnahmen werden zurück nach Odoo geschrieben (bidirektional)",
+     "Monitoring und Alert-System bei Sync-Fehler aktiv"
+    ],
+    "vorgehen": [
+     "Sync-Architektur spezifizieren: Datenpunkte (Prospects, Follow-ups, Churn-Status), Richtung, Frequenz (nächtlich)",
+     "Entwicklung und Test des Sync-Jobs in Staging-Umgebung",
+     "Monitoring- und Alert-Mechanismus bei Sync-Fehler implementieren",
+     "Produktivnahme ab 2026-08-16 (nach Abschluss M01)",
+     "Betrieb über 2 Wochen überwachen, 0 Fehl-Sync-Tage als Abnahmekriterium"
+    ],
+    "beteiligte": "Owner: Didit/Tine; Fachliche Abnahme: Haeffner (Commercial) und Pajor (Finance) für Datenkorrektheit",
+    "risiken": [
+     "Harte Abhängigkeit von M01: ohne kanonische IDs in Odoo entstehen beim Sync Duplikate oder Fehlzuordnungen",
+     "Bidirektionaler Sync erhöht Komplexität — Konfliktauflösung bei gleichzeitigen Änderungen zu spezifizieren",
+     "Starttermin 2026-08-16 setzt voraus, dass M01 bis 2026-08-15 abgeschlossen ist"
+    ],
+    "erfolgsmessung": "Sync-Latenz < 24h; 337 offene Follow-ups und 32 Churn-Fälle im Cockpit tagesaktuell; 0 Fehl-Sync-Tage über 2 Wochen nach Produktivnahme"
+   }
+  },
+  {
+   "id": "M09",
+   "seq": 9,
+   "quarter": "Q3/26",
+   "workstream": "WS1 Cliff-2027-Offensive",
+   "title": "Datenlücken der Cliff-2027-Verträge schließen (Verhandlungsfähigkeit)",
+   "action": "Für alle Cliff-2027-Verträge, die unter die 72 Kunden ohne €-Wert bzw. die Indexierungs-Lücken fallen, mit Michael Haeffner Rate-/Wert- und CPI/CBA-Daten nacherfassen. Ohne belastbaren €-Wert und Preisgleitklausel keine Verhandlung starten.",
+   "owner": "Michael Haeffner",
+   "start": "2026-07",
+   "due": "2026-09-30",
+   "kpi": "0 Cliff-2027-Verträge ohne €-Wert; Indexierungsklausel bei jedem Cliff-2027-Renewal Pflicht-Traktandum",
+   "depends_on": "Cliff-2027-Wertliste & Sponsor-Zuordnung fixieren",
+   "grounding": "72 Kunden mit Verträgen ohne €-Wert; Indexierungs-Lücken (viele Verträge ohne CPI/CBA)",
+   "prio": "P1",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Ein Teil der 94 Cliff-2027-Verträge fällt in die Gruppe der 72 Kunden ohne €-Wert und/oder hat keine Indexierungsklausel (CPI/CBA). Ohne belastbare Wert- und Preisgleitbasis können diese Verträge nicht verhandelt werden — jede Verhandlung ohne Datenbasis schwächt die AXS-Position. M09 stellt die Verhandlungsfähigkeit für jeden einzelnen Cliff-2027-Vertrag sicher, bevor Renewal-Gespräche beginnen.",
+    "leistung": [
+     "0 Cliff-2027-Verträge ohne €-Wert",
+     "Rate- und Wertdaten je betroffenen Cliff-2027-Vertrag nacherfasst",
+     "CPI/CBA-Indexierungsklausel für jedes Cliff-2027-Renewal als Pflicht-Verhandlungspunkt gesetzt",
+     "Verhandlungsfreigabe je Vertrag erst nach Daten-Vollständigkeit"
+    ],
+    "vorgehen": [
+     "Aus M04-Wertliste diejenigen Cliff-2027-Verträge filtern, die noch keinen €-Wert oder keine Indexklausel haben",
+     "Haeffner erstellt priorisierte Nacherfassungsliste (höchste Werte zuerst)",
+     "Rate- und Wertdaten aus Vertragsunterlagen extrahieren und in Odoo nachtragen",
+     "CPI/CBA-Klausel je Vertrag prüfen und als Pflicht-Traktandum für Renewal-Verhandlung flaggen",
+     "Freigabe-Mechanismus definieren: kein Verhandlungsstart ohne vollständige Datenbasis"
+    ],
+    "beteiligte": "Owner: Michael Haeffner; Koordination mit M02 (€-Wert-Lücken) zur Vermeidung von Doppelarbeit; Commercial-Team (Cüneyt/Himm/Eslava) für regionale Vertragsunterlagen",
+    "risiken": [
+     "Abhängigkeit von M04: ohne Cliff-2027-Wertliste ist Priorisierung der Nacherfassung nicht möglich",
+     "Überschneidung mit M02 (€-Wert-Lücken bei 72 Kunden) — Koordination zwingend, sonst Doppelarbeit",
+     "Vertragsunterlagen für einzelne Cliff-2027-Verträge möglicherweise nicht vollständig verfügbar → verbleibende Lücken als 'zu klären' dokumentieren"
+    ],
+    "erfolgsmessung": "0 Cliff-2027-Verträge ohne €-Wert; Indexierungsklausel bei jedem Cliff-2027-Renewal als Pflicht-Traktandum in Odoo geflaggt"
+   }
+  },
+  {
+   "id": "M10",
+   "seq": 10,
+   "quarter": "Q3/26",
+   "workstream": "WS2 OPEN entnebeln",
+   "title": "OPEN → 0 offene Klassifizierungen (Renewal-Status je Vertrag)",
+   "action": "Jeden der 148 OPEN-Verträge in eine der vier Renewal-Kategorien einordnen (RENEW / RE-PRICE / EXIT / UNCERTAIN). Priorisierung nach €-Wert und Ablaufnähe; die in CLIFF-2027 fallenden OPEN-Anteile zuerst. Wöchentliches Commercial-Standup zur Abarbeitung; jeder klassifizierte Vertrag bekommt einen operativen Account-Owner (Himm DE / Roman Eslava ES / Strauß) zugewiesen.",
+   "owner": "Michael Haeffner",
+   "start": "2026-08-16",
+   "due": "2026-09-28",
+   "kpi": "0 offene Klassifizierungen; 148/148 Verträge kategorisiert und mit Account-Owner versehen binnen 90 Tagen ab heute",
+   "depends_on": "OPEN-Register aufbauen & Datenlücken schliessen",
+   "grounding": "148 OPEN-Verträge / €91M; CLIFF-2027 €107M / 94 Verträge",
+   "prio": "P1",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Im AXS-Commercial-Portfolio sind 148 von 338 Verträgen (€91M) ohne geklärten Renewal-Status — sie sind als 'OPEN' klassifiziert, d.h. es ist unklar, ob diese Verträge verlängert, neu verhandelt, herausgepreist oder beendet werden. Ein bedeutender Teil dieser OPEN-Verträge fällt in die Cliff-2027-Wand (€107M / 94 Verträge), die ab 2027 droht. Ohne Klassifizierung und Owner-Zuweisung fehlt die Grundlage für jede kommerzielle Steuerungsmassnahme.",
+    "leistung": [
+     "Alle 148 OPEN-Verträge (€91M) sind einer der vier Kategorien zugeordnet: RENEW / RE-PRICE / EXIT / UNCERTAIN",
+     "Jedem klassifizierten Vertrag ist ein operativer Account-Owner zugewiesen (Himm DE / Roman Eslava ES / Strauß)",
+     "Priorisierungsreihenfolge nach €-Wert und Ablaufnähe ist dokumentiert und CLIFF-2027-Anteile wurden vorgezogen abgearbeitet"
+    ],
+    "vorgehen": [
+     "OPEN-Register aus Odoo/Cockpit ziehen und nach €-Wert sowie Ablaufnähe sortieren — CLIFF-2027-Verträge mit frühestem Ablauf an oberste Position",
+     "Wöchentliches Commercial-Standup mit Haeffner, Himm DE, Roman Eslava ES, Strauß aufsetzen zur strukturierten Abarbeitung der Liste",
+     "Je Vertrag Renewal-Kategorie (RENEW / RE-PRICE / EXIT / UNCERTAIN) festlegen und im CRM (Odoo) eintragen",
+     "Account-Owner pro Vertrag benennen und im CRM hinterlegen",
+     "Abschlusskontrolle: 0 unklassifizierte Einträge, vollständige Owner-Abdeckung sicherstellen"
+    ],
+    "beteiligte": "Owner: Michael Haeffner; operative Account-Owner: Himm (DE), Roman Eslava (ES), Strauß; Abhängigkeit: OPEN-Register muss aus vorgelagertem Schritt (Datenlücken schliessen) vorliegen",
+    "risiken": [
+     "Abhängigkeit vom vorgelagerten Aufbau des OPEN-Registers: fehlen Basisdaten (€-Werte, Laufzeiten), ist eine fundierte Klassifizierung für 72+ Kunden nicht möglich",
+     "Kapazitätsrisiko: 148 Verträge in ~6 Wochen (16.08.–28.09.) erfordern hohes wöchentliches Bearbeitungsvolumen im Commercial-Team",
+     "UNCERTAIN-Kategorie als Sammelkorb: zu viele UNCERTAIN-Einordnungen unterläuft den Zweck der Klassifizierung — Qualitätskontrolle erforderlich"
+    ],
+    "erfolgsmessung": "148 von 148 OPEN-Verträgen klassifiziert (0 offene Klassifizierungen) und mit Account-Owner versehen bis 28.09.2026"
+   }
+  },
+  {
+   "id": "M11",
+   "seq": 11,
+   "quarter": "Q3/26",
+   "workstream": "WS3 LH-Klumpen / Diversifikation",
+   "title": "LH-Datenlücken & Indexierung schließen (Verhandlungsfähigkeit herstellen)",
+   "action": "Michael Haeffner priorisiert innerhalb der Datenbereinigung explizit die LH-Group-Verträge: fehlende €-Werte nachtragen und jeden LH-Vertrag auf CPI-/CBA-Indexierungsklausel prüfen. Ergebnis ist ein LH-Preiserosions-Report, der die Verhandlungsbasis für den Multi-Year-Term liefert (keine Multi-Year-Bindung ohne saubere Indexierung).",
+   "owner": "Michael Haeffner",
+   "start": "2026-08",
+   "due": "2026-11-30",
+   "kpi": "0 LH-Verträge ohne €-Wert; 100% der LH-Verträge mit dokumentiertem Indexierungsstatus (mit/ohne CPI-CBA-Klausel)",
+   "depends_on": "LH-Group Sponsor-Governance & Account-Plan aktivieren",
+   "grounding": "72 Kunden mit Verträgen ohne €-Wert + Indexierungs-Lücken (viele Verträge ohne CPI/CBA-Klausel = Preiserosionsrisiko)",
+   "prio": "P1",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Die LH-Group ist mit 34% / €96M der grösste Einzelkunde im AXS-Portfolio und stellt den Löwenanteil der Cliff-2027-Wand. Viele Verträge weisen keine CPI/CBA-Indexierungsklauseln auf, was zu schleichender Preiserosion führt — jedes Jahr ohne Indexierung frisst die Marge. Ohne saubere €-Werte und dokumentierten Indexierungsstatus je LH-Vertrag ist eine fundierte Multi-Year-Verlängerungsverhandlung nicht möglich.",
+    "leistung": [
+     "Alle LH-Group-Verträge mit vollständigen €-Werten im CRM (0 LH-Verträge ohne €-Wert)",
+     "Je LH-Vertrag dokumentierter Indexierungsstatus: enthält CPI-/CBA-Klausel (ja/nein)",
+     "LH-Preiserosions-Report als Verhandlungsgrundlage für den Multi-Year-Term (zu klären: konkrete Berichtsform und Empfänger)"
+    ],
+    "vorgehen": [
+     "LH-Group-Verträge aus dem Gesamt-OPEN-Register filtern und auf fehlende €-Werte prüfen",
+     "Fehlende €-Werte aus Vertragsunterlagen (SGHA-Rahmen, Annex B) nachtragen — Datenlücken als Priorität innerhalb der laufenden Bereinigungsinitiative behandeln",
+     "Jeden LH-Vertrag auf Vorhandensein einer CPI-/CBA-Indexierungsklausel prüfen und Status im CRM hinterlegen",
+     "LH-Preiserosions-Report erstellen: Verträge ohne Indexierung, €-Volumen und Preisverfall-Exposition quantifizieren",
+     "Report als Verhandlungsunterlage an Sponsor Andreas Fritthum übergeben (Vorbereitung Multi-Year-Gespräch)"
+    ],
+    "beteiligte": "Owner: Michael Haeffner; Sponsor für Verhandlungsnutzung: Andreas Fritthum; Mitwirkung: Himm DE, Roman Eslava ES, Strauß (je nach Stations-Zuordnung der LH-Verträge)",
+    "risiken": [
+     "Datenlücken bei €-Werten können ohne Zugang zu Originalverträgen nicht geschlossen werden — Vertragsarchiv-Verfügbarkeit ist zu klären",
+     "Abhängigkeit von M13 (LH-Frühverlängerung): der Report verliert Wert, wenn Verhandlungsbeginn sich verzögert",
+     "Ohne CPI/CBA-Klausel in einem Multi-Year-Term würde die Preiserosion verlängert statt gestoppt — Risiko, dass Verhandlung ohne diesen Punkt abgeschlossen wird"
+    ],
+    "erfolgsmessung": "0 LH-Verträge ohne €-Wert; 100% der LH-Verträge mit dokumentiertem Indexierungsstatus (CPI/CBA: ja/nein) im CRM bis 30.11.2026"
+   }
+  },
+  {
+   "id": "M12",
+   "seq": 12,
+   "quarter": "Q4/26",
+   "workstream": "WS4 Beziehungspflege absichern",
+   "title": "66 stille Accounts reaktivieren — Touchpoint-Welle",
+   "action": "Die 66 Accounts in Aktivitäts-Stille auf die operativen Account-Owner (Himm DE, Roman Eslava ES, Strauß) verteilen und je Account einen dokumentierten Reaktivierungs-Touchpoint (Call/Mail/Besuch) auslösen; jeden Kontakt im CRM als Aktivität erfassen, damit die Stille-Kennzahl sinkt.",
+   "owner": "Michael Haeffner",
+   "start": "2026-08",
+   "due": "2026-10-31",
+   "kpi": "≥55 der 66 stillen Accounts mit frischem, im CRM erfasstem Touchpoint (<10 Rest-Stille)",
+   "depends_on": "Bidirektionaler Odoo-Cockpit-Sync scharf geschaltet",
+   "grounding": "66 Kunden in Aktivitäts-Stille (kein jüngster Touchpoint)",
+   "prio": "P1",
+   "status": "offen",
+   "briefing": {
+    "kontext": "66 der 129 Kunden im AXS-Portfolio haben keinen jüngsten dokumentierten Touchpoint im CRM — sie befinden sich in Aktivitäts-Stille. Fehlende Beziehungspflege ist ein Frühindikator für Churn (bereits 32 Kunden verloren) und macht Kündigungsabsichten unsichtbar, bis es zu spät ist. Ziel dieses Milestones ist es, die Stille zu durchbrechen und eine dokumentierte Kontaktbasis im CRM herzustellen.",
+    "leistung": [
+     "≥55 der 66 stillen Accounts mit mindestens einem dokumentierten Reaktivierungs-Touchpoint (Call, Mail oder Besuch) im CRM",
+     "Verteilung der 66 Accounts auf operative Account-Owner (Himm DE, Roman Eslava ES, Strauß)",
+     "Weniger als 10 Accounts verbleiben nach Ablauf der Frist in Aktivitäts-Stille"
+    ],
+    "vorgehen": [
+     "66 stille Accounts aus Odoo/Cockpit exportieren und nach €-Wert sowie Cliff-Relevanz sortieren",
+     "Accounts auf Himm DE, Roman Eslava ES und Strauß verteilen — je nach Stationsgebiet",
+     "Je Account Reaktivierungs-Touchpoint definieren (Call, Mail oder Besuch) und Termin im CRM vorerfassen",
+     "Touchpoints ausführen und Aktivität im CRM als ausgeführt markieren (Datum, Ansprechpartner, Ergebnis)",
+     "Fortschritts-Tracking im wöchentlichen Commercial-Standup: Stille-Kennzahl als KPI im Dashboard sichtbar machen"
+    ],
+    "beteiligte": "Owner: Michael Haeffner; Ausführung: Himm (DE), Roman Eslava (ES), Strauß; technische Voraussetzung: bidirektionaler Odoo-Cockpit-Sync muss scharf geschaltet sein",
+    "risiken": [
+     "Abhängigkeit: Ohne funktionierenden bidirektionalen Odoo-Cockpit-Sync können Aktivitäten nicht zuverlässig erfasst und getrackt werden",
+     "Touchpoint-Qualität: Formale Kontakte ohne echten Gesprächsinhalt verbessern die Stille-Kennzahl im System, adressieren aber nicht das Churn-Risiko — Qualitätskontrolle erforderlich",
+     "Reaktions-Ausfall: Manche stillen Accounts reagieren möglicherweise nicht — Eskalationspfad (wann Haeffner einschalten?) zu klären"
+    ],
+    "erfolgsmessung": "≥55 von 66 stillen Accounts mit dokumentiertem, im CRM erfasstem Touchpoint bis 31.10.2026; Stille-Kennzahl unter 10 sinkend"
+   }
+  },
+  {
+   "id": "M13",
+   "seq": 13,
+   "quarter": "Q4/26",
+   "workstream": "WS1 Cliff-2027-Offensive",
+   "title": "LH-Group-Frühverlängerung als Anker starten",
+   "action": "Da LH-Group 34% / €96M des Portfolios trägt und den Löwenanteil der Cliff-Wand stellt, mit Sponsor Andreas Fritthum eine strukturierte Frühverlängerung der LH-Cliff-2027-Verträge initiieren (Gesprächstermin C-Level, Verhandlungsmandat, Zielkonditionen inkl. CPI/CBA-Indexierung).",
+   "owner": "Andreas Fritthum",
+   "start": "2026-08",
+   "due": "2026-10-31",
+   "kpi": "LH-Cliff-2027-Verträge mit unterzeichnetem Term-Sheet oder Verlängerungs-LOI",
+   "depends_on": "Cliff-2027-Wertliste & Sponsor-Zuordnung fixieren",
+   "grounding": "LH-Group 34% / €96M; CLIFF-2027 €107M / 94 Verträge",
+   "prio": "P1",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Die LH-Group bildet mit 34% / €96M den grössten Einzelkunden im AXS-Portfolio und einen Hauptanteil der Cliff-2027-Wand (€107M / 94 Verträge). Eine verspätete oder reaktive Verlängerung würde AXS in eine schwache Verhandlungsposition bringen. Die Frühverlängerung — initiiert durch Sponsor Andreas Fritthum auf C-Level-Ebene — soll die Verhandlungshoheit sichern und die Grundlage für eine CPI/CBA-indexierte Multi-Year-Bindung schaffen.",
+    "leistung": [
+     "Gesprächstermin auf C-Level-Ebene zwischen AXS (Andreas Fritthum) und LH-Group initiiert und terminiert",
+     "Verhandlungsmandat und Zielkonditionen (inkl. CPI/CBA-Indexierung) intern abgestimmt und freigegeben",
+     "Unterzeichnetes Term-Sheet oder Verlängerungs-LOI für die LH-Cliff-2027-Verträge (zu klären: Anzahl/€-Volumen der betroffenen Einzelverträge)"
+    ],
+    "vorgehen": [
+     "LH-Preiserosions-Report von Haeffner als Verhandlungsunterlage übernehmen",
+     "Intern Verhandlungsmandat und Zielkonditionen abstimmen (Mindestlaufzeit, CPI/CBA-Indexierung, Preisniveau)",
+     "C-Level-Kontakt bei LH-Group identifizieren (zu klären) und Gesprächstermin mit Fritthum vereinbaren",
+     "Verhandlung führen; parallel rechtliche Prüfung der Term-Sheet-Klauseln sicherstellen (interne oder externe Ressource zu klären)",
+     "Term-Sheet oder LOI unterzeichnen und Ergebnis im Commercial-Tracking verankern"
+    ],
+    "beteiligte": "Owner: Andreas Fritthum (Sponsor LH-Group, C-Level-Verhandlung); Vorbereitung: Michael Haeffner (Datenbasis); weitere Beteiligte: zu klären (LH-seitige Ansprechpartner, rechtliche Begleitung)",
+    "risiken": [
+     "Abhängigkeit von LH-Datenlücken-Schliessung: ohne vollständige €-Werte und Indexierungsstatus ist die Verhandlungsbasis unvollständig",
+     "LH-Group kann Frühverlängerungsgespräche ablehnen oder verzögern — Ausweichstrategie zu klären",
+     "CPI/CBA-Klausel im Term-Sheet nicht durchsetzbar: Risiko, dass Multi-Year-Bindung ohne Indexierung zustande kommt und die Preiserosion verlängert"
+    ],
+    "erfolgsmessung": "LH-Cliff-2027-Verträge mit unterzeichnetem Term-Sheet oder Verlängerungs-LOI bis 31.10.2026"
+   }
+  },
+  {
+   "id": "M14",
+   "seq": 14,
+   "quarter": "Q4/26",
+   "workstream": "WS2 OPEN entnebeln",
+   "title": "Sponsor-Zuordnung für unbetreute OPEN-Kunden",
+   "action": "Aus dem klassifizierten Register die OPEN-Kunden ohne strategischen Sponsor identifizieren und die grössten €-Volumina einem C-Level-Sponsor zuordnen (DRS/Fritthum/Rohde/Gölcöl), damit RENEW/RE-PRICE-Gespräche einen Owner auf strategischer Ebene haben. Schliesst die Lücke, dass 112 von 129 Kunden ohne Sponsor sind, gezielt für das OPEN-Risiko-Set.",
+   "owner": "Andreas Fritthum",
+   "start": "2026-09-01",
+   "due": "2026-10-31",
+   "kpi": "Top-20 OPEN-Kunden nach €-Wert (Abdeckung ≥70% des €91M) mit benanntem C-Level-Sponsor",
+   "depends_on": "OPEN → 0 offene Klassifizierungen (Renewal-Status je Vertrag)",
+   "grounding": "112 von 129 Kunden ohne strategischen Sponsor (€105M betroffen); €91M OPEN",
+   "prio": "P2",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Im AXS-Portfolio sind 112 von 129 Kunden ohne strategischen Sponsor — ein strukturelles Governance-Defizit, das bedeutet, dass auf C-Level keine Verantwortung für diese Kundenbeziehungen getragen wird. Für RENEW/RE-PRICE-Gespräche bei den OPEN-Verträgen (€91M) braucht es strategische Eigentümerschaft, damit Verhandlungen auf Augenhöhe geführt werden können. Dieser Milestone adressiert gezielt die grössten €-Risiken aus dem OPEN-Set.",
+    "leistung": [
+     "Top-20 OPEN-Kunden nach €-Wert identifiziert und je ein C-Level-Sponsor benannt (DRS / Fritthum / Rohde / Gölcöl)",
+     "C-Level-Sponsoren decken mindestens 70% des €91M OPEN-Volumens ab",
+     "Sponsor-Zuweisung im CRM und Commercial-Tracking dokumentiert"
+    ],
+    "vorgehen": [
+     "Klassifiziertes OPEN-Register nach €-Wert sortieren und Top-20 Kunden isolieren",
+     "Für jeden der Top-20 Kunden einen C-Level-Sponsor aus dem Kreis DRS / Fritthum / Rohde / Gölcöl vorschlagen (Zuweisung nach strategischer Relevanz, Beziehungshistorie, Stationsverantwortung)",
+     "Sponsor-Vorschläge intern abstimmen und freigeben",
+     "Zuweisungen im CRM und Commercial-Tracking hinterlegen",
+     "Übergabe an Sponsoren: je Kunde Briefing zur Ausgangslage (Vertragsvolumen, Renewal-Kategorie, letzter Kontakt)"
+    ],
+    "beteiligte": "Owner: Andreas Fritthum; Vorbereitung: Michael Haeffner (OPEN-Register); C-Level-Sponsoren: DRS (Dieter Streuli), Fritthum, Rohde, Gölcöl",
+    "risiken": [
+     "Abhängigkeit von M10: ohne vollständig klassifiziertes OPEN-Register können die Top-20 nach €-Wert nicht sicher identifiziert werden",
+     "C-Level-Kapazität: DRS, Fritthum, Rohde und Gölcöl haben begrenzte Account-Kapazität — Priorisierungskonflikte sind zu erwarten",
+     "70%-Abdeckungsziel setzt voraus, dass €-Werte der Top-20 OPEN-Kunden vollständig vorliegen — sonst Rangfolge unzuverlässig"
+    ],
+    "erfolgsmessung": "Top-20 OPEN-Kunden nach €-Wert mit benanntem C-Level-Sponsor bis 31.10.2026; Abdeckung ≥70% des €91M OPEN-Volumens"
+   }
+  },
+  {
+   "id": "M15",
+   "seq": 15,
+   "quarter": "Q4/26",
+   "workstream": "WS7 Governance / Steuerung",
+   "title": "Datenqualitäts-Gate für €-Werte und Indexklauseln aktiv",
+   "action": "Automatischen Pflichtfeld-Check im Sync verankern, der die 72 Kunden mit Verträgen ohne €-Wert und die Verträge ohne CPI/CBA-Indexklausel als Datenlücken flaggt und als offene Massnahme an Haeffner routet. Wöchentlicher Lücken-Report ins Cockpit-Dashboard.",
+   "owner": "Michael Haeffner",
+   "start": "2026-09-01",
+   "due": "2026-11-30",
+   "kpi": "€-Wert-Lücke von 72 Kunden auf < 15 gesenkt; Indexklausel-Status je Vertrag im Cockpit sichtbar",
+   "depends_on": "Bidirektionaler Odoo-Cockpit-Sync scharf geschaltet",
+   "grounding": "72 Kunden mit Verträgen ohne €-Wert; Indexierungs-Lücken (kein CPI/CBA)",
+   "prio": "P2",
+   "status": "offen",
+   "briefing": {
+    "kontext": "72 Kunden im AXS-Portfolio haben Verträge ohne €-Wert im CRM, und viele Verträge weisen keine CPI/CBA-Indexierungsklausel auf. Diese Datenlücken sind nicht einmalig entstanden — ohne automatischen Pflichtfeld-Check im Sync werden sie sich bei neuen Verträgen wiederholen. Ein aktives Datenqualitäts-Gate soll diese strukturelle Schwäche schliessen und Haeffner wöchentlich mit einem Lücken-Report steuern.",
+    "leistung": [
+     "Automatischer Pflichtfeld-Check im Odoo-Cockpit-Sync verankert, der fehlende €-Werte und Indexklauseln als Datenlücken flaggt",
+     "Offene Datenlücken werden automatisch als Massnahmen an Haeffner geroutet",
+     "Wöchentlicher Lücken-Report im Cockpit-Dashboard sichtbar",
+     "€-Wert-Lücke von 72 Kunden auf unter 15 Kunden reduziert; Indexklausel-Status je Vertrag im Cockpit sichtbar"
+    ],
+    "vorgehen": [
+     "Pflichtfeld-Logik definieren: welche Felder (€-Wert, CPI/CBA-Status, Laufzeit) sind Pflicht je Vertragstyp",
+     "Automatischen Check im Sync-Prozess (Odoo ↔ Cockpit) implementieren — Flags bei fehlenden Pflichtfeldern setzen",
+     "Routing-Regel einrichten: Flags lösen automatisch offene Massnahme bei Haeffner aus",
+     "Lücken-Report ins Cockpit-Dashboard integrieren (wöchentliche Aktualisierung, sichtbar für Commercial-Team)",
+     "Initialen Abbau der 72 bestehenden Lücken durch Haeffner und Account-Owner begleiten bis KPI erreicht"
+    ],
+    "beteiligte": "Owner: Michael Haeffner; Umsetzung technisch: Didit/Tine (Cockpit-/Sync-Entwicklung); operative Datenpflege: Himm DE, Roman Eslava ES, Strauß",
+    "risiken": [
+     "Abhängigkeit: bidirektionaler Odoo-Cockpit-Sync muss operativ sein — Gate kann erst dann technisch verankert werden",
+     "Bestehende 72 Lücken werden nicht automatisch geschlossen, sondern müssen manuell nachgepflegt werden — Kapazitätsaufwand beim Commercial-Team",
+     "Definitionsrisiko: unklare Pflichtfeld-Matrix führt zu Fehlalarmen oder zu wenig Treffern — Abstimmung mit Haeffner vorab nötig"
+    ],
+    "erfolgsmessung": "€-Wert-Lücke von 72 Kunden auf <15 gesenkt; Indexklausel-Status je Vertrag im Cockpit sichtbar; automatischer Lücken-Report wöchentlich aktiv — alles bis 30.11.2026"
+   }
+  },
+  {
+   "id": "M16",
+   "seq": 16,
+   "quarter": "Q4/26",
+   "workstream": "WS5 Neugeschäft / Pipeline",
+   "title": "337 offene Follow-ups abarbeiten & Follow-up-Disziplin etablieren",
+   "action": "Die 337 offenen Odoo-Follow-ups nach €-Potenzial und Fälligkeit priorisieren, den 66 Kunden in Aktivitäts-Stille einen Touchpoint zuweisen und einen wöchentlichen Pipeline-Review-Rhythmus (Commercial-Ebene) mit klarer Owner-Zuordnung je Follow-up einführen. Ziel: keine Prospect-/Lead-Aktivität älter als 30 Tage.",
+   "owner": "Michael Haeffner",
+   "start": "2026-09",
+   "due": "2026-12-31",
+   "kpi": "Offene Follow-ups von 337 auf <100 reduziert; 0 Prospects in Aktivitäts-Stille >30 Tage; Weekly Pipeline-Review etabliert",
+   "depends_on": "Pipeline-€-Ziel & Prospect-Trichter aufsetzen",
+   "grounding": "Odoo 337 offene Follow-ups; 66 Kunden in Aktivitäts-Stille",
+   "prio": "P2",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Im Odoo-CRM stehen 337 offene Follow-ups ohne klare Priorisierung oder Owner-Zuordnung. Parallel dazu haben 66 Kunden keinen dokumentierten Touchpoint (Aktivitäts-Stille). Die Pipeline ist mit nur 21 Prospects strukturell dünn, und es gibt keine etablierte Review-Kadenz im Commercial-Team, die sicherstellt, dass Leads und Prospects aktiv bewirtschaftet werden. Ohne Disziplin in der Nachverfolgung verpufft Neugeschäftspotenzial.",
+    "leistung": [
+     "Offene Follow-ups von 337 auf <100 reduziert",
+     "Kein Prospect in Aktivitäts-Stille >30 Tage",
+     "Wöchentlicher Pipeline-Review auf Commercial-Ebene mit klarer Owner-Zuordnung je Follow-up etabliert"
+    ],
+    "vorgehen": [
+     "337 offene Odoo-Follow-ups exportieren und nach €-Potenzial und Fälligkeitsdatum sortieren",
+     "Follow-ups den verantwortlichen Account-Ownern (Himm DE, Roman Eslava ES, Strauß) zuweisen",
+     "66 stille Kunden in Follow-up-Liste einpflegen und Touchpoint einplanen",
+     "Wöchentlichen Pipeline-Review-Rhythmus mit Haeffner und Account-Ownern einführen: Agenda-Punkte Overdue Follow-ups, neue Prospects, Stille-Monitor",
+     "30-Tage-Regel als Standard verankern: kein offenes Follow-up ohne Aktivität >30 Tage (automatische Eskalation an Haeffner prüfen)"
+    ],
+    "beteiligte": "Owner: Michael Haeffner; operative Owner: Himm DE, Roman Eslava ES, Strauß; technische Voraussetzung: Pipeline-€-Ziel und Prospect-Trichter müssen vorher aufgesetzt sein",
+    "risiken": [
+     "Vorgelagerter Milestone (Pipeline-€-Ziel & Prospect-Trichter) muss abgeschlossen sein, sonst fehlt die Priorisierungslogik für die Follow-ups",
+     "Volume-Risiko: 337 Follow-ups auf <100 in ~4 Monaten bedeutet ~60 Abschlüsse oder Abbrüche pro Monat — realistisch nur mit klarer Owner-Delegation",
+     "Review-Kadenz bricht ohne Ownership auf Haeffner-Ebene schnell zusammen — Verbindlichkeit des Rhythmus muss im Commercial-Team verankert sein"
+    ],
+    "erfolgsmessung": "Offene Follow-ups <100; 0 Prospects in Aktivitäts-Stille >30 Tage; wöchentlicher Pipeline-Review nachweislich etabliert — alles bis 31.12.2026"
+   }
+  },
+  {
+   "id": "M17",
+   "seq": 17,
+   "quarter": "Q4/26",
+   "workstream": "WS6 Preis- & Datenqualität",
+   "title": "Basisdokumente-Vollständigkeit bei OPEN-Verträgen herstellen",
+   "action": "Bei den 148 OPEN-Verträgen (Renewal-Status ungeklärt, €91M) je Vertrag prüfen, ob SGHA-Rahmen, Annex B (Rates), aktuelle Preisliste und Laufzeit-/Kündigungsklausel vorliegen; fehlende Basisdokumente von Account-Ownern nachfordern und im CRM als vollständig/lückenhaft flaggen. Priorisierung nach €-Wert.",
+   "owner": "Michael Haeffner",
+   "start": "2026-08",
+   "due": "2026-12-31",
+   "kpi": "Dokumenten-Vollständigkeitsquote der 148 OPEN-Verträge ≥90%; €91M vertraglich dokumentiert",
+   "depends_on": "€-Wert-Lücken bei 72 Kunden schliessen",
+   "grounding": "OPEN €91M / 148 Verträge ohne geklärten Renewal-Status",
+   "prio": "P1",
+   "status": "offen",
+   "briefing": {
+    "kontext": "148 OPEN-Verträge (€91M) haben keinen geklärten Renewal-Status, und ein wesentlicher Teil davon dürfte unvollständige Basisdokumente aufweisen — fehlender SGHA-Rahmen, fehlender Annex B (Rates), keine aktuelle Preisliste oder unklare Laufzeit-/Kündigungsklauseln. Ohne diese Unterlagen ist eine Renewal- oder RE-PRICE-Verhandlung rechtlich und kommerziell nicht führbar. Ziel ist es, die dokumentarische Grundlage für alle 148 OPEN-Verträge herzustellen.",
+    "leistung": [
+     "Je der 148 OPEN-Verträge geprüft auf Vollständigkeit: SGHA-Rahmen, Annex B (Rates), aktuelle Preisliste, Laufzeit-/Kündigungsklausel",
+     "Vollständigkeitsstatus je Vertrag im CRM als vollständig/lückenhaft geflaggt",
+     "Fehlende Basisdokumente durch Account-Owner nachgefordert",
+     "Dokumenten-Vollständigkeitsquote der 148 OPEN-Verträge ≥90%"
+    ],
+    "vorgehen": [
+     "Prüfliste der Basisdokumente je Vertragstyp (SGHA-Rahmen, Annex B, Preisliste, Laufzeit-/Kündigungsklausel) definieren",
+     "148 OPEN-Verträge nach €-Wert priorisieren und systematisch auf Vollständigkeit prüfen",
+     "Lückenstatus je Vertrag im CRM hinterlegen (vollständig / partiell / fehlend)",
+     "Account-Owner (Himm DE, Roman Eslava ES, Strauß) beauftragen, fehlende Dokumente beim Kunden nachzufordern",
+     "Fortschritt wöchentlich im Commercial-Standup tracken bis Vollständigkeitsquote ≥90% erreicht"
+    ],
+    "beteiligte": "Owner: Michael Haeffner; Ausführung: Himm DE, Roman Eslava ES, Strauß; Abhängigkeit: €-Wert-Lücken müssen zumindest partiell geschlossen sein, damit Priorisierung nach €-Wert möglich ist",
+    "risiken": [
+     "Kunden verweigern oder verzögern die Herausgabe fehlender Vertragsunterlagen — Eskalationspfad zu klären",
+     "Abhängigkeit von €-Wert-Bereinigung: ohne €-Werte ist eine Priorisierung der 148 Verträge nach Wert nicht möglich",
+     "90%-Ziel setzt voraus, dass Basisdokumente physisch vorhanden sind — teilweise könnten Verträge nur mündlich oder informell bestehen (zu klären)"
+    ],
+    "erfolgsmessung": "Dokumenten-Vollständigkeitsquote der 148 OPEN-Verträge ≥90%; €91M vertraglich dokumentiert bis 31.12.2026"
+   }
+  },
+  {
+   "id": "M18",
+   "seq": 18,
+   "quarter": "Q4/26",
+   "workstream": "WS4 Beziehungspflege absichern",
+   "title": "Sponsor + Cadence auf alle 112 sponsorlosen Accounts ausrollen",
+   "action": "Nach den Top-30 die restlichen ~82 sponsorlosen Accounts wertgestaffelt einem Sponsor bzw. Account-Owner zuordnen und je Wert-Tier eine feste Kontakt-Cadence definieren (Top-Tier quartalsweise C-Level, Mid-Tier halbjährlich Commercial, Long-Tail jährlich Station). Cadence im 3-Ebenen-Modell verankern und im CRM als wiederkehrende Aktivität terminieren.",
+   "owner": "Michael Haeffner",
+   "start": "2026-09",
+   "due": "2026-12-15",
+   "kpi": "112 von 112 Accounts mit Sponsor + hinterlegter Cadence; €105M vollständig abgedeckt",
+   "depends_on": "Top-30-Accounts nach Wert: Sponsor zugewiesen",
+   "grounding": "112 Kunden ohne Sponsor / €105M betroffen",
+   "prio": "P2",
+   "status": "offen",
+   "briefing": {
+    "kontext": "112 von 129 AXS-Kunden (€105M) haben keinen strategischen Sponsor — ein strukturelles Defizit in der Beziehungspflege, das den Churn begünstigt (bereits 32 Kunden verloren). Nach der Zuweisung der Top-30-Accounts an Sponsoren adressiert M18 die verbleibenden ~82 Accounts und verankert gleichzeitig eine wertgestaffelte Kontakt-Cadence, damit Sponsoren ihren Rhythmus systematisch einhalten.",
+    "leistung": [
+     "Alle 112 von 112 Accounts mit Sponsor oder Account-Owner versehen",
+     "Je Wert-Tier eine definierte Cadence: Top-Tier quartalsweise C-Level, Mid-Tier halbjährlich Commercial, Long-Tail jährlich Station",
+     "Cadence im CRM als wiederkehrende Aktivität terminiert",
+     "€105M vollständig durch Sponsor/Cadence abgedeckt"
+    ],
+    "vorgehen": [
+     "Top-30-Accounts herausnehmen und verbleibende ~82 Accounts nach €-Wert segmentieren (Tier-Einteilung)",
+     "Je Tier Sponsor bzw. Account-Owner zuweisen: werthöhere Kunden DRS/Fritthum/Rohde/Gölcöl, mittlere Commercial-Owner (Himm DE, Roman Eslava ES, Strauß), Long-Tail Station-Verantwortliche",
+     "Cadence-Regeln definieren und intern verabschieden (Frequenz, Format, Dokumentationsstandard)",
+     "Wiederkehrende Aktivitäten im CRM (Odoo) für alle 112 Accounts einrichten",
+     "Erstes Review nach 60 Tagen: Cadence-Einhaltung prüfen und Nachsteuerung einleiten"
+    ],
+    "beteiligte": "Owner: Michael Haeffner; C-Level-Sponsoren: DRS (Dieter Streuli), Fritthum, Rohde, Gölcöl; operative Account-Owner: Himm DE, Roman Eslava ES, Strauß; Abhängigkeit: Top-30-Zuweisung muss abgeschlossen sein",
+    "risiken": [
+     "Abhängigkeit: Top-30-Accounts müssen bereits zugewiesen sein, sonst ist die Restzahl und -zusammensetzung der ~82 Accounts unklar",
+     "C-Level-Kapazität für Sponsorrolle ist begrenzt — zu viele Accounts je C-Level-Sponsor höhlen die Cadence-Qualität aus",
+     "CRM-Terminierung der wiederkehrenden Aktivitäten erfordert disziplinierte Datenpflege; bricht die Pflege ab, verliert das System seinen Steuerungswert"
+    ],
+    "erfolgsmessung": "112 von 112 Accounts mit Sponsor und hinterlegter Cadence im CRM; €105M vollständig abgedeckt bis 15.12.2026"
+   }
+  },
+  {
+   "id": "M19",
+   "seq": 19,
+   "quarter": "Q4/26",
+   "workstream": "WS7 Governance / Steuerung",
+   "title": "Cockpit als Steuerinstrument im 3-Ebenen-Modell verankert",
+   "action": "Sponsor-Zuordnung im Cockpit erzwingen und tracken: die 112 Kunden ohne strategischen Sponsor und 66 Kunden in Aktivitäts-Stille als Governance-KPI ins Masterplan-Cockpit heben, mit Ownership-Feld je Kunde (C-Level/Commercial/Station) und Touchpoint-Ampel.",
+   "owner": "Didit/Tine",
+   "start": "2026-10-01",
+   "due": "2026-12-15",
+   "kpi": "Sponsor-Feld für 129/129 Kunden befüllt; 112 sponsorlose Kunden auf < 40 reduziert; Aktivitäts-Stille-Liste im Cockpit live",
+   "depends_on": "Bidirektionaler Odoo-Cockpit-Sync scharf geschaltet",
+   "grounding": "112 von 129 Kunden ohne Sponsor (€105M); 66 Kunden in Aktivitäts-Stille",
+   "prio": "P2",
+   "status": "offen",
+   "briefing": {
+    "kontext": "112 von 129 Kunden (€105M Volumen) haben keinen zugeordneten strategischen Sponsor, und 66 Kunden befinden sich in Aktivitäts-Stille — beides ist ein Governance-Defizit, das Churn und Vertragsverluste begünstigt. Dieser Milestone verankert Sponsor-Pflicht und Aktivitäts-Tracking als verbindliche Steuerungsgrössen im CRM-Cockpit, damit keine Kundenbeziehung mehr ohne definierten Eigentümer bleibt. Voraussetzung ist, dass der bidirektionale Odoo-Cockpit-Sync bereits scharf geschaltet ist.",
+    "leistung": [
+     "Sponsor-Feld (C-Level/Commercial/Station) für alle 129 Kunden im Cockpit vollständig befüllt",
+     "Zahl sponsorloser Kunden von 112 auf unter 40 reduziert",
+     "Aktivitäts-Stille-Liste der 66 betroffenen Kunden im Cockpit live und laufend aktualisiert",
+     "Touchpoint-Ampel je Kunde sichtbar und operativ nutzbar"
+    ],
+    "vorgehen": [
+     "Bestehende Odoo-Datenstruktur prüfen: Sponsor-Feld vorhanden oder neu anzulegen (Didit/Tine)",
+     "Sponsor-Zuordnungs-Workshop mit Commercial-Leads: 129 Kunden auf C-Level/Commercial/Station-Owner verteilen",
+     "Aktivitäts-Stille-Definition festlegen (z.B. kein Touchpoint in X Tagen) und als automatisches Cockpit-Flag implementieren",
+     "Befüllung Sponsor-Feld für alle 129 Kunden — priorisiert nach €-Wert und CLIFF/OPEN-Status",
+     "Governance-KPI (Sponsor-Abdeckung, Stille-Quote) in Masterplan-Cockpit-Dashboard integrieren und Review-Rhythmus definieren"
+    ],
+    "beteiligte": "Owner: Didit/Tine (technische Umsetzung Cockpit); mitwirkend: Michael Haeffner (Commercial), regionale Account-Owner (Himm/DE, Roman Eslava/ES, Strauß), Andreas Fritthum (C-Level-Sponsor-Zuteilung)",
+    "risiken": [
+     "Abhängigkeit vom bidirektionalen Odoo-Cockpit-Sync: ist dieser nicht rechtzeitig scharf, verzögert sich die Live-Schaltung des Cockpit-KPI",
+     "Sponsor-Befüllung erfordert aktive Mitarbeit aller regionalen Account-Owner — ohne klares Mandat droht lückenhafter Befüllungsstand",
+     "Ziel <40 sponsorlose Kunden ist ambitioniert: wenn für viele Kunden kein geeigneter Sponsor verfügbar ist (Kapazität C-Level), ist das Ziel zu klären"
+    ],
+    "erfolgsmessung": "Sponsor-Feld für 129/129 Kunden befüllt; Zahl sponsorloser Kunden von 112 auf <40 reduziert; Aktivitäts-Stille-Liste im Cockpit live und nachweislich aktuell"
+   }
+  },
+  {
+   "id": "M20",
+   "seq": 20,
+   "quarter": "Q4/26",
+   "workstream": "WS3 LH-Klumpen / Diversifikation",
+   "title": "Neugeschäft-Pipeline auffüllen (Klumpen strukturell verdünnen)",
+   "action": "Michael Haeffner steuert mit den operativen Account-Ownern (Himm/DE, Roman Eslava/ES, Strauß) eine gezielte Auffüllung der Odoo-Akquise-Pipeline: qualifizierte Non-LH-Prospects nachtragen und die 337 offenen Follow-ups abarbeiten, damit die dünne Pipeline nicht der Engpass beim Cliff-2027-Ersatzgeschäft wird.",
+   "owner": "Michael Haeffner",
+   "start": "2026-09",
+   "due": "2027-06-30",
+   "kpi": "Akquise-Pipeline von 21 auf ≥50 qualifizierte Prospects; offene Follow-ups von 337 auf <150 reduziert",
+   "depends_on": "Pipeline-€-Ziel & Prospect-Trichter aufsetzen",
+   "grounding": "Odoo Akquise-Pipeline nur 21 Prospects; 337 offene Follow-ups; Churn 32 (18 Lost + 14 Inactive)",
+   "prio": "P2",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Die Odoo-Akquise-Pipeline zählt nur 21 qualifizierte Prospects bei gleichzeitig 337 offenen Follow-ups und einem Churn von 32 Kunden (18 Lost, 14 Inactive) — ein strukturell zu dünner Trichter, um das CLIFF-2027-Ersatzgeschäft (€107M, 94 Verträge) aufzufangen, sollten Verlängerungen scheitern. Dieser Milestone zielt darauf, den LH-Klumpen (34% Anteil) durch Wachstum der Nicht-LH-Basis strukturell zu verdünnen, statt nur LH zu binden.",
+    "leistung": [
+     "Odoo-Akquise-Pipeline von 21 auf mindestens 50 qualifizierte Non-LH-Prospects aufgefüllt",
+     "Offene Follow-ups von 337 auf unter 150 reduziert",
+     "Systematische Abarbeitung durch regionale Account-Owner (Himm/DE, Roman Eslava/ES, Strauß) dokumentiert"
+    ],
+    "vorgehen": [
+     "Analyse: bestehende 337 offene Follow-ups kategorisieren (Segment, €-Potenzial, Alter) — Priorisierungsliste erstellen",
+     "Whitespace-Mapping: Airlines an den AXS-Standorten ohne AXS-Vertrag identifizieren als Prospect-Rohstoff",
+     "Non-LH-Targets qualifizieren und in Odoo als Prospects anlegen — regionale Zuteilung an Himm (DE), Eslava (ES), Strauß",
+     "Offene Follow-ups systematisch abarbeiten: Klärung pro Eintrag (Weiterverfolgen/Schliessen/Konvertieren)",
+     "Monatliches Pipeline-Reporting an Haeffner mit Stand Prospects und Follow-up-Quote"
+    ],
+    "beteiligte": "Owner: Michael Haeffner; mitwirkend: Himm (DE), Roman Eslava (ES), Strauß (Stationsebene)",
+    "risiken": [
+     "Dünne Pipeline ist auch Ressourcenfrage: Account-Owner müssen neben laufendem Renewals-Druck aktiv akquirieren — Kapazitätskonflikt zu klären",
+     "Prospect-Qualität (qualifiziert ≠ nur angelegt): ohne klares Qualifikationskriterium droht Aufblähung der Zahl ohne Substanz",
+     "Langer Zeithorizont: zwischenzeitliche Steuerungspunkte sind zu definieren"
+    ],
+    "erfolgsmessung": "Akquise-Pipeline in Odoo von 21 auf ≥50 qualifizierte Prospects; offene Follow-ups von 337 auf <150 reduziert"
+   }
+  },
+  {
+   "id": "M21",
+   "seq": 21,
+   "quarter": "Q4/26",
+   "workstream": "WS1 Cliff-2027-Offensive",
+   "title": "30%-Sicherungsziel des €107M-Volumens bis Q4/2026",
+   "action": "Top-down entlang der Wertliste Verlängerungen/Neu-Abschlüsse forcieren, bis mindestens €32M des €107M-Cliff-Volumens vertraglich gesichert sind (unterzeichnet oder verbindliches Term-Sheet). Wöchentliches Tracking im CRM-Cockpit gegen die 243 offenen Maßnahmen.",
+   "owner": "Commercial (Cüneyt/Himm/Eslava)",
+   "start": "2026-08",
+   "due": "2026-12-31",
+   "kpi": "≥ €32M (30% von €107M) gesichert; Fortschritts-Balken im Cockpit",
+   "depends_on": "LH-Group-Frühverlängerung als Anker starten",
+   "grounding": "CLIFF-2027 €107M / 94 Verträge; 243 offene Maßnahmen",
+   "prio": "P1",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Der CLIFF-2027 umfasst €107M Vertragsvolumen über 94 Verträge, die bis Ende 2027 zur Verlängerung anstehen — das grösste Einzelrisiko im gesamten Commercial-Portfolio. Bis Ende Q4/2026 sollen mindestens 30% dieses Volumens (€32M) vertraglich gesichert werden, um frühzeitig Sicherheit zu schaffen und den Druck im Jahr 2027 zu reduzieren. Voraussetzung ist, dass die LH-Group-Frühverlängerung als Anker gestartet wurde.",
+    "leistung": [
+     "Mindestens €32M (30% von €107M) CLIFF-2027-Volumen bis 31.12.2026 vertraglich gesichert (unterzeichnet oder verbindliches Term-Sheet)",
+     "Fortschritts-Balken im CRM-Cockpit live und wöchentlich aktualisiert",
+     "Top-down priorisierte Wertliste der 94 Verträge als Steuerungsgrundlage vorhanden"
+    ],
+    "vorgehen": [
+     "94 CLIFF-2027-Verträge nach €-Wert sortieren und Top-Tier-Prioritätsliste erstellen",
+     "Renewal-Gespräche entlang der Wertliste starten — Commercial (Cüneyt/Himm/Eslava) mit Sponsor-Unterstützung",
+     "Wöchentliches Tracking im CRM-Cockpit: gesichertes Volumen vs. €32M-Ziel",
+     "243 offene Massnahmen priorisieren: welche betreffen CLIFF-2027-Verträge direkt und müssen vorgezogen werden",
+     "Monatliche Eskalation an DRS/Andreas Fritthum bei Rückstand gegenüber €32M-Ziel"
+    ],
+    "beteiligte": "Owner: Commercial-Team (Cüneyt Gölcöl, Himm, Eslava); Cockpit-Tracking: Didit/Tine; Sponsor-Ebene: Andreas Fritthum / DRS für strategische Gespräche",
+    "risiken": [
+     "Abhängigkeit von LH-Group-Frühverlängerung als Anker: scheitert oder verzögert sich diese, fehlt das Signal für nachgelagerte Kunden",
+     "243 offene Massnahmen sind nicht vollständig priorisiert — Risiko der Streuung statt Fokus auf wertintensive CLIFF-Verträge",
+     "Kunden können Gespräche verzögern: €32M bis 31.12.2026 ist nur erreichbar, wenn Gespräche spätestens August/September anlaufen"
+    ],
+    "erfolgsmessung": "≥€32M (30% von €107M CLIFF-2027-Volumen) bis 31.12.2026 vertraglich gesichert; Fortschritts-Balken im Cockpit zeigt Erreichungsgrad"
+   }
+  },
+  {
+   "id": "M22",
+   "seq": 22,
+   "quarter": "Q1/27",
+   "workstream": "WS6 Preis- & Datenqualität",
+   "title": "Verbindliche Indexierungsklausel (CPI/CBA) als Renewal-Standard",
+   "action": "Finance (Stephanie/Pajor) + Haeffner definieren eine Standard-Indexierungsklausel (CPI + CBA-Weitergabe) und machen sie zur Nicht-Verhandelbar-Vorgabe bei jeder Verlängerung; Klausel in SGHA-Annex-Vorlage verankern, Account-Owner-Schulung, Freigabe-Gate: kein Renewal ohne Indexierung oder dokumentierte Ausnahme (C-Level-Sponsor).",
+   "owner": "Stephanie Rohde",
+   "start": "2026-09",
+   "due": "2027-01-31",
+   "kpi": "Standardklausel freigegeben + in Vorlage; 100% neuer Renewal-Drafts ab Q1/2027 mit Indexierung oder dokumentierter Ausnahme",
+   "depends_on": "Basisdokumente-Vollständigkeit bei OPEN-Verträgen herstellen",
+   "grounding": "Indexierungs-Lücken: viele Verträge ohne CPI/CBA-Klausel = Preiserosionsrisiko",
+   "prio": "P1",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Zahlreiche Bestandsverträge enthalten keine CPI- oder CBA-Indexierungsklausel, was bei steigenden Lohn- und Betriebskosten zu struktureller Preiserosion führt und die Marge langfristig unterhöhlt. Dieser Milestone macht die Indexierungsklausel zum verbindlichen Standard bei jeder Vertragsverlängerung und schliesst damit eine der grössten wirtschaftlichen Lücken im Commercial-Rahmenwerk. Voraussetzung ist, dass die Basisdokumente-Vollständigkeit bei OPEN-Verträgen bereits hergestellt wurde.",
+    "leistung": [
+     "Standardisierte Indexierungsklausel (CPI + CBA-Weitergabe) definiert und freigegeben",
+     "Klausel in SGHA-Annex-Vorlage verankert",
+     "Account-Owner-Schulung zur Anwendung der Klausel durchgeführt",
+     "Freigabe-Gate implementiert: kein Renewal-Draft ohne Indexierung oder dokumentierte C-Level-Ausnahme ab Q1/2027"
+    ],
+    "vorgehen": [
+     "Finance (Stephanie Rohde/Pajor) und Haeffner gemeinsam Indexierungsklausel-Entwurf ausarbeiten (CPI-Referenzindex definieren, CBA-Weitergabe-Mechanismus)",
+     "Klausel rechtlich prüfen lassen und in SGHA-Annex-Vorlage einpflegen",
+     "Freigabe-Gate definieren: Prozess für dokumentierte Ausnahmen (C-Level-Sponsor-Unterschrift erforderlich)",
+     "Account-Owner-Schulung durchführen: Anwendung der Klausel, Umgang mit Kundeneinwänden",
+     "Monitoring ab Q1/2027: Anteil neuer Renewal-Drafts mit Indexierung vs. dokumentierter Ausnahme tracken"
+    ],
+    "beteiligte": "Owner: Stephanie Rohde (CFO); mitwirkend: Pajor (Finance), Michael Haeffner (Commercial); Rechtsprüfung: Amélie Charisius (Legal); Account-Owner für Schulung: Himm, Eslava, Strauß",
+    "risiken": [
+     "Kundenakzeptanz: Indexierungsklausel kann bei Renewal-Verhandlungen auf Widerstand stossen und Abschlüsse verlangsamen",
+     "Abhängigkeit von Basisdokumenten-Vollständigkeit: ohne vollständige OPEN-Vertragsunterlagen ist die Ausgangslage für Nachverhandlungen unklar",
+     "Definition des CPI-Referenzindex (national je DE/AT/ES/CH vs. einheitlich) ist zu klären und kann Umsetzung verzögern"
+    ],
+    "erfolgsmessung": "Standardklausel freigegeben und in Vorlage integriert; 100% neuer Renewal-Drafts ab Q1/2027 enthalten Indexierung oder dokumentierte C-Level-Ausnahme"
+   }
+  },
+  {
+   "id": "M23",
+   "seq": 23,
+   "quarter": "Q1/27",
+   "workstream": "WS5 Neugeschäft / Pipeline",
+   "title": "Prospect-Trichter von 21 auf mind. 60 Leads verbreitern",
+   "action": "Neue Prospects systematisch generieren: Ziel-Airlines an den 15 AXS-Standorten mappen (Airlines ohne AXS-Vertrag = Whitespace), Long-Tail-Kunden (IAG 4.6%, AF/KL 4.1%) auf Cross-Sell/Standort-Ausweitung prüfen, und die 18 Lost + 14 Inactive-Kunden auf Reaktivierbarkeit qualifizieren. Owner-Zuordnung je Region an Himm (DE), Roman Eslava (ES), Strauß.",
+   "owner": "Michael Haeffner",
+   "start": "2026-09",
+   "due": "2027-03-31",
+   "kpi": "Prospect-Zahl in Odoo von 21 auf ≥60 verdreifacht; ≥10 der 32 Churn-Kunden als Reaktivierungs-Lead requalifiziert",
+   "depends_on": "Pipeline-€-Ziel & Prospect-Trichter aufsetzen",
+   "grounding": "Odoo Pipeline 21 Prospects; Churn 32 (18 Lost + 14 Inactive); IAG 4.6% / AF-KL 4.1% Long Tail",
+   "prio": "P1",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Mit nur 21 qualifizierten Prospects in der Odoo-Pipeline ist die Neugeschäftsbasis strukturell zu dünn, um die €107M CLIFF-2027-Lücke oder den LH-Klumpen durch organisches Wachstum zu kompensieren. 32 Churn-Kunden (18 Lost, 14 Inactive) sowie identifizierbare Whitespace-Airlines an den AXS-Standorten bieten Reaktivierungs- und Neuakquise-Potenzial, das systematisch erschlossen werden muss. Dieser Milestone baut den Prospect-Trichter auf Grundlage vorhandener Daten auf.",
+    "leistung": [
+     "Prospect-Zahl in Odoo von 21 auf mindestens 60 erhöht",
+     "Mindestens 10 der 32 Churn-Kunden als Reaktivierungs-Lead qualifiziert und in Odoo erfasst",
+     "Whitespace-Karte je AXS-Standort (Airlines ohne Vertrag) erstellt",
+     "Regionale Owner-Zuordnung je Prospect (Himm/DE, Eslava/ES, Strauß) dokumentiert"
+    ],
+    "vorgehen": [
+     "Whitespace-Analyse: je AXS-Standort Airlines ohne bestehenden AXS-Vertrag identifizieren und nach €-Potenzial bewerten",
+     "Churn-Analyse: 18 Lost + 14 Inactive auf Reaktivierbarkeit prüfen (Abgangsgrund, Beziehungsstatus, Wettbewerbslage)",
+     "Long-Tail-Kunden (IAG 4.6%, AF/KL 4.1%) auf Cross-Sell- und Standort-Ausweitung analysieren",
+     "Alle qualifizierten Prospects in Odoo anlegen mit Owner, Segment, €-Schätzung, nächstem Schritt",
+     "Monatliches Prospect-Reporting an Haeffner mit Trichter-Stand und Fortschritt"
+    ],
+    "beteiligte": "Owner: Michael Haeffner; regionale Umsetzung: Himm (DE), Roman Eslava (ES), Strauß",
+    "risiken": [
+     "Prospect-Qualität vs. -Quantität: 60 Prospects sind nur wertvoll, wenn sie mit echtem Qualifikationsstandard angelegt werden",
+     "Reaktivierung von Lost-Kunden kann scheitern, wenn Abgangsgründe strukturell sind (Preis, Service-Qualität) — zu klären vor Kontaktaufnahme",
+     "Kapazität der regionalen Account-Owner: parallele Bearbeitung von Renewals und Neuakquise erfordert klare Ressourcenplanung"
+    ],
+    "erfolgsmessung": "Prospect-Zahl in Odoo von 21 auf ≥60 verdreifacht; ≥10 der 32 Churn-Kunden als Reaktivierungs-Lead requalifiziert und dokumentiert in Odoo"
+   }
+  },
+  {
+   "id": "M24",
+   "seq": 24,
+   "quarter": "Q1/27",
+   "workstream": "WS3 LH-Klumpen / Diversifikation",
+   "title": "LH-Multi-Year-Term-Gespräch führen",
+   "action": "DRS und Andreas Fritthum führen auf C-Level das strategische Gespräch mit LH-Group über eine mehrjährige Vertragsbindung (Term ≥2029), um die €96M teilweise aus der OPEN/CLIFF-Zone in die FIXED-Zone zu verschieben. Ziel: gemeinsame Absichtserklärung / Term-Sheet-Grundzüge, verankert auf sauberer Rate-/Indexierungsbasis aus dem Haeffner-Report.",
+   "owner": "Andreas Fritthum",
+   "start": "2026-11",
+   "due": "2027-03-31",
+   "kpi": "Multi-Year-Term-Gespräch geführt + Absichtserklärung/Term-Sheet-Grundzüge dokumentiert für ≥€40M LH-Volumen mit Ziel-Laufzeit ≥2029",
+   "depends_on": "LH-Datenlücken & Indexierung schließen (Verhandlungsfähigkeit herstellen)",
+   "grounding": "CLIFF-2027 €107M / 94 Verträge + OPEN €91M / 148 Verträge; FIXED ≥2029 nur €21M / 36 (7% langfristig gesichert)",
+   "prio": "P1",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Die LH-Group stellt mit €96M / 34% den grössten Einzelklumpen im AXS-Portfolio dar, wobei nur €21M (7% des Gesamtportfolios, 36 Verträge) mit Laufzeit ≥2029 langfristig gesichert sind. Ein erheblicher Teil des LH-Volumens ist in der OPEN- oder CLIFF-Zone — ohne C-Level-Gespräch über Mehrjahresbindung bleibt dieses Risiko strukturell ungelöst. Voraussetzung ist, dass LH-Datenlücken und Indexierung vorher geschlossen wurden, um verhandlungsfähig zu sein.",
+    "leistung": [
+     "Strategisches Multi-Year-Term-Gespräch mit LH-Group auf C-Level geführt (DRS + Andreas Fritthum)",
+     "Absichtserklärung oder Term-Sheet-Grundzüge für mindestens €40M LH-Volumen mit Ziel-Laufzeit ≥2029 dokumentiert",
+     "Gesprächsvorbereitung auf Basis des Haeffner-Reports (Rate-/Indexierungsbasis) vorliegend"
+    ],
+    "vorgehen": [
+     "Gesprächsunterlage erstellen: LH-Vertragslandschaft (Volumen, Ablauf, Rate-Basis, Indexierungslücken) aus Haeffner-Report zusammenführen",
+     "Gesprächsstrategie festlegen: welches Volumen soll in ≥2029 verschoben werden, welche Zugeständnisse sind möglich",
+     "Erstgespräch mit LH-Group-Vertreter initiieren — DRS + Andreas Fritthum als Führungsduo",
+     "Absichtserklärung / Term-Sheet-Grundzüge ausarbeiten und dokumentieren",
+     "Ergebnis in CRM-Cockpit als Status-Update für betroffene LH-Verträge erfassen"
+    ],
+    "beteiligte": "Owner: Andreas Fritthum (Vice Chairman); mitwirkend: DRS (Chairman, führt C-Level-Gespräch mit); Vorbereitung: Michael Haeffner; LH-Group-Counterpart: zu klären",
+    "risiken": [
+     "LH-Bereitschaft zu Mehrjahresbindung ist ungewiss: LH hat eigene Verhandlungsstrategie und kann Gespräch verzögern oder ablehnen",
+     "Verhandlungsfähigkeit hängt von vollständigen Datenlücken ab: sind Rate/Indexierung noch nicht bereinigt, verliert AXS an Verhandlungsgewicht",
+     "€40M-Ziel für Absichtserklärung ist ambitioniert bei einem offenen Gesamtklumpen von €96M — realistisches Minimalziel vorab intern klären"
+    ],
+    "erfolgsmessung": "Multi-Year-Term-Gespräch geführt und Absichtserklärung/Term-Sheet-Grundzüge für ≥€40M LH-Volumen mit Ziel-Laufzeit ≥2029 dokumentiert"
+   }
+  },
+  {
+   "id": "M25",
+   "seq": 25,
+   "quarter": "Q2/27",
+   "workstream": "WS4 Beziehungspflege absichern",
+   "title": "Cadence-Kopplung an CLIFF-2027-Renewal-Wand",
+   "action": "Die Beziehungs-Cadence priorisiert auf die 94 CLIFF-2027-Verträge (€107M) und die 148 OPEN-Verträge (€91M) legen: jeder betroffene Account bekommt vor Renewal-Fenster einen Sponsor-Touchpoint als Verhandlungsvorbereitung. Verknüpfung Sponsor↔Renewal-Datum im Cockpit sichtbar machen, damit kein at-risk-Vertrag ohne Beziehungskontakt in die Verlängerung geht.",
+   "owner": "Andreas Fritthum",
+   "start": "2026-10",
+   "due": "2027-06-30",
+   "kpi": "100% der 94 CLIFF-2027-Verträge mit dokumentiertem Sponsor-Touchpoint vor Renewal-Start",
+   "depends_on": "Sponsor + Cadence auf alle 112 sponsorlosen Accounts ausrollen",
+   "grounding": "CLIFF-2027 €107M / 94 Verträge + OPEN €91M / 148 Verträge",
+   "prio": "P2",
+   "status": "offen",
+   "briefing": {
+    "kontext": "94 CLIFF-2027-Verträge (€107M) und 148 OPEN-Verträge (€91M) sind das Kernrisiko des Portfolios — zusammen fast €200M an ungesichertem Volumen. Ohne strukturierte Beziehungspflege mit definierten Sponsor-Touchpoints vor dem Renewal-Fenster gehen diese Verträge ohne Vertrauensbasis in die Verlängerung. Dieser Milestone koppelt die Beziehungs-Cadence direkt an die Renewal-Wand und schliesst damit die Lücke zwischen Sponsor-Governance und tatsächlicher Verhandlungsvorbereitung.",
+    "leistung": [
+     "100% der 94 CLIFF-2027-Verträge mit dokumentiertem Sponsor-Touchpoint vor Renewal-Start",
+     "Verknüpfung Sponsor ↔ Renewal-Datum im CRM-Cockpit sichtbar und operativ nutzbar",
+     "Kein at-risk-Vertrag geht ohne vorherigen Beziehungskontakt in die Verlängerungsphase"
+    ],
+    "vorgehen": [
+     "Im Cockpit: Renewal-Datum je Vertrag mit Sponsor-Feld verknüpfen und Touchpoint-Fälligkeits-Ampel einrichten",
+     "Für alle 94 CLIFF-2027-Verträge: Renewal-Fenster rückwärts berechnen und Sponsor-Touchpoint-Termin spätestens X Monate davor setzen",
+     "Cadence-Muster definieren: was gilt als Touchpoint (persönliches Gespräch, strukturiertes Meeting), wann wird eskaliert",
+     "Sponsor-Touchpoints in Odoo/Cockpit dokumentieren — Nachweis liegt bei Account-Owner",
+     "Quartalsweise Überprüfung durch Andreas Fritthum: welche CLIFF-Verträge noch ohne dokumentierten Touchpoint"
+    ],
+    "beteiligte": "Owner: Andreas Fritthum (Vice Chairman); mitwirkend: Michael Haeffner (Commercial-Koordination), regionale Account-Owner (Himm, Eslava, Strauß), Didit/Tine (Cockpit-Verknüpfung); Voraussetzung: Sponsor-Zuordnung muss abgeschlossen sein",
+    "risiken": [
+     "Abhängigkeit von Sponsor-Zuordnung: ohne vollständige Sponsor-Befüllung fehlt der Ausgangspunkt für Touchpoint-Planung",
+     "Definition 'Touchpoint' muss klar sein — sonst drohen formale Checkbox-Erfüllungen ohne substanzielle Beziehungspflege",
+     "Zeitliche Dichte: 94 Verträge brauchen alle einen Sponsor-Touchpoint — bei begrenzter C-Level-Kapazität Priorisierung nach €-Wert erforderlich"
+    ],
+    "erfolgsmessung": "100% der 94 CLIFF-2027-Verträge mit dokumentiertem Sponsor-Touchpoint vor Renewal-Start; Nachweis im Cockpit je Vertrag verfügbar"
+   }
+  },
+  {
+   "id": "M26",
+   "seq": 26,
+   "quarter": "Q2/27",
+   "workstream": "WS3 LH-Klumpen / Diversifikation",
+   "title": "Nicht-Anker-Wachstum: Top-10-Non-LH-Kunden mit Sponsoren belegen & ausbauen",
+   "action": "DRS und Andreas Fritthum verteilen für die 10 größten Nicht-LH-Kunden (u.a. IAG 4.6% / BA, AF-KL 4.1%) je einen strategischen Sponsor aus dem C-Level (DRS=BA, Fritthum=SkyTeam/Star, Rohde=TUIfly, Gölcöl=Türkei-Cluster) und definieren pro Kunde ein Ausbau-Ziel. So sinkt die relative LH-Abhängigkeit durch Wachstum der Basis, nicht nur durch LH-Bindung.",
+   "owner": "Dieter Streuli",
+   "start": "2026-10",
+   "due": "2027-06-30",
+   "kpi": "Top-10-Non-LH-Kunden jeweils mit benanntem Sponsor + Ausbau-Ziel; LH-Anteil am Gesamt-Forecast von 34% auf ≤30% gesenkt",
+   "depends_on": "LH-Group Sponsor-Governance & Account-Plan aktivieren",
+   "grounding": "LH-Group 34% vs. IAG 4.6% / AF-KL 4.1% (Rest long tail); 66 Kunden in Aktivitäts-Stille",
+   "prio": "P2",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Der LH-Klumpen (34%, €96M) kann nicht allein durch LH-Bindung strukturell gelöst werden — die relative Abhängigkeit sinkt nur, wenn die Nicht-LH-Basis aktiv wächst. IAG (4.6%) und AF/KL (4.1%) sind die grössten Nicht-LH-Kunden, trotzdem liegt der gesamte Rest als Long Tail vor, und 66 Kunden befinden sich in Aktivitäts-Stille. Dieser Milestone verankert C-Level-Sponsoren mit definierten Ausbau-Zielen für die Top-10-Non-LH-Kunden.",
+    "leistung": [
+     "Je ein strategischer Sponsor aus dem C-Level für alle Top-10-Non-LH-Kunden benannt und dokumentiert",
+     "Pro Kunde ein konkretes Ausbau-Ziel (Volumen/Standort/Service-Ausweitung) definiert",
+     "LH-Anteil am Gesamt-Forecast von 34% auf ≤30% gesenkt (durch Wachstum der Basis)"
+    ],
+    "vorgehen": [
+     "Top-10-Non-LH-Kunden nach €-Volumen aus Odoo/Forecast identifizieren (inkl. IAG/BA, AF/KL)",
+     "Sponsor-Zuordnung durch DRS und Andreas Fritthum: DRS=BA, Fritthum=SkyTeam/Star-Cluster, Rohde=TUIfly, Gölcöl=Türkei-Cluster",
+     "Pro Kunde: Ausbau-Ziel formulieren (€-Ziel, Standort-Ausweitung, Service-Scope) und in Account-Plan dokumentieren",
+     "Sponsor-Aktivierung: Erstgespräch mit jedem der Top-10-Kunden durch zugeordneten Sponsor",
+     "Fortschritts-Tracking im Cockpit: Sponsor benannt / Ziel definiert / erstes Gespräch geführt"
+    ],
+    "beteiligte": "Owner: Dieter Streuli (DRS, Chairman); mitwirkend: Andreas Fritthum (Vice Chairman), Stephanie Rohde, Cüneyt Gölcöl (regionale Sponsor-Rollen); Michael Haeffner (Daten-Grundlage)",
+    "risiken": [
+     "C-Level-Kapazität: DRS, Fritthum und weitere müssen neben strategischen Aufgaben aktive Kundenbeziehungen führen — Priorisierungsdisziplin erforderlich",
+     "LH-Anteil-Reduktion von 34% auf ≤30% erfordert messbares Non-LH-Wachstum — ohne Neugeschäft ist das Ziel nur durch LH-Schrumpfung erreichbar, was unerwünscht wäre",
+     "Ausbau-Ziele je Kunde sind noch zu definieren: Realismus und Messbarkeit hängen von verfügbaren Potenzialanalysen ab"
+    ],
+    "erfolgsmessung": "Top-10-Non-LH-Kunden alle mit benanntem C-Level-Sponsor und dokumentiertem Ausbau-Ziel; LH-Anteil am Gesamt-Forecast von 34% auf ≤30% gesenkt"
+   }
+  },
+  {
+   "id": "M27",
+   "seq": 27,
+   "quarter": "Q2/27",
+   "workstream": "WS2 OPEN entnebeln",
+   "title": "Re-Pricing & Indexierung in Verhandlung bringen",
+   "action": "Für die als RE-PRICE klassifizierten OPEN-Verträge Verhandlungspakete schnüren: CPI/CBA-Indexklausel nachverhandeln (Preiserosion stoppen) und Raten anpassen. Reaktivierung der 66 Kunden in Aktivitäts-Stille als Teil dieser Runde (Touchpoint + Re-Pricing-Gespräch). Priorisierung nach €-Wert und Ablauf 2027.",
+   "owner": "Michael Haeffner",
+   "start": "2026-10-01",
+   "due": "2027-06-30",
+   "kpi": "≥80% der RE-PRICE-Verträge mit unterzeichneter Index-Klausel; alle 66 stillen Kunden mit dokumentiertem Touchpoint",
+   "depends_on": "Sponsor-Zuordnung für unbetreute OPEN-Kunden",
+   "grounding": "Indexierungs-Lücken (Preiserosionsrisiko); 66 Kunden in Aktivitäts-Stille; €91M OPEN",
+   "prio": "P2",
+   "status": "offen",
+   "briefing": {
+    "kontext": "€91M / 148 OPEN-Verträge sind das unmittelbarste Volumenrisiko neben dem CLIFF: viele davon enthalten keine Indexierungsklausel und laufen Gefahr, bei steigenden Kosten (Löhne, Energie) die Marge weiter auszuhöhlen. Zusätzlich befinden sich 66 Kunden in Aktivitäts-Stille — ohne Reaktivierungs-Touchpoint sind diese bei Renewal latent abwanderungsgefährdet. Dieser Milestone bringt Re-Pricing und Indexierung für OPEN-Verträge aktiv in die Verhandlung.",
+    "leistung": [
+     "≥80% der RE-PRICE-klassifizierten OPEN-Verträge mit unterzeichneter Indexierungsklausel",
+     "Alle 66 stillen Kunden mit dokumentiertem Touchpoint (Reaktivierungs-Gespräch oder Meeting)",
+     "Verhandlungspakete je RE-PRICE-Vertrag (CPI/CBA-Klausel + Rate-Anpassung) geschnürt und im Prozess"
+    ],
+    "vorgehen": [
+     "RE-PRICE-Verträge aus der OPEN-Liste identifizieren und nach €-Wert + Ablaufdatum priorisieren",
+     "Verhandlungspaket je Vertrag vorbereiten: aktuelle Rate vs. Markt, CPI-/CBA-Rückstand, Indexierungsklausel-Entwurf",
+     "66 Kunden in Aktivitäts-Stille kontaktieren: Touchpoint-Gespräch initiieren — priorisiert nach Überschneidung mit RE-PRICE-Liste",
+     "Verhandlungen führen: Account-Owner mit Sponsor-Unterstützung; Ziel unterzeichnete Klausel oder dokumentierte Ausnahme",
+     "Ergebnisse in Odoo/Cockpit erfassen: RE-PRICE-Status, Touchpoint-Datum, Klausel-Status"
+    ],
+    "beteiligte": "Owner: Michael Haeffner; mitwirkend: regionale Account-Owner (Himm/DE, Eslava/ES, Strauß), Sponsoren für jeweilige Kunden; Voraussetzung: Sponsor-Zuordnung und Indexierungs-Standard müssen vorliegen",
+    "risiken": [
+     "Abhängigkeit von Sponsor-Zuordnung: ohne Sponsor je Kunde fehlt die zweite Stimme in der Verhandlung, besonders bei grösseren RE-PRICE-Gesprächen",
+     "Indexierungs-Standard muss vor Beginn der Verhandlungen vorliegen: parallele Timelines könnten zu Inkonsistenz führen",
+     "Kunden in Aktivitäts-Stille können schwer erreichbar oder desinteressiert sein — bei 66 Kunden ist vollständige Touchpoint-Abdeckung organisatorisch anspruchsvoll"
+    ],
+    "erfolgsmessung": "≥80% der RE-PRICE-klassifizierten OPEN-Verträge mit unterzeichneter Indexierungsklausel; alle 66 stillen Kunden mit dokumentiertem Touchpoint in Odoo nachweisbar"
+   }
+  },
+  {
+   "id": "M28",
+   "seq": 28,
+   "quarter": "Q2/27",
+   "workstream": "WS6 Preis- & Datenqualität",
+   "title": "Preis-/Daten-Qualitäts-Cockpit als Dauer-Monitor",
+   "action": "Tine Petric (Build) + Haeffner richten im CRM-Cockpit einen stehenden Data-Quality-Report ein: €-Wert-Abdeckung, Dokumenten-Vollständigkeit, Indexierungsquote je Vertrag/Kunde/Renewal-Cliff; monatliches Review Haeffner+Finance, damit einmal geschlossene Lücken nicht zurückfallen.",
+   "owner": "Michael Haeffner",
+   "start": "2027-01",
+   "due": "2027-06-30",
+   "kpi": "Monatlicher DQ-Report live; €-Wert-Abdeckung ≥95% und Indexierungsquote als laufende Kennzahl über alle 338 Verträge",
+   "depends_on": "€-Wert-Lücken bei 72 Kunden schliessen",
+   "grounding": "338 Verträge · 243 offene Maßnahmen",
+   "prio": "P3",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Das Commercial-CRM der AXS Group umfasst 338 Verträge mit 243 offenen Massnahmen und historisch unvollständiger Datenlage. Dieser Milestone soll sicherstellen, dass einmal geschlossene Datenlücken — insbesondere die €-Wert-Abdeckung und die Indexierungsquote — nicht zurückfallen. Ein dauerhafter Datenqualitäts-Monitor ersetzt einmalige Bereinigungssprints durch laufende Steuerung.",
+    "leistung": [
+     "Stehender Data-Quality-Report im CRM-Cockpit ist live und wird monatlich aktualisiert",
+     "€-Wert-Abdeckung über alle 338 Verträge transparent und ≥95% erreicht",
+     "Indexierungsquote je Vertrag/Kunde/Renewal-Cliff als laufende Kennzahl sichtbar",
+     "Dokumenten-Vollständigkeit je Vertrag ausgewiesen"
+    ],
+    "vorgehen": [
+     "Anforderungen an den DQ-Report mit Haeffner und Finance definieren (Felder: €-Wert, Dokument-Status, Indexierungsklausel, Cliff-Zugehörigkeit)",
+     "Tine Petric (Build) setzt automatischen Report im CRM-Cockpit technisch um",
+     "Ersten vollständigen Report erstellen und gegen die 338 Verträge validieren",
+     "Monatlichen Review-Termin Haeffner + Finance institutionalisieren",
+     "Eskalationspfad bei Unterschreitung der 95%-Schwelle definieren"
+    ],
+    "beteiligte": "Owner: Michael Haeffner; Technische Umsetzung: Tine Petric (Didit/Build); Finance (Pajor)",
+    "risiken": [
+     "Abhängigkeit von vollständiger €-Wert-Erfassung bei 72 Kunden — solange diese Lücken offen sind, kann die 95%-Schwelle nicht erreicht werden",
+     "Ohne institutionalisierten Review-Rhythmus droht der Report zum ungenutzten Dashboard zu werden",
+     "Technische Umsetzungskapazität bei Tine Petric parallel zu anderen Cockpit-Aufgaben zu klären"
+    ],
+    "erfolgsmessung": "Monatlicher DQ-Report ist im CRM-Cockpit live; €-Wert-Abdeckung ≥95% und Indexierungsquote als laufende Kennzahlen über alle 338 Verträge dauerhaft gehalten"
+   }
+  },
+  {
+   "id": "M29",
+   "seq": 29,
+   "quarter": "Q2/27",
+   "workstream": "WS1 Cliff-2027-Offensive",
+   "title": "Cliff-2027 auf ≥60% gesichert bringen (Rest-Volumen & Long-Tail)",
+   "action": "Nach dem Q4/2026-Meilenstein die verbleibenden Cliff-2027-Verträge (mittlerer/kleiner Wert, u.a. IAG- und AF/KL-nahe Positionen) systematisch abarbeiten; verlorene/abwanderungsgefährdete Verträge früh identifizieren und gegen die at-risk-Liste spiegeln.",
+   "owner": "Commercial (Cüneyt/Himm/Eslava)",
+   "start": "2027-01",
+   "due": "2027-06-30",
+   "kpi": "≥ €64M (60% von €107M) gesichert; verbleibende at-risk-Cliff-Verträge mit Eskalations-Owner",
+   "depends_on": "30%-Sicherungsziel des €107M-Volumens bis Q4/2026",
+   "grounding": "CLIFF-2027 €107M / 94 Verträge; 85 at-risk; IAG 4.6% / AF-KL 4.1%",
+   "prio": "P2",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Der CLIFF-2027 umfasst €107M Vertragsvolumen über 94 Verträge — davon sind 85 als at-risk klassifiziert. Nach dem Q4/2026-Meilenstein (Ziel: 30% gesichert) gilt es, das Momentum aufrechtzuerhalten und auch mittlere und kleinere Verträge — darunter IAG- und AF/KL-nahe Positionen — systematisch abzuarbeiten. Ohne aktive Bearbeitung droht ein struktureller Umsatzverlust im dreistelligen Millionenbereich.",
+    "leistung": [
+     "Mindestens €64M (60% von €107M) der CLIFF-2027-Verträge mit unterzeichneter Verlängerung gesichert",
+     "Alle verbleibenden at-risk-Cliff-Verträge haben einen namentlich zugewiesenen Eskalations-Owner",
+     "Verlorene oder abwanderungsgefährdete Verträge frühzeitig identifiziert und in Gegen-Liste aufgenommen"
+    ],
+    "vorgehen": [
+     "CLIFF-2027-Verträge nach Wert und Abwanderungsrisiko ranken (IAG, AF/KL und sonstige getrennt)",
+     "Für jede Position Renewal-Verantwortlichen zuweisen und At-Risk-Liste spiegeln",
+     "Verhandlungen mit mittleren und kleinen Accounts starten (nach Priorität aus Ranking)",
+     "Monatlichen Fortschrittsabgleich gegen €64M-Ziellinie im Commercial-Cockpit verankern",
+     "Kritische Positionen mit C-Level-Sponsor eskalieren"
+    ],
+    "beteiligte": "Owner: Commercial-Team (Cüneyt Gölcöl, Himm, Eslava); Eskalation bei Schlüsselkunden über C-Level-Sponsoren",
+    "risiken": [
+     "Abhängigkeit vom Q4/2026-Meilenstein: Wurde das 30%-Sicherungsziel nicht erreicht, ist die 60%-Ziellinie für Q3/2027 deutlich schwieriger",
+     "IAG- und AF/KL-nahe Positionen erfordern möglicherweise C-Level-Einbindung, die rechtzeitig geplant werden muss",
+     "Ressourcen-Engpass im Commercial-Team bei paralleler Bearbeitung aller 94 Verträge"
+    ],
+    "erfolgsmessung": "≥€64M (60% von €107M) vertraglich gesichert bis 30.09.2027; alle verbleibenden at-risk-Cliff-Verträge mit namentlichem Eskalations-Owner dokumentiert im Cockpit"
+   }
+  },
+  {
+   "id": "M30",
+   "seq": 30,
+   "quarter": "Q2/27",
+   "workstream": "WS5 Neugeschäft / Pipeline",
+   "title": "Win-Back-Kampagne für Cliff-2027-Renewals als Pipeline-Kanal",
+   "action": "Die 94 Cliff-2027-Verträge (€107M) und 148 OPEN-Verträge (€91M) explizit als Neugeschäfts-Pipeline-Kanal behandeln: Retention-First-Angebote mit indexierter Rate vorbereiten, an C-Level-Sponsoren (Fritthum für LH-Group, DRS für BA, Rohde für TUIfly) koppeln und je Vertrag Renewal-Wahrscheinlichkeit + €-Wert in den Trichter aufnehmen. Damit wird Retention messbar Teil des Pipeline-Ziels.",
+   "owner": "Michael Haeffner",
+   "start": "2027-01",
+   "due": "2027-06-30",
+   "kpi": "≥80% der €107M Cliff-2027 mit definiertem Renewal-Angebot + Sponsor; Renewal-Winrate ausgewiesen; €-Wert der OPEN-148 in Trichter überführt",
+   "depends_on": "Prospect-Trichter von 21 auf mind. 60 Leads verbreitern",
+   "grounding": "CLIFF-2027 €107M / 94 Verträge; OPEN €91M / 148 Verträge; nur €21M / 36 FIXED ≥2029 (7%)",
+   "prio": "P2",
+   "status": "offen",
+   "briefing": {
+    "kontext": "AXS hat mit 21 Prospects eine zu dünne Neugeschäfts-Pipeline angesichts eines Churn von 32 Kunden und der anstehenden Cliff-Wand. Die 94 CLIFF-2027-Verträge (€107M) und 148 OPEN-Verträge (€91M) werden bisher primär als Risiken geführt, nicht als Pipeline-Chancen. Dieser Milestone macht Retention messbar zum Teil des Neugeschäfts-Funnels und koppelt Verlängerungsangebote an C-Level-Sponsoren.",
+    "leistung": [
+     "≥80% der €107M Cliff-2027 mit schriftlichem Renewal-Angebot und benanntem Sponsor hinterlegt",
+     "Renewal-Winrate als eigene Kennzahl im Cockpit ausgewiesen",
+     "€-Wert der 148 OPEN-Verträge (€91M) in den Pipeline-Trichter überführt und nach Wahrscheinlichkeit gestaffelt"
+    ],
+    "vorgehen": [
+     "Cliff-2027-Verträge und OPEN-Verträge als Retention-Pipeline in CRM-Cockpit klassifizieren",
+     "Retention-First-Angebote mit indexierter Rate je Airline-Gruppe vorbereiten (LH-Group Fritthum, BA DRS, TUIfly Rohde)",
+     "C-Level-Sponsoren pro Account zuweisen und Briefing-Unterlagen je Sponsor erstellen",
+     "Renewal-Wahrscheinlichkeit und €-Wert je Vertrag im Trichter erfassen",
+     "Winrate und Pipeline-Fortschritt monatlich im Commercial-Review tracken"
+    ],
+    "beteiligte": "Owner: Michael Haeffner; C-Level-Sponsoren: Andreas Fritthum (LH-Group), Dieter Streuli (BA), Stephanie Rohde (TUIfly); Didit/Tine für technische Cockpit-Umsetzung",
+    "risiken": [
+     "Abhängigkeit von funktionierendem Prospect-Trichter: Ziel von mind. 60 Leads muss parallel erreicht werden",
+     "C-Level-Sponsoren müssen ausreichend Zeit für Kundenbeziehungen einplanen — Kapazität zu prüfen",
+     "Ohne indexierte Rate-Angebote riskieren Verlängerungen die Weiterführung der Preiserosion"
+    ],
+    "erfolgsmessung": "≥80% der €107M Cliff-2027 mit definiertem Renewal-Angebot und C-Level-Sponsor dokumentiert; Renewal-Winrate als separate Kennzahl ausgewiesen; gesamter €-Wert der 148 OPEN-Verträge im Trichter erfasst"
+   }
+  },
+  {
+   "id": "M31",
+   "seq": 31,
+   "quarter": "Q2/27",
+   "workstream": "WS2 OPEN entnebeln",
+   "title": "OPEN in gesicherte Langfrist-Verträge überführen",
+   "action": "Für RENEW-klassifizierte OPEN-Verträge Vertragsverlängerungen ≥2029 abschliessen, um das langfristig gesicherte Volumen deutlich über den heutigen Anteil zu heben. Verknüpfung mit CLIFF-2027-Abwehr: OPEN-Verträge, die 2027 auslaufen, direkt in mehrjährige Abschlüsse überführen.",
+   "owner": "Michael Haeffner",
+   "start": "2027-01-01",
+   "due": "2027-06-30",
+   "kpi": "Langfrist gesichertes Volumen (FIXED ≥2029) von €21M / 7% auf ≥€45M / ≥15% angehoben durch überführte OPEN-Verträge",
+   "depends_on": "Re-Pricing & Indexierung in Verhandlung bringen",
+   "grounding": "FIXED ≥2029 nur €21M / 36 Verträge (7% langfristig gesichert); €91M OPEN; CLIFF-2027 €107M",
+   "prio": "P3",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Von €278M Gesamtforecast sind heute nur €21M (7%) langfristig gesichert (FIXED ≥2029). Dieser extrem niedrige Langfristanteil macht AXS strukturell anfällig für jede Renewal-Wand — heute CLIFF-2027, morgen CLIFF-2028. Ziel dieses Milestones ist es, OPEN-Verträge die bereits erneuert werden direkt in mehrjährige Abschlüsse zu überführen statt in Ein-Jahres-Verlängerungen.",
+    "leistung": [
+     "FIXED ≥2029 Volumen von €21M auf ≥€45M angehoben (Verdoppelung+ durch überführte OPEN-Verträge)",
+     "Anteil langfristig gesichertes Volumen steigt von 7% auf ≥15% des Gesamtforecast",
+     "Direkte Verknüpfung von CLIFF-2027-Verlängerungen mit Laufzeit ≥2029"
+    ],
+    "vorgehen": [
+     "OPEN-Verträge mit RENEW-Klassifizierung identifizieren und nach €-Wert und Verlängerungsbereitschaft priorisieren",
+     "Für priorisierte OPEN-Verträge Vertragsverlängerungen mit Laufzeit ≥2029 als bevorzugte Variante verhandeln",
+     "CLIFF-2027-Verträge die zur Verlängerung anstehen direkt auf ≥2029-Laufzeit einplanen",
+     "Re-Pricing und Indexierung als Paket in die Langfrist-Verhandlungen einbringen",
+     "Fortschritt monatlich gegen €45M/15%-Ziellinie tracken"
+    ],
+    "beteiligte": "Owner: Michael Haeffner; Commercial-Team für Verhandlungsführung; Amélie Charisius (Legal) für Vertragsabschlüsse",
+    "risiken": [
+     "Abhängigkeit von erfolgreichem Re-Pricing: Ohne Indexierung lohnen sich Langfrist-Abschlüsse für AXS nur begrenzt",
+     "Kunden bevorzugen möglicherweise kürzere Laufzeiten — Anreize für Langfristbindung müssen definiert werden (zu klären)",
+     "€45M-Ziel ist ambitioniert wenn OPEN-Verträge noch nicht vollständig entnebelt sind"
+    ],
+    "erfolgsmessung": "FIXED ≥2029 steigt von €21M/36 Verträgen auf ≥€45M bis 31.12.2027; Anteil langfristig gesichertes Volumen ≥15% des Gesamtforecast"
+   }
+  },
+  {
+   "id": "M32",
+   "seq": 32,
+   "quarter": "Q2/27",
+   "workstream": "WS6 Preis- & Datenqualität",
+   "title": "Indexierungs-Durchsetzung an der CLIFF-2027-Wand",
+   "action": "Bei den 94 CLIFF-2027-Verträgen (€107M, Verlängerung bis Ende 2027 fällig) die Standard-Indexierungsklausel aktiv in jede Verlängerungsverhandlung einbringen; Tracking je Vertrag: Klausel durchgesetzt / verhandelt / abgelehnt. Ziel-Quote als Steuerungs-KPI im Commercial-Cockpit.",
+   "owner": "Michael Haeffner",
+   "start": "2027-02",
+   "due": "2027-06-30",
+   "kpi": "Indexierungsquote ≥70% der bis EOY 2027 verlängerten CLIFF-2027-Verträge; €-gewichtete Quote ≥75% von €107M",
+   "depends_on": "Verbindliche Indexierungsklausel (CPI/CBA) als Renewal-Standard",
+   "grounding": "CLIFF-2027 €107M / 94 Verträge",
+   "prio": "P2",
+   "status": "offen",
+   "briefing": {
+    "kontext": "Die fehlende CPI/CBA-Indexierung ist eines der strukturellen Kernrisiken im AXS-Vertragsportfolio: Kosten steigen mit Inflation und Lohnrunden, während Erlöse in vielen Verträgen fix bleiben. Die 94 CLIFF-2027-Verträge (€107M) bieten das grösste Zeitfenster, um die Standard-Indexierungsklausel flächendeckend durchzusetzen — da alle Verträge ohnehin neu verhandelt werden müssen. Voraussetzung ist die Legal-Freigabe der Klausel.",
+    "leistung": [
+     "Standard-Indexierungsklausel in ≥70% der bis EOY 2027 verlängerten CLIFF-2027-Verträge verankert",
+     "€-gewichtete Indexierungsquote ≥75% von €107M",
+     "Tracking je Vertrag: Klausel durchgesetzt / verhandelt / abgelehnt im Commercial-Cockpit sichtbar"
+    ],
+    "vorgehen": [
+     "Legal-freigegebene Indexierungsklausel als Standard in alle CLIFF-2027-Verhandlungsunterlagen aufnehmen",
+     "Tracking-Feld im CRM-Cockpit einrichten: Klausel-Status je Vertrag (durchgesetzt/verhandelt/abgelehnt)",
+     "Verhandlungsführer briefen, Klausel aktiv einzubringen und Abweichungen zu begründen",
+     "Monatliches Review der €-gewichteten Indexierungsquote im Commercial-Review",
+     "Verträge mit abgelehnter Klausel auf Eskalationsliste setzen"
+    ],
+    "beteiligte": "Owner: Michael Haeffner; Amélie Charisius (Legal) für Klausel-Vorlage; Commercial-Team für Verhandlungsführung; Didit/Tine für Cockpit-Tracking",
+    "risiken": [
+     "Abhängigkeit vom Legal-Gate: Ohne rechtlich freigegebene Indexierungsklausel kann der Rollout nicht beginnen",
+     "Kundenwiderstand: Grosse Kunden (LH-Group 34%) werden Indexierung kritisch beäugen — Eskalationsstrategie nötig",
+     "Länderspezifische Unterschiede (DE/AT/CH/ES) können einheitliche Durchsetzung erschweren"
+    ],
+    "erfolgsmessung": "Indexierungsquote ≥70% aller verlängerten CLIFF-2027-Verträge bis EOY 2027; €-gewichtete Quote ≥75% von €107M; Tracking je Vertrag im Commercial-Cockpit dokumentiert"
+   }
+  },
+  {
+   "id": "M33",
+   "seq": 33,
+   "quarter": "Q2/27",
+   "workstream": "WS4 Beziehungspflege absichern",
+   "title": "Beziehungs-Cockpit als laufendes Steuerungsinstrument etablieren",
+   "action": "Quartals-Review-Rhythmus im GL-3-Ebenen-Modell aufsetzen: Cockpit-Kennzahlen (Accounts ohne Sponsor, stille Accounts, at-risk mit/ohne Touchpoint) je Quartal reviewen und Maßnahmen aus den 243 offenen Punkten abarbeiten. Tine Petric/Didit stellen automatisches Stille-Alerting sicher, damit reaktivierte Accounts nicht zurückfallen.",
+   "owner": "Michael Haeffner",
+   "start": "2027-01",
+   "due": "2027-06-30",
+   "kpi": "≤10 Accounts ohne Sponsor + ≤10 stille Accounts dauerhaft gehalten; offene Maßnahmen von 243 auf <120 halbiert",
+   "depends_on": "Cadence-Kopplung an CLIFF-2027-Renewal-Wand",
+   "grounding": "85 at-risk / 243 offene Maßnahmen; 66 stille Accounts",
+   "prio": "P3",
+   "status": "offen",
+   "briefing": {
+    "kontext": "85 Kunden sind als at-risk klassifiziert, 66 Accounts gelten als still (kein Touchpoint), und 112 Kunden haben keinen zugewiesenen Sponsor — das sind strukturelle Beziehungslücken die in der CLIFF-2027-Renewal-Wand direkt zu Churn führen können. Dieser Milestone wandelt das bisher punktuelle Beziehungsmanagement in einen institutionalisierten Quartals-Rhythmus mit automatischem Alerting um.",
+    "leistung": [
+     "Quartals-Review-Rhythmus im GL-3-Ebenen-Modell implementiert und dokumentiert",
+     "Stille-Alerting automatisch: reaktivierte Accounts werden durch System überwacht",
+     "Offene Massnahmen von 243 auf <120 halbiert",
+     "≤10 Accounts ohne Sponsor und ≤10 stille Accounts als Dauerziel gehalten"
+    ],
+    "vorgehen": [
+     "Cockpit-Kennzahlen für Quartals-Review definieren: Accounts ohne Sponsor, stille Accounts, at-risk mit/ohne Touchpoint",
+     "Automatisches Stille-Alerting durch Didit/Tine im Cockpit implementieren",
+     "Ersten Quartals-Review Q1/2027 durchführen und Massnahmen-Abarbeitung aus den 243 offenen Punkten priorisieren",
+     "Review-Rhythmus im Governance-Kalender verankern",
+     "Rückfall-Prävention: Reaktivierte Accounts für 2 Quartale auf Beobachtungsliste halten"
+    ],
+    "beteiligte": "Owner: Michael Haeffner; Didit/Tine für automatisches Alerting; Cüneyt Gölcöl und Fritthum im GL-3-Ebenen-Review",
+    "risiken": [
+     "Abhängigkeit von funktionierender CLIFF-2027-Renewal-Cadence — ohne diese läuft der Quartals-Review im Leerlauf",
+     "Halbierung der 243 offenen Massnahmen erfordert konsequente Abarbeitung durch Commercial-Team (Kapazität zu prüfen)",
+     "Automatisches Alerting setzt saubere Datenbasis im CRM voraus (DQ-Monitor als Voraussetzung)"
+    ],
+    "erfolgsmessung": "≤10 Accounts ohne Sponsor und ≤10 stille Accounts dauerhaft gehalten; offene Massnahmen von 243 auf <120 reduziert bis EOY 2027; Quartals-Review 4× in 2027 dokumentiert durchgeführt"
+   }
+  },
+  {
+   "id": "M34",
+   "seq": 34,
+   "quarter": "Q2/27",
+   "workstream": "WS7 Governance / Steuerung",
+   "title": "Masterplan-Review-Cadence gegen die Cliff-Wand etabliert",
+   "action": "Fixen monatlichen Cockpit-Review (C-Level + Commercial) institutionalisieren, der die Renewal-Wand steuert: CLIFF-2027 (€107M/94 Verträge) und OPEN (€91M/148 Verträge) als stehende Traktanden mit Fortschritts-KPI, dokumentiert im Governance-Kalender. Erste Sitzung Q1 2027, dann monatlich bis Ende 2027.",
+   "owner": "Dieter Streuli",
+   "start": "2027-01",
+   "due": "2027-06-30",
+   "kpi": "12 dokumentierte Monats-Reviews in 2027; OPEN-Volumen €91M von 148 Verträgen bis EOY 2027 auf < €30M geklärt; CLIFF-2027-Renewal-Quote getrackt",
+   "depends_on": "Cockpit als Steuerinstrument im 3-Ebenen-Modell verankert",
+   "grounding": "CLIFF-2027 €107M / 94 Verträge; OPEN €91M / 148 Verträge; FIXED ≥2029 nur €21M / 36",
+   "prio": "P1",
+   "status": "offen",
+   "briefing": {
+    "kontext": "CLIFF-2027 (€107M/94 Verträge) und OPEN (€91M/148 Verträge) sind die beiden grössten Risikoblöcke im AXS-Portfolio — zusammen €198M, die bis EOY 2027 aktiv gesteuert werden müssen. Heute fehlt ein institutionalisierter Steuerungsrhythmus auf C-Level. Dieser Milestone verankert einen monatlichen Cockpit-Review als festes Governance-Instrument, das die Renewal-Wand auf Führungsebene steuert.",
+    "leistung": [
+     "12 dokumentierte Monats-Reviews in 2027 mit C-Level + Commercial durchgeführt",
+     "OPEN-Volumen €91M/148 Verträge bis EOY 2027 auf <€30M ungeklärtes Restvolumen reduziert",
+     "CLIFF-2027-Renewal-Quote monatlich getrackt und dokumentiert",
+     "Erste Sitzung Q1/2027 institutionalisiert"
+    ],
+    "vorgehen": [
+     "Monatlichen Cockpit-Review-Termin mit C-Level (DRS) und Commercial (Haeffner) im Governance-Kalender fixieren",
+     "Agenda-Template für Review definieren: CLIFF-2027-Fortschritt, OPEN-Status, Eskalationen, Massnahmen",
+     "Ersten Review Q1/2027 durchführen und Baseline dokumentieren",
+     "OPEN-Verträge in Review als stehendes Traktandum mit Klärungsziel bis EOY 2027 führen",
+     "Dokumentation jedes Reviews im Governance-System sicherstellen"
+    ],
+    "beteiligte": "Owner: Dieter Streuli (Chairman); Michael Haeffner (Commercial); Cüneyt Gölcöl (CEO); Cockpit-Daten via Didit/Tine",
+    "risiken": [
+     "Abhängigkeit davon, dass das CRM-Cockpit als Steuerinstrument im 3-Ebenen-Modell bereits verankert ist",
+     "Ohne konsequente Dokumentation der Reviews ist Governance-Nachweis nicht erbringbar",
+     "Kapazität DRS als Chairman für 12 monatliche Reviews zu sichern"
+    ],
+    "erfolgsmessung": "12 dokumentierte Monats-Reviews in 2027 nachweisbar; OPEN-Volumen von €91M/148 Verträgen auf <€30M ungeklärtes Restvolumen bis EOY 2027 reduziert; CLIFF-2027-Renewal-Quote in jedem Review aktualisiert"
+   }
+  },
+  {
+   "workstream": "WS1 Cliff-2027-Offensive",
+   "quarter": "Q2/27",
+   "title": "Cliff-2028 früh angehen (Pull-Forward)",
+   "action": "Die €52M/47 Verträge der 2028-Wand nach Wert ranken und Renewal-Start ≥12 Monate vor Ablauf beginnen — damit sich das Cliff-Muster nicht wiederholt.",
+   "owner": "Commercial (Cüneyt/Himm/Eslava)",
+   "start": "2027-06",
+   "due": "2027-06-30",
+   "kpi": "€52M/47 Verträge 2028 gerankt; Top-20 mit Renewal-Start ≥12 Mt vor Ablauf",
+   "prio": "P2",
+   "grounding": "CLIFF-2028 €52M / 47 Verträge (im Snapshot, bisher unadressiert)",
+   "depends_on": "Cliff-2027-Wertliste & Sponsor-Zuordnung fixieren",
+   "id": "M35",
+   "seq": 35,
+   "status": "offen",
+   "briefing": {
+    "kontext": "Das Cliff-Muster — konzentrierte Vertragsausläufe die reaktiv und unter Zeitdruck verlängert werden — soll sich nach CLIFF-2027 nicht wiederholen. CLIFF-2028 umfasst bereits €52M/47 Verträge. Indem Renewal-Prozesse ≥12 Monate vor Ablauf gestartet werden, gewinnt AXS Verhandlungsspielraum und vermeidet den nächsten Notfall-Modus.",
+    "leistung": [
+     "Alle 47 CLIFF-2028-Verträge nach €-Wert gerankt",
+     "Top-20 Verträge mit dokumentiertem Renewal-Start ≥12 Monate vor Ablauf",
+     "Renewal-Frühstart als Standard-Prozess für künftige Cliff-Wände etabliert"
+    ],
+    "vorgehen": [
+     "CLIFF-2028-Verträge (€52M/47) aus CRM exportieren und nach €-Wert ranken",
+     "Top-20 Verträge identifizieren und Renewal-Start-Datum auf ≥12 Monate vor Ablauf setzen",
+     "Zuständige Commercial-Verantwortliche (Himm, Eslava je Station) zuweisen",
+     "Renewal-Frühstart in Governance-Kalender und CRM-Cockpit als Pflichttermin verankern",
+     "Erfahrungen aus CLIFF-2027-Abwehr als Playbook für 2028-Vorbereitung nutzen"
+    ],
+    "beteiligte": "Owner: Commercial-Team (Cüneyt Gölcöl, Himm, Eslava); Michael Haeffner für Gesamtkoordination",
+    "risiken": [
+     "Abhängigkeit von vollständiger CLIFF-2027-Wertliste und Sponsor-Zuordnung — ohne diese ist ein analoges Ranking für 2028 nicht möglich",
+     "Kapazitäts-Engpass: Wenn CLIFF-2027-Abwehr noch läuft, fehlen Ressourcen für parallelen 2028-Vorlauf",
+     "CLIFF-2028-Volumen (€52M) kann sich durch Neuabschlüsse oder Churn bis Mitte 2027 noch verschieben"
+    ],
+    "erfolgsmessung": "€52M/47 CLIFF-2028-Verträge vollständig gerankt; Top-20 mit dokumentiertem Renewal-Start ≥12 Monate vor Ablauf bis 31.12.2027 im CRM hinterlegt"
+   }
+  },
+  {
+   "workstream": "WS6 Preis- & Datenqualität",
+   "quarter": "Q3/26",
+   "title": "Standard-Indexierungsklausel Legal-freigeben",
+   "action": "Amélie Charisius (Legal) prüft die Standard-CPI/CBA-Indexierungsklausel auf SGHA/IATA-Konformität und Kartellrecht bei CBA-Weitergabe über DE/AT/CH/ES — Freigabe VOR Rollout in die Renewals.",
+   "owner": "Amélie Charisius (Legal)",
+   "start": "sofort",
+   "due": "2026-09-30",
+   "kpi": "Rechtlich freigegebene, länderkonforme Standard-Indexierungsklausel liegt vor",
+   "prio": "P1",
+   "grounding": "Indexierung über 4 Länder (DE/AT/CH/ES); Legal bisher nicht eingebunden",
+   "depends_on": "",
+   "id": "M36",
+   "seq": 36,
+   "status": "offen",
+   "briefing": {
+    "kontext": "Die fehlende Indexierung (CPI/CBA) ist ein strukturelles Ertragsleck im AXS-Vertragsportfolio: Kosten steigen mit Inflation und Tarifabschlüssen, während Vertragserlöse stagnieren. Bevor die Standard-Indexierungsklausel in Renewals ausgerollt werden kann, muss sie rechtlich geprüft und freigegeben sein — insbesondere auf SGHA/IATA-Konformität und kartellrechtliche Zulässigkeit der CBA-Weitergabe in allen vier Ländern (DE/AT/CH/ES). Legal war bisher nicht eingebunden.",
+    "leistung": [
+     "Rechtlich freigegebene, länderkonforme Standard-Indexierungsklausel (CPI und/oder CBA) liegt vor",
+     "Klarheit über kartellrechtliche Zulässigkeit der CBA-Weitergabe in DE/AT/CH/ES",
+     "SGHA/IATA-Konformität der Klausel bestätigt",
+     "Klausel einsatzbereit für Rollout in CLIFF-2027-Verhandlungen"
+    ],
+    "vorgehen": [
+     "Amélie Charisius (Legal) beauftragt die Prüfung der Standard-Indexierungsklausel auf SGHA/IATA-Konformität",
+     "Kartellrechtliche Zulässigkeit der CBA-Weitergabe in DE, AT, CH und ES je Land prüfen lassen",
+     "Klausel-Entwurf mit Commercial (Haeffner) abstimmen: praktisch handhabbar und verhandelbar",
+     "Externe Kanzleien in DE/AT/ES einbinden falls länderspezifische Rechtsexpertise fehlt (zu klären)",
+     "Freigegebene Klausel dokumentieren und für Rollout in Verhandlungsunterlagen bereitstellen"
+    ],
+    "beteiligte": "Owner: Amélie Charisius (CHRO & Legal); Michael Haeffner (Commercial, als Auftraggeber); externe Kanzleien DE/AT/ES (zu klären ob nötig)",
+    "risiken": [
+     "Kartellrechtliches Risiko bei CBA-Weitergabe ist in mehreren Ländern regulatorisch unterschiedlich bewertet — externe Expertise möglicherweise nötig",
+     "Zeitrisiko: Freigabe muss vor dem Rollout in CLIFF-2027-Verhandlungen vorliegen — Verzögerungen blockieren den Indexierungs-Rollout",
+     "Faktische Voraussetzung für alle Indexierungs-Milestones"
+    ],
+    "erfolgsmessung": "Rechtlich freigegebene, länderkonforme Standard-Indexierungsklausel liegt bis 30.09.2026 vor und ist einsatzbereit für den Rollout in CLIFF-2027-Renewal-Verhandlungen"
+   }
+  },
+  {
+   "workstream": "WS7 Governance / Steuerung",
+   "quarter": "Q3/26",
+   "title": "Commercial-Daten-Kapazität sichern (Haeffner-Entlastung)",
+   "action": "Kapazitätsprüfung: Haeffners ~13 parallele Milestones auf mindestens 2 weitere Owner/Ressourcen verteilen (Himm/Eslava/Strauß + ggf. Aufstockung), damit kein Single-Point-of-Failure entsteht.",
+   "owner": "Dieter Streuli",
+   "start": "sofort",
+   "due": "2026-08-15",
+   "kpi": "Kein Owner trägt >6 P1-Milestones parallel; Reallokation dokumentiert",
+   "prio": "P1",
+   "grounding": "Haeffner Owner von ~13 Milestones = SPOF/Engpass",
+   "depends_on": "",
+   "id": "M37",
+   "seq": 37,
+   "status": "offen",
+   "briefing": {
+    "kontext": "Haeffner trägt als Single Owner rund 13 parallele P1-Milestones im Commercial-Masterplan — ein klassischer Single-Point-of-Failure in einem Programm, das €278M Forecast und kritische Renewal-Wellen (Cliff-2027: €107M) steuern muss. Fällt Haeffner aus oder ist dauerhaft überlastet, stocken gleichzeitig Vertragssicherung, Datenqualität und Kundenbeziehungen. Der Milestone zielt darauf ab, dieses Konzentrationsrisiko durch Umverteilung auf Himm, Eslava und Strauß zu beseitigen.",
+    "leistung": [
+     "Kapazitätsanalyse: aktuelle P1-Milestone-Last je Owner dokumentiert",
+     "Reallokationsplan: Haeffners Milestones auf mindestens 2 weitere Owner (Himm/Eslava/Strauß) verteilt, sodass kein Owner >6 P1-Milestones parallel trägt",
+     "Dokumentierte Zuweisung: neue Owner-Zuordnung je Milestone schriftlich festgehalten"
+    ],
+    "vorgehen": [
+     "Aktuelle Milestone-Liste mit Owner-Zuordnung und Prioritäten auflisten (Haeffner: ~13, Rest: zu erheben)",
+     "Kapazität und Kompetenz von Himm, Eslava und Strauß je Milestone-Typ bewerten",
+     "Reallokationsvorschlag erstellen: welche Milestones gehen an wen, Begründung",
+     "Alignment mit Haeffner und den neuen Ownern sicherstellen (Übergabe-Briefing)",
+     "Dokumentation finalisieren und im Masterplan nachführen"
+    ],
+    "beteiligte": "Owner: Dieter Streuli. Mitwirkend: Haeffner (bisheriger Owner, Übergabe), Himm, Eslava, Strauß (neue Owner). Ggf. Cüneyt Gölcöl (Eskalation/Freigabe operative Ressourcen).",
+    "risiken": [
+     "Himm/Eslava/Strauß haben ebenfalls begrenzte Kapazität — Risiko, dass Reallokation nur das Problem verschiebt (Kapazitätsprüfung ist Voraussetzung, nicht Formalität)",
+     "Haeffner-Wissen über laufende Vertragsdetails ist schwer übertragbar — Wissenstransfer muss explizit eingeplant werden",
+     "Frist 15.08. ist eng bei sofortiger Startanweisung; Verzögerung durch Ferienabwesenheiten im Sommer möglich"
+    ],
+    "erfolgsmessung": "Kein Owner trägt mehr als 6 P1-Milestones parallel; Reallokation ist in der Masterplan-Dokumentation nachvollziehbar festgehalten. Messung: Zählung P1-Milestones je Owner nach Reallokation, Stichtag 15.08.2026."
+   }
+  },
+  {
+   "workstream": "WS4 Beziehungspflege absichern",
+   "quarter": "Q1/27",
+   "title": "Frühwarn-/Churn-Trigger aufsetzen",
+   "action": "Automatisiertes Frühwarnsystem, das Abwanderungssignale (RFP-Ausschreibung, Wettbewerber-Kontakt, Volumen-/Turn-Rückgang) VOR der Kündigung meldet — Alert auf die at-risk-Accounts.",
+   "owner": "Didit/Tine",
+   "start": "2026-11",
+   "due": "2027-03-31",
+   "kpi": "Frühwarn-Alert für alle 85 at-risk-Verträge aktiv; Signal im Schnitt ≥60 T vor Kündigung",
+   "prio": "P2",
+   "grounding": "85 at-risk; Churn 32 — bisher nur reaktive Stille-Alerts",
+   "depends_on": "Bidirektionaler Odoo-Cockpit-Sync scharf geschaltet",
+   "id": "M38",
+   "seq": 38,
+   "status": "offen",
+   "briefing": {
+    "kontext": "Von 338 Verträgen gelten 85 als at-risk, und bereits 32 Kunden sind abgewandert (Churn 32). Bisher reagiert das Commercial-Team erst auf Kündigungen — es gibt kein System, das Abwanderungssignale wie RFP-Ausschreibungen, Wettbewerber-Kontakt oder Volumenrückgang frühzeitig erkennt. Ein Frühwarnsystem soll die Reaktionszeit von reaktiv auf präventiv umstellen, damit Gegenmassnahmen greifen, bevor die Kündigung ausgesprochen ist.",
+    "leistung": [
+     "Frühwarn-Alert-System aktiv für alle 85 at-risk-Verträge",
+     "Signale im Durchschnitt ≥60 Tage vor Kündigung erkannt und gemeldet",
+     "Integration der Alerts in das bestehende Odoo-Cockpit (nach Sync-Schaltung)"
+    ],
+    "vorgehen": [
+     "Abwanderungssignale definieren (RFP-Erkennung, Volumen-/Turn-Rückgang-Schwellen, Wettbewerber-Kontaktmuster)",
+     "Datenquellen für Signal-Erkennung identifizieren und Zugang sicherstellen (Abhängigkeit: bidirektionaler Odoo-Cockpit-Sync muss scharf sein)",
+     "Technische Implementierung des Alert-Systems (Didit/Tine) — Regeln, Schwellenwerte, Empfänger",
+     "Pilotbetrieb mit Subset at-risk-Accounts; Signal-Qualität validieren",
+     "Rollout auf alle 85 at-risk-Verträge; Prozess für Account-Owner bei Alert-Eingang definieren"
+    ],
+    "beteiligte": "Owner: Didit/Tine. Mitwirkend: Commercial-Team (Haeffner/Himm/Eslava/Strauß) für Signal-Definition und Alert-Empfang; Pajor/Finance für Volumen-Daten (zu klären).",
+    "risiken": [
+     "Abhängigkeit von bidirektionalem Odoo-Cockpit-Sync: ohne funktionierenden Sync fehlen die Echtzeit-Daten für Signal-Erkennung",
+     "Definition aussagekräftiger Frühwarnsignale ist fachlich anspruchsvoll — Fehlalarme (False Positives) können Akzeptanz des Systems gefährden",
+     "Start erst 2026-11: Monate ohne Frühwarnung bei laufendem Cliff-2027-Risiko"
+    ],
+    "erfolgsmessung": "Frühwarn-Alert aktiv für alle 85 at-risk-Verträge; nachgewiesene durchschnittliche Lead-Time ≥60 Tage zwischen erstem Signal und Kündigung. Messung: Alert-Log mit Timestamp Signal vs. Timestamp Kündigung."
+   }
+  },
+  {
+   "workstream": "WS7 Governance / Steuerung",
+   "quarter": "Q3/26",
+   "title": "Net-Retention-Zielgrösse festlegen",
+   "action": "Konzern-Retention-Rate-Ziel definieren: wieviel Prozent des €278M-Forecasts über 2027 hinaus gehalten werden müssen — als monatlich getrackte Top-Line-KPI.",
+   "owner": "Stephanie Rohde",
+   "start": "sofort",
+   "due": "2026-08-31",
+   "kpi": "Net-Retention-Ziel schriftlich fixiert + monatlicher Track etabliert",
+   "prio": "P1",
+   "grounding": "€278M Forecast — kein Top-Line-Retention-Ziel im Plan",
+   "depends_on": "",
+   "id": "M39",
+   "seq": 39,
+   "status": "offen",
+   "briefing": {
+    "kontext": "Der AXS-Konzern hat mit €278M Forecast 2026 eine definierte Top-Line-Planung, aber kein explizites Net-Retention-Ziel — es ist nicht festgelegt, wieviel Prozent dieses Volumens über 2027 hinaus gehalten werden müssen. Angesichts des Cliff-2027 (€107M/94 Verträge auslaufend) und OPEN-Risiko (€91M/148 Verträge ohne gesichertes Renewal) fehlt ein steuerbarer KPI, der Retention als strategische Grösse im Monatsbericht verankert.",
+    "leistung": [
+     "Schriftlich fixiertes Net-Retention-Ziel (%-Satz des €278M-Forecasts, der über 2027 hinaus gehalten werden muss)",
+     "Monatlicher Tracking-Mechanismus etabliert (Bericht, Verantwortliche, Format)"
+    ],
+    "vorgehen": [
+     "Analyse der Retention-Risikobasis: Cliff-2027 €107M + OPEN €91M als Ausgangspunkt",
+     "Net-Retention-Ziel ableiten und mit Konzernstrategie/Budget abgleichen",
+     "Ziel mit Dieter Streuli und Cüneyt Gölcöl abstimmen und schriftlich fixieren",
+     "Monatliches Tracking-Format definieren (wer berichtet, an wen, in welchem Report)",
+     "Im nächsten Monthly Report erstmals ausweisen"
+    ],
+    "beteiligte": "Owner: Stephanie Rohde (CFO). Mitwirkend: Dieter Streuli (Freigabe Ziel), Cüneyt Gölcöl (operative Verankerung); Commercial-Team für Datenbasis.",
+    "risiken": [
+     "Ziel-Definition erfordert strategischen Konsens zwischen Finance, Commercial und Chairman — Abstimmungsbedarf kann Frist 31.08. gefährden",
+     "Ohne belastbare Datenbasis (insb. €-Wert-Lücken bei 72 Kunden noch offen) ist das Ziel auf unvollständiger Basis gesetzt",
+     "Monatlicher Tracking-Mechanismus ist nur wirkungsvoll, wenn operativ Verantwortliche die Zahl aktiv managen — organisatorische Verankerung zu sichern"
+    ],
+    "erfolgsmessung": "Net-Retention-Ziel schriftlich dokumentiert (Beschluss oder Memo); monatlicher Tracking-Report erstmals im August/September 2026 ausgewiesen."
+   }
+  },
+  {
+   "workstream": "WS6 Preis- & Datenqualität",
+   "quarter": "Q1/27",
+   "title": "Marge/Cost-to-Serve je Vertrag tracken",
+   "action": "Profitabilität je Station/Kunde ausweisen (Cost-to-Serve), damit gesicherte Verträge nach Marge und nicht nur nach Volumen bewertet werden.",
+   "owner": "Finance (Pajor)",
+   "start": "2026-11",
+   "due": "2027-03-31",
+   "kpi": "Marge/Cost-to-Serve je Top-Vertrag im Cockpit; Volumen-vs-Marge-Sicht",
+   "prio": "P2",
+   "grounding": "Alle KPIs messen €-Volumen, nicht Marge (blinder Fleck)",
+   "depends_on": "€-Wert-Lücken bei 72 Kunden schliessen",
+   "id": "M40",
+   "seq": 40,
+   "status": "offen",
+   "briefing": {
+    "kontext": "Alle bisherigen Commercial-KPIs messen Umsatzvolumen in Euro — die Profitabilität je Vertrag und Station ist nicht sichtbar. Das führt dazu, dass Renewals und Neukunden-Prioritäten nach Volumen und nicht nach Marge gesteuert werden: ein volumenstarker, aber margenschwacher Vertrag könnte aktiv priorisiert werden, während profitable Kleinverträge vernachlässigt werden. Dieser blinde Fleck wird durch den Milestone mit einer Cost-to-Serve-Sicht je Top-Vertrag/Station adressiert.",
+    "leistung": [
+     "Marge/Cost-to-Serve je Top-Vertrag im CRM-Cockpit ausgewiesen",
+     "Volumen-vs-Marge-Sicht als ergänzende Perspektive im Commercial Reporting verfügbar"
+    ],
+    "vorgehen": [
+     "Cost-to-Serve-Methodik je Station/Leistungsart definieren (Kostenallokations-Logik klären)",
+     "Datenabgleich: €-Wert-Lücken bei 72 Kunden müssen vorher geschlossen sein (Abhängigkeit)",
+     "Pilotberechnung für Top-Verträge (nach Volumen) durchführen",
+     "Ergebnis ins CRM-Cockpit integrieren (Didit/Tine für technische Umsetzung)",
+     "Validierung mit Finance (Pajor) und Commercial-Team"
+    ],
+    "beteiligte": "Owner: Finance (Pajor). Mitwirkend: Didit/Tine (Cockpit-Integration); Commercial-Team für Vertrags-Kontext; Stephanie Rohde (CFO, Freigabe Methodik).",
+    "risiken": [
+     "Abhängigkeit: €-Wert-Lücken bei 72 Kunden müssen geschlossen sein — ohne vollständige Umsatzbasis ist Cost-to-Serve-Berechnung unvollständig",
+     "Cost-to-Serve-Allokation auf Station-/Vertragsebene ist methodisch komplex und erfordert Abstimmung mit Finance (Zeitaufwand zu planen)",
+     "Start erst 2026-11 — erste Marge-Sicht steht erst Q1/2027 zur Verfügung; bis dahin weiterhin Volumen-blinde Steuerung"
+    ],
+    "erfolgsmessung": "Marge/Cost-to-Serve je Top-Vertrag im Cockpit abrufbar; Volumen-vs-Marge-Sicht nachweislich im Commercial Reporting vorhanden bis 31.03.2027."
+   }
+  },
+  {
+   "workstream": "WS6 Preis- & Datenqualität",
+   "quarter": "Q4/26",
+   "title": "Marktpreis-Benchmark vor Re-Pricing",
+   "action": "Wettbewerbs-Preisbenchmark (Swissport/Aviapartner) je Leistungsart erstellen, damit Re-Pricing nicht unter Marktniveau verhandelt wird.",
+   "owner": "Commercial (Cüneyt/Himm/Eslava)",
+   "start": "2026-09",
+   "due": "2026-12-31",
+   "kpi": "Preisbenchmark je Leistungsart vorliegend; in Renewal-Battlecards integriert",
+   "prio": "P2",
+   "grounding": "Indexierung stoppt Erosion, aber kein Marktbenchmark",
+   "depends_on": "",
+   "id": "M41",
+   "seq": 41,
+   "status": "offen",
+   "briefing": {
+    "kontext": "Im Rahmen der Re-Pricing-Initiativen (CPI/CBA-Indexierung) werden Preisanpassungen mit Kunden verhandelt. Ohne Marktbenchmark besteht das Risiko, dass AXS unter Marktniveau verhandelt — entweder aus Unwissenheit über Wettbewerbspreise (Swissport, Aviapartner) oder weil Kunden Preissenkungen fordern und kein Gegenargument vorliegt. Ein Wettbewerbs-Preisbenchmark je Leistungsart soll diesen Verhandlungsnachteil beseitigen.",
+    "leistung": [
+     "Wettbewerbs-Preisbenchmark (Swissport/Aviapartner) je Leistungsart erstellt",
+     "Benchmark in Renewal-Battlecards integriert und für Verhandlungsführer verfügbar"
+    ],
+    "vorgehen": [
+     "Leistungsarten definieren, für die ein Benchmark relevant ist",
+     "Marktpreise Swissport und Aviapartner je Leistungsart erheben (Methode zu klären: öffentliche Ausschreibungen, Branchenquellen, eigene Erfahrungswerte aus Verhandlungen)",
+     "Benchmark-Tabelle je Leistungsart erstellen und mit AXS-Preisen vergleichen",
+     "Erkenntnisse in bestehende Renewal-Battlecards einarbeiten",
+     "Verhandlungsführer (Himm/Eslava/Haeffner/Strauß) mit Benchmark briefen"
+    ],
+    "beteiligte": "Owner: Commercial (Cüneyt Gölcöl/Himm/Eslava). Mitwirkend: Haeffner, Strauß (Praxiswissen aus Verhandlungen); Marktdatenquellen zu klären.",
+    "risiken": [
+     "Marktpreise von Wettbewerbern (Swissport/Aviapartner) sind nicht öffentlich — Datenbeschaffung methodisch aufwändig; Qualität und Aktualität des Benchmarks unsicher",
+     "Benchmark kann schnell veralten (Preisbewegungen im Markt) — Aktualisierungs-Rhythmus muss definiert werden",
+     "Ohne standardisierte Leistungskategorien ist Benchmark schwer vergleichbar; Kategorisierung als Vorarbeit notwendig"
+    ],
+    "erfolgsmessung": "Preisbenchmark je Leistungsart dokumentiert und in Renewal-Battlecards integriert; Verhandlungsführer nachweislich gebrieft bis 31.12.2026."
+   }
+  },
+  {
+   "workstream": "WS7 Governance / Steuerung",
+   "quarter": "Q4/26",
+   "title": "Daten-Rückfall-Monitor (kontinuierlich)",
+   "action": "Kontinuierlicher Check gegen Regression: frisch geschlossene €-Wert-/Index-Lücken dürfen nicht unbemerkt re-öffnen — Alert bei Rückfall, schliesst die 6-Monats-Lücke zwischen Sync und Dauer-Monitor.",
+   "owner": "Didit/Tine",
+   "start": "2026-10",
+   "due": "2026-12-31",
+   "kpi": "Automatischer Regressions-Alert aktiv; 0 unbemerkte Re-Öffnungen",
+   "prio": "P2",
+   "grounding": "6-Monats-Lücke Sync (Q3/26) → Dauer-Monitor (Q2/27)",
+   "depends_on": "€-Wert-Lücken bei 72 Kunden schliessen",
+   "id": "M42",
+   "seq": 42,
+   "status": "offen",
+   "briefing": {
+    "kontext": "Im Q3/2026 werden €-Wert-Lücken bei 72 Kunden durch einen Daten-Sync geschlossen. Danach besteht eine Lücke von rund 6 Monaten bis zum geplanten Dauer-Monitor (Q2/2027), in der bereits geschlossene Datenlücken unbemerkt wieder aufreissen können — z.B. durch Datenmigration, manuelle Fehler oder fehlende Pflege. Dieser Milestone schliesst diese Überwachungslücke durch einen automatischen Regressions-Alert.",
+    "leistung": [
+     "Automatischer Regressions-Alert aktiv, der frisch geschlossene €-Wert- und Index-Lücken auf Wiederöffnung überwacht",
+     "0 unbemerkte Re-Öffnungen von Datenlücken ab Alert-Aktivierung"
+    ],
+    "vorgehen": [
+     "Definition: welche Datenfelder/Qualitätskriterien nach dem Sync als 'geschlossen' gelten (Baseline-Snapshot erstellen)",
+     "Alert-Logik implementieren: automatischer Vergleich aktueller Datenstand vs. Baseline; Schwellenwert für Alert-Triggerung festlegen",
+     "Empfänger und Eskalationspfad bei Alert definieren",
+     "Pilotbetrieb nach Q3-Sync; erste Alert-Reaktion testen",
+     "Dauerhafte Aktivierung bis 31.12.2026"
+    ],
+    "beteiligte": "Owner: Didit/Tine. Mitwirkend: Commercial-Team (Validierung Baseline-Definition); Finance/Pajor für €-Wert-Felder.",
+    "risiken": [
+     "Abhängigkeit: €-Wert-Lücken bei 72 Kunden müssen erst durch vorgelagerten Sync geschlossen sein — verzögert sich der Sync, verschiebt sich auch dieser Milestone",
+     "Alert-Logik muss die richtigen Felder überwachen — unvollständige Definition führt zu blindem Fleck trotz aktivem System",
+     "False-Negative-Risiko: Alert reagiert nicht auf alle Formen von Datenregression, wenn Regeln zu eng definiert sind"
+    ],
+    "erfolgsmessung": "Automatischer Regressions-Alert technisch aktiv und dokumentiert; Nachweis, dass nach Aktivierung keine unbemerkte Re-Öffnung von Datenlücken aufgetreten ist bis 31.12.2026."
+   }
+  },
+  {
+   "workstream": "WS3 LH-Klumpen / Diversifikation",
+   "quarter": "Q4/26",
+   "title": "Kontingenzpfad LH-Anker-Verlust",
+   "action": "Dokumentierter Notfall-/Kontingenzplan für den Fall eines gescheiterten LH-Multi-Year-Gesprächs (Materialisierung des €96M-Klumpenrisikos): Ersatz-/Diversifikations-Szenario + Entscheidungs-/Eskalationspfad.",
+   "owner": "Dieter Streuli",
+   "start": "2026-09",
+   "due": "2026-12-31",
+   "kpi": "Kontingenzplan LH-Verlust im VR dokumentiert; Diversifikations-Szenario beziffert",
+   "prio": "P2",
+   "grounding": "LH-Group 34% / €96M — kein Notfallpfad bei Anker-Verlust",
+   "depends_on": "LH-Group Sponsor-Governance & Account-Plan aktivieren",
+   "id": "M43",
+   "seq": 43,
+   "status": "offen",
+   "briefing": {
+    "kontext": "Die LH-Group steht für 34% / €96M des AXS-Forecasts und stellt damit das grösste Einzelklumpenrisiko dar. Laufen die Multi-Year-Gespräche mit LH auf ein Scheitern oder verzögern sich, trifft der Umsatzausfall den Konzern mit voller Wucht — ohne vorbereitetes Ersatz-/Diversifikationsszenario. Bisher existiert kein dokumentierter Notfallpfad für diesen Fall, was die Reaktionsfähigkeit im Ernstfall einschränkt.",
+    "leistung": [
+     "Dokumentierter Kontingenzplan für den Fall eines gescheiterten oder verzögerten LH-Multi-Year-Gesprächs",
+     "Diversifikations-Szenario (Ersatzumsatz/-volumen) quantifiziert und im Plan beziffert",
+     "Entscheidungs- und Eskalationspfad definiert"
+    ],
+    "vorgehen": [
+     "Risikoszenario scharf definieren: Was gilt als 'gescheitertes LH-Gespräch'? (Kündigung, Nicht-Renewal, Volumenreduktion — Kriterien festlegen)",
+     "Finanziellen Impact je Szenario beziffern (Teilrisiko vs. Vollrisiko €96M)",
+     "Diversifikations-Optionen und Ersatzumsatz-Potenziale identifizieren (welche anderen Kunden/Stationen kurzfristig skalierbar)",
+     "Entscheidungs- und Eskalationspfad formulieren (ab wann wird Plan aktiviert, wer entscheidet)",
+     "Kontingenzplan im VR dokumentieren und beschliessen"
+    ],
+    "beteiligte": "Owner: Dieter Streuli. Mitwirkend: Cüneyt Gölcöl (operative Einschätzung Diversifikations-Optionen); Stephanie Rohde (Finance-Impact-Berechnung); Andreas Fritthum (VR-Einbindung als Vice Chairman).",
+    "risiken": [
+     "Abhängigkeit vom LH-Account-Plan — ohne Klarheit über laufende LH-Gespräche fehlt die Entscheidungsgrundlage für den Kontingenzplan",
+     "Diversifikations-Szenarien sind nur glaubwürdig, wenn alternative Kunden/Stationen mit konkretem Potenzial belegt sind — sonst bleibt der Plan Papier",
+     "LH-Beziehungspflege und Kontingenzplanung dürfen nicht in Konflikt geraten: zu offensiver Kontingenzplan könnte als Vertrauensbruch gegenüber LH wirken (interne Vertraulichkeit sicherstellen)"
+    ],
+    "erfolgsmessung": "Kontingenzplan LH-Verlust im VR dokumentiert; Diversifikations-Szenario mit konkreten €-Zahlen beziffert; Vorlage und Abnahme des Plans im VR bis 31.12.2026."
+   }
+  }
+ ],
+ "endstate": {
+  "northstar": "Das AXS Commercial-CRM ist die eine, verlässliche, gruppenweit genutzte Steuerungsplattform für das Kundengeschäft — betrieben, adoptiert, selbsttragend.",
+  "why": [
+   "Sofort — die Blutung stoppen: €107M Cliff-2027, Preiserosion, Churn.",
+   "Strukturell — das existenzielle Klumpenrisiko (LH 34%/€96M) entschärfen und eine diversifizierte, dauerhafte Basis bauen.",
+   "Strategisch — die Commercial-Basis transparent + steuerbar machen = Fundament für die AXS-Wachstumsstrategie (Top-3 EU / >€600M bis 2030) und höhere Bewertung/Finanzierbarkeit.",
+   "Enterprise — das CRM ist das AI-first-Flaggschiff und das VR-Steuerinstrument über den grössten Werttreiber: Commercial wird strategisch statt reaktiv."
+  ],
+  "items": [
+   {
+    "id": "E1",
+    "dim": "Datenbasis",
+    "text": "Single Source of Truth live: Odoo ↔ Master-Index bidirektional synchron über kanonische IDs; kein Drift",
+    "status": "erreicht"
+   },
+   {
+    "id": "E2",
+    "dim": "Datenbasis",
+    "text": "Vertragsdaten vollständig: €-Wert · Laufzeit · Indexierung · Owner · Station je aktivem Vertrag; Pflichtfeld-Lücken 0",
+    "status": "erreicht"
+   },
+   {
+    "id": "E3",
+    "dim": "Cockpit",
+    "text": "Eine Oberfläche vereint Dokument-/Wert- und Beziehungs-/Pipeline-/Churn-Sicht für ALLE Kunden",
+    "status": "offen"
+   },
+   {
+    "id": "E4",
+    "dim": "Cockpit",
+    "text": "Grounded Chatbot ≥90% verlässlich, quellenbelegt, GL-tauglich",
+    "status": "teilweise"
+   },
+   {
+    "id": "E5",
+    "dim": "Cockpit",
+    "text": "Risiko/Masterplan als lebendes, getracktes Steuerinstrument",
+    "status": "offen"
+   },
+   {
+    "id": "E6",
+    "dim": "Governance",
+    "text": "Produktiv gehostet, GL-Zugang via Workspace-SSO (cross-domain), RBAC/Audit/DSGVO — kein Laptop",
+    "status": "teilweise"
+   },
+   {
+    "id": "E7",
+    "dim": "Governance",
+    "text": "Governance-Cadence: Quartals-Commercial-/VR-Review auf Cockpit-Basis",
+    "status": "teilweise"
+   },
+   {
+    "id": "E8",
+    "dim": "Adoption",
+    "text": "Aktiv genutzt: Commercial-Team + GL arbeiten IM System; Entscheidungsquelle",
+    "status": "teilweise"
+   },
+   {
+    "id": "E9",
+    "dim": "Betrieb",
+    "text": "Selbsttragend: Auto-Sync/Refresh · Frühwarn-Trigger · Regressions-Monitor",
+    "status": "erreicht"
+   },
+   {
+    "id": "E10",
+    "dim": "Wertschöpfung",
+    "text": "Speist AI@AXS (Pricing/Forecasting/Inquiry Manager) als Datengrundlage",
+    "status": "teilweise"
+   }
+  ]
+ }
+}

@@ -1,0 +1,655 @@
+{
+  "agendas": [
+    {
+      "meeting_id": "shift-huddle",
+      "dauer": "~10 Min (je Schicht, stehend)",
+      "vorsitz": "Stationsleiter",
+      "teilnehmer": "Stationsleiter + Schicht-Team (aggregierte Sicht, kein MA-Personenbezug — DE §87 BetrVG / AT §96 ArbVG)",
+      "standing_rule": "Stehend, max. 10 Min, kein Sitzen, kein neues Gremium: Kern-KPIs + Vorkommnisse + Tagesziel — alles andere wird zum Commitment oder eskaliert an den COO, nichts bleibt liegen.",
+      "traktanden": [
+        {
+          "nr": 1,
+          "titel": "Commitment-Check Vorschicht (offene Punkte zuerst)",
+          "zeit": "2 Min",
+          "verantwortlich": "Stationsleiter",
+          "output": "Erledigt/offen je Punkt → Station-Commitment-Log (dockt an Gruppen-Tracker im RUBICON Control Tower an, kein Parallelsystem)"
+        },
+        {
+          "nr": 2,
+          "titel": "Ops-Kern-KPIs letzte Schicht: Pünktlichkeit/Turnaround (G31-39/DG52), Ground Damage, Baggage Mishandling, Safety-Findings",
+          "zeit": "3 Min",
+          "verantwortlich": "Stationsleiter",
+          "output": "Aggregierte KPI-Werte (ohne MA-Bezug) → Station-Scorecard (Ops-Excellence, monatlich verdichtet ins Ops-Performance-Review)"
+        },
+        {
+          "nr": 3,
+          "titel": "Vorkommnisse & Safety-Ausreisser (Ground-Damage-/G31-39-Cluster, kritische Findings)",
+          "zeit": "3 Min",
+          "verantwortlich": "Schicht-Team → Stationsleiter",
+          "output": "Eskalation/Frühwarnung bei Ausreissern → COO (Auto-Eskalations-Trigger); Vermerk → Station-Scorecard"
+        },
+        {
+          "nr": 4,
+          "titel": "Tagesziel & Aufträge laufende Schicht (Turn-Qualität, Personalverfügbarkeit)",
+          "zeit": "2 Min",
+          "verantwortlich": "Stationsleiter",
+          "output": "Tagesziel + neue Commitments (Owner+Termin) → Station-Commitment-Log (RUBICON Control Tower / Aktions-Log)"
+        }
+      ],
+      "ergebnis": "Aggregierte lokale Ops-KPIs (ohne MA-Bezug) fliessen in die Station-Scorecard und monatlich ins Ops-Performance-Review; Commitments und Eskalationen landen im RUBICON Control Tower (Aktions-Log/Entscheids-Queue), Safety-/Ausreisser-Eskalationen gehen an den COO.",
+      "hinweise": [
+        "Station-Scorecards strikt aggregiert, kein MA-Personenbezug (DE §87 BetrVG / AT §96 ArbVG); personenbezogene Ops-KPIs erst nach Betriebsvereinbarung.",
+        "Kein neues Gefäss: dockt an WS2-MOS / Gruppen-Commitment-Tracker an; Commitment-Check steht immer zuerst.",
+        "VIE-Rollout erst nach BVD-Entscheid; Pilot 1 CH + 1 DE (M5), flächendeckend ab M8."
+      ],
+      "meeting_name": "Shift-Huddle (Stationsebene)",
+      "kadenz": "je Schicht (~10 Min)"
+    },
+    {
+      "meeting_id": "commitment-tracker",
+      "dauer": "45 Min",
+      "vorsitz": "AFR (Vice Chairman) — Struktur-/Kadenz-Owner",
+      "teilnehmer": "GL-6 (CEO Gökcöl, CFO Rohde, CFO-Stv Pajor, COO Matthei, CCO Haeffner, CHRO Charisius) · CEO-Office (Betrieb Tracker/Queue) · AFR (Kadenz/Struktur)",
+      "standing_rule": "Commitment-Review steht IMMER zuerst — kein Item verlässt den Tracker ausser «erledigt» (mit Nachweis) oder «eskaliert»; kein Löschen, kein Parallelsystem.",
+      "traktanden": [
+        {
+          "nr": 1,
+          "titel": "Commitment-Review — Ampel & fällige Commitments aller 7 Ströme",
+          "zeit": "15 Min",
+          "verantwortlich": "AFR (Vorlage CEO-Office aus Tracker)",
+          "output": "Ampel-Update (grün/gelb/rot) je Strom → Tower/Aktions-Log"
+        },
+        {
+          "nr": 2,
+          "titel": "ROT-Fälle & Konsequenz-Mechanik — verpasste Termine, 48h-Reminder-Ausläufe, neue Termine nur mit Genehmigung binnen 5 AT",
+          "zeit": "8 Min",
+          "verantwortlich": "AFR (Owner des jeweiligen Strms liefert Begründung)",
+          "output": "ROT-Beschluss + genehmigter Neu-Termin bzw. Eskalationsvermerk → Tower/Aktions-Log"
+        },
+        {
+          "nr": 3,
+          "titel": "Entscheids-Queue — offene Entscheide nach Liegedauer, GL-Norm «10 Entscheide/Tag», Erzwingung ab Schwelle",
+          "zeit": "8 Min",
+          "verantwortlich": "CEO-Office (Pflege) · GL-Owner (Entscheid)",
+          "output": "Getroffene Entscheide / zugeordnete Owner+Frist → Tower/Entscheids-Queue"
+        },
+        {
+          "nr": 4,
+          "titel": "Gruppen A–D — Chairman-Sicht (read-only Filter) & neue/erledigte Commitments einordnen",
+          "zeit": "6 Min",
+          "verantwortlich": "AFR (Betrieb CEO-Office)",
+          "output": "Aktualisierte Gruppen-A–D-Zuordnung → Tower (Chairman-Cockpit-Filter)",
+          "titel_check": true
+        },
+        {
+          "nr": 5,
+          "titel": "2×-Nichtlieferung / Stufen-Eskalation — Übergabe an Weekly ExBoD bzw. namentliche Nennung im Chairman Cockpit",
+          "zeit": "5 Min",
+          "verantwortlich": "AFR (Eskalation an ExBoD/DRS)",
+          "output": "Eskalations-Eintrag (Stufe 2/3) + namentliche Kennzeichnung → Tower/Chairman Cockpit",
+          "note": true
+        },
+        {
+          "nr": 6,
+          "titel": "Kadenz-Compliance & Wochen-Commitments — neue Verpflichtungen mit Owner+Termin erfassen, Reminder scharfstellen",
+          "zeit": "3 Min",
+          "verantwortlich": "CEO-Office (Erfassung) · AFR (Bestätigung)",
+          "output": "Neue Commitments mit T−48h-Reminder → Tower/Aktions-Log"
+        }
+      ],
+      "ergebnis": "Gepflegter Gruppen-Commitment-Tracker mit aktualisierter Ampel, abgearbeiteter Entscheids-Queue, dokumentierten ROT-/Eskalationsfällen und neu erfassten Wochen-Commitments — alles im RUBICON Control Tower (Aktions-Log, Entscheids-Queue, Chairman-Cockpit-Filter); Stufe-2/3-Eskalationen fliessen ins Weekly ExBoD bzw. Chairman Cockpit.",
+      "hinweise": [
+        "48h-Reminder → verpasst = ROT + Eskalation eine Ebene höher; 2× Nichtlieferung = CEO-Gespräch + namentliche Nennung im Chairman Cockpit.",
+        "Kein neues Steuerungsgefäss (one-in-one-out) — der Chairman-Aufträge-Tracker ist absorbiert, nicht dupliziert; Chairman-Sicht = read-only Filter Gruppen A–D.",
+        "In DE/AT gilt der Mitbestimmungs-Vorbehalt: namentliches Tracking unterhalb GL/Directors erst nach Betriebsvereinbarung (§87 BetrVG / §96 ArbVG)."
+      ],
+      "meeting_name": "Gruppen-Commitment-Tracker — Wochen-Review",
+      "kadenz": "wöchentlich (laufend, 48h-Reminder)"
+    },
+    {
+      "meeting_id": "gl-weekly",
+      "dauer": "wöchentlich · Di · 60–75 Min",
+      "vorsitz": "CGO / CEO Gökcöl (Vorsitz); AFR = Agenda-Owner für das Transformations-Traktandum",
+      "teilnehmer": "GL-6: CEO Gökcöl, CFO Rohde, CFO-Stv Pajor, COO Matthei, CCO Haeffner, CHRO Charisius (Betrieb/Protokoll: CEO-Office)",
+      "standing_rule": "Commitment-Review steht IMMER zuerst — kein neues Traktandum, bevor die fälligen Commitments der Vorwoche durchgegangen sind; nichts verlässt den Gruppen-Commitment-Tracker ausser «erledigt» (mit Nachweis) oder «eskaliert».",
+      "traktanden": [
+        {
+          "nr": 1,
+          "titel": "Commitment-Review (fällige Commitments Vorwoche, Gruppen A–D, Ampel; 48h-Reminder/ROT-Fälle; 2× Nichtlieferung → CEO-Gespräch)",
+          "zeit": "15 Min",
+          "verantwortlich": "AFR (Agenda-Owner); CEO-Office führt Tracker",
+          "output": "aktualisierter Commitment-Status + neue/verschobene Termine → Tower/Aktions-Log; namentliche ROT-Fälle → Chairman Cockpit"
+        },
+        {
+          "nr": 2,
+          "titel": "7-WS-Ampel-Statuslauf (WS1–WS6 + WS-OE: grün/gelb/rot, Blocker, Gate-Vorbereitung; monatlich = derselbe Durchgang als Ampel-Review)",
+          "zeit": "15 Min",
+          "verantwortlich": "AFR (je WS: jeweiliger Owner Rohde/Matthei/Haeffner/Charisius/Petric/CGO)",
+          "output": "Ampel-Update je WS → Tower (Programm-Ampel)"
+        },
+        {
+          "nr": 3,
+          "titel": "Entscheids-Queue (offene Entscheide wer/was/seit wann, Liegedauer sichtbar; überfällige > Schwelle erzwingen; GL-Norm «10 Entscheide/Tag»)",
+          "zeit": "15 Min",
+          "verantwortlich": "AFR (führt «offene Entscheide»-Liste); Entscheid durch zuständigen GL-Owner",
+          "output": "getroffene Beschlüsse → Tower/Aktions-Log; offene Entscheide mit Liegedauer → Tower/Entscheids-Queue"
+        },
+        {
+          "nr": 4,
+          "titel": "Gate-/Milestone-Check nächste 14 Tage (G1 12.09. → G2 Baseline 15.10. → G6 Closing 31.10. → TOM Q4-VR; VR-Pre-Read T−14)",
+          "zeit": "10 Min",
+          "verantwortlich": "AFR (Support CEO-Office; Cash-Gate Rohde, Recht/§613a Charisius)",
+          "output": "Gate-Status + Owner-Zuweisung offener Vorleistungen → Tower/Aktions-Log"
+        },
+        {
+          "nr": 5,
+          "titel": "Operative Top-Themen der Woche (max. 2–3; nur was das Tagesgeschäft eskaliert und die Ströme berührt — Rest in Monthly Business Review)",
+          "zeit": "10 Min",
+          "verantwortlich": "CGO (Vorsitz); COO Matthei operativ",
+          "output": "Beschluss/Massnahme mit Owner+Termin → Tower/Aktions-Log"
+        },
+        {
+          "nr": 6,
+          "titel": "Eskalationen & Übergabe an Weekly ExBoD/3er-Steuerung (Stufe-3-Themen, Ressourcen-/Zielentscheide, die die GL nicht löst)",
+          "zeit": "5 Min",
+          "verantwortlich": "CGO + AFR",
+          "output": "Eskalationsliste → Weekly ExBoD (DRS·AFR·CGO); Protokoll → Tower"
+        }
+      ],
+      "ergebnis": "Wöchentlich aktualisierter Commitment-Status, 7-WS-Programm-Ampel und Entscheids-Queue mit sichtbarer Liegedauer — alle Ergebnisse ausschliesslich im RUBICON Control Tower (Aktions-Log, Entscheids-Queue, Ampel); ROT-/Stufe-3-Fälle laufen ins Chairman Cockpit bzw. Weekly ExBoD auf. Kein Parallelsystem.",
+      "hinweise": [
+        "Keine neuen Gefässe: Do-18:00-Chairman-Serie geht per Cutover (Okt 26) hier auf; Chairman-Sicht = read-only-Filter Gruppen A–D auf demselben Tracker.",
+        "Datenehrlichkeit: fehlende Baselines bleiben grau, nie grün; kein Zielwert vor validierter Baseline (G2, 15.10.).",
+        "DE/AT-Mitbestimmungs-Vorbehalt: namentliches Tracking unterhalb GL/Directors erst nach Betriebsvereinbarung (§87 BetrVG / §96 ArbVG); Station-Scorecards nur aggregiert."
+      ],
+      "meeting_name": "GL-Weekly (Dienstag)",
+      "kadenz": "wöchentlich · Di (~60–75 Min)"
+    },
+    {
+      "meeting_id": "3er-steuerung",
+      "dauer": "~30 Min · wöchentlich",
+      "vorsitz": "DRS (Chairman)",
+      "teilnehmer": "DRS + AFR (Vice Chairman) + CGO (CEO Gökcöl)",
+      "standing_rule": "Hier wird nur entschieden, was GL-6 nicht lösen kann — jede Eskalation verlässt die Sitzung als Entscheid mit Owner + Datum oder mit begründeter Rückdelegation; nichts bleibt liegen.",
+      "traktanden": [
+        {
+          "nr": 1,
+          "titel": "Commitment-Review (Eskalationen der Woche)",
+          "zeit": "5 Min",
+          "verantwortlich": "AFR",
+          "output": "Bestätigte/aktualisierte ROT-Eskalationen → Tower/Aktions-Log"
+        },
+        {
+          "nr": 2,
+          "titel": "Entscheids-Queue: überfällige Stufe-3-Entscheide abarbeiten",
+          "zeit": "10 Min",
+          "verantwortlich": "DRS (Vorlage AFR/CGO)",
+          "output": "Beschlüsse (Owner + Datum) → Tower/Entscheids-Queue geschlossen"
+        },
+        {
+          "nr": 3,
+          "titel": "Ressourcen- & Zielkonflikte über Ströme (WS1–WS6/OE)",
+          "zeit": "6 Min",
+          "verantwortlich": "CGO",
+          "output": "Ressourcen-/Priorisierungs-Entscheid → Tower/Aktions-Log"
+        },
+        {
+          "nr": 4,
+          "titel": "Gate-Vorbereitung (G1/G2/G6, TOM Q4-VR, Verfahren)",
+          "zeit": "6 Min",
+          "verantwortlich": "AFR",
+          "output": "Gate-Ampel-Update + nächste Schritte → Tower; VR-Vorlagen → Sherpany (T−14)"
+        },
+        {
+          "nr": 5,
+          "titel": "2×-Nichtlieferung: CEO-Gespräch & namentliche Eskalation",
+          "zeit": "3 Min",
+          "verantwortlich": "CGO",
+          "output": "Eskalations-Entscheid namentlich → Tower/Chairman Cockpit"
+        }
+      ],
+      "ergebnis": "Gefällte Stufe-3-Entscheide, Ressourcen-/Zielentscheide und Gate-Freigaben → RUBICON Control Tower (Aktions-Log, Entscheids-Queue, Ampel); VR-relevante Punkte → Sherpany (Pre-Read T−14).",
+      "hinweise": [
+        "Commitment-Review steht immer zuerst; nur echte GL-6-Blocker landen hier.",
+        "Konsequenz-Mechanik gilt: T−48h-Reminder → verpasst = ROT + Eskalation; 2× = CEO-Gespräch + Cockpit-Nennung.",
+        "Kein Parallelsystem — Ergebnisse ausschliesslich in den Control Tower; DRS steuert/kontrolliert, greift nicht operativ ein."
+      ],
+      "meeting_name": "3er-Steuerung (Chairman-Steuerung)",
+      "kadenz": "wöchentlich · kurz (~30 Min)"
+    },
+    {
+      "meeting_id": "liquiditaet-13w",
+      "dauer": "~30 Min (wöchentlich)",
+      "vorsitz": "CFO Rohde",
+      "teilnehmer": "CFO Rohde (Vorsitz), CFO-Stv Pajor, Finance/Lesch (Support); GL im Verteiler/Read-only-Sicht im Tower",
+      "standing_rule": "Cash-Gate G6 ist unverhandelbar: kein cash-wirksamer Restrukturierungs-Schritt (BER, AAS Technics, ZRH) vor Closing 31.10.26 — jede Auszahlung wird gegen den 13-Wochen-Plan sequenziert.",
+      "traktanden": [
+        {
+          "nr": 1,
+          "titel": "Commitment-Review Cash (offene Cash-Zusagen der Vorwoche, Ampel A–D)",
+          "zeit": "4 Min",
+          "verantwortlich": "CFO Rohde",
+          "output": "Ampel-Update + überfällige Items (ROT/48h) → Tower/Aktions-Log"
+        },
+        {
+          "nr": 2,
+          "titel": "13-Wochen-Rolling-Forecast aktualisiert (Ist letzte Woche vs. Plan, Rollung um 1 Woche, tiefster Cash-Punkt)",
+          "zeit": "8 Min",
+          "verantwortlich": "CFO-Stv Pajor / Lesch",
+          "output": "Aktualisierter 13-W-Plan + Abweichungs-Flags → Tower/Cash-Ampel"
+        },
+        {
+          "nr": 3,
+          "titel": "Cash-Gate G6 & Sequenzierung: geplante Restrukturierungs-Cash-outs (BER ~CHF 1.2m, AAS Technics, ZRH) gegen Closing 31.10. prüfen",
+          "zeit": "6 Min",
+          "verantwortlich": "CFO Rohde",
+          "output": "Gate-Entscheid (freigegeben/blockiert bis Closing) → Tower/Entscheids-Queue"
+        },
+        {
+          "nr": 4,
+          "titel": "Covenant- & Kurzfrist-Hebel-Check: Swissport-Covenant (>CHF 1M = Waiver, G5), Factoring/UBS-Linie-Status (Kopplung #98)",
+          "zeit": "4 Min",
+          "verantwortlich": "CFO Rohde",
+          "output": "Covenant-Status + Hebel-Flags → Tower/Aktions-Log"
+        },
+        {
+          "nr": 5,
+          "titel": "Cash-Entscheids-Queue: offene Cash-Entscheide mit Liegedauer, Eskalation ab Schwelle",
+          "zeit": "5 Min",
+          "verantwortlich": "CFO Rohde",
+          "output": "Neue/eskalierte Entscheide → Tower/Entscheids-Queue"
+        },
+        {
+          "nr": 6,
+          "titel": "Nächste-Woche-Commitments & Eskalationen an ExBoD/Chairman Cockpit",
+          "zeit": "3 Min",
+          "verantwortlich": "CFO Rohde",
+          "output": "Commitments mit Owner/Termin → Tower; Eskalationen → Weekly ExBoD"
+        }
+      ],
+      "ergebnis": "Wöchentlich gerollter 13-Wochen-Liquiditätsplan mit Cash-Ampel, Gate-G6-Entscheiden und Cash-Commitments — alles im RUBICON Control Tower (Cash-Ampel, Aktions-Log, Entscheids-Queue); Eskalationen ins Weekly ExBoD / Chairman Cockpit.",
+      "hinweise": [
+        "Kein Parallelsystem: Ergebnisse landen ausschliesslich im Tower; kein separates Cash-Sheet als Wahrheit.",
+        "Datenehrlichkeit: fehlende Cash-Daten als Datenlücke markieren, nicht schätzen; nur belastbare Ist-Werte in die Rollung.",
+        "Abgrenzung: dies ist Cash-Steuerung, nicht der Monthly Report (P&L/Bilanz) — Überschneidungen vermeiden."
+      ],
+      "meeting_name": "13-Wochen-Liquidität",
+      "kadenz": "wöchentlich (~30 Min)"
+    },
+    {
+      "meeting_id": "mbr",
+      "dauer": "~90 Min (monatlich)",
+      "vorsitz": "CGO (Gökcöl, CEO) — als Umsetzungsmotor des Power-Duos",
+      "teilnehmer": "CGO (Vorsitz) · COO Matthei · CFO Rohde (Support Lesch/Pajor) · Station-/P&L-Owner der Top-Verluststationen BER/MUC/FRA/DUS. Ab M7 alle ~15 Stationen (rollierend/On-Demand zugeschaltet).",
+      "standing_rule": "Commitment-Review zuerst — kein Station-Deep-Dive, bevor die offenen Commitments der Vorperiode auf ROT/GELB/GRÜN gestellt sind; jede Zahl kommt aus WINGMAN bzw. der Ops-Scorecard, keine Ad-hoc-Zahlen, jeder Beschluss landet im RUBICON Control Tower (Aktions-Log/Entscheids-Queue).",
+      "ergebnis": "Aktualisierte Station-Ampel + P&L-Owner-Status und alle Beschlüsse/Turnaround-Massnahmen → RUBICON Control Tower (Aktions-Log + Entscheids-Queue); Verlustquellen-/Kostendeckel-relevante Beschlussvorlagen → VR/GL via Sherpany; MBR-Protokoll → Tower.",
+      "hinweise": [
+        "Station-Scorecards nur aggregiert (kein MA-Personenbezug) — in DE/AT Mitbestimmungs-Vorbehalt (§87 BetrVG / §96 ArbVG).",
+        "VIE-relevante Kosten-/Personalmassnahmen bis BVD-Entscheid eingefroren; SLA-Untergrenze (SGHA Annex B §9) ist nicht verhandelbar.",
+        "Datenehrlichkeit: bis Baseline-Gate G2 (15.10.) offene Zahlen als Datenlücke markieren, keine Zielwerte vor validierter Baseline fixieren."
+      ],
+      "traktanden": [
+        {
+          "nr": 1,
+          "titel": "Commitment-Review (Vorperiode) — offene Ops-/P&L-Commitments auf Ampel stellen, 2× Nichtlieferung eskalieren",
+          "zeit": "10 Min",
+          "verantwortlich": "CGO (Vorsitz), Betrieb CEO-Office",
+          "output": "Ampel-Update + Eskalationen → RUBICON Control Tower (Aktions-Log)"
+        },
+        {
+          "nr": 2,
+          "titel": "Station-Scorecards Top-Verluststationen (BER/MUC/FRA/DUS): Pünktlichkeit/Turnaround, Ground Damage, Baggage Mishandling, Safety (AHM 730 / G31–39, DG52)",
+          "zeit": "30 Min",
+          "verantwortlich": "COO Matthei (je Station der P&L-Owner)",
+          "output": "Konsolidierte Ops-Scorecard je Station + Massnahmen → Tower"
+        },
+        {
+          "nr": 3,
+          "titel": "P&L-Owner-Review: Ist vs. Plan je Station (WINGMAN), Cost-per-Turn-Entwicklung, Abweichungs-Ursachen",
+          "zeit": "20 Min",
+          "verantwortlich": "CFO Rohde (Support Lesch/Pajor)",
+          "output": "P&L-/CpT-Sicht + Owner-Zusagen → Tower (Aktions-Log)"
+        },
+        {
+          "nr": 4,
+          "titel": "Zentralkosten-Deckel & externe Kosten: Fortschritt gegen Deckel/−30%-Pfad, Doppelspurigkeits-Abbau",
+          "zeit": "12 Min",
+          "verantwortlich": "CFO Rohde (Support AFR Finanz-Challenge)",
+          "output": "Kostendeckel-Status/Ampel → Tower; beschlussreife Vorlagen → VR/GL (Sherpany)"
+        },
+        {
+          "nr": 5,
+          "titel": "Verlustquellen-Turnaround (Top-3 AAS Technics/BER/MUC + ZRH-Residual): drehen vs. eliminieren, harte Daten/Gates",
+          "zeit": "13 Min",
+          "verantwortlich": "AFR (AAS Technics in charge) / CGO (BER/MUC)",
+          "output": "Turnaround-Beschlüsse + Gate-Status → Tower; VR-Beschlussvorlagen → Sherpany"
+        },
+        {
+          "nr": 6,
+          "titel": "Entscheids-Queue & neue Commitments: offene Entscheide mit Liegedauer zwingen, Owner + Termin je neuem Item setzen",
+          "zeit": "5 Min",
+          "verantwortlich": "CGO (Vorsitz)",
+          "output": "Neue Commitments/Entscheide mit Owner+Termin → RUBICON Control Tower (Entscheids-Queue)"
+        }
+      ],
+      "meeting_name": "Monthly Business / Ops-Performance-Review",
+      "kadenz": "monatlich (~90 Min)"
+    },
+    {
+      "meeting_id": "monthly-report",
+      "dauer": "monatlich, bis 20. des Folgemonats (~45 Min)",
+      "vorsitz": "CFO Rohde",
+      "teilnehmer": "CFO Rohde (Vorsitz), CFO-Stv Pajor, Lesch (Reporting/WINGMAN); Bericht an GL / Chairman Cockpit (DRS)",
+      "standing_rule": "Nur CFO-testierte Zahlen aus WINGMAN — jede offene Zahl bleibt als Datenlücke markiert, nichts wird geschönt oder im Kopf gerechnet.",
+      "traktanden": [
+        {
+          "nr": 1,
+          "titel": "Commitment-Review Finance: offene Zusagen aus letztem Monatsbericht (Ampel, überfällige Massnahmen)",
+          "zeit": "5 Min",
+          "verantwortlich": "CFO Rohde",
+          "output": "Ampel-Update + überfällige Items → Tower/Aktions-Log"
+        },
+        {
+          "nr": 2,
+          "titel": "Pünktlichkeits-Check: Report ≤ 20. geliefert? (Pünktlichkeit als eigener KPI, Verzugsursache falls verfehlt)",
+          "zeit": "3 Min",
+          "verantwortlich": "Lesch",
+          "output": "KPI Reporting-Pünktlichkeit → Tower/Ampel"
+        },
+        {
+          "nr": 3,
+          "titel": "P&L Monatsabschluss (Gruppe + Kernbeteiligungen), Ist vs. Plan/Forecast",
+          "zeit": "12 Min",
+          "verantwortlich": "CFO Rohde (Support Lesch)",
+          "output": "P&L-Sicht + Abweichungskommentar → Tower/Monthly-Report-Ablage"
+        },
+        {
+          "nr": 4,
+          "titel": "Abweichungsanalyse & Verlustquellen (Top-3 Run-Rate AAS Technics/BER/MUC), Ursachen + Gegenmassnahmen",
+          "zeit": "10 Min",
+          "verantwortlich": "CFO Rohde (Support Pajor)",
+          "output": "Massnahmen mit Owner/Termin → Tower/Aktions-Log"
+        },
+        {
+          "nr": 5,
+          "titel": "13-Wochen-Liquidität (ab M4): Rolling-Forecast, Cash-Gate G6 gegen geplante Auszahlungen",
+          "zeit": "7 Min",
+          "verantwortlich": "CFO Rohde (Support Lesch)",
+          "output": "Liquiditäts-Ampel + Cash-Gate-Status → Tower/Chairman Cockpit"
+        },
+        {
+          "nr": 6,
+          "titel": "Bilanz/Cashflow & Art.-963-OR-Vollausbau (ab M8): IC-Eliminierung, Minorities",
+          "zeit": "4 Min",
+          "verantwortlich": "CFO-Stv Pajor",
+          "output": "Konsolidierungsstatus → Tower"
+        },
+        {
+          "nr": 7,
+          "titel": "Neue Entscheide/Eskalationen an GL + Chairman Cockpit (Entscheids-Queue-Einträge)",
+          "zeit": "4 Min",
+          "verantwortlich": "CFO Rohde",
+          "output": "Entscheids-Queue-Einträge → Tower/Entscheids-Queue"
+        }
+      ],
+      "ergebnis": "Testierter Monatsabschluss (P&L, ab M4 +13-Wo-Liquidität, ab M8 +Bilanz/Cashflow) mit Abweichungskommentar und beschlossenen Gegenmassnahmen → RUBICON Control Tower (Aktions-Log, Entscheids-Queue, Ampel) und Chairman Cockpit.",
+      "hinweise": [
+        "Commitment-Review steht immer zuerst; kein Parallel-Reporting neben dem Tower.",
+        "Report muss bis 20. des Folgemonats vorliegen — Verzug wird als eigener KPI erfasst und eskaliert.",
+        "Nur CFO-testierte WINGMAN-Zahlen; keine Doppelzählung von AI-/WS3-Einsparungen (gemeinsame Einsparungs-Brücke)."
+      ],
+      "meeting_name": "Monthly Report — Review",
+      "kadenz": "monatlich, bis 20. Folgemonat (~45 Min)"
+    },
+    {
+      "meeting_id": "chairman-cockpit",
+      "dauer": "monatlich · ~30 Min (1-Seiter Pre-Read)",
+      "vorsitz": "DRS (Chairman) — steuert & kontrolliert",
+      "teilnehmer": "DRS allein (Kontroll-Review); Steuerimpulse gehen an AFR + CGO (Power-Duo), keine Teilnahme",
+      "standing_rule": "Kontrollieren, nicht eingreifen: DRS liest den 1-Seiter, prüft Lieferung und Ampel und erteilt Steuerimpulse an AFR+CGO — er übernimmt keine operative Aufgabe und eröffnet kein Parallelsystem. Commitment-Review steht immer zuerst.",
+      "traktanden": [
+        {
+          "nr": 1,
+          "titel": "Commitment-Review zuerst — überfällige/rote Commitments namentlich (Konsequenz-Mechanik greift?)",
+          "zeit": "6 Min",
+          "verantwortlich": "DRS (Kontrolle); Datenquelle Gruppen-Commitment-Tracker, Betrieb CEO-Office",
+          "output": "Bestätigung/Steuerimpuls zu 2×-Nichtlieferungen (CEO-Gespräch-Trigger) → Tower/Aktions-Log"
+        },
+        {
+          "nr": 2,
+          "titel": "Programm-Ampel 7 Ströme (grün/gelb/rot je WS) + Execution-Rate gegen Zielpfad (≥80% M6 / ≥90% M8)",
+          "zeit": "6 Min",
+          "verantwortlich": "DRS (Kontrolle); Ampel-Zulieferung AFR (Agenda-Owner Transformation)",
+          "output": "Ampel-Kontrollvermerk + Fokus-Flag rote WS → Tower/Ampel"
+        },
+        {
+          "nr": 3,
+          "titel": "Gate-Kontrolle kritischer Pfad (G1 12.09 · G2 Baseline 15.10 · G6 Closing 31.10 · TOM Q4-VR · Verfahren eingeleitet · Zielnachweis Apr 27) — on track / at risk",
+          "zeit": "5 Min",
+          "verantwortlich": "DRS (Kontrolle); Gate-Status aus WS-Zulieferung AFR/Rohde",
+          "output": "Gate-Statusvermerk + Eskalationsentscheid bei at-risk-Gate → Tower/Aktions-Log"
+        },
+        {
+          "nr": 4,
+          "titel": "Entscheids-Queue — überfällige Entscheide mit Liegedauer (> Schwelle); Kontrolle GL-Norm «10 Entscheide/Tag»",
+          "zeit": "5 Min",
+          "verantwortlich": "DRS (Eskalations-Endpunkt); Queue-Pflege CEO-Office",
+          "output": "Ziehen/Zuweisen liegengebliebener Entscheide als Steuerimpuls an AFR+CGO → Tower/Entscheids-Queue"
+        },
+        {
+          "nr": 5,
+          "titel": "Steuerimpulse an das Power-Duo (AFR+CGO) formulieren — Richtungs-/Ressourcen-/Prioritätsimpulse aus TP 1–4",
+          "zeit": "5 Min",
+          "verantwortlich": "DRS (Steuerung)",
+          "output": "Nummerierte Steuerimpulse mit Owner+Termin (48h-Reminder) → Tower/Aktions-Log; Weiterlauf Weekly ExBoD"
+        },
+        {
+          "nr": 6,
+          "titel": "Chairman-Vorbehalte: nächster VR-Beschlussbedarf (Pre-Read T−14) + vertrauliche/Governance-Punkte ausserhalb Tracker",
+          "zeit": "3 Min",
+          "verantwortlich": "DRS (Chairman)",
+          "output": "VR-Traktandierungs-Notiz → Sherpany; vertrauliche Punkte → HR-Sensitive-Kanal (nicht im Tower)"
+        }
+      ],
+      "ergebnis": "Monatlicher Kontroll-Snapshot des Chairman (Programm-Ampel, Execution-Rate, Gate-Status, Commitment-/Entscheids-Rückstände) plus eine Liste nummerierter Steuerimpulse an AFR+CGO — alles im RUBICON Control Tower (Aktions-Log/Ampel/Entscheids-Queue); VR- und vertrauliche Punkte separat nach Sherpany bzw. HR-Sensitive-Kanal.",
+      "hinweise": [
+        "Kein Parallelsystem: Datenbasis ist ausschliesslich der 1-Seiter aus Tower/Gruppen-Commitment-Tracker; DRS erhebt keine eigenen Zahlen und legt keine Zweitliste an.",
+        "DRS greift nicht operativ ein — jeder Handlungsbedarf wird zum Steuerimpuls an AFR+CGO, nicht zur eigenen To-do.",
+        "Datenehrlichkeit: rote/graue Felder bleiben rot/grau; kein Zielwert vor validierter Baseline (G2, 15.10.)."
+      ],
+      "meeting_name": "Chairman Cockpit Review",
+      "kadenz": "monatlich · 1-Seiter Pre-Read (~30 Min)"
+    },
+    {
+      "meeting_id": "commercial-cafes",
+      "dauer": "monatlich · ~60 Min",
+      "vorsitz": "CCO Haeffner",
+      "teilnehmer": "CCO Haeffner (Vorsitz) + Stationsleiter",
+      "standing_rule": "«Jeder Kunde, den wir als gegeben betrachten, ist ein verlorener Kunde» — jeder Renewal <120 Tage und jeder Top-Account hat einen benannten Owner mit dokumentiertem Touchpoint; kein Café ohne aktualisiertes Touchpoint-Log im CRM-Cockpit.",
+      "traktanden": [
+        {
+          "nr": 1,
+          "titel": "Commitment-Review (zuerst): offene Renewal-/Kundennähe-Aufträge des Vormonats",
+          "zeit": "10 Min",
+          "verantwortlich": "CCO Haeffner",
+          "output": "Status je Commitment (erledigt/eskaliert) → Tower/Aktions-Log; 2×-Nichtlieferung → Eskalation ins Power-Duo"
+        },
+        {
+          "nr": 2,
+          "titel": "Renewal-Frühwarnung <120 Tage: auslaufende Verträge je Station (2026: 166 OPEN / EUR 95.6 Mio)",
+          "zeit": "15 Min",
+          "verantwortlich": "Stationsleiter (je Station)",
+          "output": "Frühwarn-Liste mit Owner + nächstem Schritt → CRM-Cockpit (:8600); Ampel-Update → Tower"
+        },
+        {
+          "nr": 3,
+          "titel": "Cliff-2027-Wand: Coverage-Fortschritt (97 / EUR 109.3 Mio), Priorität Eurowings DUS Ramp EUR 26.26 Mio",
+          "zeit": "12 Min",
+          "verantwortlich": "CCO Haeffner",
+          "output": "Cliff-Coverage-Update → CRM-Cockpit; harte Verhandlungsfälle (Eurowings) → Entscheids-Queue Tower"
+        },
+        {
+          "nr": 4,
+          "titel": "«Dieters Liste» & Beziehungspflege-Matrix: Top-Accounts × Owner, Touchpoint-Kadenz (3-Tier)",
+          "zeit": "10 Min",
+          "verantwortlich": "CCO Haeffner",
+          "output": "Dokumentierte Quartals-Touchpoints je Account → CRM-Cockpit; Tier-A-Chairman-Touchpoints markiert für DRS"
+        },
+        {
+          "nr": 5,
+          "titel": "Kundennähe vor Ort: Signale, Beschwerden, SLA-Frühwarnungen, Wettbewerbs-Intel je Station",
+          "zeit": "8 Min",
+          "verantwortlich": "Stationsleiter (je Station)",
+          "output": "Kunden-Signale → CRM-Cockpit; SLA-Ausreisser-Verweis an Ops-Performance-Review (WS-OE)"
+        },
+        {
+          "nr": 6,
+          "titel": "Neue Commitments & nächste Schritte: Owner + Termin je Aktion",
+          "zeit": "5 Min",
+          "verantwortlich": "CCO Haeffner",
+          "output": "Neue Commitments mit Owner/Termin → Tower/Aktions-Log (48h-Reminder aktiv)"
+        }
+      ],
+      "ergebnis": "Aktualisiertes Touchpoint-Log und Renewal-/Cliff-Frühwarn-Status je Station → CRM-Cockpit (:8600); neue Commitments und Eskalationen → RUBICON Control Tower (Aktions-Log/Entscheids-Queue/Ampel).",
+      "hinweise": [
+        "Commitment-Review steht immer zuerst; kein Parallelsystem — alle Aktionen laufen in den Control Tower, alle Kundendaten ins CRM-Cockpit.",
+        "Konsequenz-Mechanik: 48h-Reminder auf offene Commitments; 2× Nichtlieferung = Eskalation eine Ebene höher (Power-Duo AFR+CGO).",
+        "Individuelle Personal-/Vertragsspezifika gehören nicht ins Café — nur Kundennähe- und Renewal-Struktur."
+      ],
+      "meeting_name": "Commercial Cafés",
+      "kadenz": "monatlich (~60 Min)"
+    },
+    {
+      "meeting_id": "vr-sitzung",
+      "dauer": "halbtägig (ca. 240 Min)",
+      "vorsitz": "DRS (VR-Präsident) — Traktandenhoheit",
+      "teilnehmer": "VR (inkl. Vice Chairman Fritthum) · Vorlage AFR/CGO · CFO Rohde für Financials · Protokoll CEO-Office/Sekretariat",
+      "standing_rule": "Commitment-Review zuerst: Kein neues Traktandum wird eröffnet, bevor der Umsetzungsstand der letzten VR-Beschlüsse aus dem Control Tower abgehakt ist — offene Beschlüsse bleiben ROT mit Owner und neuem Termin.",
+      "hinweise": [
+        "Pre-Read T−14 via Sherpany verbindlich; ohne fristgerechte Vorlage kein Beschluss (Sequenz-Konflikt VR vor Gates 28.08. wird so behoben).",
+        "Keine Parallel-Governance: Commercial läuft über TRAK-2026-0007, AI über TRAK-2026-0010 — im VR nur Eskalationen/Beschlüsse, kein Doppel-Reporting.",
+        "Alle Beschlüsse landen im RUBICON Control Tower (Aktions-Log + Entscheids-Queue), Protokoll formal via Sherpany — kein Parallelsystem."
+      ],
+      "ergebnis": "Genehmigte VR-Beschlüsse (TOM/Zielvereinbarungen/Budget/Finanzierung) + aktualisierte Programm-Ampel + offene Entscheide fliessen in den RUBICON Control Tower (Aktions-Log/Entscheids-Queue/Ampel); formales Protokoll via Sherpany.",
+      "traktanden": [
+        {
+          "nr": 1,
+          "titel": "Konstituierung & Beschluss-Umsetzungs-Tracking (Commitment-Review zuerst)",
+          "zeit": "25 Min",
+          "verantwortlich": "DRS (Vorsitz), Vorlage AFR",
+          "output": "Abgehakter Umsetzungsstand aller offenen VR-Beschlüsse; überfällige ROT mit Owner + neuem Termin → Control Tower/Aktions-Log"
+        },
+        {
+          "nr": 2,
+          "titel": "Programm-Ampel RUBICON: 7-Ströme-Status, kritischer Pfad & Gate-Review (G1 Datenzugang · G2 Baseline · G6 Closing)",
+          "zeit": "40 Min",
+          "verantwortlich": "CGO (Vorlage), AFR für Struktur-Ströme WS1/WS2",
+          "output": "Ampel-Update je Strom + Gate-Freigabe/-Stopp-Entscheide → Control Tower/Ampel; Beschlüsse → Aktions-Log"
+        },
+        {
+          "nr": 3,
+          "titel": "Financials & Reporting-Qualität: WINGMAN-Konsolidierung, 13-Wochen-Liquidität, Monthly-Report-Pünktlichkeit",
+          "zeit": "40 Min",
+          "verantwortlich": "CFO Rohde",
+          "output": "Kenntnisnahme Finanzlage + Beschluss zu Reporting-Vollausbau (Art. 963 OR) → Protokoll/Sherpany; Auflagen → Aktions-Log"
+        },
+        {
+          "nr": 4,
+          "titel": "Genehmigung TOM-Blueprint (Elysium 2.0) & Job-Descriptions-Kaskade GL=6",
+          "zeit": "45 Min",
+          "verantwortlich": "AFR (Vorlage), DRS Governance-Rahmen",
+          "output": "VR-Genehmigungsbeschluss TOM-Blueprint + GL=6/JD-Kaskade → Protokoll/Sherpany; Umsetzungsauftrag → Aktions-Log"
+        },
+        {
+          "nr": 5,
+          "titel": "Genehmigung Zielvereinbarungen P&L-Owner & Budget/Zentralkosten-Deckel (−30%)",
+          "zeit": "35 Min",
+          "verantwortlich": "AFR/CFO Rohde (Vorlage)",
+          "output": "Beschluss Zielvereinbarungen 100% + Budget/Deckel → Protokoll/Sherpany; Freigaben → Aktions-Log"
+        },
+        {
+          "nr": 6,
+          "titel": "Finanzierung (Projekt #98, Closing 31.10.) & Risiken/Rechts-Gates (G4 BR/§613a · G5 Swissport-Covenant)",
+          "zeit": "35 Min",
+          "verantwortlich": "CFO Rohde / VR, Recht Charisius zuliefernd",
+          "output": "Finanzierungs-/Risiko-Beschlüsse + Sequenzierungs-Auflagen (cash-wirksam erst nach Closing) → Protokoll/Sherpany + Entscheids-Queue"
+        },
+        {
+          "nr": 7,
+          "titel": "Entscheids-Queue, Eskalationen & VR-Beschlussfassung (Verabschiedung, nächste Schritte, T−14 nächste Sitzung)",
+          "zeit": "20 Min",
+          "verantwortlich": "DRS (Vorsitz)",
+          "output": "Gefasste Beschlüsse + neue Aufträge mit Owner/Termin → Control Tower/Aktions-Log; Protokoll → Sherpany"
+        }
+      ],
+      "meeting_name": "VR-Sitzung",
+      "kadenz": "4×/Jahr · Pre-Read T−14 via Sherpany (halbtägig)"
+    },
+    {
+      "meeting_id": "quartals-commitment",
+      "dauer": "halbtägig (~4 Std)",
+      "vorsitz": "AFR (Vice Chairman) — Steuerung/Kontrolle DRS (Chairman)",
+      "teilnehmer": "AFR (Vorsitz) · DRS (Steuerung/Kontrolle) · CGO/CEO Gökcöl · Strom-Owner: CFO Rohde (WS3) · CCO Haeffner (WS4) · COO Matthei (OE) · CHRO Charisius (WS1/WS5) · Petric (WS6). Support: CEO-Office (Tracker/Queue-Betrieb), CFO-Stv Pajor (Finance/Baseline)",
+      "standing_rule": "Kein Zielwert wird nachjustiert ohne validierte Baseline (G2) und CFO-testierte Zahl — Commitment-Review steht immer zuerst, jede Nachjustierung landet als Beschluss im RUBICON Control Tower.",
+      "traktanden": [
+        {
+          "nr": 1,
+          "titel": "Commitment-Review Vorquartal (alle 7 Ströme, Ampel + überfällige Commitments namentlich)",
+          "zeit": "30 Min",
+          "verantwortlich": "AFR (Betrieb: CEO-Office)",
+          "output": "Ampel-Update + abgeschlossene/eskalierte Commitments → Tower/Aktions-Log"
+        },
+        {
+          "nr": 2,
+          "titel": "Entscheids-Queue-Durchsicht: überfällige Entscheide (Liegedauer > Schwelle), 2×-Nichtlieferungs-Eskalationen",
+          "zeit": "20 Min",
+          "verantwortlich": "AFR (CGO)",
+          "output": "Entscheide gefällt/eskaliert → Tower/Entscheids-Queue"
+        },
+        {
+          "nr": 3,
+          "titel": "Ziel-Nachjustierung gegen Baseline (G2, 15.10.): KPI-Soll je Strom bestätigen/anpassen (Execution-Rate, Overhead −30%, CpT −5%, Verlustquellen −50%, Renewal)",
+          "zeit": "60 Min",
+          "verantwortlich": "CFO Rohde (Finance) + Strom-Owner",
+          "output": "Beschluss Zielwerte je KPI → Tower/Aktions-Log; VR-relevante Änderungen → Sherpany (Pre-Read T−14)"
+        },
+        {
+          "nr": 4,
+          "titel": "Phasen-Fortschritt je Strom (Phase 0–3 / Nachlauf) gegen kritischen Pfad & Gates (G6 Closing 31.10. · TOM Q4-VR · Verfahren eingeleitet · Zielnachweis Apr 27)",
+          "zeit": "60 Min",
+          "verantwortlich": "Strom-Owner (je 7 Ströme, moderiert AFR)",
+          "output": "Phasen-Ampel + Gate-Status → Tower; Roadmap-Abweichungen als Commitment → Tower/Aktions-Log"
+        },
+        {
+          "nr": 5,
+          "titel": "Ressourcen-Rebalancing: Kapazität/Budget/Personal zwischen Strömen nach Engpässen & kritischem Pfad",
+          "zeit": "40 Min",
+          "verantwortlich": "AFR (DRS entscheidet Ressourcen)",
+          "output": "Rebalancing-Beschluss → Tower/Aktions-Log; Budget-/GL-relevantes → VR/Sherpany"
+        },
+        {
+          "nr": 6,
+          "titel": "Neue Quartals-Commitments + Owner + Termin je Strom (Konsequenz-Mechanik 48h/2×-Eskalation aktiviert)",
+          "zeit": "30 Min",
+          "verantwortlich": "AFR (Owner je Strom)",
+          "output": "Commitments mit Owner/Termin → Tower/Aktions-Log (Gruppen A–D)"
+        },
+        {
+          "nr": 7,
+          "titel": "Steuerungs-/Kontroll-Fazit DRS: Eskalations-Endpunkt, Richtungs-Setzung, VR-Traktandierung",
+          "zeit": "20 Min",
+          "verantwortlich": "DRS (Chairman)",
+          "output": "Chairman-Fazit + VR-Pre-Read-Punkte → Chairman Cockpit / Sherpany"
+        }
+      ],
+      "ergebnis": "Quartals-Gesamtbild aller 7 Ströme (Ampel, Phasen-Fortschritt, nachjustierte Zielwerte, Rebalancing- und neue Commitment-Beschlüsse) — vollständig im RUBICON Control Tower (Aktions-Log, Entscheids-Queue, Ampel); VR-relevante Beschlüsse zusätzlich via Sherpany (Pre-Read T−14).",
+      "hinweise": [
+        "Kein Parallelsystem: alle Ergebnisse ausschliesslich in den RUBICON Control Tower — der Chairman-Aufträge-Tracker ist absorbiert.",
+        "GL-Norm «10 Entscheide/Tag, 2 korrigierbar» gilt auch hier — Entscheide werden gefällt, nicht vertagt.",
+        "Zeitboxen sind Deckel; überzogene Punkte werden als Commitment in den Tracker verschoben, nicht ausgesessen."
+      ],
+      "meeting_name": "Quartals-Commitment-Runde",
+      "kadenz": "quartalsweise (~half-day)"
+    }
+  ]
+}
