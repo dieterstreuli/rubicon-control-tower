@@ -83,6 +83,17 @@ gesetzlicher Nachlauf Q2/27.
 | `scripts/test_status_parity.py` + `_parity_node.mjs` | Golden-Master-Paritätstest JS↔Python-Statuslogik (Audit #1); Exit≠0 bei Drift |
 | `mcp/calendar_bridge.md` | Spez. realer Writes (Freigabe-Token) |
 
+## Portabilität (13.07.2026, DRS: «jederzeit in die AXS-Welt überführbar»)
+
+**[MIGRATION.md](MIGRATION.md) ist das Runbook.** Kernmechanik: Git-versioniert (seit 13.07.);
+`scripts/_tools/` = vendored Snapshot der Chief/Tools-Abhängigkeiten (greift automatisch,
+wenn `~/Chief/Tools` fehlt — auf dem DRS-Mac gewinnt weiterhin das Original; bei
+Tools-Änderungen Snapshot per `cp` erneuern); Python via env `RUBICON_PY` übersteuerbar;
+`scripts/requirements.txt`. Transfer-Probelauf 13.07. bestanden (Clone: validate 0 Fehler,
+Parität 16/16, vendored Module standalone). Tower-Kern braucht KEIN Google — nur
+GDoc-/Drive-Exporte + Gemini-Import (Creds ersetzen, s. Runbook §7). Nach jeder
+substanziellen Änderung: `git add -A && git commit` (Repo-Identität d.streuli@axs.aero).
+
 ## Arbeitsregeln für Änderungen
 
 - Datenänderungen IMMER in `projekt.yaml`, danach `npm run validate`.
