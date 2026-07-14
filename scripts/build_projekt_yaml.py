@@ -307,6 +307,16 @@ def main():
             n_rb += 1
     else:
         gaps.append('rubicon_briefings.json fehlt — RUBICON-MS ohne Briefing (Lücke)')
+    # Klartext-Ziel je Milestone (14.07. Klarheits-Audit): ausführliche, abkürzungs-
+    # freie Zielzustand-/Erledigt-Definition — rebuild-fest aus Quelldatei injiziert.
+    zk_path = SC / 'ziel_klartext.json'
+    n_zk = 0
+    if zk_path.exists():
+        for mid, txt in json.loads(zk_path.read_text()).items():
+            if mid in briefings:
+                briefings[mid]['ziel_klartext'] = txt
+                n_zk += 1
+        print(f"  Klartext-Ziele injiziert: {n_zk}")
     BRIEF_OUT = ROOT / 'src' / 'data' / 'briefings.json'
     _atomic_write(BRIEF_OUT, json.dumps(briefings, ensure_ascii=False, indent=1))
     print(f"  Briefings: {len(briefings)} gesamt ({n_rb} RUBICON + {len(briefings)-n_rb} Masterplan) → {BRIEF_OUT.name}")

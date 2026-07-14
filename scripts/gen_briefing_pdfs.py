@@ -43,6 +43,8 @@ CSS = """
  ul,ol{padding-left:5mm}
  li{margin-bottom:.8mm}
  .grounding{color:#5a6570;font-size:8.5pt}
+ .klartext{background:#F5F7FA;border-left:2.5pt solid #b07d2c;padding:2mm 3mm;font-size:9pt;margin-bottom:4mm}
+ .klartext b{color:#1E3E58}
  .foot{margin-top:6mm;border-top:.5pt solid #C9D3DC;padding-top:1.5mm;font-size:7.5pt;color:#8a94a8}
 </style>"""
 
@@ -79,6 +81,7 @@ def render(m, b):
  <tr><td class="k">Abhängig von</td><td>{e(deps)}</td>
      <td class="k">Merkmale</td><td>{e(' · '.join(flags) or '—')}</td></tr>
 </table>
+{f'<div class="klartext"><b>ZIEL IM KLARTEXT:</b> {e(b.get("ziel_klartext"))}</div>' if b.get('ziel_klartext') else ''}
 <h2>KONTEXT — WARUM DIESER MILESTONE</h2><p>{e(b.get('kontext') or 'zu klären')}</p>
 <h2>ERWARTETE LEISTUNG (DELIVERABLES)</h2><ul>{leistung or '<li>zu klären</li>'}</ul>
 <h2>VORGEHEN</h2><ol>{vorgehen or '<li>zu klären</li>'}</ol>

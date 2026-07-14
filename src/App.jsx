@@ -1591,6 +1591,11 @@ function BriefingModal({ m, role, me, onClose }) {
             <div><span style={{ color: T.inkFaint }}>Abhängig von</span><br /><b style={{ fontFamily: T.mono }}>{(m.depends_on || []).join(', ') || '—'}</b></div>
           </div>
           {b.beteiligte && <div className="text-[11.5px] mt-2" style={{ color: T.inkDim }}><b style={{ color: T.brass }}>Beteiligte:</b> {b.beteiligte}</div>}
+          {b.ziel_klartext && (
+            <div className="mt-3 rounded p-3 text-[12px]" style={{ background: T.panelSoft, borderLeft: `2.5px solid ${T.brass}`, color: T.ink }}>
+              <b style={{ color: T.brass }}>ZIEL IM KLARTEXT:</b> {b.ziel_klartext}
+            </div>
+          )}
         </div>
         {/* Handlungen (abhakbar — treiben bei aktiviertem Roll-up den Fortschritt) */}
         <TaskSection m={m} role={role} me={me} />

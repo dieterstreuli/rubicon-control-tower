@@ -19,7 +19,7 @@
    "Kopplung an Data Foundation Layer 2 (WS6): verspätete Ontologie-Klärung verzögert KI-Ersatz-Optionen",
    "«One World bis Ende Juli» wäre bei der Systemtiefe unrealistisch — Scope ist bewusst nur der Entscheid, nicht die Migration"
   ],
-  "erfolgsmessung": "100% der Ops-Bereiche haben bis 15.08.2026 einen dokumentierten Zielsystem-Entscheid",
+  "erfolgsmessung": "100% der Ops-Bereiche haben bis 07.09.2026 einen dokumentierten Zielsystem-Entscheid",
   "grounding": "projekt.yaml WS1-01; RUBICON-Doc §4 WS1 D8/K9 + Abschnitt Systemlandkarte; WS-Paket WS1 Phase 0"
  },
  {
@@ -90,7 +90,7 @@
    "IT-/Didit-Fragilität (Ein-Mann-IT Suchomski) blockiert die Mail-Domain-Migration — Stellvertretung + Doku bis M2 nötig",
    "Kopplung an AT ArbVG §§108/109 + §45a AMFG für die österreichische Seite (VIE) der Verwaltungskonsolidierung"
   ],
-  "erfolgsmessung": "Org-Entscheid GL-beschlossen, GL-Mail-Domain @axs.aero migriert und §613a-Unterrichtungsschreiben vorbereitet — bis 31.10.2026",
+  "erfolgsmessung": "Org-Entscheid GL-beschlossen, GL-Mail-Domain @axs.aero migriert, §613a-Unterrichtungsschreiben vorbereitet und genau eine CFO-Mailbox konsolidiert — bis 31.10.2026",
   "grounding": "projekt.yaml WS1-04; RUBICON-Doc §4 WS1 K10/K11; WS-Paket WS1 Phase 1 (messbar-Spalte)"
  },
  {

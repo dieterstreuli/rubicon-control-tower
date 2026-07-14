@@ -21,7 +21,8 @@
    "Ohne abgeschlossenes M01 sind alle nachgelagerten Milestones (Sponsor-Mapping, Cliff-Analyse, Churn-Tracking) auf inkonsistenter Datenbasis – Verzögerung hat Kaskadeneffekt auf gesamten Commercial-Workstream"
   ],
   "erfolgsmessung": "100% der 338 Verträge und 129 Kunden tragen eine kanonische ID in Odoo; Reconciliation-Report weist 0 unaufgelöste Duplikate aus; Rollback-Snapshot vor Produktiv-Write dokumentiert und archiviert; Abnahme durch Haeffner und Pajor bis 2026-08-15 erfolgt",
-  "grounding": "129 Kunden · 338 Verträge im CRM-Cockpit"
+  "grounding": "129 Kunden · 338 Verträge im CRM-Cockpit",
+  "ziel_klartext": "Die Key-Harmonisierung (Vereinheitlichung der Datensatz-Schlüssel über Kunden und Verträge) ist physisch in Odoo geschrieben: 100% der 338 Verträge und 129 Kunden tragen eine kanonische (eindeutige, systemweit gültige) ID, der Reconciliation-Report (Abgleichsbericht) weist 0 unaufgelöste Duplikate aus, der Rollback-Snapshot (Sicherung zur Wiederherstellung) vor dem Produktiv-Write ist dokumentiert und archiviert, und die Abnahme durch Haeffner und Pajor ist bis 15.08.2026 erfolgt."
  },
  "M02": {
   "kontext": "72 der 129 Kunden haben Verträge ohne erfassten €-Wert. Dadurch ist ein wesentlicher Teil des €278M-Forecasts nicht vertraglich unterlegt und damit weder steuerbar noch belastbar verhandelbar. Ohne bezifferte Vertragswerte fehlt auch die Grundlage für Preisgleitklausel-Analysen (CPI/CBA) und Renewal-Priorisierung.",
@@ -45,7 +46,8 @@
    "Kapazitätsengpass bei Haeffner, da M02, M03 und M09 parallel laufen"
   ],
   "erfolgsmessung": "72 → 0 Kunden mit €-losen Verträgen; ≥95% des Forecast-Volumens vertraglich beziffert",
-  "grounding": "72 Kunden mit Verträgen ohne €-Wert"
+  "grounding": "72 Kunden mit Verträgen ohne €-Wert",
+  "ziel_klartext": "Die €-Wert-Lücken bei den 72 Kunden sind geschlossen: Kein Kunde hat mehr Verträge ohne hinterlegten €-Wert (72 → 0), und mindestens 95% des Forecast-Volumens sind vertraglich beziffert."
  },
  "M03": {
   "kontext": "Die 148 OPEN-Verträge mit einem Volumen von €91M sind derzeit nicht strukturiert erfasst: es fehlen €-Werte, Ablaufdaten, Renewal-Wahrscheinlichkeiten und Indexierungsklauseln (CPI/CBA). Ohne dieses Register ist das Risiko aus der OPEN-Masse weder mess- noch steuerbar und Verhandlungsprioritäten können nicht gesetzt werden.",
@@ -68,7 +70,8 @@
    "Indexierungsstatus einzelner Verträge ggf. nicht aus vorhandenen Unterlagen ableitbar → zu klären"
   ],
   "erfolgsmessung": "148/148 OPEN-Verträge mit €-Wert und Index-Flag im Register; 0 Verträge ohne €-Wert innerhalb des OPEN-Sets",
-  "grounding": "148 OPEN-Verträge / €91M; 72 Kunden mit Verträgen ohne €-Wert; Indexierungs-Lücken"
+  "grounding": "148 OPEN-Verträge / €91M; 72 Kunden mit Verträgen ohne €-Wert; Indexierungs-Lücken",
+  "ziel_klartext": "Das OPEN-Register (Register der offenen Vertragsverlängerungen, OPEN-Renewals) ist aufgebaut und die Datenlücken sind geschlossen: Alle 148 OPEN-Verträge sind mit €-Wert und Index-Flag erfasst; im OPEN-Set verbleibt kein Vertrag ohne €-Wert."
  },
  "M04": {
   "kontext": "94 Verträge mit einem Gesamtvolumen von €107M laufen 2027 aus (Cliff-2027). Ohne eine nach €-Wert priorisierte Liste und klar zugeordnete Verhandlungs-Owner und strategische Sponsoren droht ein unkoordinierter, reaktiver Renewal-Prozess mit hohem Churn-Risiko. M04 schafft die Grundlage für die gesamte Cliff-2027-Offensive.",
@@ -91,7 +94,8 @@
    "Kapazität Commercial-Team (Cüneyt/Himm/Eslava) für parallele Bearbeitung aller Milestones zu klären"
   ],
   "erfolgsmessung": "94/94 Verträge nach Wert gerankt; Top-30 (>ca. 80% des €107M) mit namentlichem Owner und Sponsor im CRM belegt",
-  "grounding": "CLIFF-2027 €107M / 94 Verträge"
+  "grounding": "CLIFF-2027 €107M / 94 Verträge",
+  "ziel_klartext": "Die Wertliste der Cliff-2027-Verträge (2027 auslaufende Vertragswelle) liegt vor: Alle 94 Verträge sind nach €-Wert absteigend gerankt, und für die Top-30-Verträge (über ca. 80% des Gesamtwerts von €107 Mio.) sind Verhandlungs-Owner und strategischer Sponsor namentlich im Customer-Relationship-Management-System (CRM) hinterlegt."
  },
  "M05": {
   "kontext": "Die LH-Group macht 34% bzw. €96M des €278M-Forecasts aus und stellt damit ein massives Klumpenrisiko dar. Gleichzeitig fehlt für diesen Schlüsselkunden ein strukturierter Account-Plan und die Beziehung ist reaktiv statt strategisch. Ohne frühzeitige Governance-Struktur droht ein unkontrollierter Renewal-Prozess bei einem existenzkritischen Kunden.",
@@ -115,7 +119,8 @@
    "Klumpenrisiko bleibt strukturell bestehen, solange Diversifikation (WS3) nicht greift"
   ],
   "erfolgsmessung": "LH-Account-Plan fertig; 100% der LH-Verträge mit €-Wert und Renewal-Datum erfasst; mind. 1 dokumentierter strategischer Touchpoint mit LH-Procurement",
-  "grounding": "LH-Group 34% / €96M des €278M-Forecasts; 112 von 129 Kunden ohne strategischen Sponsor"
+  "grounding": "LH-Group 34% / €96M des €278M-Forecasts; 112 von 129 Kunden ohne strategischen Sponsor",
+  "ziel_klartext": "Die Sponsor-Governance für die Lufthansa-Gruppe (LH-Group) ist aktiv: Der LH-Account-Plan liegt fertig vor, 100% der LH-Verträge sind mit €-Wert und Verlängerungsdatum (Renewal-Datum) erfasst, und mindestens ein strategischer Kontakt (Touchpoint) mit dem Einkauf der Lufthansa-Gruppe (LH-Procurement) ist durchgeführt und dokumentiert."
  },
  "M06": {
   "kontext": "112 von 129 Kunden (entsprechend rund €105M) haben keinen zugeordneten strategischen Sponsor auf C-Level-Seite. Ohne Sponsorship-Struktur fehlt bei Renewal-Verhandlungen die Beziehungsebene oberhalb des operativen Commercial-Teams. M06 schließt diese Lücke für die wertvollsten 30 Accounts als erste Priorität.",
@@ -138,7 +143,8 @@
    "Sponsor-Zuteilung ohne klare Erwartungshaltung und Kapazitätsabklärung bei C-Level bleibt wirkungslos"
   ],
   "erfolgsmessung": "30 von 30 Top-Accounts mit namentlichem C-Level-Sponsor im CRM-Cockpit hinterlegt; GL-Beschluss dokumentiert",
-  "grounding": "112 Kunden ohne Sponsor / €105M betroffen"
+  "grounding": "112 Kunden ohne Sponsor / €105M betroffen",
+  "ziel_klartext": "Für alle 30 nach Wert priorisierten Top-Accounts ist ein namentlicher Sponsor auf oberster Führungsebene (C-Level) im Customer-Relationship-Management-Cockpit (CRM-Cockpit) hinterlegt (30/30), und der zugehörige Beschluss der Geschäftsleitung (GL) ist dokumentiert."
  },
  "M07": {
   "kontext": "Die Akquise-Pipeline umfasst lediglich 21 Prospects ohne strukturierte Trichterführung und ohne bezifferte €-Werte. Angesichts des Cliff-2027-Risikos von €107M und einer Churn-Rate von 32 Kunden reicht das bestehende Neugeschäftspotenzial nicht aus, um den Umsatz zu stabilisieren. M07 schafft die quantitative Basis und die Trichterstruktur für gesteuertes Neugeschäft.",
@@ -161,7 +167,8 @@
    "Pipeline-Ziel €30M deckt Cliff-2027 nur partiell — strukturelle Diversifikation bleibt langfristig notwendig"
   ],
   "erfolgsmessung": "Pipeline-€-Ziel schriftlich fixiert; alle 21 Prospects mit €-Wert und Trichterstufe in Odoo erfasst; gewichteter Pipeline-Wert ausgewiesen",
-  "grounding": "Akquise-Pipeline nur 21 Prospects; CLIFF-2027 €107M / 94 Verträge"
+  "grounding": "Akquise-Pipeline nur 21 Prospects; CLIFF-2027 €107M / 94 Verträge",
+  "ziel_klartext": "Das Pipeline-€-Ziel (Zielwert für neues Geschäft in der Verkaufs-Pipeline) ist schriftlich fixiert und der Prospect-Trichter (Verkaufstrichter für potenzielle Neukunden) ist in Odoo aufgesetzt: Alle 21 Prospects sind mit €-Wert und Trichterstufe erfasst, und der gewichtete Pipeline-Wert ist als Kennzahl ausgewiesen."
  },
  "M08": {
   "kontext": "Aktuell gibt es keine automatisierte Verbindung zwischen Odoo (als System of Record) und dem CRM-Cockpit. Das bedeutet, dass 337 offene Follow-ups, 32 Churn-Fälle (18 Lost, 14 Inactive) und die 21 Prospects manuell synchron gehalten werden müssen — fehleranfällig und zeitverzögert. M08 aktiviert den bidirektionalen Sync als operative Grundlage für die tägliche Commercial-Steuerung.",
@@ -185,7 +192,8 @@
    "Starttermin 2026-08-16 setzt voraus, dass M01 bis 2026-08-15 abgeschlossen ist"
   ],
   "erfolgsmessung": "Sync-Latenz < 24h; 337 offene Follow-ups und 32 Churn-Fälle im Cockpit tagesaktuell; 0 Fehl-Sync-Tage über 2 Wochen nach Produktivnahme",
-  "grounding": "21 Prospects · 337 offene Follow-ups · Churn 32 (18 Lost + 14 Inactive)"
+  "grounding": "21 Prospects · 337 offene Follow-ups · Churn 32 (18 Lost + 14 Inactive)",
+  "ziel_klartext": "Die bidirektionale (in beide Richtungen laufende) Daten-Synchronisation zwischen Odoo und dem CRM-Cockpit ist produktiv geschaltet: Die Sync-Latenz liegt unter 24 Stunden, die 337 offenen Follow-ups und 32 Churn-Fälle (kündigungsgefährdete bzw. abwandernde Kunden) sind im Cockpit tagesaktuell sichtbar, und in den zwei Wochen nach Produktivnahme sind null Tage mit fehlgeschlagener Synchronisation (0 Fehl-Sync-Tage) aufgetreten."
  },
  "M09": {
   "kontext": "Ein Teil der 94 Cliff-2027-Verträge fällt in die Gruppe der 72 Kunden ohne €-Wert und/oder hat keine Indexierungsklausel (CPI/CBA). Ohne belastbare Wert- und Preisgleitbasis können diese Verträge nicht verhandelt werden — jede Verhandlung ohne Datenbasis schwächt die AXS-Position. M09 stellt die Verhandlungsfähigkeit für jeden einzelnen Cliff-2027-Vertrag sicher, bevor Renewal-Gespräche beginnen.",
@@ -209,7 +217,8 @@
    "Vertragsunterlagen für einzelne Cliff-2027-Verträge möglicherweise nicht vollständig verfügbar → verbleibende Lücken als 'zu klären' dokumentieren"
   ],
   "erfolgsmessung": "0 Cliff-2027-Verträge ohne €-Wert; Indexierungsklausel bei jedem Cliff-2027-Renewal als Pflicht-Traktandum in Odoo geflaggt",
-  "grounding": "72 Kunden mit Verträgen ohne €-Wert; Indexierungs-Lücken (viele Verträge ohne CPI/CBA)"
+  "grounding": "72 Kunden mit Verträgen ohne €-Wert; Indexierungs-Lücken (viele Verträge ohne CPI/CBA)",
+  "ziel_klartext": "Die Datenlücken der Cliff-2027-Verträge (2027 auslaufende Vertragswelle) sind geschlossen: Kein Cliff-2027-Vertrag ist mehr ohne erfassten €-Wert, und das Thema Indexierungsklausel ist bei jedem Cliff-2027-Renewal (Vertragsverlängerung) als Pflicht-Traktandum in Odoo geflaggt — damit ist die Verhandlungsfähigkeit für die Renewal-Gespräche hergestellt."
  },
  "M10": {
   "kontext": "Im AXS-Commercial-Portfolio sind 148 von 338 Verträgen (€91M) ohne geklärten Renewal-Status — sie sind als 'OPEN' klassifiziert, d.h. es ist unklar, ob diese Verträge verlängert, neu verhandelt, herausgepreist oder beendet werden. Ein bedeutender Teil dieser OPEN-Verträge fällt in die Cliff-2027-Wand (€107M / 94 Verträge), die ab 2027 droht. Ohne Klassifizierung und Owner-Zuweisung fehlt die Grundlage für jede kommerzielle Steuerungsmassnahme.",
@@ -232,7 +241,8 @@
    "UNCERTAIN-Kategorie als Sammelkorb: zu viele UNCERTAIN-Einordnungen unterläuft den Zweck der Klassifizierung — Qualitätskontrolle erforderlich"
   ],
   "erfolgsmessung": "148 von 148 OPEN-Verträgen klassifiziert (0 offene Klassifizierungen) und mit Account-Owner versehen bis 28.09.2026",
-  "grounding": "148 OPEN-Verträge / €91M; CLIFF-2027 €107M / 94 Verträge"
+  "grounding": "148 OPEN-Verträge / €91M; CLIFF-2027 €107M / 94 Verträge",
+  "ziel_klartext": "Alle 148 Verträge mit Status OPEN (offene Vertragsverlängerungen, OPEN-Renewals) sind hinsichtlich ihres Renewal-Status klassifiziert — 0 offene Klassifizierungen — und jeder dieser Verträge ist einem Account-Owner (verantwortlichen Kundenbetreuer) zugewiesen."
  },
  "M11": {
   "kontext": "Die LH-Group ist mit 34% / €96M der grösste Einzelkunde im AXS-Portfolio und stellt den Löwenanteil der Cliff-2027-Wand. Viele Verträge weisen keine CPI/CBA-Indexierungsklauseln auf, was zu schleichender Preiserosion führt — jedes Jahr ohne Indexierung frisst die Marge. Ohne saubere €-Werte und dokumentierten Indexierungsstatus je LH-Vertrag ist eine fundierte Multi-Year-Verlängerungsverhandlung nicht möglich.",
@@ -255,7 +265,8 @@
    "Ohne CPI/CBA-Klausel in einem Multi-Year-Term würde die Preiserosion verlängert statt gestoppt — Risiko, dass Verhandlung ohne diesen Punkt abgeschlossen wird"
   ],
   "erfolgsmessung": "0 LH-Verträge ohne €-Wert; 100% der LH-Verträge mit dokumentiertem Indexierungsstatus (CPI/CBA: ja/nein) im CRM bis 30.11.2026",
-  "grounding": "72 Kunden mit Verträgen ohne €-Wert + Indexierungs-Lücken (viele Verträge ohne CPI/CBA-Klausel = Preiserosionsrisiko)"
+  "grounding": "72 Kunden mit Verträgen ohne €-Wert + Indexierungs-Lücken (viele Verträge ohne CPI/CBA-Klausel = Preiserosionsrisiko)",
+  "ziel_klartext": "Die Datenlücken bei den Lufthansa-Verträgen (LH) sind geschlossen: Kein LH-Vertrag ist mehr ohne erfassten €-Wert, und 100% der LH-Verträge haben einen dokumentierten Indexierungsstatus — CPI (Consumer Price Index, Verbraucherpreisindex) beziehungsweise CBA (Collective Bargaining Agreement, Tarifvertrag): ja/nein — im Customer-Relationship-Management-System (CRM). Damit ist die Verhandlungsfähigkeit gegenüber Lufthansa hergestellt."
  },
  "M12": {
   "kontext": "66 der 129 Kunden im AXS-Portfolio haben keinen jüngsten dokumentierten Touchpoint im CRM — sie befinden sich in Aktivitäts-Stille. Fehlende Beziehungspflege ist ein Frühindikator für Churn (bereits 32 Kunden verloren) und macht Kündigungsabsichten unsichtbar, bis es zu spät ist. Ziel dieses Milestones ist es, die Stille zu durchbrechen und eine dokumentierte Kontaktbasis im CRM herzustellen.",
@@ -278,7 +289,8 @@
    "Reaktions-Ausfall: Manche stillen Accounts reagieren möglicherweise nicht — Eskalationspfad (wann Haeffner einschalten?) zu klären"
   ],
   "erfolgsmessung": "≥55 von 66 stillen Accounts mit dokumentiertem, im CRM erfasstem Touchpoint bis 31.10.2026; Stille-Kennzahl unter 10 sinkend",
-  "grounding": "66 Kunden in Aktivitäts-Stille (kein jüngster Touchpoint)"
+  "grounding": "66 Kunden in Aktivitäts-Stille (kein jüngster Touchpoint)",
+  "ziel_klartext": "Die Touchpoint-Welle zur Reaktivierung der 66 stillen Accounts (Kundenbeziehungen ohne aktuellen dokumentierten Kontakt) ist abgeschlossen: Mindestens 55 der 66 stillen Accounts haben einen dokumentierten, im Customer-Relationship-Management-System (CRM) erfassten Touchpoint (Kundenkontakt), und die Stille-Kennzahl sinkt unter 10."
  },
  "M13": {
   "kontext": "Die LH-Group bildet mit 34% / €96M den grössten Einzelkunden im AXS-Portfolio und einen Hauptanteil der Cliff-2027-Wand (€107M / 94 Verträge). Eine verspätete oder reaktive Verlängerung würde AXS in eine schwache Verhandlungsposition bringen. Die Frühverlängerung — initiiert durch Sponsor Andreas Fritthum auf C-Level-Ebene — soll die Verhandlungshoheit sichern und die Grundlage für eine CPI/CBA-indexierte Multi-Year-Bindung schaffen.",
@@ -301,7 +313,8 @@
    "CPI/CBA-Klausel im Term-Sheet nicht durchsetzbar: Risiko, dass Multi-Year-Bindung ohne Indexierung zustande kommt und die Preiserosion verlängert"
   ],
   "erfolgsmessung": "LH-Cliff-2027-Verträge mit unterzeichnetem Term-Sheet oder Verlängerungs-LOI bis 31.10.2026",
-  "grounding": "LH-Group 34% / €96M; CLIFF-2027 €107M / 94 Verträge"
+  "grounding": "LH-Group 34% / €96M; CLIFF-2027 €107M / 94 Verträge",
+  "ziel_klartext": "Die Frühverlängerung der Lufthansa-Group-Verträge (LH) ist als Anker-Deal für die weiteren Vertragsverlängerungen gestartet: Für die LH-Cliff-2027-Verträge (2027 auslaufende Vertragswelle) liegt ein unterzeichnetes Term-Sheet (Eckpunktepapier) oder ein unterzeichneter Verlängerungs-LOI (Letter of Intent, Absichtserklärung) vor."
  },
  "M14": {
   "kontext": "Im AXS-Portfolio sind 112 von 129 Kunden ohne strategischen Sponsor — ein strukturelles Governance-Defizit, das bedeutet, dass auf C-Level keine Verantwortung für diese Kundenbeziehungen getragen wird. Für RENEW/RE-PRICE-Gespräche bei den OPEN-Verträgen (€91M) braucht es strategische Eigentümerschaft, damit Verhandlungen auf Augenhöhe geführt werden können. Dieser Milestone adressiert gezielt die grössten €-Risiken aus dem OPEN-Set.",
@@ -324,7 +337,8 @@
    "70%-Abdeckungsziel setzt voraus, dass €-Werte der Top-20 OPEN-Kunden vollständig vorliegen — sonst Rangfolge unzuverlässig"
   ],
   "erfolgsmessung": "Top-20 OPEN-Kunden nach €-Wert mit benanntem C-Level-Sponsor bis 31.10.2026; Abdeckung ≥70% des €91M OPEN-Volumens",
-  "grounding": "112 von 129 Kunden ohne strategischen Sponsor (€105M betroffen); €91M OPEN"
+  "grounding": "112 von 129 Kunden ohne strategischen Sponsor (€105M betroffen); €91M OPEN",
+  "ziel_klartext": "Die Sponsor-Zuordnung für bislang unbetreute Kunden mit offenen Vertragsverlängerungen (OPEN-Renewals) ist abgeschlossen: Die 20 wertgrössten OPEN-Kunden (Top-20 nach Euro-Vertragswert) haben bis 31.10.2026 einen benannten Sponsor auf C-Level, und die so abgedeckten Kunden repräsentieren mindestens 70% des offenen Vertragsvolumens von €91 Mio."
  },
  "M15": {
   "kontext": "72 Kunden im AXS-Portfolio haben Verträge ohne €-Wert im CRM, und viele Verträge weisen keine CPI/CBA-Indexierungsklausel auf. Diese Datenlücken sind nicht einmalig entstanden — ohne automatischen Pflichtfeld-Check im Sync werden sie sich bei neuen Verträgen wiederholen. Ein aktives Datenqualitäts-Gate soll diese strukturelle Schwäche schliessen und Haeffner wöchentlich mit einem Lücken-Report steuern.",
@@ -348,7 +362,8 @@
    "Definitionsrisiko: unklare Pflichtfeld-Matrix führt zu Fehlalarmen oder zu wenig Treffern — Abstimmung mit Haeffner vorab nötig"
   ],
   "erfolgsmessung": "€-Wert-Lücke von 72 Kunden auf <15 gesenkt; Indexklausel-Status je Vertrag im Cockpit sichtbar; automatischer Lücken-Report wöchentlich aktiv — alles bis 30.11.2026",
-  "grounding": "72 Kunden mit Verträgen ohne €-Wert; Indexierungs-Lücken (kein CPI/CBA)"
+  "grounding": "72 Kunden mit Verträgen ohne €-Wert; Indexierungs-Lücken (kein CPI/CBA)",
+  "ziel_klartext": "Das Datenqualitäts-Gate (Qualitätsprüfung mit Sperrwirkung) für Euro-Vertragswerte und Indexklauseln ist aktiv: Die Zahl der Kunden ohne erfassten Euro-Vertragswert ist von 72 auf unter 15 gesenkt, der Indexklausel-Status ist je Vertrag im Cockpit sichtbar, und ein automatischer wöchentlicher Lücken-Report läuft — alles bis 30.11.2026."
  },
  "M16": {
   "kontext": "Im Odoo-CRM stehen 337 offene Follow-ups ohne klare Priorisierung oder Owner-Zuordnung. Parallel dazu haben 66 Kunden keinen dokumentierten Touchpoint (Aktivitäts-Stille). Die Pipeline ist mit nur 21 Prospects strukturell dünn, und es gibt keine etablierte Review-Kadenz im Commercial-Team, die sicherstellt, dass Leads und Prospects aktiv bewirtschaftet werden. Ohne Disziplin in der Nachverfolgung verpufft Neugeschäftspotenzial.",
@@ -371,7 +386,8 @@
    "Review-Kadenz bricht ohne Ownership auf Haeffner-Ebene schnell zusammen — Verbindlichkeit des Rhythmus muss im Commercial-Team verankert sein"
   ],
   "erfolgsmessung": "Offene Follow-ups <100; 0 Prospects in Aktivitäts-Stille >30 Tage; wöchentlicher Pipeline-Review nachweislich etabliert — alles bis 31.12.2026",
-  "grounding": "Odoo 337 offene Follow-ups; 66 Kunden in Aktivitäts-Stille"
+  "grounding": "Odoo 337 offene Follow-ups; 66 Kunden in Aktivitäts-Stille",
+  "ziel_klartext": "Die 337 offenen Follow-ups (Wiedervorlagen/Nachfassaktionen) sind abgearbeitet und eine dauerhafte Follow-up-Disziplin ist etabliert: Es sind weniger als 100 Follow-ups offen, kein Prospect (potenzieller Kunde) ist länger als 30 Tage ohne dokumentierte Aktivität, und ein wöchentlicher Pipeline-Review ist nachweislich etabliert — alles bis 31.12.2026."
  },
  "M17": {
   "kontext": "148 OPEN-Verträge (€91M) haben keinen geklärten Renewal-Status, und ein wesentlicher Teil davon dürfte unvollständige Basisdokumente aufweisen — fehlender SGHA-Rahmen, fehlender Annex B (Rates), keine aktuelle Preisliste oder unklare Laufzeit-/Kündigungsklauseln. Ohne diese Unterlagen ist eine Renewal- oder RE-PRICE-Verhandlung rechtlich und kommerziell nicht führbar. Ziel ist es, die dokumentarische Grundlage für alle 148 OPEN-Verträge herzustellen.",
@@ -395,7 +411,8 @@
    "90%-Ziel setzt voraus, dass Basisdokumente physisch vorhanden sind — teilweise könnten Verträge nur mündlich oder informell bestehen (zu klären)"
   ],
   "erfolgsmessung": "Dokumenten-Vollständigkeitsquote der 148 OPEN-Verträge ≥90%; €91M vertraglich dokumentiert bis 31.12.2026",
-  "grounding": "OPEN €91M / 148 Verträge ohne geklärten Renewal-Status"
+  "grounding": "OPEN €91M / 148 Verträge ohne geklärten Renewal-Status",
+  "ziel_klartext": "Die Vollständigkeit der Basisdokumente bei den Verträgen mit offener Verlängerung (OPEN-Verträge) ist hergestellt: Die Dokumenten-Vollständigkeitsquote der 148 OPEN-Verträge liegt bei mindestens 90%, und das zugehörige Vertragsvolumen von €91 Mio. ist damit vertraglich dokumentiert — bis 31.12.2026."
  },
  "M18": {
   "kontext": "112 von 129 AXS-Kunden (€105M) haben keinen strategischen Sponsor — ein strukturelles Defizit in der Beziehungspflege, das den Churn begünstigt (bereits 32 Kunden verloren). Nach der Zuweisung der Top-30-Accounts an Sponsoren adressiert M18 die verbleibenden ~82 Accounts und verankert gleichzeitig eine wertgestaffelte Kontakt-Cadence, damit Sponsoren ihren Rhythmus systematisch einhalten.",
@@ -419,7 +436,8 @@
    "CRM-Terminierung der wiederkehrenden Aktivitäten erfordert disziplinierte Datenpflege; bricht die Pflege ab, verliert das System seinen Steuerungswert"
   ],
   "erfolgsmessung": "112 von 112 Accounts mit Sponsor und hinterlegter Cadence im CRM; €105M vollständig abgedeckt bis 15.12.2026",
-  "grounding": "112 Kunden ohne Sponsor / €105M betroffen"
+  "grounding": "112 Kunden ohne Sponsor / €105M betroffen",
+  "ziel_klartext": "Alle 112 bislang sponsorlosen Accounts haben einen benannten Sponsor und eine im CRM (Customer-Relationship-Management-System) hinterlegte Cadence (fester Kontakt-Rhythmus); damit ist das zugehörige Vertragsvolumen von €105 Mio. bis 15.12.2026 vollständig abgedeckt."
  },
  "M19": {
   "kontext": "112 von 129 Kunden (€105M Volumen) haben keinen zugeordneten strategischen Sponsor, und 66 Kunden befinden sich in Aktivitäts-Stille — beides ist ein Governance-Defizit, das Churn und Vertragsverluste begünstigt. Dieser Milestone verankert Sponsor-Pflicht und Aktivitäts-Tracking als verbindliche Steuerungsgrössen im CRM-Cockpit, damit keine Kundenbeziehung mehr ohne definierten Eigentümer bleibt. Voraussetzung ist, dass der bidirektionale Odoo-Cockpit-Sync bereits scharf geschaltet ist.",
@@ -443,7 +461,8 @@
    "Ziel <40 sponsorlose Kunden ist ambitioniert: wenn für viele Kunden kein geeigneter Sponsor verfügbar ist (Kapazität C-Level), ist das Ziel zu klären"
   ],
   "erfolgsmessung": "Sponsor-Feld für 129/129 Kunden befüllt; Zahl sponsorloser Kunden von 112 auf <40 reduziert; Aktivitäts-Stille-Liste im Cockpit live und nachweislich aktuell",
-  "grounding": "112 von 129 Kunden ohne Sponsor (€105M); 66 Kunden in Aktivitäts-Stille"
+  "grounding": "112 von 129 Kunden ohne Sponsor (€105M); 66 Kunden in Aktivitäts-Stille",
+  "ziel_klartext": "Das Cockpit ist als Steuerungsinstrument im 3-Ebenen-Modell (Sponsor-Ebenen C-Level / Commercial / Station) verankert: Das Sponsor-Feld ist für alle 129 Kunden befüllt, die Zahl der Kunden ohne aktiven Sponsor ist von 112 auf unter 40 reduziert, und die Aktivitäts-Stille-Liste (Kunden ohne aktuellen Kundenkontakt) ist im Cockpit live geschaltet und nachweislich aktuell."
  },
  "M20": {
   "kontext": "Die Odoo-Akquise-Pipeline zählt nur 21 qualifizierte Prospects bei gleichzeitig 337 offenen Follow-ups und einem Churn von 32 Kunden (18 Lost, 14 Inactive) — ein strukturell zu dünner Trichter, um das CLIFF-2027-Ersatzgeschäft (€107M, 94 Verträge) aufzufangen, sollten Verlängerungen scheitern. Dieser Milestone zielt darauf, den LH-Klumpen (34% Anteil) durch Wachstum der Nicht-LH-Basis strukturell zu verdünnen, statt nur LH zu binden.",
@@ -466,7 +485,8 @@
    "Langer Zeithorizont: zwischenzeitliche Steuerungspunkte sind zu definieren"
   ],
   "erfolgsmessung": "Akquise-Pipeline in Odoo von 21 auf ≥50 qualifizierte Prospects; offene Follow-ups von 337 auf <150 reduziert",
-  "grounding": "Odoo Akquise-Pipeline nur 21 Prospects; 337 offene Follow-ups; Churn 32 (18 Lost + 14 Inactive)"
+  "grounding": "Odoo Akquise-Pipeline nur 21 Prospects; 337 offene Follow-ups; Churn 32 (18 Lost + 14 Inactive)",
+  "ziel_klartext": "Die Neugeschäft-Pipeline ist aufgefüllt und das Klumpenrisiko (Umsatzkonzentration auf wenige Grosskunden) ist strukturell verdünnt: Die Akquise-Pipeline in Odoo ist von 21 auf mindestens 50 qualifizierte Prospects (ernsthafte potenzielle Neukunden) ausgebaut, und die Zahl der offenen Follow-ups ist von 337 auf unter 150 reduziert."
  },
  "M21": {
   "kontext": "Der CLIFF-2027 umfasst €107M Vertragsvolumen über 94 Verträge, die bis Ende 2027 zur Verlängerung anstehen — das grösste Einzelrisiko im gesamten Commercial-Portfolio. Bis Ende Q4/2026 sollen mindestens 30% dieses Volumens (€32M) vertraglich gesichert werden, um frühzeitig Sicherheit zu schaffen und den Druck im Jahr 2027 zu reduzieren. Voraussetzung ist, dass die LH-Group-Frühverlängerung als Anker gestartet wurde.",
@@ -489,7 +509,8 @@
    "Kunden können Gespräche verzögern: €32M bis 31.12.2026 ist nur erreichbar, wenn Gespräche spätestens August/September anlaufen"
   ],
   "erfolgsmessung": "≥€32M (30% von €107M CLIFF-2027-Volumen) bis 31.12.2026 vertraglich gesichert; Fortschritts-Balken im Cockpit zeigt Erreichungsgrad",
-  "grounding": "CLIFF-2027 €107M / 94 Verträge; 243 offene Maßnahmen"
+  "grounding": "CLIFF-2027 €107M / 94 Verträge; 243 offene Maßnahmen",
+  "ziel_klartext": "Das 30%-Sicherungsziel für das CLIFF-2027-Volumen (2027 auslaufende Vertragswelle, Gesamtvolumen €107 Mio.) ist erreicht: Bis zum 31.12.2026 sind mindestens €32 Mio. (30% von €107 Mio.) vertraglich gesichert — unterzeichnet oder mit verbindlichem Term-Sheet —, und der Fortschritts-Balken im Cockpit zeigt den Erreichungsgrad."
  },
  "M22": {
   "kontext": "Zahlreiche Bestandsverträge enthalten keine CPI- oder CBA-Indexierungsklausel, was bei steigenden Lohn- und Betriebskosten zu struktureller Preiserosion führt und die Marge langfristig unterhöhlt. Dieser Milestone macht die Indexierungsklausel zum verbindlichen Standard bei jeder Vertragsverlängerung und schliesst damit eine der grössten wirtschaftlichen Lücken im Commercial-Rahmenwerk. Voraussetzung ist, dass die Basisdokumente-Vollständigkeit bei OPEN-Verträgen bereits hergestellt wurde.",
@@ -513,7 +534,8 @@
    "Definition des CPI-Referenzindex (national je DE/AT/ES/CH vs. einheitlich) ist zu klären und kann Umsetzung verzögern"
   ],
   "erfolgsmessung": "Standardklausel freigegeben und in Vorlage integriert; 100% neuer Renewal-Drafts ab Q1/2027 enthalten Indexierung oder dokumentierte C-Level-Ausnahme",
-  "grounding": "Indexierungs-Lücken: viele Verträge ohne CPI/CBA-Klausel = Preiserosionsrisiko"
+  "grounding": "Indexierungs-Lücken: viele Verträge ohne CPI/CBA-Klausel = Preiserosionsrisiko",
+  "ziel_klartext": "Eine verbindliche Indexierungsklausel — automatische Preisanpassung auf Basis des Konsumentenpreisindexes (CPI, Consumer Price Index) und vertragliche Weitergabe von Kostensteigerungen aus Tarifabschlüssen (CBA, Collective Bargaining Agreement) — ist als Standard für Vertragsverlängerungen (Renewals) in Kraft: Die Standardklausel ist freigegeben und in die Vertragsvorlage integriert, und ab Q1/2027 enthalten 100% der neuen Renewal-Entwürfe entweder die Indexierung oder eine dokumentierte C-Level-Ausnahme."
  },
  "M23": {
   "kontext": "Mit nur 21 qualifizierten Prospects in der Odoo-Pipeline ist die Neugeschäftsbasis strukturell zu dünn, um die €107M CLIFF-2027-Lücke oder den LH-Klumpen durch organisches Wachstum zu kompensieren. 32 Churn-Kunden (18 Lost, 14 Inactive) sowie identifizierbare Whitespace-Airlines an den AXS-Standorten bieten Reaktivierungs- und Neuakquise-Potenzial, das systematisch erschlossen werden muss. Dieser Milestone baut den Prospect-Trichter auf Grundlage vorhandener Daten auf.",
@@ -537,7 +559,8 @@
    "Kapazität der regionalen Account-Owner: parallele Bearbeitung von Renewals und Neuakquise erfordert klare Ressourcenplanung"
   ],
   "erfolgsmessung": "Prospect-Zahl in Odoo von 21 auf ≥60 verdreifacht; ≥10 der 32 Churn-Kunden als Reaktivierungs-Lead requalifiziert und dokumentiert in Odoo",
-  "grounding": "Odoo Pipeline 21 Prospects; Churn 32 (18 Lost + 14 Inactive); IAG 4.6% / AF-KL 4.1% Long Tail"
+  "grounding": "Odoo Pipeline 21 Prospects; Churn 32 (18 Lost + 14 Inactive); IAG 4.6% / AF-KL 4.1% Long Tail",
+  "ziel_klartext": "Der Prospect-Trichter (Bestand potenzieller Neukunden in der Akquise) ist von 21 auf mindestens 60 Leads verbreitert: Die Prospect-Zahl in Odoo ist auf 60 oder mehr erhöht, und mindestens 10 der 32 abgewanderten Kunden (Churn) sind als Reaktivierungs-Lead requalifiziert und in Odoo dokumentiert."
  },
  "M24": {
   "kontext": "Die LH-Group stellt mit €96M / 34% den grössten Einzelklumpen im AXS-Portfolio dar, wobei nur €21M (7% des Gesamtportfolios, 36 Verträge) mit Laufzeit ≥2029 langfristig gesichert sind. Ein erheblicher Teil des LH-Volumens ist in der OPEN- oder CLIFF-Zone — ohne C-Level-Gespräch über Mehrjahresbindung bleibt dieses Risiko strukturell ungelöst. Voraussetzung ist, dass LH-Datenlücken und Indexierung vorher geschlossen wurden, um verhandlungsfähig zu sein.",
@@ -560,7 +583,8 @@
    "€40M-Ziel für Absichtserklärung ist ambitioniert bei einem offenen Gesamtklumpen von €96M — realistisches Minimalziel vorab intern klären"
   ],
   "erfolgsmessung": "Multi-Year-Term-Gespräch geführt und Absichtserklärung/Term-Sheet-Grundzüge für ≥€40M LH-Volumen mit Ziel-Laufzeit ≥2029 dokumentiert",
-  "grounding": "CLIFF-2027 €107M / 94 Verträge + OPEN €91M / 148 Verträge; FIXED ≥2029 nur €21M / 36 (7% langfristig gesichert)"
+  "grounding": "CLIFF-2027 €107M / 94 Verträge + OPEN €91M / 148 Verträge; FIXED ≥2029 nur €21M / 36 (7% langfristig gesichert)",
+  "ziel_klartext": "Das Multi-Year-Term-Gespräch (Gespräch über eine mehrjährige Vertragsverlängerung) mit der Lufthansa Group (LH) ist auf C-Level geführt, und die Grundzüge einer Absichtserklärung bzw. eines Term Sheets für ein LH-Volumen von mindestens €40 Mio. mit einer Ziel-Laufzeit bis mindestens 2029 liegen dokumentiert vor."
  },
  "M25": {
   "kontext": "94 CLIFF-2027-Verträge (€107M) und 148 OPEN-Verträge (€91M) sind das Kernrisiko des Portfolios — zusammen fast €200M an ungesichertem Volumen. Ohne strukturierte Beziehungspflege mit definierten Sponsor-Touchpoints vor dem Renewal-Fenster gehen diese Verträge ohne Vertrauensbasis in die Verlängerung. Dieser Milestone koppelt die Beziehungs-Cadence direkt an die Renewal-Wand und schliesst damit die Lücke zwischen Sponsor-Governance und tatsächlicher Verhandlungsvorbereitung.",
@@ -583,7 +607,8 @@
    "Zeitliche Dichte: 94 Verträge brauchen alle einen Sponsor-Touchpoint — bei begrenzter C-Level-Kapazität Priorisierung nach €-Wert erforderlich"
   ],
   "erfolgsmessung": "100% der 94 CLIFF-2027-Verträge mit dokumentiertem Sponsor-Touchpoint vor Renewal-Start; Nachweis im Cockpit je Vertrag verfügbar",
-  "grounding": "CLIFF-2027 €107M / 94 Verträge + OPEN €91M / 148 Verträge"
+  "grounding": "CLIFF-2027 €107M / 94 Verträge + OPEN €91M / 148 Verträge",
+  "ziel_klartext": "Der Sponsor-Kontakt-Rhythmus (Cadence) ist an die CLIFF-2027-Vertragswelle (die 94 im Jahr 2027 auslaufenden Verträge) gekoppelt: Alle 94 CLIFF-2027-Verträge weisen vor dem Start ihrer jeweiligen Vertragsverlängerung (Renewal) einen dokumentierten Sponsor-Touchpoint auf, und der Nachweis dazu ist je Vertrag im Cockpit verfügbar."
  },
  "M26": {
   "kontext": "Der LH-Klumpen (34%, €96M) kann nicht allein durch LH-Bindung strukturell gelöst werden — die relative Abhängigkeit sinkt nur, wenn die Nicht-LH-Basis aktiv wächst. IAG (4.6%) und AF/KL (4.1%) sind die grössten Nicht-LH-Kunden, trotzdem liegt der gesamte Rest als Long Tail vor, und 66 Kunden befinden sich in Aktivitäts-Stille. Dieser Milestone verankert C-Level-Sponsoren mit definierten Ausbau-Zielen für die Top-10-Non-LH-Kunden.",
@@ -606,7 +631,8 @@
    "Ausbau-Ziele je Kunde sind noch zu definieren: Realismus und Messbarkeit hängen von verfügbaren Potenzialanalysen ab"
   ],
   "erfolgsmessung": "Top-10-Non-LH-Kunden alle mit benanntem C-Level-Sponsor und dokumentiertem Ausbau-Ziel; LH-Anteil am Gesamt-Forecast von 34% auf ≤30% gesenkt",
-  "grounding": "LH-Group 34% vs. IAG 4.6% / AF-KL 4.1% (Rest long tail); 66 Kunden in Aktivitäts-Stille"
+  "grounding": "LH-Group 34% vs. IAG 4.6% / AF-KL 4.1% (Rest long tail); 66 Kunden in Aktivitäts-Stille",
+  "ziel_klartext": "Die zehn umsatzstärksten Kunden ausserhalb der Lufthansa Group (Top-10-Non-LH-Kunden) haben alle einen benannten C-Level-Sponsor und ein dokumentiertes Ausbau-Ziel, und der Lufthansa-(LH-)Anteil am Gesamt-Forecast ist von 34% auf höchstens 30% gesenkt."
  },
  "M27": {
   "kontext": "€91M / 148 OPEN-Verträge sind das unmittelbarste Volumenrisiko neben dem CLIFF: viele davon enthalten keine Indexierungsklausel und laufen Gefahr, bei steigenden Kosten (Löhne, Energie) die Marge weiter auszuhöhlen. Zusätzlich befinden sich 66 Kunden in Aktivitäts-Stille — ohne Reaktivierungs-Touchpoint sind diese bei Renewal latent abwanderungsgefährdet. Dieser Milestone bringt Re-Pricing und Indexierung für OPEN-Verträge aktiv in die Verhandlung.",
@@ -629,7 +655,8 @@
    "Kunden in Aktivitäts-Stille können schwer erreichbar oder desinteressiert sein — bei 66 Kunden ist vollständige Touchpoint-Abdeckung organisatorisch anspruchsvoll"
   ],
   "erfolgsmessung": "≥80% der RE-PRICE-klassifizierten OPEN-Verträge mit unterzeichneter Indexierungsklausel; alle 66 stillen Kunden mit dokumentiertem Touchpoint in Odoo nachweisbar",
-  "grounding": "Indexierungs-Lücken (Preiserosionsrisiko); 66 Kunden in Aktivitäts-Stille; €91M OPEN"
+  "grounding": "Indexierungs-Lücken (Preiserosionsrisiko); 66 Kunden in Aktivitäts-Stille; €91M OPEN",
+  "ziel_klartext": "Mindestens 80% der als RE-PRICE (neu zu bepreisen) klassifizierten offenen Vertragsverlängerungen (OPEN-Verträge) haben eine unterzeichnete Indexierungsklausel (vertraglich vereinbarte automatische Preisanpassung), und alle 66 Kunden ohne dokumentierte Aktivität («stille Kunden») weisen einen in Odoo dokumentierten Touchpoint nach."
  },
  "M28": {
   "kontext": "Das Commercial-CRM der AXS Group umfasst 338 Verträge mit 243 offenen Massnahmen und historisch unvollständiger Datenlage. Dieser Milestone soll sicherstellen, dass einmal geschlossene Datenlücken — insbesondere die €-Wert-Abdeckung und die Indexierungsquote — nicht zurückfallen. Ein dauerhafter Datenqualitäts-Monitor ersetzt einmalige Bereinigungssprints durch laufende Steuerung.",
@@ -653,7 +680,8 @@
    "Technische Umsetzungskapazität bei Tine Petric parallel zu anderen Cockpit-Aufgaben zu klären"
   ],
   "erfolgsmessung": "Monatlicher DQ-Report ist im CRM-Cockpit live; €-Wert-Abdeckung ≥95% und Indexierungsquote als laufende Kennzahlen über alle 338 Verträge dauerhaft gehalten",
-  "grounding": "338 Verträge · 243 offene Maßnahmen"
+  "grounding": "338 Verträge · 243 offene Maßnahmen",
+  "ziel_klartext": "Ein monatlicher Datenqualitäts-Report (DQ-Report) läuft dauerhaft («live») im CRM-Cockpit (Customer-Relationship-Management-System), und die €-Wert-Abdeckung von mindestens 95% sowie die Indexierungsquote werden als laufende Kennzahlen über alle 338 Verträge dauerhaft gehalten."
  },
  "M29": {
   "kontext": "Der CLIFF-2027 umfasst €107M Vertragsvolumen über 94 Verträge — davon sind 85 als at-risk klassifiziert. Nach dem Q4/2026-Meilenstein (Ziel: 30% gesichert) gilt es, das Momentum aufrechtzuerhalten und auch mittlere und kleinere Verträge — darunter IAG- und AF/KL-nahe Positionen — systematisch abzuarbeiten. Ohne aktive Bearbeitung droht ein struktureller Umsatzverlust im dreistelligen Millionenbereich.",
@@ -676,7 +704,8 @@
    "Ressourcen-Engpass im Commercial-Team bei paralleler Bearbeitung aller 94 Verträge"
   ],
   "erfolgsmessung": "≥€64M (60% von €107M) vertraglich gesichert bis 30.09.2027; alle verbleibenden at-risk-Cliff-Verträge mit namentlichem Eskalations-Owner dokumentiert im Cockpit",
-  "grounding": "CLIFF-2027 €107M / 94 Verträge; 85 at-risk; IAG 4.6% / AF-KL 4.1%"
+  "grounding": "CLIFF-2027 €107M / 94 Verträge; 85 at-risk; IAG 4.6% / AF-KL 4.1%",
+  "ziel_klartext": "Die 2027 auslaufende Vertragswelle (Cliff-2027) ist zu mindestens 60% vertraglich gesichert: Vom Cliff-2027-Volumen von €107 Mio. — inklusive Rest-Volumen und der vielen kleineren Verträge (Long-Tail) — sind mindestens €64 Mio. vertraglich gesichert (bis 30.09.2027), und alle verbleibenden abwanderungsgefährdeten (at-risk) Cliff-Verträge sind mit einem namentlich benannten Eskalations-Verantwortlichen im Commercial-Cockpit dokumentiert."
  },
  "M30": {
   "kontext": "AXS hat mit 21 Prospects eine zu dünne Neugeschäfts-Pipeline angesichts eines Churn von 32 Kunden und der anstehenden Cliff-Wand. Die 94 CLIFF-2027-Verträge (€107M) und 148 OPEN-Verträge (€91M) werden bisher primär als Risiken geführt, nicht als Pipeline-Chancen. Dieser Milestone macht Retention messbar zum Teil des Neugeschäfts-Funnels und koppelt Verlängerungsangebote an C-Level-Sponsoren.",
@@ -699,7 +728,8 @@
    "Ohne indexierte Rate-Angebote riskieren Verlängerungen die Weiterführung der Preiserosion"
   ],
   "erfolgsmessung": "≥80% der €107M Cliff-2027 mit definiertem Renewal-Angebot und C-Level-Sponsor dokumentiert; Renewal-Winrate als separate Kennzahl ausgewiesen; gesamter €-Wert der 148 OPEN-Verträge im Trichter erfasst",
-  "grounding": "CLIFF-2027 €107M / 94 Verträge; OPEN €91M / 148 Verträge; nur €21M / 36 FIXED ≥2029 (7%)"
+  "grounding": "CLIFF-2027 €107M / 94 Verträge; OPEN €91M / 148 Verträge; nur €21M / 36 FIXED ≥2029 (7%)",
+  "ziel_klartext": "Eine Win-Back-Kampagne für die Vertragsverlängerungen (Renewals) der 2027 auslaufenden Vertragswelle (Cliff-2027) ist als eigener Pipeline-Kanal etabliert: Für mindestens 80% des Cliff-2027-Volumens von €107 Mio. ist ein definiertes Renewal-Angebot mit benanntem Sponsor auf oberster Führungsebene (C-Level) dokumentiert, die Renewal-Winrate (Erfolgsquote der Vertragsverlängerungen) wird als separate Kennzahl ausgewiesen, und der gesamte €-Wert der 148 offenen Vertragsverlängerungen (OPEN-Verträge) ist im Pipeline-Trichter erfasst."
  },
  "M31": {
   "kontext": "Von €278M Gesamtforecast sind heute nur €21M (7%) langfristig gesichert (FIXED ≥2029). Dieser extrem niedrige Langfristanteil macht AXS strukturell anfällig für jede Renewal-Wand — heute CLIFF-2027, morgen CLIFF-2028. Ziel dieses Milestones ist es, OPEN-Verträge die bereits erneuert werden direkt in mehrjährige Abschlüsse zu überführen statt in Ein-Jahres-Verlängerungen.",
@@ -722,7 +752,8 @@
    "€45M-Ziel ist ambitioniert wenn OPEN-Verträge noch nicht vollständig entnebelt sind"
   ],
   "erfolgsmessung": "FIXED ≥2029 steigt von €21M/36 Verträgen auf ≥€45M bis 31.12.2027; Anteil langfristig gesichertes Volumen ≥15% des Gesamtforecast",
-  "grounding": "FIXED ≥2029 nur €21M / 36 Verträge (7% langfristig gesichert); €91M OPEN; CLIFF-2027 €107M"
+  "grounding": "FIXED ≥2029 nur €21M / 36 Verträge (7% langfristig gesichert); €91M OPEN; CLIFF-2027 €107M",
+  "ziel_klartext": "Die offenen Vertragsverlängerungen (OPEN-Verträge) sind in gesicherte Langfrist-Verträge überführt: Das fest gebundene Vertragsvolumen mit Laufzeit bis mindestens 2029 (FIXED ≥2029) ist von €21 Mio. / 36 Verträgen auf mindestens €45 Mio. gestiegen (bis 31.12.2027), und der Anteil langfristig gesicherten Volumens beträgt mindestens 15% des Gesamtforecast."
  },
  "M32": {
   "kontext": "Die fehlende CPI/CBA-Indexierung ist eines der strukturellen Kernrisiken im AXS-Vertragsportfolio: Kosten steigen mit Inflation und Lohnrunden, während Erlöse in vielen Verträgen fix bleiben. Die 94 CLIFF-2027-Verträge (€107M) bieten das grösste Zeitfenster, um die Standard-Indexierungsklausel flächendeckend durchzusetzen — da alle Verträge ohnehin neu verhandelt werden müssen. Voraussetzung ist die Legal-Freigabe der Klausel.",
@@ -745,7 +776,8 @@
    "Länderspezifische Unterschiede (DE/AT/CH/ES) können einheitliche Durchsetzung erschweren"
   ],
   "erfolgsmessung": "Indexierungsquote ≥70% aller verlängerten CLIFF-2027-Verträge bis EOY 2027; €-gewichtete Quote ≥75% von €107M; Tracking je Vertrag im Commercial-Cockpit dokumentiert",
-  "grounding": "CLIFF-2027 €107M / 94 Verträge"
+  "grounding": "CLIFF-2027 €107M / 94 Verträge",
+  "ziel_klartext": "Die Preis-Indexierung ist in der 2027 auslaufenden Vertragswelle (Cliff-2027) durchgesetzt: Bis Ende 2027 enthalten mindestens 70% aller verlängerten Cliff-2027-Verträge die Indexierungsklausel, die €-gewichtete Quote beträgt mindestens 75% des Volumens von €107 Mio., und der Klausel-Status wird je Vertrag im Commercial-Cockpit dokumentiert nachgeführt."
  },
  "M33": {
   "kontext": "85 Kunden sind als at-risk klassifiziert, 66 Accounts gelten als still (kein Touchpoint), und 112 Kunden haben keinen zugewiesenen Sponsor — das sind strukturelle Beziehungslücken die in der CLIFF-2027-Renewal-Wand direkt zu Churn führen können. Dieser Milestone wandelt das bisher punktuelle Beziehungsmanagement in einen institutionalisierten Quartals-Rhythmus mit automatischem Alerting um.",
@@ -769,7 +801,8 @@
    "Automatisches Alerting setzt saubere Datenbasis im CRM voraus (DQ-Monitor als Voraussetzung)"
   ],
   "erfolgsmessung": "≤10 Accounts ohne Sponsor und ≤10 stille Accounts dauerhaft gehalten; offene Massnahmen von 243 auf <120 reduziert bis EOY 2027; Quartals-Review 4× in 2027 dokumentiert durchgeführt",
-  "grounding": "85 at-risk / 243 offene Maßnahmen; 66 stille Accounts"
+  "grounding": "85 at-risk / 243 offene Maßnahmen; 66 stille Accounts",
+  "ziel_klartext": "Das Beziehungs-Cockpit (Übersicht der Kundenbeziehungen mit Sponsoren, Kontaktaktivitäten und offenen Massnahmen) ist als laufendes Steuerungsinstrument etabliert: Dauerhaft bestehen höchstens 10 Accounts ohne Sponsor und höchstens 10 stille Accounts (ohne aktuelle Kontaktaktivität), die offenen Massnahmen sind bis Ende 2027 von 243 auf unter 120 reduziert, und der Quartals-Review ist 2027 viermal dokumentiert durchgeführt."
  },
  "M34": {
   "kontext": "CLIFF-2027 (€107M/94 Verträge) und OPEN (€91M/148 Verträge) sind die beiden grössten Risikoblöcke im AXS-Portfolio — zusammen €198M, die bis EOY 2027 aktiv gesteuert werden müssen. Heute fehlt ein institutionalisierter Steuerungsrhythmus auf C-Level. Dieser Milestone verankert einen monatlichen Cockpit-Review als festes Governance-Instrument, das die Renewal-Wand auf Führungsebene steuert.",
@@ -793,7 +826,8 @@
    "Kapazität DRS als Chairman für 12 monatliche Reviews zu sichern"
   ],
   "erfolgsmessung": "12 dokumentierte Monats-Reviews in 2027 nachweisbar; OPEN-Volumen von €91M/148 Verträgen auf <€30M ungeklärtes Restvolumen bis EOY 2027 reduziert; CLIFF-2027-Renewal-Quote in jedem Review aktualisiert",
-  "grounding": "CLIFF-2027 €107M / 94 Verträge; OPEN €91M / 148 Verträge; FIXED ≥2029 nur €21M / 36"
+  "grounding": "CLIFF-2027 €107M / 94 Verträge; OPEN €91M / 148 Verträge; FIXED ≥2029 nur €21M / 36",
+  "ziel_klartext": "Der monatliche Masterplan-Review-Rhythmus zur Steuerung der 2027 auslaufenden Vertragswelle (Cliff-2027) ist etabliert und läuft. Erledigt heisst: In 2027 sind 12 dokumentierte Monats-Reviews nachweisbar, das ungeklärte Restvolumen der offenen Vertragsverlängerungen (OPEN-Renewals) ist bis Ende 2027 von €91 Mio (148 Verträge) auf unter €30 Mio reduziert, und die Cliff-2027-Verlängerungsquote (Renewal-Quote) ist in jedem Review aktualisiert."
  },
  "M35": {
   "kontext": "Das Cliff-Muster — konzentrierte Vertragsausläufe die reaktiv und unter Zeitdruck verlängert werden — soll sich nach CLIFF-2027 nicht wiederholen. CLIFF-2028 umfasst bereits €52M/47 Verträge. Indem Renewal-Prozesse ≥12 Monate vor Ablauf gestartet werden, gewinnt AXS Verhandlungsspielraum und vermeidet den nächsten Notfall-Modus.",
@@ -816,7 +850,8 @@
    "CLIFF-2028-Volumen (€52M) kann sich durch Neuabschlüsse oder Churn bis Mitte 2027 noch verschieben"
   ],
   "erfolgsmessung": "€52M/47 CLIFF-2028-Verträge vollständig gerankt; Top-20 mit dokumentiertem Renewal-Start ≥12 Monate vor Ablauf bis 31.12.2027 im CRM hinterlegt",
-  "grounding": "CLIFF-2028 €52M / 47 Verträge (im Snapshot, bisher unadressiert)"
+  "grounding": "CLIFF-2028 €52M / 47 Verträge (im Snapshot, bisher unadressiert)",
+  "ziel_klartext": "Die 2028 auslaufende Vertragswelle (Cliff-2028) ist frühzeitig vorbereitet (Pull-Forward: vorgezogener Start der Vertragsverlängerungen). Erledigt heisst: Alle 47 Cliff-2028-Verträge mit €52 Mio Volumen sind vollständig nach Vertragswert gerankt, und für die Top-20-Verträge ist ein dokumentierter Start der Vertragsverlängerung (Renewal-Start) mindestens 12 Monate vor Vertragsablauf bis 31.12.2027 im Customer-Relationship-Management-System (CRM) hinterlegt."
  },
  "M36": {
   "kontext": "Die fehlende Indexierung (CPI/CBA) ist ein strukturelles Ertragsleck im AXS-Vertragsportfolio: Kosten steigen mit Inflation und Tarifabschlüssen, während Vertragserlöse stagnieren. Bevor die Standard-Indexierungsklausel in Renewals ausgerollt werden kann, muss sie rechtlich geprüft und freigegeben sein — insbesondere auf SGHA/IATA-Konformität und kartellrechtliche Zulässigkeit der CBA-Weitergabe in allen vier Ländern (DE/AT/CH/ES). Legal war bisher nicht eingebunden.",
@@ -840,7 +875,8 @@
    "Faktische Voraussetzung für alle Indexierungs-Milestones"
   ],
   "erfolgsmessung": "Rechtlich freigegebene, länderkonforme Standard-Indexierungsklausel liegt bis 30.09.2026 vor und ist einsatzbereit für den Rollout in CLIFF-2027-Renewal-Verhandlungen",
-  "grounding": "Indexierung über 4 Länder (DE/AT/CH/ES); Legal bisher nicht eingebunden"
+  "grounding": "Indexierung über 4 Länder (DE/AT/CH/ES); Legal bisher nicht eingebunden",
+  "ziel_klartext": "Die rechtlich freigegebene, in allen vier Ländern (Deutschland, Österreich, Schweiz, Spanien) konforme Standard-Indexierungsklausel liegt bis 30.09.2026 vor und ist einsatzbereit für den Rollout in den Verhandlungen zur Verlängerung der 2027 auslaufenden Verträge (Cliff-2027-Renewals)."
  },
  "M37": {
   "kontext": "Haeffner trägt als Single Owner rund 13 parallele P1-Milestones im Commercial-Masterplan — ein klassischer Single-Point-of-Failure in einem Programm, das €278M Forecast und kritische Renewal-Wellen (Cliff-2027: €107M) steuern muss. Fällt Haeffner aus oder ist dauerhaft überlastet, stocken gleichzeitig Vertragssicherung, Datenqualität und Kundenbeziehungen. Der Milestone zielt darauf ab, dieses Konzentrationsrisiko durch Umverteilung auf Himm, Eslava und Strauß zu beseitigen.",
@@ -863,7 +899,8 @@
    "Frist 15.08. ist eng bei sofortiger Startanweisung; Verzögerung durch Ferienabwesenheiten im Sommer möglich"
   ],
   "erfolgsmessung": "Kein Owner trägt mehr als 6 P1-Milestones parallel; Reallokation ist in der Masterplan-Dokumentation nachvollziehbar festgehalten. Messung: Zählung P1-Milestones je Owner nach Reallokation, Stichtag 15.08.2026.",
-  "grounding": "Haeffner Owner von ~13 Milestones = SPOF/Engpass"
+  "grounding": "Haeffner Owner von ~13 Milestones = SPOF/Engpass",
+  "ziel_klartext": "Die Kapazität für die Commercial-Datenarbeit ist gesichert und Michael Haeffner ist entlastet: Die Milestone-Verantwortungen sind so umverteilt, dass kein Owner mehr als 6 Prioritäts-1-Milestones (P1 = höchste Priorität) parallel trägt. Die Umverteilung (Reallokation) ist in der Masterplan-Dokumentation nachvollziehbar festgehalten; gemessen wird per Zählung der P1-Milestones je Owner nach der Reallokation, Stichtag 15.08.2026."
  },
  "M38": {
   "kontext": "Von 338 Verträgen gelten 85 als at-risk, und bereits 32 Kunden sind abgewandert (Churn 32). Bisher reagiert das Commercial-Team erst auf Kündigungen — es gibt kein System, das Abwanderungssignale wie RFP-Ausschreibungen, Wettbewerber-Kontakt oder Volumenrückgang frühzeitig erkennt. Ein Frühwarnsystem soll die Reaktionszeit von reaktiv auf präventiv umstellen, damit Gegenmassnahmen greifen, bevor die Kündigung ausgesprochen ist.",
@@ -886,7 +923,8 @@
    "Start erst 2026-11: Monate ohne Frühwarnung bei laufendem Cliff-2027-Risiko"
   ],
   "erfolgsmessung": "Frühwarn-Alert aktiv für alle 85 at-risk-Verträge; nachgewiesene durchschnittliche Lead-Time ≥60 Tage zwischen erstem Signal und Kündigung. Messung: Alert-Log mit Timestamp Signal vs. Timestamp Kündigung.",
-  "grounding": "85 at-risk; Churn 32 — bisher nur reaktive Stille-Alerts"
+  "grounding": "85 at-risk; Churn 32 — bisher nur reaktive Stille-Alerts",
+  "ziel_klartext": "Ein Frühwarnsystem für drohende Kundenabwanderung (Churn) ist in Betrieb. Erledigt heisst: Der Frühwarn-Alert ist für alle 85 als abwanderungsgefährdet eingestuften Verträge (at-risk-Verträge) aktiv, und es ist eine durchschnittliche Vorlaufzeit (Lead-Time) von mindestens 60 Tagen zwischen erstem Warnsignal und Kündigung nachgewiesen — gemessen über das Alert-Log mit Zeitstempel des Signals vs. Zeitstempel der Kündigung."
  },
  "M39": {
   "kontext": "Der AXS-Konzern hat mit €278M Forecast 2026 eine definierte Top-Line-Planung, aber kein explizites Net-Retention-Ziel — es ist nicht festgelegt, wieviel Prozent dieses Volumens über 2027 hinaus gehalten werden müssen. Angesichts des Cliff-2027 (€107M/94 Verträge auslaufend) und OPEN-Risiko (€91M/148 Verträge ohne gesichertes Renewal) fehlt ein steuerbarer KPI, der Retention als strategische Grösse im Monatsbericht verankert.",
@@ -908,7 +946,8 @@
    "Monatlicher Tracking-Mechanismus ist nur wirkungsvoll, wenn operativ Verantwortliche die Zahl aktiv managen — organisatorische Verankerung zu sichern"
   ],
   "erfolgsmessung": "Net-Retention-Ziel schriftlich dokumentiert (Beschluss oder Memo); monatlicher Tracking-Report erstmals im August/September 2026 ausgewiesen.",
-  "grounding": "€278M Forecast — kein Top-Line-Retention-Ziel im Plan"
+  "grounding": "€278M Forecast — kein Top-Line-Retention-Ziel im Plan",
+  "ziel_klartext": "Die Zielgrösse für die Net Retention (Netto-Umsatzerhalt: Anteil des Umsatzes aus bestehenden Kundenverträgen, der über Verlängerungen gehalten wird) ist schriftlich festgelegt — als Beschluss oder Memo —, und die Kennzahl ist erstmals im August/September 2026 in einem monatlichen Tracking-Report ausgewiesen."
  },
  "M40": {
   "kontext": "Alle bisherigen Commercial-KPIs messen Umsatzvolumen in Euro — die Profitabilität je Vertrag und Station ist nicht sichtbar. Das führt dazu, dass Renewals und Neukunden-Prioritäten nach Volumen und nicht nach Marge gesteuert werden: ein volumenstarker, aber margenschwacher Vertrag könnte aktiv priorisiert werden, während profitable Kleinverträge vernachlässigt werden. Dieser blinde Fleck wird durch den Milestone mit einer Cost-to-Serve-Sicht je Top-Vertrag/Station adressiert.",
@@ -930,7 +969,8 @@
    "Start erst 2026-11 — erste Marge-Sicht steht erst Q1/2027 zur Verfügung; bis dahin weiterhin Volumen-blinde Steuerung"
   ],
   "erfolgsmessung": "Marge/Cost-to-Serve je Top-Vertrag im Cockpit abrufbar; Volumen-vs-Marge-Sicht nachweislich im Commercial Reporting vorhanden bis 31.03.2027.",
-  "grounding": "Alle KPIs messen €-Volumen, nicht Marge (blinder Fleck)"
+  "grounding": "Alle KPIs messen €-Volumen, nicht Marge (blinder Fleck)",
+  "ziel_klartext": "Marge und Cost-to-Serve (Kosten der Leistungserbringung je Vertrag) sind für jeden Top-Vertrag im Cockpit abrufbar, und die Volumen-vs.-Marge-Sicht (Gegenüberstellung von Umsatzvolumen und Profitabilität) ist nachweislich im Commercial Reporting (kommerzielles Berichtswesen) verankert."
  },
  "M41": {
   "kontext": "Im Rahmen der Re-Pricing-Initiativen (CPI/CBA-Indexierung) werden Preisanpassungen mit Kunden verhandelt. Ohne Marktbenchmark besteht das Risiko, dass AXS unter Marktniveau verhandelt — entweder aus Unwissenheit über Wettbewerbspreise (Swissport, Aviapartner) oder weil Kunden Preissenkungen fordern und kein Gegenargument vorliegt. Ein Wettbewerbs-Preisbenchmark je Leistungsart soll diesen Verhandlungsnachteil beseitigen.",
@@ -952,7 +992,8 @@
    "Ohne standardisierte Leistungskategorien ist Benchmark schwer vergleichbar; Kategorisierung als Vorarbeit notwendig"
   ],
   "erfolgsmessung": "Preisbenchmark je Leistungsart dokumentiert und in Renewal-Battlecards integriert; Verhandlungsführer nachweislich gebrieft bis 31.12.2026.",
-  "grounding": "Indexierung stoppt Erosion, aber kein Marktbenchmark"
+  "grounding": "Indexierung stoppt Erosion, aber kein Marktbenchmark",
+  "ziel_klartext": "Der Marktpreis-Benchmark (Vergleich der AXS-Preise mit den Preisen der Wettbewerber) liegt je Leistungsart dokumentiert vor und ist in die Renewal-Battlecards (Verhandlungsleitfäden für Vertragsverlängerungen) integriert; die Verhandlungsführer sind vor Beginn des Re-Pricing (Neubepreisung der Verträge) nachweislich gebrieft."
  },
  "M42": {
   "kontext": "Im Q3/2026 werden €-Wert-Lücken bei 72 Kunden durch einen Daten-Sync geschlossen. Danach besteht eine Lücke von rund 6 Monaten bis zum geplanten Dauer-Monitor (Q2/2027), in der bereits geschlossene Datenlücken unbemerkt wieder aufreissen können — z.B. durch Datenmigration, manuelle Fehler oder fehlende Pflege. Dieser Milestone schliesst diese Überwachungslücke durch einen automatischen Regressions-Alert.",
@@ -974,7 +1015,8 @@
    "False-Negative-Risiko: Alert reagiert nicht auf alle Formen von Datenregression, wenn Regeln zu eng definiert sind"
   ],
   "erfolgsmessung": "Automatischer Regressions-Alert technisch aktiv und dokumentiert; Nachweis, dass nach Aktivierung keine unbemerkte Re-Öffnung von Datenlücken aufgetreten ist bis 31.12.2026.",
-  "grounding": "6-Monats-Lücke Sync (Q3/26) → Dauer-Monitor (Q2/27)"
+  "grounding": "6-Monats-Lücke Sync (Q3/26) → Dauer-Monitor (Q2/27)",
+  "ziel_klartext": "Der Daten-Rückfall-Monitor läuft kontinuierlich: Ein automatischer Regressions-Alert (Warnmeldung, sobald bereits geschlossene Datenlücken wieder aufreissen) ist technisch aktiv und dokumentiert, und es ist nachgewiesen, dass seit der Aktivierung keine Datenlücke unbemerkt wieder geöffnet wurde."
  },
  "M43": {
   "kontext": "Die LH-Group steht für 34% / €96M des AXS-Forecasts und stellt damit das grösste Einzelklumpenrisiko dar. Laufen die Multi-Year-Gespräche mit LH auf ein Scheitern oder verzögern sich, trifft der Umsatzausfall den Konzern mit voller Wucht — ohne vorbereitetes Ersatz-/Diversifikationsszenario. Bisher existiert kein dokumentierter Notfallpfad für diesen Fall, was die Reaktionsfähigkeit im Ernstfall einschränkt.",
@@ -997,7 +1039,8 @@
    "LH-Beziehungspflege und Kontingenzplanung dürfen nicht in Konflikt geraten: zu offensiver Kontingenzplan könnte als Vertrauensbruch gegenüber LH wirken (interne Vertraulichkeit sicherstellen)"
   ],
   "erfolgsmessung": "Kontingenzplan LH-Verlust im VR dokumentiert; Diversifikations-Szenario mit konkreten €-Zahlen beziffert; Vorlage und Abnahme des Plans im VR bis 31.12.2026.",
-  "grounding": "LH-Group 34% / €96M — kein Notfallpfad bei Anker-Verlust"
+  "grounding": "LH-Group 34% / €96M — kein Notfallpfad bei Anker-Verlust",
+  "ziel_klartext": "Der Kontingenzplan (Notfallplan) für den Verlust des Ankerkunden Lufthansa (LH) liegt vor: Das Diversifikations-Szenario ist mit konkreten €-Zahlen beziffert, und der Plan ist dem Verwaltungsrat (VR) vorgelegt und von diesem abgenommen."
  },
  "WS1-01": {
   "kontext": "Zwei grosse Ops-System-Welten sind eine unmittelbare Folge der unvollendeten Fusion AAS+AHS. Bevor konsolidiert wird, braucht jeder Ops-Bereich einen bewussten Zielsystem-Entscheid: konsolidieren auf ein Bestandssystem vs. auf eine KI-Lösung überspringen — nicht blind konsolidieren, wo KI Teile in 12–18 Monaten ablöst. Der Entscheid je Bereich (nicht die Migration) ist bis 15.08.2026 (Mitte August, DRS 07.07.) machbar und vorgezogen (vor Programmstart 01.09.).",
@@ -1018,8 +1061,9 @@
    "Kopplung an Data Foundation Layer 2 (WS6): verspätete Ontologie-Klärung verzögert KI-Ersatz-Optionen",
    "«One World bis Ende Juli» wäre bei der Systemtiefe unrealistisch — Scope ist bewusst nur der Entscheid, nicht die Migration"
   ],
-  "erfolgsmessung": "100% der Ops-Bereiche haben bis 15.08.2026 einen dokumentierten Zielsystem-Entscheid",
-  "grounding": "projekt.yaml WS1-01; RUBICON-Doc §4 WS1 D8/K9 + Abschnitt Systemlandkarte; WS-Paket WS1 Phase 0"
+  "erfolgsmessung": "100% der Ops-Bereiche haben bis 07.09.2026 einen dokumentierten Zielsystem-Entscheid",
+  "grounding": "projekt.yaml WS1-01; RUBICON-Doc §4 WS1 D8/K9 + Abschnitt Systemlandkarte; WS-Paket WS1 Phase 0",
+  "ziel_klartext": "Die Systemlandkarte (vollständiges Inventar aller eingesetzten IT-Systeme) je Operations-Bereich liegt vor, und für jeden Operations-Bereich ist der Zielsystem-Entscheid dokumentiert: bestehende Systeme konsolidieren oder durch eine KI-Lösung ersetzen. Erledigt, wenn 100% der Operations-Bereiche einen dokumentierten Zielsystem-Entscheid haben (Mess-Anker: bis 07.09.2026)."
  },
  "WS1-02": {
   "kontext": "Datenehrlichkeit ist Spielregel: kein Zielwert wird vor validierter Baseline fixiert (Gate G2, 15.10.2026). Das Baseline-Datenpaket WS1 liefert FTE, echte Holding-Kostenbasis (heute nur Recharge-Proxy ≈ 3'984 TEUR) und Reporting-Linien inkl. Finance-Geografie VIE/HAM — und klärt per Kompetenz-Assessment, ob die heutige Aufstellung Rohde/Lesch/Pajor für eine konsolidierte Finance-Linie reicht. Kritischer Pfad (G2), abhängig vom Datenzugangs-Gate OE-01/G1.",
@@ -1042,7 +1086,8 @@
    "Assessment-Ergebnis kann Besetzungsfragen aufwerfen — individuelle Personalentscheide laufen über den HR-Sensitive-Kanal, nicht im Board-Dokument"
   ],
   "erfolgsmessung": "Baseline vollständig vorgelegt und im Diagnose-Review G2 (15.10.2026) abgenommen; Zentralkosten-IST als Basis für −30% fixiert",
-  "grounding": "projekt.yaml WS1-02 (Gate G2, critical, depends_on OE-01); RUBICON-Doc §4 WS1 K1; WS-Paket WS1 Phase 0"
+  "grounding": "projekt.yaml WS1-02 (Gate G2, critical, depends_on OE-01); RUBICON-Doc §4 WS1 K1; WS-Paket WS1 Phase 0",
+  "ziel_klartext": "Das Baseline-Datenpaket für Workstream 1 (WS1) — die Ist-Datenbasis bestehend aus Vollzeitstellen-Datensatz (FTE, Full-Time Equivalents), echter Holding-Kostenbasis und Reporting-Linien — liegt vollständig vor, inklusive Finance-Kompetenz- und Besetzungs-Assessment sowie kartierter geografischer Verteilung der Finance-Funktionen zwischen den Standorten VIE (Wien) und HAM (Hamburg). Erledigt, wenn das Paket im Diagnose-Review G2 (15.10.2026) abgenommen und das Zentralkosten-IST als verbindliche Ausgangsbasis für das −30%-Reduktionsziel fixiert ist."
  },
  "WS1-03": {
   "kontext": "Die Gremien-Zähl-Vermischung «5 vs. 7» (GL, Vice Chairman und Chairman durcheinander gezählt) ist ein Kernbefund der Diagnose (C — unklare Accountability). Nach dem formalen GL=6-Beschluss vom 18.09.2026 (M1) macht das Organigramm v2 die bereinigte Struktur gruppenweit sichtbar: GL = 6 (CEO Gökcöl, CFO Rohde, CFO-Stv Pajor, COO Matthei, CCO Haeffner, CHRO Charisius), Charisius→CEO, Fritthum = Vice Chairman auf Board-Ebene, nicht Linie.",
@@ -1064,7 +1109,8 @@
    "Wahrnehmungsrisiko Zwei-Kopf-Führung: Duo AFR+CGO muss nach aussen einheitlich auftreten, der CEO verantwortet öffentlich"
   ],
   "erfolgsmessung": "Organigramm v2 bis 31.10.2026 gruppenweit veröffentlicht; genau ein Accountable je Ergebnis abgebildet",
-  "grounding": "projekt.yaml WS1-03; RUBICON-Doc §4 WS1 D1/K2; WS-Paket WS1 Phase 1"
+  "grounding": "projekt.yaml WS1-03; RUBICON-Doc §4 WS1 D1/K2; WS-Paket WS1 Phase 1",
+  "ziel_klartext": "Das Organigramm Version 2 (v2) ist gruppenweit veröffentlicht. Es bildet die Geschäftsleitung (GL) mit genau 6 Mitgliedern ab, den direkten Berichtsweg von Charisius an den CEO sowie Fritthum in der Rolle des Vice Chairman. Erledigt, wenn das Organigramm v2 bis 31.10.2026 gruppenweit publiziert ist und für jedes Ergebnis genau eine verantwortliche Person (Accountable) ausweist."
  },
  "WS1-04": {
   "kontext": "Die Gruppe wird als zwei parallele Verwaltungen geführt (Diagnose A): Finance dreifach gespalten, doppelte CFO-Mailboxen, uneinheitliche Mail-Domain (z.B. @ahs-aero.de statt @axs.aero). Der Org-Entscheid «eine klare Verwaltungs-/Finance-Organisation» (ein Owner, eine Linie, ein Reporting; Standort abgeleitet nach Kosten/Rechts-Machbarkeit) ist die Weichenstellung — inkl. rechtssicherer §613a-Vorbereitung für die Folgeumsetzung.",
@@ -1086,8 +1132,9 @@
    "IT-/Didit-Fragilität (Ein-Mann-IT Suchomski) blockiert die Mail-Domain-Migration — Stellvertretung + Doku bis M2 nötig",
    "Kopplung an AT ArbVG §§108/109 + §45a AMFG für die österreichische Seite (VIE) der Verwaltungskonsolidierung"
   ],
-  "erfolgsmessung": "Org-Entscheid GL-beschlossen, GL-Mail-Domain @axs.aero migriert und §613a-Unterrichtungsschreiben vorbereitet — bis 31.10.2026",
-  "grounding": "projekt.yaml WS1-04; RUBICON-Doc §4 WS1 K10/K11; WS-Paket WS1 Phase 1 (messbar-Spalte)"
+  "erfolgsmessung": "Org-Entscheid GL-beschlossen, GL-Mail-Domain @axs.aero migriert, §613a-Unterrichtungsschreiben vorbereitet und genau eine CFO-Mailbox konsolidiert — bis 31.10.2026",
+  "grounding": "projekt.yaml WS1-04; RUBICON-Doc §4 WS1 K10/K11; WS-Paket WS1 Phase 1 (messbar-Spalte)",
+  "ziel_klartext": "Der Organisationsentscheid zur künftigen Verwaltungs- und Finance-Organisation ist durch die Geschäftsleitung (GL) beschlossen; die Unterrichtungsschreiben nach §613a BGB (Betriebsübergang, Unterrichtungspflicht gegenüber den Mitarbeitenden) sind vorbereitet; es existiert genau eine CFO-Mailbox; und die Mailkonten der GL-Mitglieder sind auf die Domain @axs.aero migriert. Erledigt gemäss Mess-Anker, wenn bis 31.10.2026 der Organisationsentscheid GL-beschlossen ist, die GL-Mail-Domain auf @axs.aero migriert ist und die §613a-Unterrichtungsschreiben vorbereitet sind; die CFO-Mailbox-Konsolidierung gehört zum Umfang des Milestones (siehe zugehörige Handlung WS1-04-H05)."
  },
  "WS1-05": {
   "kontext": "Diagnose-Befund C: Aus der Chairman-Jobdescription (2-Pager, V18 final / V19) sind bislang keine abgeleiteten Role-Descriptions für die GL-Rollen entwickelt — die Accountability-Architektur ist nicht im Rollen-Dokument verankert. Die Kaskade leitet alle 6 GL-Rollen plus die Vice-Chairman-Abgrenzung einheitlich aus dem Chairman-2-Pager ab und koppelt sie an die Zielvereinbarungen der P&L-Owner.",
@@ -1109,7 +1156,8 @@
    "Termin 31.10. ist Annahme (date_assumed); Doc-Termin D5 nennt M4 — WS-Paket präzisiert «final Okt 26»"
   ],
   "erfolgsmessung": "6/6 GL-Rollen-JDs plus Vice-Chairman-Abgrenzung final abgeleitet und an P&L-Owner-Zielvereinbarungen gekoppelt — bis 31.10.2026",
-  "grounding": "projekt.yaml WS1-05; RUBICON-Doc §4 WS1 D5/K5 + Abschnitt JD-Kaskade; WS-Paket WS1 Phase 1"
+  "grounding": "projekt.yaml WS1-05; RUBICON-Doc §4 WS1 D5/K5 + Abschnitt JD-Kaskade; WS-Paket WS1 Phase 1",
+  "ziel_klartext": "Die Kaskade der Job Descriptions (JD, Stellenbeschreibungen) ist final: Für alle 6 Rollen der Geschäftsleitung (GL) liegen finale Stellenbeschreibungen vor, ergänzt um die dokumentierte Abgrenzung der Vice-Chairman-Rolle; beides ist aus dem Chairman-2-Pager (dem 2-seitigen Rollenpapier des Verwaltungsratspräsidenten) abgeleitet. Erledigt, wenn bis 31.10.2026 6 von 6 GL-Rollen-Stellenbeschreibungen plus die Vice-Chairman-Abgrenzung final vorliegen und an die Zielvereinbarungen der P&L-Owner (Führungskräfte mit Gewinn-und-Verlust-Verantwortung) gekoppelt sind."
  },
  "WS1-06": {
   "kontext": "Berichtswege sind uneindeutig und Entscheide werden hochdelegiert (Diagnose C/D). Die RACI-Charta regelt für 10 Entscheidungstypen entlang AXS-INS-001, wer entscheidet, mitwirkt und informiert wird — und schliesst zugleich die offenen INS-001-Punkte (inkl. Entscheids-Kaskade Anhang B, gemeinsam mit WS2). Prinzip P6: Führung = Zeichnungsrecht.",
@@ -1131,7 +1179,8 @@
    "Wirksamkeit hängt an gelebter Durchsetzung via Gruppen-Commitment-Tracker (WS2), nicht am Papier"
   ],
   "erfolgsmessung": "RACI-Charta für 10 Entscheidungstypen verabschiedet und als INS-001-Anlage in Kraft; offene INS-001-Punkte geschlossen — bis 30.11.2026",
-  "grounding": "projekt.yaml WS1-06; RUBICON-Doc §4 WS1 D3/K4; WS-Paket WS1 Phase 1 (messbar-Spalte)"
+  "grounding": "projekt.yaml WS1-06; RUBICON-Doc §4 WS1 D3/K4; WS-Paket WS1 Phase 1 (messbar-Spalte)",
+  "ziel_klartext": "Die RACI-Charta (RACI = Responsible/Accountable/Consulted/Informed — Zuordnung, wer entscheidet, wer mitarbeitet, wer konsultiert und wer informiert wird) für die 10 definierten Entscheidungstypen ist verabschiedet und als Anlage zur AXS-Konzernrichtlinie INS-001 in Kraft. Zusätzlich sind alle offenen Punkte der Konzernrichtlinie INS-001 abgearbeitet und geschlossen."
  },
  "WS1-07": {
   "kontext": "Heute sind 0% der Einheiten mit dokumentiertem P&L-Owner belegt; Station→Director ist nicht dokumentiert (Metriktabelle). Die P&L-Owner-Matrix gibt jeder Einheit (43 Legal Entities, ~15 Stationen) genau einen P&L-Owner mit unterschriebener Zielvereinbarung — das Kernstück der Accountability-Architektur und Voraussetzung für den monatlichen P&L-Review (M8).",
@@ -1153,7 +1202,8 @@
    "Datenehrlichkeits-Spielregel: keine Zielwerte vor validierter Baseline (G2, 15.10.) — enge Taktung bis Dez 26"
   ],
   "erfolgsmessung": "100% der Einheiten (43 LE / ~15 Stationen) mit dokumentiertem P&L-Owner und unterschriebener Zielvereinbarung — bis 31.12.2026 (Q4-VR)",
-  "grounding": "projekt.yaml WS1-07; RUBICON-Doc §4 WS1 D2/K3 + Metrik P&L-Owner-Abdeckung; WS-Paket WS1 Phase 1"
+  "grounding": "projekt.yaml WS1-07; RUBICON-Doc §4 WS1 D2/K3 + Metrik P&L-Owner-Abdeckung; WS-Paket WS1 Phase 1",
+  "ziel_klartext": "Für 100% der Einheiten der Gruppe (43 Gesellschaften (Legal Entities, LE) / ~15 Stationen) ist ein Verantwortlicher mit Gewinn-und-Verlust-Verantwortung (P&L-Owner) dokumentiert, und für jede Einheit liegt eine von diesem Owner unterschriebene Zielvereinbarung vor."
  },
  "WS1-08": {
   "kontext": "Der TOM-Blueprint ist das VR-genehmigte Zielbild der gesamten Organisation — identisch mit «Elysium 2.0» (Elysium und TOM sind ein und dasselbe Zielbild, nicht zwei Programme). Er ist kritischer Pfad: Die Restrukturierungs-Einleitung WS3-12 (§111/§17) hängt an ihm, und er selbst hängt am Finanzierungs-Closing G6 (WS3-05, 31.10.), das cash-wirksame Schritte erst zulässt.",
@@ -1175,7 +1225,8 @@
    "VR-Terminierung: Pre-Read T−14 zwingend; Q4-VR-Datum ist der harte Anker (due 31.12. ist Annahme)"
   ],
   "erfolgsmessung": "TOM-Blueprint im Q4-VR (Sherpany, Pre-Read T−14) formal genehmigt — bis 31.12.2026",
-  "grounding": "projekt.yaml WS1-08 (critical, depends_on WS3-05); RUBICON-Doc §4 WS1 D4 + Elysium≡TOM-Reconciliation; WS-Paket WS1 Phase 1"
+  "grounding": "projekt.yaml WS1-08 (critical, depends_on WS3-05); RUBICON-Doc §4 WS1 D4 + Elysium≡TOM-Reconciliation; WS-Paket WS1 Phase 1",
+  "ziel_klartext": "Der Blueprint des Target Operating Model (TOM, Ziel-Betriebsmodell) — inhaltlich identisch mit «Elysium 2.0» — ist an der Q4-Sitzung des Verwaltungsrats (VR) formal genehmigt. Die Sitzungsunterlage (Pre-Read) wurde dafür gemäss Prozess-Standard 14 Tage vor der Sitzung (T−14) via Sherpany eingereicht."
  },
  "WS1-09": {
   "kontext": "Finance ist heute dreifach gespalten — strukturell (getrennte Systeme), personell (getrennte Teams AAS-Finance VIE / AHS-Finance HAM) und grenzüberschreitend (AT/DE); CFO in HAM, CFO-Stv in VIE. Eine operative Finance-Linie mit einem Owner ist Voraussetzung für die Konzern-Wahrheit (Art. 963 OR, Reporting-Vollausbau). Umsetzung nur nach sauberem §613a-Ablauf.",
@@ -1197,7 +1248,8 @@
    "AT ArbVG §§108/109 + AMS §45a AMFG und DE §99/§111 BetrVG: jede Verlagerung nur nach Gate G4 (Freigabe Charisius)"
   ],
   "erfolgsmessung": "Konsolidierte Finance-Linie operativ mit einem Owner; §613a-Frist abgelaufen und Widerspruchsquote dokumentiert — bis 31.01.2027",
-  "grounding": "projekt.yaml WS1-09; RUBICON-Doc §4 WS1 K6 + Stromrisiko Finance cross-border; WS-Paket WS1 Phase 2 (messbar-Spalte)"
+  "grounding": "projekt.yaml WS1-09; RUBICON-Doc §4 WS1 K6 + Stromrisiko Finance cross-border; WS-Paket WS1 Phase 2 (messbar-Spalte)",
+  "ziel_klartext": "Die konsolidierte, länderübergreifende (cross-border) Finance-Linie (Finanzorganisation) zwischen Österreich und Deutschland (AT↔DE) ist mit genau einem Verantwortlichen (Owner) operativ. Die einmonatige Widerspruchsfrist nach §613a BGB (Betriebsübergang, Unterrichtungspflicht) ist abgelaufen, und die Widerspruchsquote ist dokumentiert."
  },
  "WS1-10": {
   "kontext": "DRS hält heute 18 DE-GF-Mandate — eine Haftungskonzentration auf einer Person (Diagnose C: GF-Haftungskonzentration aufzulösen). Die Entflechtung läuft in gestaffelten Wellen auf ≤5 Mandate; Welle 1 muss bis Feb 27 im Handelsregister eingetragen sein, mit Prokuren + Delegationsordnung als Interim.",
@@ -1219,7 +1271,8 @@
    "Swissport-Covenant-Verletzung (G5) stoppt den jeweiligen Schritt bis zur Freigabe"
   ],
   "erfolgsmessung": "Welle-1-Mandate im Handelsregister eingetragen; DRS-Mandatszahl gesenkt auf Zielpfad →≤5 — bis 28.02.2027",
-  "grounding": "projekt.yaml WS1-10; RUBICON-Doc §4 WS1 D10/K12 + Stromrisiko DE-GF-Entflechtung; WS-Paket WS1 Phase 2"
+  "grounding": "projekt.yaml WS1-10; RUBICON-Doc §4 WS1 D10/K12 + Stromrisiko DE-GF-Entflechtung; WS-Paket WS1 Phase 2",
+  "ziel_klartext": "Die Welle 1 der Entflechtung der deutschen Geschäftsführer-Mandate (GF) ist im Handelsregister eingetragen. Damit ist die Zahl der GF-Mandate von Dieter Streuli (DRS) entsprechend dem Zielpfad (von 18 auf letztlich höchstens 5) gesenkt, und für Gesellschaften ohne neuen Geschäftsführer sind Interims-Prokuren (befristete Handlungsvollmachten) erteilt."
  },
  "WS1-11": {
   "kontext": "Die HR-Organisation ist Teil der Fusions-Doppelstrukturen; zusätzlich ist die Schnittstelle zu ShAir (Payrolling-Einheit) ungeklärt. WS1 adressiert ausschliesslich die Struktur-Ebene: HR-Zielorganisation streamlinen und die ShAir-Rolle/-Schnittstelle klären — individuelle Personalentscheide und ShAir-MBO-/Vertragsspezifika laufen strikt über den vertraulichen HR-Sensitive-Kanal.",
@@ -1241,7 +1294,8 @@
    "Parallellast Charisius (WS1-10/-11/-14, RACI, WS5-Strom) — Priorisierungskonflikt möglich (zu klären im GL-Weekly)"
   ],
   "erfolgsmessung": "HR-Zielorganisation beschlossen; ShAir-Rolle/-Schnittstelle als Struktur dokumentiert (keine MBO-Spezifika) — bis 28.02.2027",
-  "grounding": "projekt.yaml WS1-11; RUBICON-Doc §4 WS1 D6/K7 + Vertraulichkeits-Passus; WS-Paket WS1 Phase 2 (messbar-Spalte)"
+  "grounding": "projekt.yaml WS1-11; RUBICON-Doc §4 WS1 D6/K7 + Vertraulichkeits-Passus; WS-Paket WS1 Phase 2 (messbar-Spalte)",
+  "ziel_klartext": "Die Zielorganisation des HR-Bereichs (Personalwesen) ist verschlankt («streamlined») und formell beschlossen; zusätzlich ist die Rolle und Schnittstelle von ShAir gegenüber dem HR-Bereich auf reiner Struktur-Ebene dokumentiert — ohne Spezifika zum möglichen ShAir-Management-Buy-out (MBO) und ohne individuelle Personalentscheide."
  },
  "WS1-12": {
   "kontext": "IT/Didit ist ungeordnet: Ein-Mann-IT (Bus-Faktor Suchomski), zugleich zentral für Mail-Domain, Kommunikationsplattform, Data Foundation und AI-Hosting (Vertex) — Zielorganisation und Governance sind ungeklärt, die Owner-Frage (Didit/Suchomski heute unter AI@AXS) offen. Die Bereinigung ist mehr als Bus-Faktor-Entschärfung: Org-Aufstellung, Governance und ein expliziter Sourcing-Entscheid.",
@@ -1263,7 +1317,8 @@
    "Abhängigkeit WS6: Vertex-Stack-Übernahme der Chairman-Automationen (WS2-12, Feb 27) setzt geordnete IT-Governance voraus"
   ],
   "erfolgsmessung": "IT-/Didit-Zielorganisation + Sourcing-Entscheid dokumentiert; Stellvertretung/Doku vorhanden — bis 28.02.2027",
-  "grounding": "projekt.yaml WS1-12; RUBICON-Doc §4 WS1 D7/K8 + Stromrisiko IT-Fragilität; WS-Paket WS1 Phase 2 (messbar-Spalte)"
+  "grounding": "projekt.yaml WS1-12; RUBICON-Doc §4 WS1 D7/K8 + Stromrisiko IT-Fragilität; WS-Paket WS1 Phase 2 (messbar-Spalte)",
+  "ziel_klartext": "Die Zielorganisation für die Konzern-IT und Didit ist bereinigt und dokumentiert: Die Governance ist definiert, der Sourcing-Entscheid (Eigenerbringung/Insourcing vs. externe Vergabe/Externalisierung) ist gefällt, und das Schlüsselpersonen-Risiko («Bus-Faktor»: kritisches Wissen hängt an einzelnen Personen) ist durch eine benannte Stellvertretung und vorhandene Dokumentation entschärft."
  },
  "WS1-13": {
   "kontext": "Der Zielnachweis schliesst die 8-Monats-Kernumsetzung von WS1 ab (Phase 3, M8): Die Organisation ist vollzogen, die Fusions-Doppelspurigkeiten sind mehrheitlich abgebaut, die GF-Haftungskonzentration ist aufgelöst — und der Strom wird in die Linie übergeben, ohne Rückfall in Chairman-Zentrierung. Das ist die Abnahme-Messlatte des gesamten Stroms gegenüber GL und VR.",
@@ -1286,7 +1341,8 @@
    "Rückfall-Risiko Chairman-Zentrierung: Übergabe gilt nur bei bestandenem Unabhängigkeits-Audit"
   ],
   "erfolgsmessung": "Verwaltungs-/Finance-Organisation vollzogen; ≥5/6 Doppelspurigkeits-Items abgebaut (Fallback 4/6 dokumentiert); DRS ≤5 GF-Mandate im Handelsregister; Übergabe-Audit bestanden und Schlussbericht GL/VR vorgelegt — bis 30.04.2027",
-  "grounding": "projekt.yaml WS1-13; RUBICON-Doc §4 WS1 D9/D10/K11–K13; WS-Paket WS1 Phase 3 (messbar-Spalten) + Erfolgskriterien"
+  "grounding": "projekt.yaml WS1-13; RUBICON-Doc §4 WS1 D9/D10/K11–K13; WS-Paket WS1 Phase 3 (messbar-Spalten) + Erfolgskriterien",
+  "ziel_klartext": "Der Zielnachweis für Workstream 1 (WS1) ist erbracht: (1) Die Verwaltungs- und Finance-Organisation ist vollzogen; (2) mindestens 5 der 6 definierten Doppelspurigkeits-Items sind abgebaut (dokumentierter Fallback: 4 von 6); (3) DRS ist mit höchstens 5 Geschäftsführer-Mandaten (GF-Mandaten) im Handelsregister eingetragen; (4) das Übergabe-Audit für die Übergabe in die Linienorganisation ist bestanden und der Schlussbericht ist der Geschäftsleitung (GL) und dem Verwaltungsrat (VR) vorgelegt."
  },
  "WS1-14": {
   "kontext": "Die Entity-Portfolio-Bereinigung inkl. ZRH-Vollzug ist gesetzlich gebundener Nachlauf (Q2/27) ausserhalb der 8-Monats-Kernumsetzung — sie zählt nie gegen das Kern-Projektende 30.04.2027. Das ZRH-Residual belastet mit ~−110 TCHF/Monat; der fixe Endtermin wird bereits Feb 27 fixiert (WS3-11), der Vollzug folgt nach Art.-335f–k-OR-Check im Q2/27.",
@@ -1308,7 +1364,8 @@
    "PR-/Reputationsrisiko beim ZRH-Vollzug (PR-Vorlauf gemäss WS3-11 eingeplant); Medien-Vorgeschichte ZRH beachten"
   ],
   "erfolgsmessung": "ZRH-Residual (~−110 TCHF/Monat) mit fixem Endtermin beendet und Entity-Portfolio bereinigt — Vollzug bis 30.06.2027 (Nachlauf, zählt nicht gegen baseline_end 30.04.2027)",
-  "grounding": "projekt.yaml WS1-14 (nachlauf: true); RUBICON-Doc §4 WS1 K14 + Stromrisiko Minorities; WS-Paket WS1 Nachlauf Q2/27 (messbar-Spalte)"
+  "grounding": "projekt.yaml WS1-14 (nachlauf: true); RUBICON-Doc §4 WS1 K14 + Stromrisiko Minorities; WS-Paket WS1 Nachlauf Q2/27 (messbar-Spalte)",
+  "ziel_klartext": "Nachlauf-Milestone: Die Bereinigung des Gesellschafts-Portfolios (Entity-Portfolio) ist vollzogen, einschliesslich des Vollzugs am Standort Zürich (ZRH) nach dem Verfahren gemäss Art. 335f–k OR (Schweizer Obligationenrecht: Verfahren bei Massenentlassungen — Konsultation der Arbeitnehmenden und Anzeige an das Amt). Damit ist das ZRH-Residual von rund −110 TCHF (Tausend Schweizer Franken) pro Monat mit fixem Endtermin beendet; der Vollzug erfolgt bis 30.06.2027 und zählt nicht gegen das Baseline-Ende (baseline_end) 30.04.2027."
  },
  "WS2-01": {
   "kontext": "Die heutige Gremien-Zähl-Vermischung («5 vs. 7») entstand, weil GL, Vice Chairman und Chairman durcheinander gezählt wurden — ohne bereinigte Führungsstruktur gibt es keine klare Accountability-Ebene, an der das MOS ansetzen kann. WS2-01 ist das gemeinsame M1-Deliverable mit WS1 (WS2-D1 ≙ WS1-D1) und die formale Gremien-Bereinigung per 18.09.2026.",
@@ -1329,7 +1386,8 @@
    "Abhängigkeit von der VR-Traktandierung: ohne formalen Beschluss bleibt die Zähl-Vermischung bestehen und blockiert nachgelagerte WS1-/WS2-Deliverables (Organigramm v2, JD-Kaskade)"
   ],
   "erfolgsmessung": "VR-Beschluss dokumentiert; GL=6 formal publiziert; Fritthum als Vice Chairman (nicht Linie) und DRS als Chairman separat ausgewiesen — bis 18.09.2026.",
-  "grounding": "projekt.yaml WS2-01 (due 18.09.2026, fix); RUBICON-Doc §4 WS2-D1/K1; WS-Paket WS2 Phase 0"
+  "grounding": "projekt.yaml WS2-01 (due 18.09.2026, fix); RUBICON-Doc §4 WS2-D1/K1; WS-Paket WS2 Phase 0",
+  "ziel_klartext": "Die Geschäftsleitung (GL) ist auf 6 Mitglieder bereinigt und diese Aufstellung ist formal publiziert. Die Ebenen-Trennung zwischen GL, Vice Chairman und Chairman ist per Beschluss des Verwaltungsrats (VR) dokumentiert: Fritthum ist als Vice Chairman (ohne Linienfunktion) und DRS als Chairman separat ausgewiesen — damit ist die offene Zählweise-Frage «5 vs. 7» zur GL-Grösse aufgelöst."
  },
  "WS2-02": {
   "kontext": "WS2 macht aus appellativer Führung ein gemessenes, verbindliches System — dafür muss der Führungsrhythmus in Phase 0 scharf gestellt werden, bevor Tracker und Queue live gehen. Zugleich ist das wöchentliche 13-Wochen-Liquiditätsbild bei zwingendem Finanzierungs-Closing 31.10.2026 ein heute blinder Fleck (Diagnose B).",
@@ -1352,7 +1410,8 @@
    "Entscheids-Queue verpufft, wenn Einträge ohne Konsequenz altern — Erzwingungs-Schwelle wird in M1 kalibriert (Wert = Annahme, zu klären)"
   ],
   "erfolgsmessung": "ExBoD-Standing-Traktandum + monatlicher Ampel-Review terminiert; Entscheids-Queue existiert und wird wöchentlich geführt; GL-Norm protokolliert; 13-Wochen-Liquidität wöchentlich verfügbar — bis 30.09.2026.",
-  "grounding": "projekt.yaml WS2-02 (due 30.09.2026, fix); RUBICON-Doc §4 WS2-D3/K3/K6; WS-Paket WS2 Phase 0"
+  "grounding": "projekt.yaml WS2-02 (due 30.09.2026, fix); RUBICON-Doc §4 WS2-D3/K3/K6; WS-Paket WS2 Phase 0",
+  "ziel_klartext": "Der Führungsrhythmus der Geschäftsleitung (GL) ist in Kraft: Das Standing-Traktandum (fester wiederkehrender Agendapunkt) «Transformation» im Executive Board (ExBoD, erweiterte GL-Runde) sowie der monatliche Ampel-Review sind terminiert; die Entscheids-Queue (Liste der offenen Entscheide mit Liegedauer) existiert und wird wöchentlich geführt; die GL-Norm ist im GL-Protokoll dokumentiert; der 13-Wochen-Liquiditätsreport ist wöchentlich verfügbar — nachweisbar zum Stichtag 30.09.2026."
  },
  "WS2-03": {
   "kontext": "Datenehrlichkeit ist Spielregel: Kein WS2-Zielwert wird vor validierter Baseline fixiert (Gate G2, 15.10.2026). Die Execution-Rate liegt heute bei «höchstens ~50%, real vermutlich tiefer» — sie wird gemessen statt als harte Grösse verkauft; Durchlaufzeit, Meetingzeit und Reporting-Pünktlichkeit sind Datenlücken. WS2-03 liegt auf dem kritischen Pfad (G1 → G2 → G6 → …).",
@@ -1377,7 +1436,8 @@
    "Zielwerte (≥80%/≥90%, ≤30 Tage) sind Vorschläge zur Validierung — vor G2 nicht als fix kommunizieren"
   ],
   "erfolgsmessung": "Execution-Baseline eingefroren; Durchlaufzeit-Baseline erfasst; Meetingzeit-Deckel je Rolle auf Basis der Ist-Messung fixiert; im Diagnose-Review GL (Gate G2) bestätigt — bis 15.10.2026.",
-  "grounding": "projekt.yaml WS2-03 (due 15.10.2026, Gate G2, critical); RUBICON-Doc §4 WS2-Metriken; WS-Paket WS2 Phase 0"
+  "grounding": "projekt.yaml WS2-03 (due 15.10.2026, Gate G2, critical); RUBICON-Doc §4 WS2-Metriken; WS-Paket WS2 Phase 0",
+  "ziel_klartext": "Die Baseline (Ausgangsmessung) für Workstream 2 (WS2) liegt vollständig vor: Die Execution-Rate (Anteil termingerecht erledigter Commitments und Action-Items) ist erhoben und eingefroren; die Baseline der Entscheidungs-Durchlaufzeit ist erfasst; die Ist-Meetingzeit je Führungsrolle und die Reporting-Pünktlichkeit sind gemessen; der Meetingzeit-Deckel je Rolle ist auf Basis der Ist-Messung fixiert; die Baseline ist im Diagnose-Review der Geschäftsleitung (GL) am Gate G2 bestätigt — bis 15.10.2026."
  },
  "WS2-04": {
   "kontext": "Der Gruppen-Commitment-Tracker ist das operative Tracking-Backbone des gesamten Programms RUBICON — alle sieben Ströme führen ihre Commitments auf diesem einen System (Anti-Duplikations-Regel: kein neues PMO-Tool, kein Parallel-Reporting). Root Cause der Execution-Schwäche ist primär ein Tracking-Problem; deshalb ist der Plan-Ansatz Tracking-first.",
@@ -1399,7 +1459,8 @@
    "Konsequenz-Mechanik wird nicht gelebt, wenn CGO die Eskalationen nicht trägt — Umsetzungsführungs-Rahmung entscheidend"
   ],
   "erfolgsmessung": "Tracker produktiv; alle 7 Ströme führen Commitments dort; T−48h-Reminder + ROT-Eskalation aktiv — bis 31.10.2026 (Termin = Annahme «Okt 26/M2»).",
-  "grounding": "projekt.yaml WS2-04 (due 31.10.2026, date_assumed); RUBICON-Doc §4 WS2-D2/K2 + Backbone-Abschnitt; WS-Paket WS2 Phase 1"
+  "grounding": "projekt.yaml WS2-04 (due 31.10.2026, date_assumed); RUBICON-Doc §4 WS2-D2/K2 + Backbone-Abschnitt; WS-Paket WS2 Phase 1",
+  "ziel_klartext": "Der Gruppen-Commitment-Tracker ist produktiv und dient als Rückgrat (Backbone) aller 7 Workstreams: Alle 7 Ströme führen ihre Commitments (verbindliche Zusagen mit Termin und Owner) ausschliesslich in diesem Tracker, und die Konsequenz-Mechanik ist scharf geschaltet — der automatische Reminder 48 Stunden vor Fälligkeit (T−48h) und die Eskalation bei Status ROT sind aktiv — bis 31.10.2026 (Termin = Annahme «Okt 26/M2»)."
  },
  "WS2-05": {
   "kontext": "Der bestehende Chairman-Aufträge-Tracker (Google Sheet + Weekly Review Do 18:00) wird nicht dupliziert, sondern absorbiert — sein Schema ist der Bauplan des Gruppen-Trackers. Der Cutover beseitigt Parallelbetrieb und ist zugleich ein Schritt weg von der Chairman-Zentrierung: Ownership wechselt vom Chairman-Office zum CEO-Office.",
@@ -1421,7 +1482,8 @@
    "Abhängigkeit von WS2-04: ohne produktiven Gruppen-Tracker kein Cutover — bei Verzug kein Zwischenzustand mit Doppelpflege zulassen"
   ],
   "erfolgsmessung": "Chairman-Tracker read-only migriert; Do-Serie ohne Parallelbetrieb im GL-Weekly/Cockpit aufgegangen — bis 31.10.2026 (Termin = Annahme «Okt 26»).",
-  "grounding": "projekt.yaml WS2-05 (due 31.10.2026, date_assumed); RUBICON-Doc §4 WS2-D9 + Cutover-Tabelle; WS-Paket WS2 Phase 1"
+  "grounding": "projekt.yaml WS2-05 (due 31.10.2026, date_assumed); RUBICON-Doc §4 WS2-D9 + Cutover-Tabelle; WS-Paket WS2 Phase 1",
+  "ziel_klartext": "Der Cutover (die Umstellung) des Chairman-Aufträge-Trackers ist abgeschlossen: Seine Bestände sind in den Gruppen-Commitment-Tracker migriert, der Chairman greift nur noch über einen Read-only-Filter (reiner Lesezugriff) auf die Gruppen A–D zu, die bisherige Donnerstag-18:00-Weekly-Review-Serie ist ersatzlos im GL-Weekly (wöchentliche Sitzung der Geschäftsleitung) bzw. im Chairman Cockpit aufgegangen, und es besteht kein Parallelbetrieb zweier Tracker mehr — bis 31.10.2026 (Termin = Annahme «Okt 26»)."
  },
  "WS2-06": {
   "kontext": "Die Entscheids-Queue macht offene Entscheide sichtbar («wer/was/seit wann», mit Liegedauer) und erzwingt sie ab einer Schwelle — sie ist neben der Kaskade das zweite Instrument der Entscheidungs-Mechanik, die Tempo erzwingt statt appelliert. Der VR-Pre-Read T−14 behebt zudem den dokumentierten Sequenz-Konflikt (VR 26.08. vor Gates 28.08.).",
@@ -1443,7 +1505,8 @@
    "Schwellenwert X ist noch nicht kalibriert (Annahme, M1) — vorzeitige Fixierung ohne Baseline widerspricht der Datenehrlichkeits-Regel"
   ],
   "erfolgsmessung": "Queue produktiv mit sichtbarer Liegedauer; VR-Pre-Read-T−14-Prozess + Beschluss-Tracking beschlossen und angewandt — bis 30.11.2026.",
-  "grounding": "projekt.yaml WS2-06 (due 30.11.2026, date_assumed); RUBICON-Doc §4 WS2-D3/D8/K9 + Entscheidungs-Mechanik; WS-Paket WS2 Phase 1"
+  "grounding": "projekt.yaml WS2-06 (due 30.11.2026, date_assumed); RUBICON-Doc §4 WS2-D3/D8/K9 + Entscheidungs-Mechanik; WS-Paket WS2 Phase 1",
+  "ziel_klartext": "Die Entscheids-Queue (Liste der offenen Entscheide) ist produktiv: Die Liegedauer jedes Entscheids ist sichtbar, und ab einer definierten Schwelle greift die Erzwingung (der Entscheid muss herbeigeführt werden). Zusätzlich sind der Prozess «VR-Pre-Read T−14» — Versand der Unterlagen des Verwaltungsrats (VR) 14 Tage vor der Sitzung — sowie das Tracking der Umsetzung von VR-Beschlüssen beschlossen und angewandt — bis 30.11.2026."
  },
  "WS2-07": {
   "kontext": "Die Entscheids-Kaskade klärt, wer bis zu welcher Schwelle allein entscheidet — sie verhindert Hochdelegieren und hält Standardentscheide unten. Als INS-001 Anhang B wird sie im bestehenden Richtlinien-Rahmen verankert (kein neues Regelwerk), ergänzt um die Eskalationsmatrix v1.0 als INS-001-Nachtrag.",
@@ -1463,7 +1526,8 @@
    "Schnittstellen-Abhängigkeit zu WS1 (RACI-Charta, gleiche INS-001-Anlage-Logik, due ebenfalls 30.11.) — Inkonsistenzen zwischen Anlage und Anhang B vermeiden"
   ],
   "erfolgsmessung": "INS-001 Anhang B verabschiedet und publiziert; Eskalationsmatrix v1.0 (24h/5 AT/sofort) als INS-001-Nachtrag in Kraft — bis 30.11.2026.",
-  "grounding": "projekt.yaml WS2-07 (due 30.11.2026, date_assumed, Owner Charisius); RUBICON-Doc §4 WS2-D4/K4 + Entscheidungs-Mechanik; WS-Paket WS2 Phase 1"
+  "grounding": "projekt.yaml WS2-07 (due 30.11.2026, date_assumed, Owner Charisius); RUBICON-Doc §4 WS2-D4/K4 + Entscheidungs-Mechanik; WS-Paket WS2 Phase 1",
+  "ziel_klartext": "Die Entscheids-Kaskade ist als Anhang B der AXS-Konzernrichtlinie INS-001 verabschiedet, publiziert und in Kraft; die Eskalationsmatrix Version 1.0 mit den drei Eskalationsstufen 24 Stunden / 5 Arbeitstage / sofort ist als Nachtrag zur Konzernrichtlinie INS-001 in Kraft gesetzt und publiziert."
  },
  "WS2-08": {
   "kontext": "Die Top-6-Verluststationen (BER/MUC/FRA/DUS/DUS II + AAS Technics) sind heute ohne durchgängige Betriebs-Scorecard (Diagnose E). WS2-08 installiert das Ops-Performance-Review-Format als WS2-Führungsformat — die Datenbasis liefert der Strom OE (Scorecards); zugleich geht das Commitment-Board auf GL- und Directors-Ebene live.",
@@ -1484,7 +1548,8 @@
    "Datenbasis-Abhängigkeit vom OE-Strom (EPG-GHS-Datenzugang, Gate G1) — ohne Ops-KPI-Extrakt keine belastbaren Top-6-Scorecards"
   ],
   "erfolgsmessung": "Top-6-Scorecards im Monthly Business Review; Commitment-Board GL/Directors live; Konsequenz-Regelwerk beschlossen — bis 30.11.2026.",
-  "grounding": "projekt.yaml WS2-08 (due 30.11.2026, date_assumed, Owner Matthei); RUBICON-Doc §4 WS2-D7/K7 + Mitbestimmungs-Vorbehalt; WS-Paket WS2 Phase 1"
+  "grounding": "projekt.yaml WS2-08 (due 30.11.2026, date_assumed, Owner Matthei); RUBICON-Doc §4 WS2-D7/K7 + Mitbestimmungs-Vorbehalt; WS-Paket WS2 Phase 1",
+  "ziel_klartext": "Das Ops-Performance-Review-Format für die Top-6-Verluststationen ist definiert und die Top-6-Scorecards sind im Monthly Business Review verankert; das Commitment-Board für die Geschäftsleitung (GL) und die Directors ist live geschaltet; das Konsequenz-Regelwerk ist rechtlich geprüft und beschlossen."
  },
  "WS2-09": {
   "kontext": "Das MOS-Handbuch v1.0 kodifiziert das gesamte Management Operating System als Konzernrichtlinie — Rhythmus, Tracker, Kaskade, Eskalationsmatrix — und macht es damit unabhängig von Personen durchsetzbar. Parallel muss der Monthly Report erstmals pünktlich bis zum 20. geliefert werden (IST: JAN 11.03., FEB 24.03. — verspätet), inkl. 13-Wochen-Liquidität.",
@@ -1504,7 +1569,8 @@
    "Handbuch bleibt Papier, wenn Kadenz-Compliance nicht gemessen wird — Kopplung an die ≥95%-Metrik (WS2-11)"
   ],
   "erfolgsmessung": "MOS-Handbuch v1.0 als Richtlinie in Kraft (Sign-off Charisius/Wüst); Monthly Report ≤ 20. mit 13-Wochen-Liquidität geliefert — bis 31.12.2026.",
-  "grounding": "projekt.yaml WS2-09 (due 31.12.2026, date_assumed); RUBICON-Doc §4 WS2-D5/D6/K5; WS-Paket WS2 Phase 1"
+  "grounding": "projekt.yaml WS2-09 (due 31.12.2026, date_assumed); RUBICON-Doc §4 WS2-D5/D6/K5; WS-Paket WS2 Phase 1",
+  "ziel_klartext": "Das Handbuch zum Management Operating System (MOS, Führungs- und Steuerungssystem) liegt in Version 1.0 vor und ist als Konzernrichtlinie in Kraft (mit dokumentiertem Sign-off von Charisius und Wüst); der Monthly Report ist erstmals spätestens am 20. des Folgemonats versandt und enthält die 13-Wochen-Liquiditätsvorschau."
  },
  "WS2-10": {
   "kontext": "Der Führungsrhythmus soll durchgängig vom Shift-Huddle bis zum VR reichen — der Pilot bringt das MOS auf die Stationsebene, wo die operative Wertschöpfung stattfindet. Bewusst klein geschnitten: 2 Stationen (1 CH + 1 DE), VIE explizit erst nach BVD-Entscheid (laufendes Lizenzverfahren, AAS-Backbone eingefroren).",
@@ -1525,7 +1591,8 @@
    "Pilot ohne Datenbasis (Scorecards aus OE) verliert Substanz — Abhängigkeit von OE-Scorecard-Fortschritt"
   ],
   "erfolgsmessung": "Shift-Huddle an 2 Pilotstationen (1 CH + 1 DE) produktiv — bis 31.01.2027.",
-  "grounding": "projekt.yaml WS2-10 (due 31.01.2027, date_assumed, Owner Matthei); RUBICON-Doc §4 WS2-K8; WS-Paket WS2 Phase 2"
+  "grounding": "projekt.yaml WS2-10 (due 31.01.2027, date_assumed, Owner Matthei); RUBICON-Doc §4 WS2-K8; WS-Paket WS2 Phase 2",
+  "ziel_klartext": "Der Pilotbetrieb der Shift-Huddles (kurze, regelmässige Schichtbesprechungen im operativen Betrieb) ist an zwei Pilotstationen produktiv — je eine Station in der Schweiz (CH) und eine in Deutschland (DE). Wien (VIE) wird erst nach dem Entscheid über die Bodenverkehrsdienst-Lizenz (BVD) einbezogen."
  },
  "WS2-11": {
   "kontext": "Erster harter Wirkungsnachweis des MOS: Die Execution-Rate muss von der Baseline (~50%, real vermutlich tiefer) auf ≥80% steigen, die Kadenz-Compliance (Agenda + Protokoll + Commitment-Log) auf ≥95% — beides aus dem Gruppen-Tracker belegt, nicht behauptet. Dies ist die M6-Zwischenmarke auf dem Weg zum ≥90%-Ziel (M8).",
@@ -1547,7 +1614,8 @@
    "Kadenz-Compliance-Baseline ist Datenlücke — Messbarkeit hängt an sauberer Protokoll-Disziplin ab M2"
   ],
   "erfolgsmessung": "Execution-Rate ≥80% aus Tracker belegt; Kadenz-Compliance (Agenda + Protokoll + Commitment-Log) ≥95% — bis 28.02.2027.",
-  "grounding": "projekt.yaml WS2-11 (due 28.02.2027, date_assumed); RUBICON-Doc §4 WS2-Metriken; WS-Paket WS2 Phase 2 + KPIs"
+  "grounding": "projekt.yaml WS2-11 (due 28.02.2027, date_assumed); RUBICON-Doc §4 WS2-Metriken; WS-Paket WS2 Phase 2 + KPIs",
+  "ziel_klartext": "Die Execution-Rate von mindestens 80% ist erreicht und aus dem Gruppen-Tracker belegt; die Kadenz-Compliance (Einhaltung der Sitzungs-Kadenz, gemessen an Agenda, Protokoll und Commitment-Log) von mindestens 95% ist erreicht und ebenfalls aus dem Tracker belegt."
  },
  "WS2-12": {
   "kontext": "Die Chairman-persönlichen Automationen (Morning Scan, ExBoD-Prep, Dashboards) laufen heute als Single Point of Failure auf dem DRS-Mac — ein dokumentiertes Rückfall-Risiko in die Chairman-Zentrierung. WS2-12 überführt sie in den GL-getragenen Betrieb auf dem Konzern-Stack (Vertex), gekoppelt an WS6.",
@@ -1568,7 +1636,8 @@
    "Unvollständige Migration lässt den SPoF faktisch bestehen — MOS-Audit (WS2-14) prüft die Chairman-Unabhängigkeit explizit"
   ],
   "erfolgsmessung": "Automationen laufen auf dem Vertex-Stack, unabhängig vom DRS-Mac — bis 28.02.2027.",
-  "grounding": "projekt.yaml WS2-12 (due 28.02.2027, date_assumed, Owner Petric); RUBICON-Doc §4 WS2 (Abschnitt nach K10) + Risikotabelle; WS-Paket WS2 Phase 2"
+  "grounding": "projekt.yaml WS2-12 (due 28.02.2027, date_assumed, Owner Petric); RUBICON-Doc §4 WS2 (Abschnitt nach K10) + Risikotabelle; WS-Paket WS2 Phase 2",
+  "ziel_klartext": "Alle Automationen des Verwaltungsratspräsidenten (Chairman) sind in den Betrieb der Geschäftsleitung (GL) auf dem Vertex-Stack überführt und laufen dort produktiv, unabhängig vom persönlichen Mac von Dieter Streuli (DRS). Der bisherige Single Point of Failure (SPoF, einzelner Ausfallpunkt) «DRS-Mac» ist damit beseitigt."
  },
  "WS2-13": {
   "kontext": "Der Zielnachweis des Stroms: Execution-Rate ≥90% muss über zwei aufeinanderfolgende Monate belegt sein (von Baseline ~50%), das Reporting erreicht den Vollausbau nach Art. 963 OR (P&L + Bilanz + Cashflow + IC-Eliminierung — heute existiert keine Konzernrechnung, EY-bestätigt), und der Shift-Huddle wird vom Pilot auf alle Stationen ausgerollt.",
@@ -1590,7 +1659,8 @@
    "≥90% über 2 Monate erfordert stabile Werte bereits ab Feb/Mär 27 — der M6-Meilenstein (WS2-11) ist harte Vorstufe"
   ],
   "erfolgsmessung": "Execution-Rate ≥90% über 2 aufeinanderfolgende Monate belegt; Monthly Report inkl. Bilanz/Cashflow; Shift-Huddle flächendeckend — bis 30.04.2027.",
-  "grounding": "projekt.yaml WS2-13 (due 30.04.2027, date_assumed); RUBICON-Doc §4 WS2-Metriken/D6; WS-Paket WS2 Phase 3"
+  "grounding": "projekt.yaml WS2-13 (due 30.04.2027, date_assumed); RUBICON-Doc §4 WS2-Metriken/D6; WS-Paket WS2 Phase 3",
+  "ziel_klartext": "Die Execution-Rate (Umsetzungsquote der beschlossenen Massnahmen gemäss Gruppen-Tracker) liegt über zwei aufeinanderfolgende Monate bei mindestens 90 Prozent und ist belegt; der Monthly Report (monatlicher Finanzbericht) ist im Vollausbau nach Art. 963 OR (Pflicht zur konsolidierten Konzernrechnung) etabliert, inklusive Bilanz und Cashflow; der Shift-Huddle (kurze, strukturierte Schichtbesprechung) ist an allen Stationen ausgerollt."
  },
  "WS2-14": {
   "kontext": "Das MOS gilt erst als verankert, wenn es ohne den Chairman läuft: Das Audit prüft explizit Chairman-Unabhängigkeit, keinen Rückfall in Chairman-Zentrierung und den gehaltenen Meeting-Deckel. Mit bestandenem Audit geht das System in die Linie über; der Schlussbericht an GL/VR schliesst den Strom formal ab.",
@@ -1612,7 +1682,8 @@
    "Formale VR-Abnahme liegt erst am Q2-VR (~Jun 27) — Milestone-Erfüllung (Audit + Übergabe + Bericht bis Apr 27) davon sauber abgrenzen"
   ],
   "erfolgsmessung": "MOS-Audit durchgeführt und bestanden; Übergabe in die Linie dokumentiert; Schlussbericht an GL/VR vorgelegt — bis 30.04.2027.",
-  "grounding": "projekt.yaml WS2-14 (due 30.04.2027, date_assumed); RUBICON-Doc §4 WS2-Risikotabelle (Chairman-Zentrierung); WS-Paket WS2 Phase 3 + Erfolgskriterien"
+  "grounding": "projekt.yaml WS2-14 (due 30.04.2027, date_assumed); RUBICON-Doc §4 WS2-Risikotabelle (Chairman-Zentrierung); WS-Paket WS2 Phase 3 + Erfolgskriterien",
+  "ziel_klartext": "Das Audit des Management Operating System (MOS, Führungs-/Steuerungssystem) ist durchgeführt und bestanden — mit dem Prüfschwerpunkt, dass das System unabhängig vom Verwaltungsratspräsidenten (Chairman) funktioniert. Die Übergabe des MOS-Betriebs in die Linienorganisation ist dokumentiert, und der Schlussbericht ist der Geschäftsleitung (GL) und dem Verwaltungsrat (VR) vorgelegt."
  },
  "WS3-01": {
   "kontext": "Vor dem Finanzierungs-Closing (31.10.2026, Gate G6) sind nur cash-neutrale Massnahmen zulässig — WS3 startet deshalb mit einem Sofortpaket, das die Kostendrift ohne Cash-Wirkung stoppt. Hintergrund: Zentralkosten heute nur als Recharge-Proxy FC26 ≈ 3'984 TEUR bekannt (FC27-Recharge AAS-only −4'355 TEUR zu stoppen); es gilt, ab Tag 1 Kontrolle über Zentralkosten, Beratermandate und P&L-Ownership herzustellen.",
@@ -1634,7 +1705,8 @@
    "Cash-Gate G6: keine cash-wirksamen Schritte vor Closing — Sofortpaket muss strikt cash-neutral bleiben"
   ],
   "erfolgsmessung": "Deckel in Kraft, Freeze-Regel (CEO+CFO-Doppelfreigabe) publiziert, Interimsliste = 100% der Einheiten — bis 30.09.2026.",
-  "grounding": "projekt.yaml WS3-01; RUBICON-Doc §4 WS3 Kernmassnahmen Zentralkosten; WS-Paket WS3 Phase 0, Deliverable 1"
+  "grounding": "projekt.yaml WS3-01; RUBICON-Doc §4 WS3 Kernmassnahmen Zentralkosten; WS-Paket WS3 Phase 0, Deliverable 1",
+  "ziel_klartext": "Das cash-neutrale Sofortpaket ist in Kraft: (1) Der Interims-Deckel für die Zentralkosten ist fixiert und wirksam, (2) die Freeze-Regel (Vergabestopp), wonach Beratermandate über EUR 25'000 nur mit Doppelfreigabe durch CEO und CFO vergeben werden dürfen, ist publiziert, und (3) die Interimsliste der Verantwortlichen mit Gewinn-und-Verlust-Verantwortung (P&L) deckt 100% der Einheiten ab — alles bis 30.09.2026."
  },
  "WS3-02": {
   "kontext": "Die drei strukturellen Verlustquellen (AAS Technics −4'211, BER −3'291, MUC −2'800 TEUR FY25A, kumuliert ≈ −10'302) sind der grösste Run-Rate-Hebel des Programms; die Gates 28.08.2026 verlangen einen sofortigen Umsetzungs-Kickoff. Ohne frühzeitige arbeitsrechtliche Schwellenprüfung (§17/§18 KSchG, §613a BGB) ist keine Restrukturierung bis März 2027 (WS3-12, G4) einleitbar.",
@@ -1657,7 +1729,8 @@
    "Sozialplan KEL = Datenlücke; BER-Restrukturierungskosten CHF 1.2m sind cash-wirksam und erst nach Closing (G6) auslösbar"
   ],
   "erfolgsmessung": "Kickoff dokumentiert; Schwellenprüfung je Betrieb vorliegend; MUC-Personalwirksamkeit binär entschieden (ja/nein) — bis 30.09.2026.",
-  "grounding": "projekt.yaml WS3-02; RUBICON-Doc §4 WS3 Verlustquellen (Agenda-WS9); WS-Paket WS3 Phase 0, Deliverable 2"
+  "grounding": "projekt.yaml WS3-02; RUBICON-Doc §4 WS3 Verlustquellen (Agenda-WS9); WS-Paket WS3 Phase 0, Deliverable 2",
+  "ziel_klartext": "Der Umsetzungs-Kickoff für die Gates AAS Technics, BER und MUC ist durchgeführt und dokumentiert: Die Schwellenprüfung nach §17/§18 KSchG (Kündigungsschutzgesetz, Anzeigepflicht bei Massenentlassungen) liegt für jeden betroffenen Betrieb vor, der Check nach §613a BGB (Betriebsübergang, Unterrichtungspflicht) ist dokumentiert, und die Frage der Personalwirksamkeit am Standort MUC ist binär (ja/nein) entschieden — bis 30.09.2026."
  },
  "WS3-03": {
   "kontext": "Datenehrlichkeit ist oberste Regel: kein Zielwert wird vor validierter Baseline fixiert (Gate G2, 15.10.2026). Dieser kritische Meilenstein friert die Datengrundlage für alle WS3-Ziele ein (−30% Zentralkosten, −5% CpT, −50% Verlustquellen, −20% externe Kosten) und hängt am Datenzugangs-Gate G1 (OE-01, EPG-GHS/Looker bis 12.09.).",
@@ -1679,7 +1752,8 @@
    "Unvollständige Baseline erzwingt Zielwert-Anpassung statt -Bestätigung; Datenehrlichkeit vor Termintreue"
   ],
   "erfolgsmessung": "Alle gelisteten Datenfelder befüllt, keine offene Datenlücke im Kern-Paket; GL-Protokoll mit fixierten (oder begründet angepassten) Zielwerten je KPI — bis 15.10.2026 (Gate G2).",
-  "grounding": "projekt.yaml WS3-03 (gate G2, critical, depends_on OE-01); WS-Paket WS3 Phase 0, Deliverables 3+4; RUBICON-Doc §4 WS3 Spielregel Datenehrlichkeit"
+  "grounding": "projekt.yaml WS3-03 (gate G2, critical, depends_on OE-01); WS-Paket WS3 Phase 0, Deliverables 3+4; RUBICON-Doc §4 WS3 Spielregel Datenehrlichkeit",
+  "ziel_klartext": "Das Baseline-Datenpaket ist komplett: Alle gelisteten Datenfelder des Kern-Pakets sind befüllt, keine offene Datenlücke im Kern-Paket. Zusätzlich hat die Geschäftsleitung (GL) im Diagnose-Review die Zielwerte je Kennzahl (KPI) (−30%/−5%/−50%/−20%) validiert oder begründet angepasst; das GL-Protokoll mit den fixierten Zielwerten liegt vor — bis 15.10.2026 (Gate G2)."
  },
  "WS3-04": {
   "kontext": "Die heutige Zentralkosten-Sicht beruht nur auf einem Recharge-Proxy (FC26 ≈ 3'984 TEUR ≈ 1.4% Overhead-Ratio); die echte Holding-Kostenbasis ist eine ausgewiesene Datenlücke. Der finale Overhead-Baseline-Report ersetzt den Proxy und ist die belastbare Basis für den finalen Zentralkosten-Deckel (WS3-07) und den −30%-Nachweis (WS3-13).",
@@ -1698,7 +1772,8 @@
    "Abhängigkeit von Datenzugängen (G1/OE-01): FTE-Baseline via Looker weiterhin Datenlücke"
   ],
   "erfolgsmessung": "Report mit echter Holding-Kostenbasis liegt vor und ist GL-abgenommen — bis 31.10.2026 (Termin Annahme lt. projekt.yaml).",
-  "grounding": "projekt.yaml WS3-04 (date_assumed true); RUBICON-Doc §4 WS3-D1; WS-Paket WS3 Phase 1, Deliverable 1"
+  "grounding": "projekt.yaml WS3-04 (date_assumed true); RUBICON-Doc §4 WS3-D1; WS-Paket WS3 Phase 1, Deliverable 1",
+  "ziel_klartext": "Der finale Overhead-Baseline-Report liegt vor und ist von der Geschäftsleitung (GL) abgenommen: Er weist die echte Holding-Kostenbasis aus und ersetzt damit den bisherigen Näherungswert auf Basis konzerninterner Weiterverrechnungen (Recharge-Proxy) — bis 31.10.2026."
  },
  "WS3-05": {
   "kontext": "Das Finanzierungs-Closing (EUR 15 Mio fix, 31.10.2026) läuft als externe Parallel-Achse in Projekt #98 — WS3 respektiert dessen Sequenzierung als Gate G6: cash-wirksame Restrukturierungen (BER, AAS Technics, ZRH) sind erst danach zulässig. Dieser kritische Gate-Meilenstein sichert die Cash-Disziplin vor dem Closing und die saubere BER-Offenlegung in der Closing-Dokumentation.",
@@ -1720,7 +1795,8 @@
    "Unvollständige BER-Disclosure in der Closing-Doku wäre ein Rechts-/Reputationsrisiko im Finanzierungsprozess"
   ],
   "erfolgsmessung": "Kein cash-wirksamer Restrukturierungs-Schritt vor 31.10.2026; BER in der Closing-Dokumentation offengelegt; Closing-Datum 31.10.2026 (Gate G6) gehalten.",
-  "grounding": "projekt.yaml WS3-05 (gate G6, critical, depends_on WS3-03); RUBICON-Doc §4 WS3 «Finanzierung = externe Parallel-Achse (Projekt #98)»; WS-Paket WS3 Phase 1, Deliverable 3"
+  "grounding": "projekt.yaml WS3-05 (gate G6, critical, depends_on WS3-03); RUBICON-Doc §4 WS3 «Finanzierung = externe Parallel-Achse (Projekt #98)»; WS-Paket WS3 Phase 1, Deliverable 3",
+  "ziel_klartext": "Das Finanzierungs-Closing ist per 31.10.2026 vollzogen (Gate G6): Bis zum Closing wurde kein cash-wirksamer Restrukturierungsschritt ausgelöst, und der BER-Sachverhalt ist in der Closing-Dokumentation offengelegt. Erst ab dem vollzogenen Closing sind cash-wirksame Restrukturierungsschritte zulässig."
  },
  "WS3-06": {
   "kontext": "Externe Kosten (Kanzleien, WP, Agenturen, Einkauf) sind ein eigener Governance-Block mit Zielwert Run-Rate −20% bis M8 (Vorschlag zur Validierung); die Spend-Beträge sind heute eine Datenlücke. Die Einkaufsbündelung über 14 Stationen (Ziel 5% Discount) ist der zweite Hebel des Programms.",
@@ -1740,7 +1816,8 @@
    "Mandats-Konsolidierung kann laufende Verfahren berühren (z.B. §35-GewO FRA, BVD Wien) — Wechsel nur mit Rechts-Check (Charisius)"
   ],
   "erfolgsmessung": "Anbieter-Inventar vollständig, Spend-Baseline beziffert, Bündelungs-Verhandlungen initiiert (Ziel 5% Discount) — bis 31.10.2026 (Termin Annahme).",
-  "grounding": "projekt.yaml WS3-06 (Owner Wüst, date_assumed true); RUBICON-Doc §4 WS3-D4; WS-Paket WS3 Phase 1, Deliverable 2 + Erfolgskriterium 3"
+  "grounding": "projekt.yaml WS3-06 (Owner Wüst, date_assumed true); RUBICON-Doc §4 WS3-D4; WS-Paket WS3 Phase 1, Deliverable 2 + Erfolgskriterium 3",
+  "ziel_klartext": "Das Programm zur Reduktion der externen Kosten ist gestartet: Das Anbieter-Inventar (6 Anwaltskanzleien, 3 Wirtschaftsprüfungsgesellschaften (WP), Agenturen) ist vollständig dokumentiert, die Spend-Baseline (Ausgaben-Basiserhebung über alle externen Anbieter) ist beziffert, und die Verhandlungen zur Einkaufsbündelung über die 14 Stationen sind initiiert (Ziel: 5% Rabatt)."
  },
  "WS3-07": {
   "kontext": "Nach validierter Baseline (G2) und finalem Overhead-Baseline-Report ersetzt der finale Zentralkosten-Deckel den Interimsdeckel aus WS3-01; parallel wird die Zielorganisation der Zentralfunktionen zero-based beschlossen. Der Deckel operationalisiert das −30%-Ziel (≤ ~2'800 TEUR, Overhead-Ratio ~1.0%) und ist mit WS1-K13 und den AI-Initiativen verzahnt.",
@@ -1762,7 +1839,8 @@
    "Verspätete Baseline (WS3-03/WS3-04) verschiebt den finalen Deckel — Interimsdeckel bliebe länger auf Proxy-Basis"
   ],
   "erfolgsmessung": "Finaler Deckel in Kraft; Zero-based-Blueprint mit GL-Beschluss dokumentiert; §17/§613a-Vorprüfung je DE-Betrieb vorliegend — bis 31.12.2026 (Termin Annahme).",
-  "grounding": "projekt.yaml WS3-07 (date_assumed true); RUBICON-Doc §4 WS3-D2 + Kernmassnahmen Zero-based; WS-Paket WS3 Phase 1, Deliverable 4"
+  "grounding": "projekt.yaml WS3-07 (date_assumed true); RUBICON-Doc §4 WS3-D2 + Kernmassnahmen Zero-based; WS-Paket WS3 Phase 1, Deliverable 4",
+  "ziel_klartext": "Der finale Zentralkosten-Deckel (abgeleitet nach Vorliegen der Kosten-Baseline) ist per Beschluss der Geschäftsleitung (GL) in Kraft, und die Zero-based-Zielorganisation der Zentralfunktionen (vom Nullpunkt her neu geplante Zielorganisation) ist von der GL beschlossen und dokumentiert. Zusätzlich liegt je betroffenem deutschen Betrieb die Vorprüfung nach §17 KSchG (Massenentlassungsanzeige) und §613a BGB (Betriebsübergang, Unterrichtungspflicht) vor."
  },
  "WS3-08": {
   "kontext": "Die Verlustquellen AAS Technics (FY25 −4'211 TEUR, Umsatz −54% YoY, Kundenkonzentration 87%) und BER (−3'291 TEUR, LH-Verlust ~EUR 7.2 Mio per 31.10.2026) brauchen beschlussreife Vorlagen «drehen vs. eliminieren» mit hartem Datum — kein Dauer-Monitoring. Die Gates vom 28.08.2026 werden damit in VR-/GL-Beschlüsse überführt; für MUC (−2'800 TEUR) wird der Fahrplan aus dem Kickoff-Ergebnis (WS3-02) abgeleitet.",
@@ -1784,7 +1862,8 @@
    "Verzug hier gefährdet WS3-12 (G4, kritischer Pfad, 31.03.2027)"
   ],
   "erfolgsmessung": "Je Verlustquelle liegt eine beschlussreife Vorlage mit Zahlengrundlage und hartem Datum im VR/GL vor; MUC-Fahrplan dokumentiert — bis 31.12.2026 (Termin Annahme).",
-  "grounding": "projekt.yaml WS3-08 (date_assumed true); RUBICON-Doc §4 WS3-D7 + Verlustquellen-Block (Agenda-WS9); WS-Paket WS3 Phase 1, Deliverable 5"
+  "grounding": "projekt.yaml WS3-08 (date_assumed true); RUBICON-Doc §4 WS3-D7 + Verlustquellen-Block (Agenda-WS9); WS-Paket WS3 Phase 1, Deliverable 5",
+  "ziel_klartext": "Für die Verlustbringer AAS Technics und Station BER liegen beschlussreife Vorlagen mit den Optionen «drehen vs. eliminieren» (Turnaround vs. Aufgabe der Einheit) vor — jeweils mit Zahlengrundlage und hartem Umsetzungsdatum, eingebracht in Verwaltungsrat (VR) bzw. Geschäftsleitung (GL); zusätzlich ist der Fahrplan für die Station MUC dokumentiert."
  },
  "WS3-09": {
   "kontext": "Die zwei Staff-Cost-Quick-Wins (Krankenstand-Transparenz, Arbeitszeitkonten/Überstunden-Monitoring) sind schnell und direkt margenwirksam — ohne Entlassungen — und gehen den strukturellen Hebeln (BTV, Staff Lending, Payrolling, Kurzarbeit) bewusst voraus. Krankenstands-Baseline je Standort ist heute eine Datenlücke; strategische Oberlinie ist «Kapazitätssicherung statt Kostenabbau» (demografischer Personalmangel).",
@@ -1807,7 +1886,8 @@
    "Krankenstands-Baseline fehlt — ohne sie sind Zielwerte und Margeneffekt nicht messbar"
   ],
   "erfolgsmessung": "Beide Hebel an allen Standorten aktiv; Monitoring aggregiert bzw. nach BV (DE/AT); Krankenstands-Zielwert je Standort erreicht (margenwirksam) — bis 28.02.2027 (Termin Annahme; Start Nov 26, flächig Jan/Feb 27).",
-  "grounding": "projekt.yaml WS3-09 (Owner Charisius, date_assumed true); RUBICON-Doc §4 WS3-D6 + Staff-Cost-Hebel (Agenda-WS6); WS-Paket WS3 Phase 2, Deliverable 1"
+  "grounding": "projekt.yaml WS3-09 (Owner Charisius, date_assumed true); RUBICON-Doc §4 WS3-D6 + Staff-Cost-Hebel (Agenda-WS6); WS-Paket WS3 Phase 2, Deliverable 1",
+  "ziel_klartext": "Die beiden kurzfristigen Personalkosten-Hebel (Staff-Cost-Quick-Wins) — Transparenz über die Krankenstände sowie Monitoring von Arbeitszeitkonten und Überstunden — sind flächendeckend an allen Standorten aktiv. Das Monitoring läuft aggregiert bzw. in Deutschland/Österreich nach abgeschlossener Betriebsvereinbarung (BV), und der Krankenstands-Zielwert je Standort ist erreicht (margenwirksam)."
  },
  "WS3-10": {
   "kontext": "Kostenführerschaft braucht Transparenz auf Stationsebene: Station-P&L und Cost-per-Turn (CpT) je Station monatlich live sind die Steuerungsgrundlage für das −5%-CpT-Ziel (Hebel-Näherung ≈ +10'201 TEUR EBITDA, Annahme aus dem Produktivitäts-Szenario). Die CpT-Baseline ist heute eine Datenlücke (Ops-KPIs Skelett, EPG-GHS beantragt und nicht erteilt).",
@@ -1828,7 +1908,8 @@
    "−5%-Hebelwert ist eine Annahme — Kalibrierung erst nach CpT-Baseline M2–M3"
   ],
   "erfolgsmessung": "CpT je Station monatlich live für alle Stationen; Report ≤ 20. drei Monate in Folge pünktlich — bis 28.02.2027 (Termin Annahme).",
-  "grounding": "projekt.yaml WS3-10 (date_assumed true); RUBICON-Doc §4 WS3-D5 + Metriktabelle CpT; WS-Paket WS3 Phase 2, Deliverable 2"
+  "grounding": "projekt.yaml WS3-10 (date_assumed true); RUBICON-Doc §4 WS3-D5 + Metriktabelle CpT; WS-Paket WS3 Phase 2, Deliverable 2",
+  "ziel_klartext": "Die Stations-Gewinn-und-Verlust-Rechnung (Station-P&L) und die Kennzahl Cost-per-Turn (CpT, Kosten pro Flugzeugabfertigung) sind für alle Stationen monatlich live verfügbar. Der Monatsreport ist drei Monate in Folge pünktlich bis spätestens am 20. des Folgemonats ausgeliefert."
  },
  "WS3-11": {
   "kontext": "Das ZRH-Residual kostet ~−110 TCHF/Monat und läuft ohne fixen Endtermin weiter. Dieser Meilenstein setzt den verbindlichen Endtermin — nach Art.-335f–k-OR-Check auf Basis der Residual-Headcount-Baseline (15.10.) und mit PR-Vorlauf (june/Meroni) wegen der medialen Vorgeschichte (AAS-Schliessung ZRH).",
@@ -1851,7 +1932,8 @@
    "Ohne fixen Endtermin läuft die Run-Rate ~−110 TCHF/Monat ungebremst weiter"
   ],
   "erfolgsmessung": "Verbindlicher ZRH-Endtermin im Plan fixiert; ~−110 TCHF/Monat mit Auslaufdatum versehen — bis 28.02.2027 (Termin Annahme).",
-  "grounding": "projekt.yaml WS3-11 (Owner CGO, date_assumed true); RUBICON-Doc §4 WS3 Verlustquellen ZRH-Residual; WS-Paket WS3 Phase 2, Deliverable 3"
+  "grounding": "projekt.yaml WS3-11 (Owner CGO, date_assumed true); RUBICON-Doc §4 WS3 Verlustquellen ZRH-Residual; WS-Paket WS3 Phase 2, Deliverable 3",
+  "ziel_klartext": "Für den verbleibenden Zürich-Betrieb (ZRH-Residual) ist ein verbindlicher Endtermin im RUBICON-Plan fixiert; der laufende monatliche Verlust von rund −110 TCHF trägt damit ein festes Auslaufdatum. Grundlage sind die Prüfung nach Art. 335f–k OR (Konsultations- und Meldepflichten bei Massenentlassungen) auf Basis der Headcount-Baseline (verifizierte Ausgangs-Mitarbeiterzahlen) sowie ein vorbereiteter PR-/Kommunikationsvorlauf."
  },
  "WS3-12": {
   "kontext": "Kritischer Pfad und Gate G4: Die Restrukturierungen AAS Technics und BER müssen bis Ende März 2027 formal eingeleitet sein (Beschlüsse gefällt, §111-Verfahren/§17-Anzeige gestartet, Kündigungsausspruch begonnen), damit die arbeitsrechtlich gebundene Wirksamkeit im Nachlauf Q2/27 (WS3-14) erreichbar bleibt. Voraussetzung ist der VR-genehmigte TOM-Blueprint (WS1-08, Q4-VR).",
@@ -1873,7 +1955,8 @@
    "Cash-Wirkung (BER-Restrukturierungskosten CHF 1.2m; Sozialpläne) nur nach Closing G6 und gegen 13-Wochen-Liquiditätsplan"
   ],
   "erfolgsmessung": "Verfahren nachweislich eingeleitet: Beschlüsse gefällt, §111/§17 gestartet, Kündigungsausspruch begonnen — bis 31.03.2027 (Gate G4, Termin Annahme).",
-  "grounding": "projekt.yaml WS3-12 (gate G4, critical, depends_on WS1-08); RUBICON-Doc §4 WS3 Verlustquellen; WS-Paket WS3 Phase 2, Deliverable 4"
+  "grounding": "projekt.yaml WS3-12 (gate G4, critical, depends_on WS1-08); RUBICON-Doc §4 WS3 Verlustquellen; WS-Paket WS3 Phase 2, Deliverable 4",
+  "ziel_klartext": "Die Restrukturierungsverfahren für AAS Technics und die Station BER sind nachweislich eingeleitet: Die Beschlüsse von Geschäftsleitung (GL) und Verwaltungsrat (VR) sind gefasst, die Verhandlungen nach §111 BetrVG (Betriebsänderung: Interessenausgleich/Sozialplan mit dem Betriebsrat) und die Anzeigen nach §17 KSchG (Massenentlassungsanzeige bei der Agentur für Arbeit) sind gestartet, und der Ausspruch der Kündigungen hat begonnen."
  },
  "WS3-13": {
   "kontext": "Der Zielbild-Nachweis Kosten schliesst die 8-Monats-Kernumsetzung von WS3 ab: Zentralkosten −30% (Overhead-Ratio ~1.4% → ~1.0%, ≤ ~2'800 TEUR) und externe Kosten −20% müssen strukturell entschieden/umgesetzt und CFO-testiert nachgewiesen sein. WS3 ist der grösste Einzelbeitrag zur EBITDA-Run-Rate ≥ CHF 12'372k; der Nachweis setzt die eingeleiteten Restrukturierungen (WS3-12) voraus.",
@@ -1895,7 +1978,8 @@
    "−20%-Ziel externe Kosten war Vorschlag zur Validierung — falls im G2-Review angepasst, gilt der angepasste Wert"
   ],
   "erfolgsmessung": "Overhead-Ratio ~1.0% nachgewiesen; externe Kosten-Run-Rate −20% CFO-testiert; Einsparungs-Brücke ohne Doppelzählung konsolidiert — bis 30.04.2027 (Termin Annahme).",
-  "grounding": "projekt.yaml WS3-13 (critical, depends_on WS3-12); RUBICON-Doc §4 WS3 Metrik; WS-Paket WS3 Phase 3, Deliverables 1+2 + Erfolgskriterien 1/3"
+  "grounding": "projekt.yaml WS3-13 (critical, depends_on WS3-12); RUBICON-Doc §4 WS3 Metrik; WS-Paket WS3 Phase 3, Deliverables 1+2 + Erfolgskriterien 1/3",
+  "ziel_klartext": "Der Zielbild-Nachweis Kosten liegt vor: Die Zentralkosten sind um 30% reduziert (Overhead-Ratio rund 1.0%), die laufende Kostenbasis (Run-Rate) der externen Kosten ist um 20% gesenkt und dies vom Chief Financial Officer (CFO) testiert, und die Einsparungs-Brücke ist ohne Doppelzählungen konsolidiert und CFO-testiert."
  },
  "WS3-14": {
   "kontext": "Gesetzlicher Nachlauf Q2/27 (ausserhalb der 8-Monats-Kernumsetzung, zählt nicht gegen das Kern-Projektende 30.04.2027): Die bis April 2027 eingeleiteten Restrukturierungen BER und AAS Technics werden arbeitsrechtlich wirksam (§18-Sperrfrist, Kündigungsfristen), die Verlustquellen-Run-Rate wird um −50% (Effekt ≥ +5'000 TEUR p.a.) halbiert und die EBITDA-Run-Rate ≥ CHF 12'372k nachgewiesen — zugleich Gate 2 der AI-Ramp.",
@@ -1917,7 +2001,8 @@
    "EBITDA-Run-Rate-Ziel 12'372k hängt auch an Beiträgen anderer Ströme (WS4/WS-OE/WS6) — Zurechnung sauber über die CFO-testierte Brücke"
   ],
   "erfolgsmessung": "BER-Run-Rate-Effekt realisiert (bzw. 30.06.27 (Hard Edge) bei Einigungsstelle dokumentiert); AAS Technics Run-Rate gegen 0 oder vollzogener Exit belegt; Verlustquellen −50% (≥ +5'000 TEUR p.a.) + EBITDA-Run-Rate ≥ CHF 12'372k CFO-testiert — bis 30.06.2027 (Nachlauf, Termin Annahme).",
-  "grounding": "projekt.yaml WS3-14 (nachlauf true, critical, depends_on WS3-12); WS-Paket WS3 Nachlauf Q2/27, Deliverables 1–3; RUBICON-Doc §3 Metriktabelle Verlustquellen"
+  "grounding": "projekt.yaml WS3-14 (nachlauf true, critical, depends_on WS3-12); WS-Paket WS3 Nachlauf Q2/27, Deliverables 1–3; RUBICON-Doc §3 Metriktabelle Verlustquellen",
+  "ziel_klartext": "Der Nachlauf ist abgeschlossen: Die Restrukturierungen an der Station BER und bei AAS Technics sind wirksam (BER: Run-Rate-Effekt realisiert bzw. bei laufendem Einigungsstellen-Verfahren der Stand per 30.06.2027 dokumentiert; AAS Technics: laufende Verlust-Run-Rate gegen 0 geführt oder vollzogener Exit belegt). Die Run-Rate der Verlustquellen ist um 50% reduziert (≥ +5'000 TEUR pro Jahr) und die EBITDA-Run-Rate (Ergebnis vor Zinsen, Steuern und Abschreibungen auf Jahresbasis) liegt bei ≥ CHF 12'372k — beides CFO-testiert. Damit ist zugleich Gate 2 der AI-Ramp (Workstream WS6) erfüllt."
  },
  "OE-01": {
   "kontext": "Heute existiert keine Konzern-Ops-Sicht (AHM 730 nicht konsolidiert, Ops-KPIs SKELETT); der EPG-GHS-Datenzugang ist beantragt (03.07.), aber nicht erteilt. Ohne diesen Datenzugang bleibt die gesamte Ops-Excellence-Scorecard ein Skelett — OE-01 ist deshalb Gate G1 und liegt auf dem kritischen Pfad; die Baseline-Datenpakete WS1-02 und WS3-03 (beide G2, 15.10.) hängen direkt davon ab.",
@@ -1941,7 +2026,8 @@
    "Datenqualität der Interim-Rohdaten je Station uneinheitlich — als Datenlücke markieren, nie schätzen"
   ],
   "erfolgsmessung": "Binär per 12.09.2026: Zugang (EPG-GHS + Looker/FTE) erteilt ODER Eskalation Stufe 3 dokumentiert UND Interim-Datenpfad aus AHM-730-Rohdaten aktiviert.",
-  "grounding": "projekt.yaml OE-01 (G1, critical, due 12.09.26); RUBICON-Doc §4 WS-OE (OE-K1, EPG-GHS-Baseline); WS-Paket WS-OE Phase 0."
+  "grounding": "projekt.yaml OE-01 (G1, critical, due 12.09.26); RUBICON-Doc §4 WS-OE (OE-K1, EPG-GHS-Baseline); WS-Paket WS-OE Phase 0.",
+  "ziel_klartext": "Datenzugangs-Gate G1 ist entschieden: Der Datenzugang zu EPG-GHS und zu Looker/FTE (FTE = Full-Time Equivalent, Vollzeitstellen-Daten) ist erteilt — oder, falls nicht, ist die Eskalation Stufe 3 dokumentiert und der Interim-Datenpfad aus AHM-730-Rohdaten (IATA-Standard für Verspätungscodes) ist aktiviert."
  },
  "OE-02": {
   "kontext": "Aus dem Selbstbefund «Wir sind aktuell kein (sehr) guter Ground Handler» (AFR) soll messbare Betriebs-Exzellenz werden. Der Kickoff rahmt das Kern-Deliverable des Stroms — eine bewusst schlanke Scorecard mit 5–6 Kern-KPIs je Station — und macht die operative Prozess-Baustelle sichtbar, indem CGO die «Top-3 ungeregelten Prozesse» persönlich benennt.",
@@ -1963,7 +2049,8 @@
    "Kickoff ohne belastbare Datenbasis, falls G1 (OE-01) noch offen — Design dann auf Interim-AHM-730-Basis rahmen"
   ],
   "erfolgsmessung": "Binär per 30.09.2026: Kickoff durchgeführt; KPI-Set (5–6) und Top-3-Prozessliste schriftlich vorliegend.",
-  "grounding": "projekt.yaml OE-02; RUBICON-Doc §4 WS-OE (Scorecard-Kern-Deliverable) + §5 Roadmap 30.09.26; WS-Paket WS-OE Phase 0."
+  "grounding": "projekt.yaml OE-02; RUBICON-Doc §4 WS-OE (Scorecard-Kern-Deliverable) + §5 Roadmap 30.09.26; WS-Paket WS-OE Phase 0.",
+  "ziel_klartext": "Der Kickoff des Workstreams Betriebs-Exzellenz (WS-OE) ist durchgeführt: Das Scorecard-Design mit 5–6 Kennzahlen (KPIs) je Station ist gerahmt, und die «Top-3 ungeregelten Prozesse» sind von CGO (Cüneyt Gökcöl) benannt; KPI-Set und Prozessliste liegen schriftlich vor."
  },
  "OE-03": {
   "kontext": "Bevor die Scorecard flächig ausgerollt wird, wird die Datenstrecke an drei Pilotstationen (DUS Ramp, VIE, MUC) bewiesen — DUS Ramp und MUC sind zugleich kommerziell bzw. ergebnisseitig heikle Stationen, VIE ist das geschützte Profit-Rückgrat. OE-03 ist das erste Delivery-Ergebnis nach dem Datenzugangs-Gate G1 (depends_on OE-01) und entspricht Deliverable OE-D1 des Stroms.",
@@ -1985,7 +2072,8 @@
    "Uneinheitliche Datenformate der zwei Ops-System-Welten (unvollendete Fusion) erschweren den Extrakt"
   ],
   "erfolgsmessung": "Binär per 31.10.2026: Ops-KPI-Extrakt für alle 3 Pilotstationen (DUS Ramp, VIE, MUC) vorliegend.",
-  "grounding": "projekt.yaml OE-03 (depends_on OE-01); RUBICON-Doc §4 WS-OE OE-D1; WS-Paket WS-OE Phase 1."
+  "grounding": "projekt.yaml OE-03 (depends_on OE-01); RUBICON-Doc §4 WS-OE OE-D1; WS-Paket WS-OE Phase 1.",
+  "ziel_klartext": "Der Ops-KPI-Extrakt (Auswertung der operativen Kennzahlen) liegt für alle drei Pilotstationen DUS Ramp, VIE und MUC als fertiges Dokument vor."
  },
  "OE-04": {
   "kontext": "«Gut» soll keine Absichtserklärung mehr sein, sondern eine kleine Zahl operativer Kern-KPIs mit Zielwert je Station. Die Scorecard v1.0 definiert dieses Steuerungsinstrument verbindlich — bewusst schlank (5–6 KPIs, keine Inflation) und mitbestimmungskonform (aggregiert, ohne MA-Personenbezug), damit sie in DE/AT ohne Betriebsvereinbarung sofort einsetzbar ist.",
@@ -2008,7 +2096,8 @@
    "Zielwerte ohne validierte Baseline sind Annahmen — Datenehrlichkeit wahren, Kalibrierung nachziehen"
   ],
   "erfolgsmessung": "Binär per 30.11.2026: Scorecard v1.0 freigegeben; ≤6 KPIs; Zielwert je KPI/Station gesetzt; §87/§96-Konformität bestätigt.",
-  "grounding": "projekt.yaml OE-04; RUBICON-Doc §4 WS-OE OE-D2 + Scorecard-Tabelle; WS-Paket WS-OE Phase 1."
+  "grounding": "projekt.yaml OE-04; RUBICON-Doc §4 WS-OE OE-D2 + Scorecard-Tabelle; WS-Paket WS-OE Phase 1.",
+  "ziel_klartext": "Die Ops-Excellence-Scorecard v1.0 ist definiert und freigegeben: höchstens 6 Kennzahlen (KPIs) mit je einem Zielwert pro KPI und Station; die Kennzahlen werden strikt aggregiert und ohne Personenbezug geführt, und die Mitbestimmungs-Konformität nach §87 BetrVG (Mitbestimmung des Betriebsrats, Deutschland) und §96 ArbVG (zustimmungspflichtige Kontrollmassnahmen, Österreich) ist bestätigt."
  },
  "OE-05": {
   "kontext": "Die Scorecard wird zuerst dort produktiv, wo der Handlungsdruck am grössten ist: bei den Top-6 Verluststationen (BER −3'291 / MUC −2'800 / FRA −1'519 / DUS −1'240 / DUS II −1'143 TEUR FY25A + AAS Technics −4'211). Sie läuft als stehender Teil des monatlichen Ops-Performance-Review / Monthly Business Review (WS2-Format) — kein neues Gremium; der Finanz-Turnaround dieser Stationen bleibt strikt bei WS3.",
@@ -2029,7 +2118,8 @@
    "Datenlücken einzelner Verluststationen bei verzögertem EPG-GHS-Zugang — Interim-AHM-730-Daten nutzen, Lücken ausweisen"
   ],
   "erfolgsmessung": "Binär per 30.11.2026: ≥1 Monthly Business Review mit Scorecards aller Top-6 Verluststationen durchgeführt und protokolliert.",
-  "grounding": "projekt.yaml OE-05; RUBICON-Doc §4 WS-OE OE-D5 (Start) + §5 Roadmap Nov 26; WS-Paket WS-OE Phase 1."
+  "grounding": "projekt.yaml OE-05; RUBICON-Doc §4 WS-OE OE-D5 (Start) + §5 Roadmap Nov 26; WS-Paket WS-OE Phase 1.",
+  "ziel_klartext": "Die Ops-Excellence-Scorecard ist für die Top-6 Verluststationen monatlich im produktiven Einsatz: Mindestens ein Monthly Business Review (das Ops-Performance-Review-Gefäss) mit den Scorecards aller Top-6 Verluststationen ist durchgeführt und protokolliert."
  },
  "OE-06": {
   "kontext": "Die eingefrorene Baseline aller ~15 Stationen ist die Referenz für Gate G7: «SLA ≥ Baseline durchgehend» wird zur harten Nebenbedingung über jeder kostenwirksamen Massnahme aus WS3. Ohne eingefrorene Baseline gibt es keinen objektiven Nachweis, dass Kostenführerschaft nicht auf Kosten der Servicequalität geht — und keinen belastbaren Zielnachweis in OE-10.",
@@ -2051,7 +2141,8 @@
    "Baseline-Qualität uneinheitlich über zwei Ops-System-Welten — je Station dokumentieren"
   ],
   "erfolgsmessung": "Binär per 31.12.2026: Baseline für 100% der ~15 Stationen erhoben und als G7-Referenz eingefroren.",
-  "grounding": "projekt.yaml OE-06 (Gate G7); RUBICON-Doc §4 WS-OE OE-D3; WS-Paket WS-OE Phase 1."
+  "grounding": "projekt.yaml OE-06 (Gate G7); RUBICON-Doc §4 WS-OE OE-D3; WS-Paket WS-OE Phase 1.",
+  "ziel_klartext": "Die Scorecard-Baseline (Ausgangswerte der Kern-Kennzahlen) ist für alle ~15 Stationen erhoben und formal eingefroren. Sie dient als Referenz für Gate G7 mit der Vorgabe, dass die Service-Level-Agreement-Werte (SLA, vertraglich zugesicherte Leistungsniveaus) die eingefrorene Baseline nicht unterschreiten dürfen (SLA ≥ Baseline)."
  },
  "OE-07": {
   "kontext": "Die SGHA-Rahmenverträge geben Airlines 60-Tage-Kündbarkeit und Kündigungsrechte bei Qualitätsmängeln (Annex B §9) — Servicequalitäts-Risse gefährden also direkt die WS4-Vertragsbasis von EUR 283.4 Mio FC2026. Der SLA-Schutzschirm installiert Frühwarn-Trigger mit Auto-Eskalation je Station, damit eskaliert wird, bevor Vertragsstrafen oder Kündigungsrechte auslösen; VIE ist als Profit-Rückgrat (laufendes BVD-Verfahren) besonders geschützt.",
@@ -2075,7 +2166,8 @@
    "SLA-Riss an VIE während des BVD-Verfahrens hätte doppelte Wirkung (Lizenz + Profit) — höchste Priorität"
   ],
   "erfolgsmessung": "Binär per 31.12.2026: Frühwarn-Trigger je Station aktiv; ≥1 Test-Eskalation nachgewiesen; 0 SLA-getriebene Kündigungs-/Strafen-Ereignisse.",
-  "grounding": "projekt.yaml OE-07; RUBICON-Doc §4 WS-OE OE-D4 + SLA-Schutzschirm-Abschnitt (SGHA Annex B §9); WS-Paket WS-OE Phase 1."
+  "grounding": "projekt.yaml OE-07; RUBICON-Doc §4 WS-OE OE-D4 + SLA-Schutzschirm-Abschnitt (SGHA Annex B §9); WS-Paket WS-OE Phase 1.",
+  "ziel_klartext": "Der SLA-Schutzschirm (Service Level Agreement, vertraglich zugesicherte Leistungsniveaus) ist live: Für jede Station sind Frühwarn-Trigger und ein automatischer Eskalationspfad aktiv, abgeleitet aus den Schwellenwerten in Annex B §9 des Standard Ground Handling Agreement (SGHA, IATA-Standardvertrag); die Station VIE ist mit höchster Priorität konfiguriert. Erledigt, wenn die Frühwarn-Trigger je Station aktiv sind, mindestens eine Test-Eskalation nachgewiesen ist und null SLA-getriebene Kündigungs- oder Strafereignisse vorliegen."
  },
  "OE-08": {
   "kontext": "Die verdichteten Scorecard-Daten sind der Doppel-Nutzen des Stroms: Sie sind zugleich ein früher AI@AXS-Use-Case (Ops-Analytics) und damit die Brücke zu WS6. Die Übergabe hält die Owner-Trennung sauber — WS-OE liefert Datenbasis und Use-Case, WS6 (Delivery Petric) verantwortet Modell und Hosting.",
@@ -2096,7 +2188,8 @@
    "Unvollständige Scorecard-Datenbasis (Verzug OE-06/OE-09) mindert den Use-Case-Wert — Übergabe mit dokumentiertem Datenstand"
   ],
   "erfolgsmessung": "Binär per 28.02.2027: Übergabe-Dokument an WS6/Petric abgenommen und Use-Case im WS6-Backlog aufgenommen.",
-  "grounding": "projekt.yaml OE-08; RUBICON-Doc §4 WS-OE OE-D6 + Abgrenzungstabelle (Ops-Analytics → WS6); WS-Paket WS-OE Phase 2."
+  "grounding": "projekt.yaml OE-08; RUBICON-Doc §4 WS-OE OE-D6 + Abgrenzungstabelle (Ops-Analytics → WS6); WS-Paket WS-OE Phase 2.",
+  "ziel_klartext": "Der Use-Case «Ops-Analytics» (Auswertung der operativen Scorecard-Daten als früher AI@AXS-Anwendungsfall) ist an Workstream 6 (WS6) übergeben: Das Übergabe-Dokument ist von WS6 (Petric) abgenommen, und der Use-Case ist in das WS6-Backlog (Arbeitsvorrat) aufgenommen."
  },
  "OE-09": {
   "kontext": "Nach Pilot (3 Stationen) und Top-6-Betrieb folgt der Vollausbau: alle ~15 Stationen in CH/DE/AT/ES mit monatlicher Scorecard im Ops-Performance-Review. Erst die Flächendeckung macht Betriebs-Exzellenz konzernweit steuerbar und liefert die Grundlage für den Zielnachweis OE-10 im April 2027.",
@@ -2118,7 +2211,8 @@
    "Anhaltende Datenzugangs-Probleme einzelner Stationen verhindern 100%-Abdeckung — Lücken ausweisen, nicht schönen"
   ],
   "erfolgsmessung": "Binär per 31.03.2027: 100% (~15) Stationen mit monatlicher Scorecard im Ops-Performance-Review produktiv.",
-  "grounding": "projekt.yaml OE-09; RUBICON-Doc §4 WS-OE OE-D5 (Vollausbau, alle Stationen ab M7) + §5 Roadmap Mär 27; WS-Paket WS-OE Phase 2."
+  "grounding": "projekt.yaml OE-09; RUBICON-Doc §4 WS-OE OE-D5 (Vollausbau, alle Stationen ab M7) + §5 Roadmap Mär 27; WS-Paket WS-OE Phase 2.",
+  "ziel_klartext": "Die Scorecard ist flächendeckend produktiv: Alle ~15 Stationen liefern monatlich eine Scorecard, und diese wird im Ops-Performance-Review (operatives Leistungs-Review) verwendet."
  },
  "OE-10": {
   "kontext": "Der Zielnachweis schliesst den Strom zum Programmende der 8-Monats-Kernumsetzung (30.04.2027): AXS weist nach, ein guter, stabiler und solider Ground Handler zu sein — nicht als Absichtserklärung, sondern binär aus der Scorecard ablesbar. CGO verantwortet diesen Nachweis öffentlich; er ist zugleich der Beleg, dass die Kostenführerschaft (WS3) die Servicequalität nicht beschädigt hat (G7 gehalten).",
@@ -2142,7 +2236,8 @@
    "Unvollständige Flächendeckung (Verzug OE-09) macht den Nachweis angreifbar"
   ],
   "erfolgsmessung": "Binär per 30.04.2027 im Ops-Report ablesbar: 100% Scorecard-Abdeckung; SLA ≥ M1-Baseline; 0 SLA-Strafen-/Kündigungsereignisse; Safety 0 kritische offene Findings.",
-  "grounding": "projekt.yaml OE-10; RUBICON-Doc §4 WS-OE Metriktabelle (8-Monats-Spalte); WS-Paket WS-OE Phase 3 (Zielnachweis, messbar binär)."
+  "grounding": "projekt.yaml OE-10; RUBICON-Doc §4 WS-OE Metriktabelle (8-Monats-Spalte); WS-Paket WS-OE Phase 3 (Zielnachweis, messbar binär).",
+  "ziel_klartext": "Der Zielnachweis Betriebs-Exzellenz liegt vor und ist im Ops-Report ablesbar: 100% Scorecard-Abdeckung über alle ~15 Stationen; die Service-Level-Agreement-Werte (SLA, vertraglich zugesicherte Leistungsniveaus) liegen auf oder über der M1-Baseline (der per OE-06 eingefrorenen Referenz-Baseline); null SLA-getriebene Straf- oder Kündigungsereignisse; im Bereich Safety (Betriebssicherheit) sind null kritische Findings (Prüfungsfeststellungen) offen."
  },
  "OE-11": {
   "kontext": "Personenbezogene Ops-KPIs und Shift-Fill-Massnahmen (z.B. Arbeitszeitkonten-/Überstunden-Monitoring auf Personenebene) unterliegen in DE §87 BetrVG und in AT §96 ArbVG der zwingenden Mitbestimmung — sie dürfen erst nach abgeschlossener Betriebsvereinbarung aktiviert werden. Dieser Milestone ist deshalb bewusst als gesetzlich gebundener Nachlauf Q2/27 ausserhalb der 8-Monats-Kernumsetzung terminiert; bis dahin bleiben alle Stations-KPIs strikt aggregiert.",
@@ -2165,7 +2260,8 @@
    "Kopplung an WS3-Staff-Cost-Hebel (Krankenstand/Überstunden): Abgrenzung kostenseitig WS3 vs. betriebsseitig WS-OE sauber halten"
   ],
   "erfolgsmessung": "Binär per 30.06.2027: Betriebsvereinbarung(en) unterzeichnet (ja/nein); personenbezogene KPI-Ebene erst danach aktiviert.",
-  "grounding": "projekt.yaml OE-11 (nachlauf: true); RUBICON-Doc §4 WS-OE (Mitbestimmungs-Vorbehalt §87/§96); WS-Paket WS-OE Nachlauf Q2/27."
+  "grounding": "projekt.yaml OE-11 (nachlauf: true); RUBICON-Doc §4 WS-OE (Mitbestimmungs-Vorbehalt §87/§96); WS-Paket WS-OE Nachlauf Q2/27.",
+  "ziel_klartext": "Nachlauf: Die Betriebsvereinbarung(en) (BV) zu personenbezogenen operativen Kennzahlen (Ops-KPIs) und zu Shift-Fill-Massnahmen (Massnahmen zur Schichtbesetzung/Personalverfügbarkeit) sind für Deutschland (§87 BetrVG (Mitbestimmung des Betriebsrats)) und Österreich (§96 ArbVG (zustimmungspflichtige Massnahmen)) unterzeichnet; die personenbezogene KPI-Ebene ist erst nach Unterzeichnung der jeweiligen BV aktiviert."
  },
  "WS4-01": {
   "kontext": "Der Kunden-Schutzschirm ist das erste sichtbare WS4-Ergebnis in Phase 0: Das bestehende CRM Cockpit (:8600, live, 129 Accounts / 338 Verträge / EUR 278 Mio) wird als benanntes Steuerungs-Backbone von WS4 scharfgestellt — kein Greenfield, sondern Einbettung des laufenden Commercial-Programms. Ohne validierten Renewal-Status und aktive <120-Tage-Alerts können Vertragsfristen der EUR-283.4-Mio-Basis unbemerkt verstreichen.",
@@ -2188,7 +2284,8 @@
    "Kontinuitätsrisiko WS4-Lead: Besetzungsbestätigung CCO durch CEO ist Kickoff-Voraussetzung KW36; Deputy Matthei interimistisch"
   ],
   "erfolgsmessung": "Bis 30.09.2026: Renewal-Status im CRM Cockpit validiert (ja/nein), <120-Tage-Alert aktiv (ja/nein), Datenehrlichkeits-Regel im Audit-Layer aktiv (ja/nein) — alle drei erfüllt = Milestone erreicht.",
-  "grounding": "projekt.yaml WS4-01 (due 30.09.26, dep M03); RUBICON-Doc §4 WS4 (Flaggschiff-Assets, Datenehrlichkeit) + §5 Roadmap 30.09.26; WS-Paket WS4 Spielregeln 3–4."
+  "grounding": "projekt.yaml WS4-01 (due 30.09.26, dep M03); RUBICON-Doc §4 WS4 (Flaggschiff-Assets, Datenehrlichkeit) + §5 Roadmap 30.09.26; WS-Paket WS4 Spielregeln 3–4.",
+  "ziel_klartext": "Der Kunden-Schutzschirm im CRM Cockpit (Customer-Relationship-Management-System, erreichbar unter Port :8600) ist live: Der Renewal-Status (Stand der Vertragsverlängerung) ist je Vertrag validiert, der <120-Tage-Alert (Frühwarnung für Verträge, deren Verlängerung in weniger als 120 Tagen ansteht) ist aktiv, und die Datenehrlichkeits-Regel ist im Data-Quality-Audit-Layer (Datenqualitäts-Prüfschicht) aktiviert. Alle drei Kriterien erfüllt = Milestone erreicht."
  },
  "WS4-02": {
   "kontext": "Der CRM-Datenqualitäts-Stand ist der WS4-Beitrag zum konzernweiten Baseline-Datenpaket für das Diagnose-Review der GL (Gate G2, 15.10.26) — als kritischer Gate-Milestone markiert. Ohne ehrliche Baseline (98% von EUR 283 Mio strukturiert; zwei benannte offene Punkte) kann die GL den Renewal-/Cliff-Pfad nicht belastbar beurteilen.",
@@ -2211,7 +2308,8 @@
    "Pipeline-Gap-Schliessung hängt von Datenzulieferung der Stationen ab (VIE/ZRH/Cargo/Full)"
   ],
   "erfolgsmessung": "Bis 15.10.2026: CRM-Datenqualitäts-Stand im Baseline-Datenpaket enthalten und im Diagnose-Review GL (G2) behandelt (ja/nein); beide offene Punkte quantifiziert ausgewiesen (ja/nein).",
-  "grounding": "projekt.yaml WS4-02 (due 15.10.26, gate G2, critical); RUBICON-Doc §4 WS4 «Datenstand & echte offene Punkte» + §5 Roadmap 15.10.26; WS-Paket WS4 KPI Datenstrukturierung."
+  "grounding": "projekt.yaml WS4-02 (due 15.10.26, gate G2, critical); RUBICON-Doc §4 WS4 «Datenstand & echte offene Punkte» + §5 Roadmap 15.10.26; WS-Paket WS4 KPI Datenstrukturierung.",
+  "ziel_klartext": "Der Datenqualitäts-Stand des Customer-Relationship-Management-Systems (CRM) ist als Bestandteil des Baseline-Datenpakets geliefert und im Diagnose-Review der Geschäftsleitung (GL) am Gate G2 behandelt; die beiden offenen Punkte (Vertragslücke gemäss Nachfass Haeffner sowie Gap aus dem Abgleich Contract-Inventory ↔ Renewal-Pipeline) sind quantifiziert ausgewiesen."
  },
  "WS4-04": {
   "kontext": "Eurowings DUS Ramp (EUR 26.26 Mio, Frist 31.01.2027) ist der grösste Einzel-Cliff und Priorität #1 im 2027-Cliff (EUR 109.3 Mio); Eurowings kumuliert EUR 40.7 Mio = 14% des Forecasts (Klumpenrisiko). D2 schafft die Verhandlungsgrundlage: vollständiges Dossier plus ExBoD/GL-Mandat, bevor die harte Verhandlung unter Lead AFR startet.",
@@ -2234,7 +2332,8 @@
    "Terminvorbehalt: due 31.10.26 ist als Annahme markiert (date_assumed: true) — Feintermin im Kickoff zu bestätigen"
   ],
   "erfolgsmessung": "Bis 31.10.2026 (Annahme): Dossier fertiggestellt und ExBoD/GL-Mandat beantragt bzw. terminiert (ja/nein); Mandat spätestens Okt/Nov 26 beschlossen (ja/nein, s. WS4-08).",
-  "grounding": "projekt.yaml WS4-04 (Owner AFR, due 31.10.26 assumed); RUBICON-Doc §4 WS4-D2 + Renewal-Tabelle (Prio #1) + Risikoregister R3; WS-Paket WS4 Spielregel 5 (Entscheidungsrecht Eurowings)."
+  "grounding": "projekt.yaml WS4-04 (Owner AFR, due 31.10.26 assumed); RUBICON-Doc §4 WS4-D2 + Renewal-Tabelle (Prio #1) + Risikoregister R3; WS-Paket WS4 Spielregel 5 (Entscheidungsrecht Eurowings).",
+  "ziel_klartext": "D2: Das Eurowings-Dossier für die Ramp-Dienstleistungen (Vorfeldabfertigung) am Standort DUS (Volumen EUR 26.26 Mio, Frist 31.01.27) ist fertiggestellt, und das Mandat beim Executive Board (ExBoD, erweiterte Geschäftsleitungs-Runde) bzw. bei der Geschäftsleitung (GL) ist beantragt bzw. zur Beschlussfassung terminiert (Beschluss spätestens Okt/Nov 26, siehe WS4-08). Lead: AFR (Andreas Fritthum)."
  },
  "WS4-05": {
   "kontext": "D3 institutionalisiert die Kundennähe auf der zentralen/strategischen Ebene: Die Beziehungspflege-Matrix (Top-Accounts × Owner, 3-Tier) macht Ownership je Account explizit, und «Dieters Liste» (10–15 Top-Accounts, Chairman-Touchpoint ≥1×/Jahr) verankert die Tier-A-Beziehungen persönlich beim Chairman. Baut auf dem Masterplan-Milestone M06 (Top-30-Accounts: Sponsor zugewiesen) auf.",
@@ -2257,7 +2356,8 @@
    "Terminvorbehalt: due 31.10.26 ist Annahme (date_assumed: true)"
   ],
   "erfolgsmessung": "Bis 31.10.2026 (Annahme): Matrix mit 3-Tier-Ownership finalisiert und kommuniziert (ja/nein); «Dieters Liste» mit benannten Tier-A-Accounts operativ (ja/nein). Zielbild laut WS-Paket: operative Accounts quartalsweise CRM-dokumentiert, Chairman-Touchpoints Tier A separat ≥1×/Jahr.",
-  "grounding": "projekt.yaml WS4-05 (due 31.10.26 assumed, dep M06); RUBICON-Doc §4 WS4-D3 + «Kundennähe institutionalisieren» + KPI-Baum B11; WS-Paket WS4 KPI Top-Account-Kontakt."
+  "grounding": "projekt.yaml WS4-05 (due 31.10.26 assumed, dep M06); RUBICON-Doc §4 WS4-D3 + «Kundennähe institutionalisieren» + KPI-Baum B11; WS-Paket WS4 KPI Top-Account-Kontakt.",
+  "ziel_klartext": "D3: Die Beziehungspflege-Matrix, die jedem Top-Account einen verantwortlichen Owner in der 3-Tier-Logik (drei Prioritätsstufen) zuordnet, ist finalisiert und an die Geschäftsleitung (GL) kommuniziert; «Dieters Liste» (die von Dieter Streuli persönlich betreuten Tier-A-Accounts) ist im Customer-Relationship-Management-System (CRM) operativ angelegt. Zielbild gemäss Workstream-Paket: Die operativen Accounts werden quartalsweise im CRM dokumentiert, und Chairman-Touchpoints der Tier-A-Accounts sind separat mit mindestens 1× pro Jahr dokumentierbar."
  },
  "WS4-06": {
   "kontext": "D4 institutionalisiert die Kundennähe auf der lokalen/operativen Ebene: Commercial Cafés als Monatsrhythmus zwischen Haeffner und den Stationsleitern — datengetrieben über das CRM Cockpit statt Bauchgefühl. Zusammen mit «Dieters Liste» (WS4-05) bildet das die Zwei-Ebenen-Logik der Kundennähe (lokal ↔ zentral) aus dem 3-Ebenen-Modell.",
@@ -2280,7 +2380,8 @@
    "Terminvorbehalt: due 30.11.26 ist Annahme (date_assumed: true)"
   ],
   "erfolgsmessung": "Bis 30.11.2026 (Annahme): Monatsrhythmus etabliert und mindestens ein Commercial Café durchgeführt und CRM-dokumentiert (ja/nein); danach: Rhythmus monatlich gehalten (ja/nein je Monat).",
-  "grounding": "projekt.yaml WS4-06 (due 30.11.26 assumed); RUBICON-Doc §4 WS4-D4 + «Kundennähe institutionalisieren» + §5 Roadmap Nov 26; WS-Paket WS4 KPI Top-Account-Kontakt (Commercial Cafés im Monatsrhythmus)."
+  "grounding": "projekt.yaml WS4-06 (due 30.11.26 assumed); RUBICON-Doc §4 WS4-D4 + «Kundennähe institutionalisieren» + §5 Roadmap Nov 26; WS-Paket WS4 KPI Top-Account-Kontakt (Commercial Cafés im Monatsrhythmus).",
+  "ziel_klartext": "D4: Die Commercial Cafés (monatliches Austauschformat zwischen Michael Haeffner und den Stationsleitern) sind als fester Monatsrhythmus etabliert: Mindestens ein Commercial Café ist durchgeführt und im Customer-Relationship-Management-System (CRM) dokumentiert; danach wird der Rhythmus Monat für Monat gehalten."
  },
  "WS4-07": {
   "kontext": "D5 macht die Inquiry-Reaktionszeit zur gemessenen und gesteuerten Grösse: Der Inquiry-Manager (AI@AXS Init #1, commercial@axs.aero) geht mit einem Erstantwort-SLA ≤24h live — Teil der E10-Kopplung WS4 ↔ WS6 (CRM speist Pricing/Forecasting/Inquiry Manager). Die 24h-Schwelle ist ausdrücklich eine Annahme, die in der M1-Messung validiert wird.",
@@ -2303,7 +2404,8 @@
    "Terminvorbehalt: due 30.11.26 ist Annahme (date_assumed: true)"
   ],
   "erfolgsmessung": "Bis 30.11.2026 (Annahme): SLA-Messung live (ja/nein); Ziel laut WS-Paket: ≥95% der Inquiries mit Erstantwort ≤24h ab M3, danach gehalten — monatlich binär prüfbar.",
-  "grounding": "projekt.yaml WS4-07 (due 30.11.26 assumed); RUBICON-Doc §4 WS4-D5 + E10-Kopplung + Annahmen-Register A6 + §5 Roadmap Nov 26; WS-Paket WS4 KPI Inquiry-Reaktionszeit."
+  "grounding": "projekt.yaml WS4-07 (due 30.11.26 assumed); RUBICON-Doc §4 WS4-D5 + E10-Kopplung + Annahmen-Register A6 + §5 Roadmap Nov 26; WS-Paket WS4 KPI Inquiry-Reaktionszeit.",
+  "ziel_klartext": "D5: Das Erstantwort-Service-Level-Agreement (SLA, Leistungsversprechen) des Inquiry Managers ist live: Die SLA-Messung ist produktiv geschaltet und der Zielwert «Erstantwort auf Kundenanfragen innerhalb von maximal 24 Stunden» ist in Kraft (Annahmewert, in der M1-Baseline-Messung validiert). Ziel gemäss Workstream-Paket: ab M3 erhalten mindestens 95% der Anfragen eine Erstantwort innerhalb von 24 Stunden, danach gehalten."
  },
  "WS4-08": {
   "kontext": "Jahresend-Gate der Renewal-Kohorte 2026: Von 166 OPEN-Verträgen (EUR 95.6 Mio) müssen ≥90% gesichert sein — die kommerzielle Kernabsicherung des Forecasts. Gleichzeitig fallen zwei Weichenstellungen: der TUIFLY-Entscheid (~EUR 5.2 Mio per 31.12.26, WISAG-Risiko, Entscheid Nov) und der GL-Beschluss des Eurowings-Mandats als Voraussetzung für den Abschluss Jan 27. Baut auf M10 (OPEN → 0 offene Klassifizierungen) auf.",
@@ -2326,7 +2428,8 @@
    "Abhängigkeit M10: ohne 0 offene Klassifizierungen keine belastbare 90%-Messung; Terminvorbehalt due 31.12.26 (date_assumed: true)"
   ],
   "erfolgsmessung": "Bis 31.12.2026 (Annahme): Renewal-Quote 2026-OPEN ≥90% des Volumens EUR 95.6 Mio gesichert (ja/nein, CRM-Cockpit-Messung); TUIFLY-Entscheid dokumentiert (ja/nein); Eurowings-Mandat GL-beschlossen (ja/nein).",
-  "grounding": "projekt.yaml WS4-08 (due 31.12.26 assumed, dep M10); RUBICON-Doc §4 WS4 Renewal-Tabelle + Metrik + §5 Roadmap Nov/Dez 26; WS-Paket WS4 KPI Renewal-Quote 2026."
+  "grounding": "projekt.yaml WS4-08 (due 31.12.26 assumed, dep M10); RUBICON-Doc §4 WS4 Renewal-Tabelle + Metrik + §5 Roadmap Nov/Dez 26; WS-Paket WS4 KPI Renewal-Quote 2026.",
+  "ziel_klartext": "Mindestens 90% des Volumens der offenen Vertragsverlängerungen 2026 (2026-OPEN-Renewals; EUR 95.6 Mio) sind gesichert; der TUIFLY-Entscheid (~EUR 5.2 Mio) ist im November 2026 getroffen und dokumentiert; das Eurowings-Mandat ist von der Geschäftsleitung (GL) beschlossen und der Beschluss dokumentiert."
  },
  "WS4-09": {
   "kontext": "Der Abschluss der Eurowings-Verlängerung DUS Ramp (EUR 26.26 Mio per 31.01.2027) ist der grösste Einzel-Cliff des 2027-Portfolios und als kritischer Milestone markiert. Eurowings steht kumuliert für EUR 40.7 Mio = 14% des Forecasts — das grösste Klumpenrisiko von WS4 (Risikoregister R3). Verhandlungs-Lead ist AFR (Kern seines Profils), auf Basis von Dossier und Mandat aus WS4-04/WS4-08.",
@@ -2349,7 +2452,8 @@
    "Qualitätsverschlechterung als Renewal-Killer: SGHA 60-Tage-Kündbarkeit bei Qualitätsmängeln — SLA-Schutzschirm (WS-OE) muss halten"
   ],
   "erfolgsmessung": "Bis 31.01.2027: Verlängerung Eurowings DUS Ramp (EUR 26.26 Mio) abgeschlossen (ja/nein).",
-  "grounding": "projekt.yaml WS4-09 (due 31.01.27, critical, dep WS4-04); RUBICON-Doc §4 WS4 Renewal-Tabelle (Prio #1) + Risikoregister R3 + §5 Roadmap 31.01.27; WS-Paket WS4 KPI Cliff-2027-Coverage."
+  "grounding": "projekt.yaml WS4-09 (due 31.01.27, critical, dep WS4-04); RUBICON-Doc §4 WS4 Renewal-Tabelle (Prio #1) + Risikoregister R3 + §5 Roadmap 31.01.27; WS-Paket WS4 KPI Cliff-2027-Coverage.",
+  "ziel_klartext": "Der Vertrag Eurowings DUS Ramp (Vorfeldabfertigung; EUR 26.26 Mio) ist verlängert — der grösste Einzelvertrag der 2027 auslaufenden Vertragswelle (Cliff-2027). Verhandlungs-Lead ist AFR."
  },
  "WS4-10": {
   "kontext": "D6 schliesst den Regelkreis von der Kundenstimme zurück in die Vertragsarbeit: Eine strukturierte Kundenfeedback-Schleife über die Top-20-Accounts plus ein Claims-Log liefern Fakten für die Renewal-Dossiers — statt Bauchgefühl. Zyklus 1 geht laut Roadmap im Feb 27 an die GL und speist direkt die Cliff-2027-Bearbeitung (Zielnachweis WS4-11).",
@@ -2372,7 +2476,8 @@
    "Terminvorbehalt: due 28.02.27 ist Annahme (date_assumed: true)"
   ],
   "erfolgsmessung": "Bis 28.02.2027 (Annahme): Zyklus 1 über Top-20 abgeschlossen und an GL berichtet (ja/nein); Claims-Log aktiv (ja/nein); Nachweis der Einspeisung in mindestens die laufenden Renewal-Dossiers (ja/nein).",
-  "grounding": "projekt.yaml WS4-10 (due 28.02.27 assumed); RUBICON-Doc §4 WS4-D6 + §5 Roadmap Feb 27; WS-Paket WS4 Reporting «Kundenfeedback-Zyklus (Top-20) + Claims-Log»."
+  "grounding": "projekt.yaml WS4-10 (due 28.02.27 assumed); RUBICON-Doc §4 WS4-D6 + §5 Roadmap Feb 27; WS-Paket WS4 Reporting «Kundenfeedback-Zyklus (Top-20) + Claims-Log».",
+  "ziel_klartext": "D6: Die Kundenfeedback-Schleife über die Top-20-Accounts ist etabliert: Zyklus 1 ist abgeschlossen und die Ergebnisse sind an die Geschäftsleitung (GL) berichtet; das Claims-Log (laufendes Register der Kundenreklamationen und -forderungen) ist aktiv geführt; die Erkenntnisse sind nachweislich in die laufenden Renewal-Dossiers (Unterlagen zu den Vertragsverlängerungen) eingespeist."
  },
  "WS4-11": {
   "kontext": "D7 ist der Zielnachweis von WS4 zum Ende der 8-Monats-Kernumsetzung (30.04.27): Cliff-2027-Coverage ≥40% (von 97 Verträgen / EUR 109.3 Mio), Desired Endstate E1–E10 selbsttragend (gelebt/sanktioniert, nicht nur «Daten sauber») und der formale VR-Report über die bestehende Governance TRAK-2026-0007 — keine Parallel-Governance. Baut auf M21 (30%-Sicherungsziel des €107M-Volumens bis Q4/2026) auf.",
@@ -2395,7 +2500,8 @@
    "«Selbsttragend» ist anspruchsvoller als «Daten sauber» — Endstate-Bewertung braucht harte Kriterien je E, sonst Ampel-Kosmetik (Datenehrlichkeits-Regel gilt auch hier); Terminvorbehalt due 30.04.27 (date_assumed: true)"
   ],
   "erfolgsmessung": "Bis 30.04.2027 (Annahme): Cliff-2027-Coverage ≥40% im CRM Cockpit nachgewiesen (ja/nein); E1–E10 selbsttragend bestätigt (ja/nein je Endstate); VR-Report über TRAK-2026-0007 geliefert (ja/nein).",
-  "grounding": "projekt.yaml WS4-11 (due 30.04.27 assumed, dep M21); RUBICON-Doc §4 WS4-D7 + Metrik-Tabelle + §5 Roadmap Apr 27; WS-Paket WS4 Reporting TRAK-2026-0007 + KPI Cliff-2027-Coverage."
+  "grounding": "projekt.yaml WS4-11 (due 30.04.27 assumed, dep M21); RUBICON-Doc §4 WS4-D7 + Metrik-Tabelle + §5 Roadmap Apr 27; WS-Paket WS4 Reporting TRAK-2026-0007 + KPI Cliff-2027-Coverage.",
+  "ziel_klartext": "D7/Zielnachweis: Die Abdeckung der 2027 auslaufenden Vertragswelle (Cliff-2027-Coverage) liegt bei mindestens 40% und ist im CRM Cockpit nachgewiesen; alle zehn Endstates E1–E10 sind je einzeln als selbsttragend bestätigt; der Bericht an den Verwaltungsrat (VR) ist über das Traktandum TRAK-2026-0007 geliefert."
  },
  "WS4-12": {
   "kontext": "Nachlauf-Milestone (Q2/27, nach Ende der 8-Monats-Kernumsetzung): Der Pfad zur vollen Cliff-2027-Sicherung ≥70% (12-Monats-Ziel laut WS-Paket) wird bestätigt, und die Commercial-Steuerung geht aus dem Programm-Modus in die Linie über — WS4 muss ohne RUBICON-Sondersteuerung weiterlaufen (Endstate-Logik «selbsttragend»).",
@@ -2417,7 +2523,8 @@
    "Kontinuität WS4-Lead bleibt auch im Nachlauf relevant (Deputy-Regelung Matthei, Talent-Pipeline WS5)"
   ],
   "erfolgsmessung": "Bis 30.06.2027: Coverage-Pfad ≥70% im CRM Cockpit bestätigt (ja/nein); Übergabe-Paket an die Linie abgenommen (ja/nein, Abnahme AFR + CGO/DRS).",
-  "grounding": "projekt.yaml WS4-12 (due 30.06.27, nachlauf: true); RUBICON-Doc §4 WS4 Metrik (≥70% / 12M) + KPI-Baum B9; WS-Paket WS4 KPI Cliff-2027-Coverage + Ziel (Einbettung, nicht Neuerfindung)."
+  "grounding": "projekt.yaml WS4-12 (due 30.06.27, nachlauf: true); RUBICON-Doc §4 WS4 Metrik (≥70% / 12M) + KPI-Baum B9; WS-Paket WS4 KPI Cliff-2027-Coverage + Ziel (Einbettung, nicht Neuerfindung).",
+  "ziel_klartext": "Nachlauf: Es ist im CRM Cockpit bestätigt, dass die Abdeckung der 2027 auslaufenden Vertragswelle (Cliff-2027-Coverage) auf dem Pfad zu mindestens 70% liegt, und die Übergabe der Commercial-Steuerung in die Linienorganisation ist vollzogen; das Übergabe-Paket ist durch AFR (Andreas Fritthum) sowie CGO (Cüneyt Gölcöl) / DRS (Dieter Streuli) abgenommen."
  },
  "WS5-01": {
   "kontext": "Die BR-Landkarte DE/AT/ES ist heute eine Datenlücke — ohne sie ist keine mitbestimmungskonforme Umsetzung von Commitment-Tracking, Plattform-Rollout oder Restrukturierungsbegleitung möglich. WS5 liefert damit das Mitbestimmungs-Fundament, an dem WS1–WS3, WS-OE und WS2 hängen (Gate-G4-Logik: BR-/KBR-Konsultation vor DE/AT-Umsetzung). Für Spanien gilt zusätzlich: keine ES-Massnahme vor dem Zaforesa-Check.",
@@ -2439,7 +2546,8 @@
    "Beauftragung externer Unterstützung kollidiert mit Berater-Freeze >EUR 25k (WS3) — Doppelfreigabe CEO+CFO nötig"
   ],
   "erfolgsmessung": "BR-Landkarte-Auftrag erteilt UND Zaforesa-Assessment nachweislich gestartet (bis 30.09.2026)",
-  "grounding": "projekt.yaml WS5-01; RUBICON-Doc §4 WS5 D5/Risiken; WS-Paket WS5 Phase 0 (messbar-Spalte)"
+  "grounding": "projekt.yaml WS5-01; RUBICON-Doc §4 WS5 D5/Risiken; WS-Paket WS5 Phase 0 (messbar-Spalte)",
+  "ziel_klartext": "Das Fundament für die Arbeit mit den Arbeitnehmervertretungen (Mitbestimmungs-Fundament) ist gelegt: Der Auftrag zur Erstellung einer Betriebsrats-Landkarte (BR-Landkarte) für Deutschland, Österreich und Spanien (DE/AT/ES) ist erteilt, und das Spanien-Assessment durch Zaforesa ist nachweislich gestartet."
  },
  "WS5-02": {
   "kontext": "Die Mitarbeiterplattform ist eine der Fusions-Doppelspurigkeiten (Diagnose A): AHS ist nicht angebunden, Beekeeper ist sehr teuer und vom KBR noch nicht genehmigt (nicht abgelehnt). Stossrichtung laut Plan: günstigere Alternative TCO-evaluieren statt Ressourcen in die Beekeeper-Durchsetzung zu stecken — Vertragslaufzeit/Kündigungsfrist Beekeeper (Sunk-Cost) ist eine Phase-0-Datenlücke.",
@@ -2461,7 +2569,8 @@
    "Abhängigkeit von Didit/Ein-Mann-IT (Bus-Faktor Suchomski, WS1-Risiko) für technische Bewertung"
   ],
   "erfolgsmessung": "TCO-Vergleich vorliegend UND Beekeeper-Kündigungsfrist dokumentiert (bis 30.09.2026)",
-  "grounding": "projekt.yaml WS5-02; RUBICON-Doc §2 Diagnose A + §4 WS5 D6; WS-Paket WS5 Phase 0"
+  "grounding": "projekt.yaml WS5-02; RUBICON-Doc §2 Diagnose A + §4 WS5 D6; WS-Paket WS5 Phase 0",
+  "ziel_klartext": "Die Entscheidungsgrundlage für die Mitarbeiter-Kommunikationsplattform liegt vor: Für mindestens eine günstigere Alternative zur bestehenden Plattform Beekeeper ist ein Vergleich der Gesamtkosten (Total Cost of Ownership, TCO) erstellt, und Vertragslaufzeit sowie Kündigungsfrist des bestehenden Beekeeper-Vertrags sind geprüft und dokumentiert."
  },
  "WS5-03": {
   "kontext": "Spielregel «Vorbild vor Kaskade»: Die GL=6 (inkl. Pajor CFO-Stv) setzt eigene Quartals-Commitments zuerst und unterwirft sich demselben Konsequenz-Regelwerk wie alle anderen — keine Ausnahme für die Spitze. Ohne dieses sichtbare GL-Vorbild trägt die spätere Commitment-Kaskade auf Directors (WS5-05) nicht. Voraussetzung ist die formale GL-Bereinigung auf 6 per 18.09.2026 (WS2-01).",
@@ -2483,7 +2592,8 @@
    "Kommunikations-Sequenzbruch (Belegschaft/Medien vor BR) beschädigt die BR-Partnerschaft (§79-Vertraulichkeitsregime)"
   ],
   "erfolgsmessung": "GL = 6 hat je publizierte Commitments; Kickoff-Kommunikation versendet (bis 30.09.2026)",
-  "grounding": "projekt.yaml WS5-03; RUBICON-Doc §4 WS5 Kernmassnahmen (Vorbildfunktion GL); WS-Paket WS5 Phase 0 + Spielregel 3"
+  "grounding": "projekt.yaml WS5-03; RUBICON-Doc §4 WS5 Kernmassnahmen (Vorbildfunktion GL); WS-Paket WS5 Phase 0 + Spielregel 3",
+  "ziel_klartext": "Die Selbst-Commitments aller sechs Mitglieder der Geschäftsleitung (GL) sind publiziert — die GL geht damit als Vorbild voran, bevor die Commitment-Kaskade auf die weiteren Führungsebenen ausgerollt wird — und die Kickoff-Kommunikation an die Führungskräfte ist versendet."
  },
  "WS5-04": {
   "kontext": "Aus zwei Herkunftsorganisationen (AAS + AHS) soll eine AXS-Identität werden — der Charter (1 Seite DE/EN, D1) und die Change-Story je Land (CH/DE/AT/ES inkl. BR-Fassung, D4) sind die Verhaltens-Grundlage, ohne die WS1–WS4 und WS-OE nicht halten. Die Change-Story muss die Restrukturierungen (BER, AAS Technics) ehrlich adressieren; sie leitet sich aus dem Kommunikationskonzept V1.0 ab (Owner DRS+Charisius, geplant Aug 26).",
@@ -2505,7 +2615,8 @@
    "Sequenzbruch BR → Belegschaft → Medien bei den heiklen Restrukturierungs-Botschaften (BER/AAS Technics) gefährdet BR-Partnerschaft und CH-Verfahren (keine Kommunikation zu laufenden Verfahren)"
   ],
   "erfolgsmessung": "Charter publiziert; Change-Story für alle 4 Länder inkl. BR-Fassung vorhanden (bis 31.10.2026; Termin = Annahme lt. projekt.yaml)",
-  "grounding": "projekt.yaml WS5-04; RUBICON-Doc §4 WS5 D1+D4 + Kernmassnahmen/Risiken; WS-Paket WS5 Phase 1"
+  "grounding": "projekt.yaml WS5-04; RUBICON-Doc §4 WS5 D1+D4 + Kernmassnahmen/Risiken; WS-Paket WS5 Phase 1",
+  "ziel_klartext": "Die Lieferobjekte D1 und D4 liegen vor: Der AXS-Identitäts-Charter (eine Seite, in Deutsch und Englisch) ist publiziert, und für jedes der vier Länder Schweiz, Deutschland, Österreich und Spanien (CH/DE/AT/ES) liegt eine finalisierte Change-Story vor — jeweils inklusive einer separaten Fassung für die Betriebsräte (BR)."
  },
  "WS5-05": {
   "kontext": "Das Commitment-Board macht Führungs-Commitments öffentlich nachgehalten: GL=6 und alle Directors mit je 3 publizierten Quartals-Commitments — die Verhaltens-Kaskade nach dem GL-Vorbild (WS5-03). Es dockt an den Gruppen-Commitment-Tracker (WS2, Backbone aller 7 Ströme) an, kein neues Gefäss. Die Erweiterung auf Station-Manager DE/AT ist mitbestimmungspflichtig und erfolgt erst nach Betriebsvereinbarung.",
@@ -2527,7 +2638,8 @@
    "Directors liefern nur Alibi-Commitments — Qualitätssicherung (messbar, konsequenzbewehrt) nötig, sonst bleibt Execution appellativ"
   ],
   "erfolgsmessung": "GL-6 + alle Directors mit je 3 publizierten Quartals-Commitments online (bis 30.11.2026; Termin = Annahme lt. projekt.yaml)",
-  "grounding": "projekt.yaml WS5-05; RUBICON-Doc §4 WS5 D2; WS-Paket WS5 Phase 1 + Spielregel 5 (Mitbestimmung)"
+  "grounding": "projekt.yaml WS5-05; RUBICON-Doc §4 WS5 D2; WS-Paket WS5 Phase 1 + Spielregel 5 (Mitbestimmung)",
+  "ziel_klartext": "Das Lieferobjekt D2 ist erreicht: Das Commitment-Board ist live geschaltet — alle sechs Mitglieder der Geschäftsleitung (GL) sowie alle Directors haben je drei Quartals-Commitments publiziert. Die Station-Manager in Deutschland und Österreich (DE/AT) werden erst einbezogen, nachdem eine Betriebsvereinbarung (BV) mit den zuständigen Betriebsräten abgeschlossen ist."
  },
  "WS5-06": {
   "kontext": "Konsequenz-Management ist heute nicht durchgesetzt (Diagnose D: keine Eskalation, kein «2× = CEO-Gespräch»). Das 3-Stufen-Regelwerk (Klärungsgespräch → Verantwortungsentzug → Rollenwechsel) mit automatischem Trigger bei 2× Nichtlieferung macht Konsequenz mechanisch statt ermessensabhängig — und muss je Land arbeitsrechtlich halten. Parallel startet mit Puls #1 die Change-Barometer-Messung (Baseline M3, heute Datenlücke).",
@@ -2549,7 +2661,8 @@
    "Kein Nachfolger = keine harte Personalentscheidung — Kopplung an Talent-Pipeline (WS5-08) zwingend"
   ],
   "erfolgsmessung": "Regelwerk GL-beschlossen; arbeitsrechtliche Prüfung CH/DE/AT/ES dokumentiert; Change-Barometer Puls #1 gemessen (bis 30.11.2026; Termin = Annahme lt. projekt.yaml)",
-  "grounding": "projekt.yaml WS5-06; RUBICON-Doc §4 WS5 D3 + Stromspezifische Risiken; WS-Paket WS5 Phase 1"
+  "grounding": "projekt.yaml WS5-06; RUBICON-Doc §4 WS5 D3 + Stromspezifische Risiken; WS-Paket WS5 Phase 1",
+  "ziel_klartext": "D3: Das Konsequenz-Regelwerk — drei Eskalationsstufen, mit automatischem Auslöser (Trigger) bei zweimaliger Nichtlieferung einer zugesagten Leistung — ist von der Geschäftsleitung (GL) beschlossen, und die arbeitsrechtliche Prüfung ist für alle vier Länder Schweiz, Deutschland, Österreich und Spanien (CH/DE/AT/ES) dokumentiert. Zusätzlich ist die erste Messung des Change-Barometers (Puls #1) durchgeführt."
  },
  "WS5-07": {
   "kontext": "Betriebsräte sollen Partner der Transformation werden, nicht Blockierer: Die BR-Partner-Roadmap institutionalisiert Quartals-Regeltermine mit 100% Abdeckung in DE/AT/ES (heute uneinheitlich) und setzt die Richtlinie «Informationsverfahren Arbeitnehmerausschüsse» in Kraft — die heute nur als leeres Template existiert. Grundlage ist die BR-Landkarte aus WS5-01.",
@@ -2571,7 +2684,8 @@
    "Ohne gelebte Regeltermine fehlt das Vertrauensfundament für die kritischen BV-Verhandlungen (Commitment-Board WS5-05, Plattform WS5-10) und die Restrukturierungs-Begleitung (WS5-12)"
   ],
   "erfolgsmessung": "BR-Regeltermine 100% DE/AT/ES terminiert; Richtlinie verabschiedet und in Kraft (bis 31.12.2026; Termin = Annahme lt. projekt.yaml)",
-  "grounding": "projekt.yaml WS5-07; RUBICON-Doc §4 WS5 D5; WS-Paket WS5 Phase 1 + KPI BR-Regeltermin-Abdeckung"
+  "grounding": "projekt.yaml WS5-07; RUBICON-Doc §4 WS5 D5; WS-Paket WS5 Phase 1 + KPI BR-Regeltermin-Abdeckung",
+  "ziel_klartext": "D5: Die Betriebsrats-Partner-Roadmap (BR = Betriebsrat) ist umgesetzt: Mit sämtlichen Betriebsratsgremien in Deutschland, Österreich und Spanien (DE/AT/ES) sind quartalsweise Regeltermine vereinbart und terminiert (100% Abdeckung aller Gremien), und die Richtlinie «Informationsverfahren Arbeitnehmerausschüsse» ist verabschiedet und in Kraft."
  },
  "WS5-08": {
   "kontext": "Es gibt heute keine stehende Talent-Pipeline für die zwei erfolgskritischen Funktionen (Commercial-Lead + starke Stationsleiter) — eine Datenlücke, die das Konsequenz-Management direkt blockiert: kein Nachfolger = keine harte Personalentscheidung. Der stille Dauer-Search hält die Pipeline permanent gefüllt (auch ohne akute Vakanz); das interne Aufbauprogramm ist die zweite Schiene. Governance-Prinzip: Trennung und Search laufen parallel, nicht nacheinander.",
@@ -2593,7 +2707,8 @@
    "Externe Search-Kosten kollidieren mit dem Berater-Freeze >EUR 25k (WS3) — Doppelfreigabe CEO+CFO einplanen"
   ],
   "erfolgsmessung": "Dauer-Search aktiv nachweisbar; Aufbauprogramm-Konzept vorliegend (bis 31.12.2026; Termin = Annahme lt. projekt.yaml)",
-  "grounding": "projekt.yaml WS5-08; RUBICON-Doc §4 WS5 D7 + Kernmassnahmen Top-Personal; WS-Paket WS5 Phase 1 + KPI Talent-Pipeline"
+  "grounding": "projekt.yaml WS5-08; RUBICON-Doc §4 WS5 D7 + Kernmassnahmen Top-Personal; WS-Paket WS5 Phase 1 + KPI Talent-Pipeline",
+  "ziel_klartext": "D7: Die Talent-Pipeline ist aufgebaut: Ein stiller (d.h. vertraulicher, nicht öffentlich ausgeschriebener) Dauer-Search für die zwei Kernfunktionen Commercial-Lead und starke Stationsleiter läuft aktiv und ist nachweisbar dokumentiert; zusätzlich liegt das Konzept für das interne Aufbauprogramm (Entwicklung eigener Kandidaten) vor."
  },
  "WS5-09": {
   "kontext": "Nach der TCO-Evaluation (WS5-02) muss der Plattform-Entscheid formal fallen: gewählte günstigere Lösung vs. Beekeeper. Der Entscheid ist Voraussetzung für den KBR-Genehmigungsprozess (§87 BetrVG) und den Rollout-Pfad bis 100% Reichweite (M8) — eine der 6 Fusions-Doppelspurigkeiten aus WS1-D9 (Fallback dort: 4/6 + Plattform M8, falls KBR-Genehmigung aussteht).",
@@ -2615,7 +2730,8 @@
    "Beekeeper-Restlaufzeit erzeugt Doppelkosten während der Migration (Sunk-Cost) — im Beschluss transparent ausweisen"
   ],
   "erfolgsmessung": "Plattform-Entscheid GL-beschlossen; KBR-Genehmigungsprozess für gewählte Lösung eingeleitet (bis 31.12.2026; Termin = Annahme lt. projekt.yaml)",
-  "grounding": "projekt.yaml WS5-09; RUBICON-Doc §4 WS5 D6 + WS1-D9-Fallback; WS-Paket WS5 Phase 1 (Plattform-Entscheid)"
+  "grounding": "projekt.yaml WS5-09; RUBICON-Doc §4 WS5 D6 + WS1-D9-Fallback; WS-Paket WS5 Phase 1 (Plattform-Entscheid)",
+  "ziel_klartext": "Der Entscheid über die Mitarbeiter-Kommunikationsplattform — gewählte neue Lösung oder Beekeeper — ist durch die Geschäftsleitung (GL) beschlossen und dokumentiert, und der Genehmigungsprozess beim Konzernbetriebsrat (KBR) für die gewählte Lösung ist eingeleitet."
  },
  "WS5-10": {
   "kontext": "Die KBR-Vereinbarung ist das mitbestimmungsrechtliche Gate für den Plattform-Rollout (§87 BetrVG): Ohne sie keine 100%-Reichweite bis M8 (WS5-11) und kein Abbau der Doppelspurigkeit «eine Mitarbeiterplattform» (WS1-D9). Scheitert die Einigung, ist der Einigungsstellen-Pfad der definierte Alternativweg — mit dem Fallback aus WS1 (4/6 Items + Plattform M8).",
@@ -2637,7 +2753,8 @@
    "Verzug kaskadiert direkt in WS5-11 (Zielnachweis) und WS1-D9 (Doppelspurigkeits-Abbau ≥5/6)"
   ],
   "erfolgsmessung": "KBR-Vereinbarung unterzeichnet ODER Einigungsstellen-Pfad dokumentiert eingeleitet (bis 28.02.2027; Termin = Annahme lt. projekt.yaml)",
-  "grounding": "projekt.yaml WS5-10; RUBICON-Doc §4 WS5 D6 + Metrik Plattform-Reichweite; WS-Paket WS5 Phase 2 (messbar-Spalte)"
+  "grounding": "projekt.yaml WS5-10; RUBICON-Doc §4 WS5 D6 + Metrik Plattform-Reichweite; WS-Paket WS5 Phase 2 (messbar-Spalte)",
+  "ziel_klartext": "Die Vereinbarung mit dem Konzernbetriebsrat (KBR) zur gewählten Kommunikationsplattform ist unterzeichnet — ODER, falls keine Einigung zustande kommt, ist der Weg über die Einigungsstelle (betriebsverfassungsrechtliches Schlichtungsverfahren) nachweisbar eingeleitet und dokumentiert; als Rückfalllösung (Fallback) dient in diesem Fall D5, die Betriebsrats-Partner-Roadmap mit ihren Regelterminen."
  },
  "WS5-11": {
   "kontext": "Der Zielnachweis des Stroms zum Programmende (baseline_end 30.04.2027): WS5 weist nach, dass die Verhaltens-Grundlage steht — Plattform-Reichweite 100%, Execution-Rate ≥90% über 2 Monate (von Baseline höchstens ~50%), Change-Barometer Puls #3 mit gehaltenem steigendem Trend und Talent-Pipeline mit Time-to-Fill ≤90 Tagen. Damit ist der WS5-Beitrag zum RUBICON-Endzustand (Merkmal 4: Execution-Disziplin) erbracht und übergabefähig.",
@@ -2661,7 +2778,8 @@
    "Time-to-Fill ≤90 Tage ist ein Vorschlag zur Validierung, noch kein bestätigter Zielwert — vor Zielnachweis formal validieren (zu klären)"
   ],
   "erfolgsmessung": "Plattform-Reichweite 100%; Execution-Rate ≥90% zwei Monate in Folge belegt; Puls #3 gemessen mit gehaltenem Trend; BR-Abdeckung 100%; Time-to-Fill ≤90 Tage erreicht/validiert (bis 30.04.2027; Termin = Annahme lt. projekt.yaml)",
-  "grounding": "projekt.yaml WS5-11; RUBICON-Doc §4 WS5 D6 + Metriktabelle (8 Monate); WS-Paket WS5 Phase 3 + Erfolgskriterien"
+  "grounding": "projekt.yaml WS5-11; RUBICON-Doc §4 WS5 D6 + Metriktabelle (8 Monate); WS-Paket WS5 Phase 3 + Erfolgskriterien",
+  "ziel_klartext": "Zielnachweis für Deliverable D6 liegt vor: Der Plattform-Rollout hat 100% Reichweite erreicht, die Execution-Rate (Umsetzungsquote der Zusagen) liegt in zwei aufeinanderfolgenden Monaten bei mindestens 90%, die dritte Puls-Messung des Change-Barometers (Puls #3) ist durchgeführt und zeigt einen gehaltenen Trend, die Abdeckung der Betriebsrats-Regeltermine (BR = Betriebsrat) beträgt 100%, und die Time-to-Fill (Zeit von der Vakanz bis zur Stellenbesetzung) von höchstens 90 Tagen ist erreicht und validiert."
  },
  "WS5-12": {
   "kontext": "Die bis April 2027 eingeleiteten Restrukturierungen (BER, AAS Technics/KEL — WS3-12) werden erst im gesetzlichen Nachlauf Q2/27 wirksam (§111/§17 KSchG-Verfahren). WS5 begleitet sie BR- und kommunikationsseitig bis zur Wirksamkeit — mit strikter Sequenz BR → Belegschaft → Medien und §79-Vertraulichkeitsregime. Der Milestone zählt als Nachlauf nicht gegen das Kern-Projektende (baseline_end 30.04.2027).",
@@ -2683,7 +2801,8 @@
    "Parallele KBR-Plattform-Verhandlung und Restrukturierungs-Begleitung belasten dieselbe BR-Beziehung — Dossier-Trennung nötig"
   ],
   "erfolgsmessung": "Kommunikations-/BR-Begleitung durchgeführt ohne Sequenzbruch; Übergabe Kultur-/Konsequenz-System in die Linie im MOS-Audit bestätigt (bis 30.06.2027, Nachlauf — zählt nicht gegen baseline_end)",
-  "grounding": "projekt.yaml WS5-12 (nachlauf: true); RUBICON-Doc §4 WS5 Change-Story/CH-Sonderspur; WS-Paket WS5 Nachlauf Q2/27 (messbar-Spalte)"
+  "grounding": "projekt.yaml WS5-12 (nachlauf: true); RUBICON-Doc §4 WS5 Change-Story/CH-Sonderspur; WS-Paket WS5 Nachlauf Q2/27 (messbar-Spalte)",
+  "ziel_klartext": "Nachlauf abgeschlossen: Die Betriebsrats- (BR = Betriebsrat) und Kommunikations-Begleitung der eingeleiteten Restrukturierungsverfahren an den Standorten BER und KEL ist bis zur gesetzlichen Wirksamkeit der Massnahmen ohne Bruch der vereinbarten Kommunikations-Sequenz durchgeführt, und die Übergabe des Kultur-/Konsequenz-Systems an die Linienorganisation ist im MOS-Audit (Management Operating System = Führungs-/Steuerungssystem) bestätigt."
  },
  "WS6-01": {
   "kontext": "Vor Programmstart 01.09.2026 sind zwei Grundlagen des AI-Stroms ungeklärt: Der Vertragsstatus des Delivery-Leads Petric ist nicht final dokumentiert (stromspezifisches Risiko laut RUBICON-Doc), und die AI-Budget-Währung ist CHF/EUR-inkonsistent (Datenlücke). Ohne beides fehlt WS6 die personelle und finanzielle Startbasis.",
@@ -2703,7 +2822,8 @@
    "Währungs-Inkonsistenz verfälscht die Bottom-up-Validierung der EUR-5'000k-Targets (WS6-02)"
   ],
   "erfolgsmessung": "Vertragsstatus bilateral CEO/CHRO final dokumentiert UND Budget in einer Währung konsistent (ja/nein) — bis 04.09.2026",
-  "grounding": "projekt.yaml WS6-01 + Input IN-16; RUBICON-Doc §4 WS6 (stromspezifische Risiken, Roadmap KW36); WS-Paket WS6 Phase 0"
+  "grounding": "projekt.yaml WS6-01 + Input IN-16; RUBICON-Doc §4 WS6 (stromspezifische Risiken, Roadmap KW36); WS-Paket WS6 Phase 0",
+  "ziel_klartext": "Der Vertragsstatus des Delivery-Leads Tine Petric ist im bilateralen Rahmen zwischen CEO und CHRO (Chief Human Resources Officer) geklärt und final dokumentiert, und das AI-Budget (AI = Artificial Intelligence, Künstliche Intelligenz) ist auf eine einheitliche Währung (CHF oder EUR) konsolidiert und in bereinigter Fassung dokumentiert."
  },
  "WS6-02": {
   "kontext": "Die acht AI@AXS-Initiativen tragen ein Hard-Goal von min. EUR 5 Mio p.a. / 30% Overhead-Reduktion bis Ende 2027 — realisiert per Q3/2026: 0, die Targets existieren bisher nur top-down (25.05.2026). Das AI-Transformations-Mapping (D1) macht daraus ein priorisiertes, ExBoD-beschlossenes Programm und verankert «Elysium 3.0 = AI@AXS = ein Programm» unter TRAK-2026-0010.",
@@ -2725,7 +2845,8 @@
    "Abhängigkeit von WS6-01 (Budget-Währung bereinigt) für belastbare Zahlen"
   ],
   "erfolgsmessung": "ExBoD-Beschluss dokumentiert; A/B/C-Liste + Nicht-verfolgen-Liste vorhanden; Top-Down-Target bottom-up gegengerechnet (ja/nein) — bis 30.09.2026",
-  "grounding": "projekt.yaml WS6-02; RUBICON-Doc §4 WS6-D1 + Priorisierung A/B/C + «Bewusst nicht verfolgt»; WS-Paket WS6 Phase 0"
+  "grounding": "projekt.yaml WS6-02; RUBICON-Doc §4 WS6-D1 + Priorisierung A/B/C + «Bewusst nicht verfolgt»; WS-Paket WS6 Phase 0",
+  "ziel_klartext": "Deliverable D1 liegt vor: Das AI-Transformations-Mapping (Gesamtübersicht der KI-Initiativen der Gruppe) ist vom Executive Board (ExBoD, erweiterte Geschäftsleitungsrunde) beschlossen — mit Priorisierung aller Initiativen in die Kategorien A/B/C, einer Nicht-verfolgen-Liste sowie einer Bottom-up-Gegenrechnung, die das Top-down-Einsparziel von EUR 5'000k von unten, aus den einzelnen Initiativen heraus, validiert."
  },
  "WS6-03": {
   "kontext": "Damit der KI-Einsatz in der Gruppe gesteuert statt wildwüchsig erfolgt, braucht WS6 einen verbindlichen Zonen-Rahmen (D8). Die No-/High-AI-Zones definieren, wo KI erste Wahl ist, wo sie ausgeschlossen bleibt und wo sie nur mit Human-in-the-Loop und Mitbestimmung zulässig ist — verankert in der AI-Governance TRAK-2026-0010.",
@@ -2746,7 +2867,8 @@
    "Verzögerter Beschluss blockiert nachgelagerte Zielsystem-Entscheide mit KI-Ersatz-Brille (WS6-05)"
   ],
   "erfolgsmessung": "Zonen-Katalog (High/No/Guarded) ExBoD-beschlossen und in TRAK-2026-0010 abgelegt (ja/nein) — bis 31.10.2026 (Termin = Annahme laut projekt.yaml)",
-  "grounding": "projekt.yaml WS6-03; RUBICON-Doc §4 WS6-D8 + Tabelle No-/High-AI-Zones; WS-Paket WS6 Phase 0 + Spielregeln"
+  "grounding": "projekt.yaml WS6-03; RUBICON-Doc §4 WS6-D8 + Tabelle No-/High-AI-Zones; WS-Paket WS6 Phase 0 + Spielregeln",
+  "ziel_klartext": "Deliverable D8 liegt vor: Der Katalog der AI-Einsatzzonen mit den drei Klassen High-AI-Zone, No-AI-Zone und Guarded-Zone ist definiert, vom Executive Board (ExBoD, erweiterte Geschäftsleitungsrunde) beschlossen und in TRAK-2026-0010 (AI-Governance) verankert."
  },
  "WS6-04": {
   "kontext": "Die Data Foundation blockiert 6 der 8 AI@AXS-Initiativen — ohne kanonische Identifier und eine Single Source of Truth für Finance/HR ist keine AI-Skalierung zulässig (Sequenz-Gate G3). Zusätzlich hängt das Datenfundament am Ein-Mann-IT-Risiko Didit/Suchomski, das über die WS1-Schnittstelle (IT-/Didit-Zielorganisation) grundlegend adressiert wird.",
@@ -2769,7 +2891,8 @@
    "Owner-Klärung Didit/Suchomski (heute unter AI@AXS geführt) noch offen — zu klären über WS1-D7"
   ],
   "erfolgsmessung": "SSOT Finance/HR produktiv; Didit-Stellvertretung dokumentiert; GL-CoS-Agenten 8/8 produktiv (ja/nein) — bis 30.11.2026 (Gate G3)",
-  "grounding": "projekt.yaml WS6-04 (Gate G3); RUBICON-Doc §4 WS6-D2 + stromspezifische Risiken; WS-Paket WS6 Phase 1 + Spielregel G3"
+  "grounding": "projekt.yaml WS6-04 (Gate G3); RUBICON-Doc §4 WS6-D2 + stromspezifische Risiken; WS-Paket WS6 Phase 1 + Spielregel G3",
+  "ziel_klartext": "D2: Das Data-Foundation-Gate ist erreicht — das heisst: (1) Die kanonischen Identifier (konzernweit einheitliche, verbindliche Datenschlüssel) sowie die SSOT (Single Source of Truth, einzige verbindliche Datenquelle) für Finance und HR sind produktiv; (2) alle 8 von 8 GL-CoS-Agenten (Chief-of-Staff-KI-Agenten für die Mitglieder der Geschäftsleitung, GL) laufen produktiv; (3) der Bus-Faktor Didit (Klumpenrisiko, dass kritisches Wissen an einer einzelnen Person hängt) ist entschärft, erkennbar an einer dokumentierten Stellvertretungsregelung."
  },
  "WS6-05": {
   "kontext": "Aus der unvollendeten Fusion existieren zwei grosse Ops-System-Welten. Leitprinzip von D7: nicht blind auf ein Bestandssystem konsolidieren, wenn KI Teile in 12–18 Monaten ablöst — je Ops-Bereich ein expliziter Entscheid «konsolidieren vs. auf KI-Lösung überspringen». Die Systemlandkarte ist ein geteiltes WS1↔WS6-Artefakt; Entscheid ≠ Migration.",
@@ -2791,7 +2914,8 @@
    "«One World»-Erwartung: nur der Entscheid je Bereich ist bis zur Frist machbar, die Migration nicht — Erwartungsmanagement nötig"
   ],
   "erfolgsmessung": "100% der Ops-Bereiche mit dokumentiertem Zielsystem-Entscheid (Entscheid ≠ Migration) — bis 31.12.2026",
-  "grounding": "projekt.yaml WS6-05; RUBICON-Doc §4 WS6-D7 + Abschnitt «Zielsystem-Entscheid mit KI-Ersatz-Brille»; WS-Paket WS6 Phase 1; Input IN-05"
+  "grounding": "projekt.yaml WS6-05; RUBICON-Doc §4 WS6-D7 + Abschnitt «Zielsystem-Entscheid mit KI-Ersatz-Brille»; WS-Paket WS6 Phase 1; Input IN-05",
+  "ziel_klartext": "D7: Für 100% der Operations-Bereiche (Ops) liegt ein dokumentierter Zielsystem-Entscheid vor, jeweils geprüft mit der «KI-Ersatz-Brille» (Entscheidkriterium: bestehendes System konsolidieren oder direkt auf eine KI-Lösung überspringen). Grundlage ist die Systemlandkarte, die als geteiltes Artefakt gemeinsam mit Workstream 1 (WS1) geführt wird. Der dokumentierte Entscheid genügt für die Zielerreichung — eine Migration ist nicht erforderlich (Entscheid ≠ Migration)."
  },
  "WS6-06": {
   "kontext": "Die Execution-Rate der Gruppe liegt bei höchstens ~50% — Root Cause ist primär fehlendes Tracking. Das Action-Item-Tracking (Document-Intelligence Modul 1, Prio A, vorgezogen aus Q1/27 als Vorschlag) liefert den automatisierten Feed in den WS2-Gruppen-Commitment-Tracker und ist damit direkter Hebel auf das Programmziel Execution ≥90%.",
@@ -2811,7 +2935,8 @@
    "Abhängigkeit vom Go-Live des Gruppen-Commitment-Trackers (WS2, Okt 26) als Ziel-System des Feeds"
   ],
   "erfolgsmessung": "MVP produktiv; Action-Items fliessen in den Gruppen-Commitment-Tracker (ja/nein) — bis 30.11.2026",
-  "grounding": "projekt.yaml WS6-06; RUBICON-Doc §4 WS6-D3 + WS2-K10 (§87 bei Transkription); WS-Paket WS6 Phase 1"
+  "grounding": "projekt.yaml WS6-06; RUBICON-Doc §4 WS6-D3 + WS2-K10 (§87 bei Transkription); WS-Paket WS6 Phase 1",
+  "ziel_klartext": "D3: Das MVP (Minimum Viable Product, minimal funktionsfähige Erstversion) für das Action-Item-Tracking auf Basis der Document-Intelligence ist produktiv geschaltet — im Scope strikt beschränkt auf die Gremienebene (Sitzungsunterlagen und Protokolle der Führungsgremien, nicht auf Mitarbeitendenebene). Die erfassten Action-Items fliessen in den Gruppen-Commitment-Tracker von Workstream 2 (WS2) ein."
  },
  "WS6-07": {
   "kontext": "WS6 muss aus Top-Down-Targets CFO-testierte Einsparungen machen — nur vom CFO testierte Effekte zählen, ohne Doppelzählung mit WS3. AI-Ramp-Gate 1 ist der erste harte Nachweis (0 → ≥ EUR 1'000k Run-Rate Q4/26) und zugleich Stop-or-Go-Punkt je Initiative; parallel starten Knowledge-Mgmt und Procurement-Bot (Prio B).",
@@ -2833,7 +2958,8 @@
    "Abhängigkeit von Data Foundation (G3, WS6-04): ohne Datenfundament keine skalierbaren Effekte"
   ],
   "erfolgsmessung": "CFO-testierte Run-Rate ≥ EUR 1'000k; Stop-or-Go je Initiative dokumentiert (ja/nein) — bis 31.12.2026",
-  "grounding": "projekt.yaml WS6-07; RUBICON-Doc §4 WS6-D6 + Metrik (0 → ≥1'000k Q4/26); WS-Paket WS6 Phase 1 + KPI P8"
+  "grounding": "projekt.yaml WS6-07; RUBICON-Doc §4 WS6-D6 + Metrik (0 → ≥1'000k Q4/26); WS-Paket WS6 Phase 1 + KPI P8",
+  "ziel_klartext": "D6a: Das AI-Ramp-Gate 1 ist absolviert — das heisst: (1) Die Einsparungs-Run-Rate (laufende Einsparungsrate) für Q4/2026 von mindestens EUR 1'000k ist durch den CFO (Chief Financial Officer) testiert (formell bestätigt); (2) der Stop-or-Go-Entscheid ist je KI-Initiative dokumentiert; (3) die beiden Initiativen Knowledge-Mgmt (Wissensmanagement) und Procurement-Bot (Beschaffungs-Bot) sind gestartet."
  },
  "WS6-08": {
   "kontext": "Knowledge-Mgmt (Initiative #8, Prio B, 300k) wird am AI-Ramp-Gate 1 gestartet und muss als Welle 1 produktiv gehen — ein Baustein des Entblockungs-Pfads von 2/8 auf 6/8 Initiativen bis M6 (Feb 27).",
@@ -2853,7 +2979,8 @@
    "Effekte zählen nur CFO-testiert in die Einsparungs-Brücke; sonst kein Beitrag zum Ramp-Pfad"
   ],
   "erfolgsmessung": "Knowledge-Mgmt Welle 1 produktiv (ja/nein) — bis 31.01.2027",
-  "grounding": "projekt.yaml WS6-08; RUBICON-Doc §4 WS6 Priorisierung B (#8 Knowledge-Mgmt 300k); WS-Paket WS6 Phase 2"
+  "grounding": "projekt.yaml WS6-08; RUBICON-Doc §4 WS6 Priorisierung B (#8 Knowledge-Mgmt 300k); WS-Paket WS6 Phase 2",
+  "ziel_klartext": "Die Welle 1 (erste Ausrollstufe) der Initiative Knowledge-Mgmt (Wissensmanagement) ist ausgerollt und produktiv geschaltet; der produktive Betrieb ist mit ja/nein feststellbar."
  },
  "WS6-09": {
   "kontext": "Die Chairman-Automationen (u.a. Morning Scan, ExBoD-Prep, Dashboards — laut WS2) laufen heute auf dem DRS-Mac und bilden damit einen Single Point of Failure. Die Überführung in den GL-getragenen Vertex-Stack beseitigt den SPoF und ist zugleich Voraussetzung für die Chairman-Unabhängigkeit, die das MOS-Audit (WS2) prüft. Spiegel-Milestone: WS2-12 (gleicher Inhalt, gleiche Frist).",
@@ -2873,7 +3000,8 @@
    "Nicht vollzogene Überführung gefährdet das Bestehen des MOS-Audits (Chairman-Unabhängigkeit, WS2-14)"
   ],
   "erfolgsmessung": "Automationen laufen auf dem Vertex-Stack, unabhängig vom DRS-Mac (ja/nein) — bis 28.02.2027",
-  "grounding": "projekt.yaml WS6-09 (Spiegel: WS2-12); RUBICON-Doc §4 WS2 Phase 2 (Vertex-Überführung); WS-Paket WS6 Phase 2 + Schnittstelle WS2"
+  "grounding": "projekt.yaml WS6-09 (Spiegel: WS2-12); RUBICON-Doc §4 WS2 Phase 2 (Vertex-Überführung); WS-Paket WS6 Phase 2 + Schnittstelle WS2",
+  "ziel_klartext": "Die Automationen des Verwaltungsratspräsidenten (Chairman-Automationen) sind in den regulären Betrieb der Geschäftsleitung (GL) auf dem Vertex-Stack (Konzern-AI-Hosting) überführt. Damit ist der bisherige Single Point of Failure (SPoF, einzelner Ausfallpunkt) — der lokale Mac von Dieter Streuli (DRS) — beseitigt: Alle Automationen laufen unabhängig vom DRS-Mac."
  },
  "WS6-10": {
   "kontext": "Der Monthly Report kommt heute verspätet (JAN erst 11.03., FEB erst 24.03.) und ohne Bilanz/Cashflow — ein Kernbefund der fehlenden Konzern-Wahrheit. D4 automatisiert das Reporting über die Finance-Automation (Initiative #2, Prio A, 1'500k) und weist parallel den Entblockungs-Fortschritt 6/8 der AI@AXS-Initiativen nach.",
@@ -2894,7 +3022,8 @@
    "Entblockung 6/8 hängt an vorgelagerten Gates (G3, Ramp-Gate 1) — Verzug kaskadiert"
   ],
   "erfolgsmessung": "3 aufeinanderfolgende Monate Report ≤ 20. pünktlich UND ≥6/8 Initiativen entblockt (ja/nein) — bis 28.02.2027",
-  "grounding": "projekt.yaml WS6-10; RUBICON-Doc §4 WS6-D4 + Metrik (Entblockung 6/8 M6) + Diagnose B (Report verspätet); WS-Paket WS6 Phase 2"
+  "grounding": "projekt.yaml WS6-10; RUBICON-Doc §4 WS6-D4 + Metrik (Entblockung 6/8 M6) + Diagnose B (Report verspätet); WS-Paket WS6 Phase 2",
+  "ziel_klartext": "D4: Die Reporting-Automatisierung ist wirksam: Der Monatsreport zu Gewinn-und-Verlust-Rechnung (P&L) und Liquidität ist in drei aufeinanderfolgenden Monaten jeweils fristgerecht, d.h. spätestens am 20. des Folgemonats, geliefert worden, und mindestens 6 der 8 AI@AXS-Initiativen sind entblockt (bestehende Blocker beseitigt)."
  },
  "WS6-11": {
   "kontext": "Phase-3-Zielnachweis des AI-Stroms: Die Bot-Welle (HR/Legal/Procurement) ist produktiv und die Data Foundation vollständig. Der HR-Bot (Initiative #3, 700k) darf in DE erst nach abgeschlossenem BetrVG-Prozess ausgerollt werden — Gate G4 (Rechts-/Mitbestimmungs-Vorbehalt, Owner Charisius) ist harte Vorbedingung.",
@@ -2917,7 +3046,8 @@
    "Data Foundation 8/8 hängt an der vollständigen Entblockungs-Kette (G3 → Ramp-Gate 1 → 6/8) — Verzug kaskadiert auf den Zielnachweis"
   ],
   "erfolgsmessung": "HR-Bot an ≥2 DE-Standorten produktiv (BetrVG abgeschlossen); Legal-Bot + Procurement-Bot produktiv; Data Foundation 8/8 (ja/nein) — bis 30.04.2027 (Gate G4)",
-  "grounding": "projekt.yaml WS6-11 (Gate G4); RUBICON-Doc §4 WS6-D5 + Priorisierung B; WS-Paket WS6 Phase 3 + Erfolgskriterien"
+  "grounding": "projekt.yaml WS6-11 (Gate G4); RUBICON-Doc §4 WS6-D5 + Priorisierung B; WS-Paket WS6 Phase 3 + Erfolgskriterien",
+  "ziel_klartext": "D5/Zielnachweis: Der HR-Bot (Personal-Chatbot) ist in Welle 1 an mindestens zwei Standorten in Deutschland (DE) produktiv, wobei der Mitbestimmungsprozess nach dem deutschen Betriebsverfassungsgesetz (BetrVG) abgeschlossen ist. Der Legal-Bot und der Procurement-Bot sind produktiv geschaltet, und der Vollausbau der Data Foundation (zentrales Datenfundament) ist mit 8/8 erreicht."
  },
  "WS6-12": {
   "kontext": "Nachlauf ausserhalb der 8-Monats-Kernumsetzung: AI-Ramp-Gate 2 weist die Q2/27-Einsparungsstufe nach. Die Hard-Goal-Deadline (EUR 5'000k p.a. Q4/27) liegt ausserhalb des Programms — WS6 schuldet den belastbaren, CFO-gestützten Pfadnachweis, nicht die volle Zielerreichung.",
@@ -2937,7 +3067,8 @@
    "Verfehlte Q2/27-Stufe → Stop-or-Go durch CFO; Pfad zum Hard-Goal Q4/27 müsste neu belegt werden"
   ],
   "erfolgsmessung": "CFO-testierte Einsparungen ≥ EUR 3'500k erreicht UND belastbarer, CFO-gestützter Pfad ≥ EUR 5'000k Q4/27 dokumentiert (ja/nein) — bis 30.06.2027 (Nachlauf)",
-  "grounding": "projekt.yaml WS6-12 (nachlauf: true) + WS3-14 (Gate 2 AI); RUBICON-Doc §4 WS6-D6 + Metrik; WS-Paket WS6 Nachlauf Q2/27"
+  "grounding": "projekt.yaml WS6-12 (nachlauf: true) + WS3-14 (Gate 2 AI); RUBICON-Doc §4 WS6-D6 + Metrik; WS-Paket WS6 Nachlauf Q2/27",
+  "ziel_klartext": "Nachlauf: Das AI-Ramp-Gate 2 ist erreicht: Vom Chief Financial Officer (CFO) testierte AI-Einsparungen von mindestens EUR 3'500k liegen vor, und ein belastbarer, vom CFO gestützter Pfad zu Einsparungen von mindestens EUR 5'000k bis Q4/2027 ist dokumentiert."
  },
  "WS2-15": {
   "kontext": "DRS-Ergänzung 13.07.2026: Vor dem Programmstart 01.09. prüft das Steuerungs-Trio (DRS/AFR/CGO) den gesamten RUBICON-Plan — alle 7 Workstreams, alle Phase-0-Milestones und die daraus abgeleiteten Handlungen (Tower-Tab «Aufgaben»). Ziel: der Plan, auf den sich anschliessend alle verpflichten, ist von der Spitze validiert.",
@@ -2956,7 +3087,8 @@
    "Anpassungen mündlich statt erfasst → gehen verloren; Regel: nur über die Write-Pfade"
   ],
   "erfolgsmessung": "Binär per 19.08.2026: alle 3 Trio-Freigaben abgehakt, gemeldete Anpassungen eingearbeitet.",
-  "grounding": "DRS-Ergänzung Phase 0, 13.07.2026 (Session); Tower-Datenstand projekt.yaml/tasks.json."
+  "grounding": "DRS-Ergänzung Phase 0, 13.07.2026 (Session); Tower-Datenstand projekt.yaml/tasks.json.",
+  "ziel_klartext": "Die Programm-Freigabe durch das Steuerungs-Trio liegt vor: Dieter Streuli (DRS), Andreas Fritthum (AFR) und Cüneyt Gökcöl (CGO) haben je den Gesamtplan — alle Workstreams (WS, Arbeitsströme des Programms) samt zugehörigen Handlungen — analysiert und entweder freigegeben oder konkrete Anpassungen gemeldet. Alle drei Freigaben sind abgehakt und gemeldete Anpassungen eingearbeitet."
  },
  "WS2-16": {
   "kontext": "DRS-Ergänzung 13.07.2026: Nach der Trio-Freigabe (WS2-15) prüft jede verantwortliche Person ihren eigenen Wirkungsbereich — den eigenen Workstream bzw. die eigenen Milestones und Handlungen — und gibt frei oder meldet Anpassungen. Damit ist der Plan von denen validiert, die ihn liefern müssen.",
@@ -2975,7 +3107,8 @@
    "Owner passen still an statt zu melden → Plan-Drift; Regel: Änderungen nur über CoS/Write-Pfade"
   ],
   "erfolgsmessung": "Binär per 28.08.2026: alle 9 Owner-Freigaben abgehakt, Anpassungen eingearbeitet.",
-  "grounding": "DRS-Ergänzung Phase 0, 13.07.2026 (Session); abhängig von WS2-15."
+  "grounding": "DRS-Ergänzung Phase 0, 13.07.2026 (Session); abhängig von WS2-15.",
+  "ziel_klartext": "Die Freigabe aller neun Workstream-Verantwortlichen liegt vor: Jede Ownerin und jeder Owner hat den eigenen Workstream (WS, Arbeitsstrom des Programms) samt zugehörigen Milestones und Handlungen analysiert und entweder freigegeben oder konkrete Anpassungen gemeldet. Alle neun Freigaben sind abgehakt und gemeldete Anpassungen eingearbeitet."
  },
  "WS2-17": {
   "kontext": "DRS-Ergänzung 13.07.2026: Nach Trio- und Owner-Freigabe verpflichten sich alle Verantwortlichen formell auf den RUBICON-Plan (Read & Sign). Das Abhaken der eigenen Handlung im Tower IST die Unterschrift — durch das Owner-Scoping kann sie nur die Person selbst (oder CoS) setzen; Zeitstempel wird persistiert.",
@@ -2993,6 +3126,7 @@
    "Einzelne verweigern → offen eskalieren statt still starten (Chairman-Gespräch)"
   ],
   "erfolgsmessung": "Binär per 28.08.2026: 9/9 Read-&-Sign-Handlungen abgehakt.",
-  "grounding": "DRS-Ergänzung Phase 0, 13.07.2026 (Session); abhängig von WS2-15 + WS2-16."
+  "grounding": "DRS-Ergänzung Phase 0, 13.07.2026 (Session); abhängig von WS2-15 + WS2-16.",
+  "ziel_klartext": "Das Commitment zum RUBICON-Plan liegt vor: Alle neun Verantwortlichen (Fritthum, Gökcöl, Matthei, Rohde, Pajor, Haeffner, Charisius, Petric, Streuli) haben den RUBICON-Plan im Read-&-Sign-Verfahren (Lesen und Unterzeichnen) gelesen und sich mit persönlicher Unterschrift zur verbindlichen Einhaltung des Plans verpflichtet. Erledigt, wenn per 28.08.2026 alle 9 von 9 Read-&-Sign-Handlungen abgehakt sind."
  }
 }
