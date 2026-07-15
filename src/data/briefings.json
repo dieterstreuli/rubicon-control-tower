@@ -3128,5 +3128,28 @@
   "erfolgsmessung": "Binär per 28.08.2026: 9/9 Read-&-Sign-Handlungen abgehakt.",
   "grounding": "DRS-Ergänzung Phase 0, 13.07.2026 (Session); abhängig von WS2-15 + WS2-16.",
   "ziel_klartext": "Das Commitment zum RUBICON-Plan liegt vor: Alle neun Verantwortlichen (Fritthum, Gökcöl, Matthei, Rohde, Pajor, Haeffner, Charisius, Petric, Streuli) haben den RUBICON-Plan im Read-&-Sign-Verfahren (Lesen und Unterzeichnen) gelesen und sich mit persönlicher Unterschrift zur verbindlichen Einhaltung des Plans verpflichtet. Erledigt, wenn per 28.08.2026 alle 9 von 9 Read-&-Sign-Handlungen abgehakt sind."
+ },
+ "WS3-15": {
+  "kontext": "BER und AAS Technics sind die beiden grössten Verlustquellen des deutschen Portfolios (BER EBIT-Verlust ~2,1 Mio 2026; AAS Technics negatives EBITDA / Wirtschaftlichkeits-Gate). Der cash-wirksame Restrukturierungspfad ist durch Cash-Gate G6 (Finanzierungs-Closing 31.10.) blockiert. Die strategische Grundsatzentscheidung «drehen oder eliminieren» wird deshalb vorgezogen und der VR-Sitzung am 26.08.2026 beschlussreif vorgelegt, damit die spätere cash-wirksame Umsetzung (WS3-02 ff.) auf einem klaren Richtungsentscheid aufsetzt.",
+  "leistung": [
+   "Beschlussreife Vorlage «drehen vs. eliminieren» je Einheit (BER, AAS Technics) mit belastbarer Zahlengrundlage",
+   "Strategischer Grundsatzentscheid des VR dokumentiert (Richtungsentscheid je Einheit)",
+   "Synchronisierung mit dem AAS-Technics-Wirtschaftlichkeits-Gate (24.08.)"
+  ],
+  "vorgehen": [
+   "Szenario-Analyse durch Rohde/Fritthum (operativ/commercial mit Gökcöl/Matthei + Abwicklungsszenarien mit Charisius/HR/Legal)",
+   "Beschlussreife Vorlage mit Zahlengrundlage bis 24.08. fertigstellen (Pre-Read VR)",
+   "Grundsatzentscheid an der VR-Sitzung 26.08.2026 herbeiführen (Entscheid DRS/VR)",
+   "Cash-wirksame Umsetzung erst nach Closing 31.10. (G6) — Übergabe in den Umsetzungs-Kickoff WS3-02"
+  ],
+  "beteiligte": "Owner: Dieter Streuli (Chairman, Grundsatzentscheid); Vorlage/Analyse: Rohde (CFO) + Fritthum (AAS-Technics-Turnaround); Mitwirkende: Gökcöl (BER/operativ), Matthei (COO), Charisius (Abwicklung/HR/Legal), Pajor (Zahlenbasis)",
+  "risiken": [
+   "Zahlengrundlage je Einheit muss belastbar sein (Datenlücken Technics-Wirtschaftlichkeit / BER-Szenarien) — sonst kein beschlussreifer Entscheid",
+   "Cash-Gate G6: vor Closing 31.10. keine cash-wirksamen Schritte — der Aug-Entscheid ist strategisch (Richtung), nicht Umsetzung",
+   "Mitbestimmung/Arbeitsrecht (§17/§18 KSchG, §613a) erst in der Umsetzungsphase (WS3-02/WS3-12) — im Aug-Entscheid nur zu berücksichtigen"
+  ],
+  "erfolgsmessung": "Für beide Einheiten (BER, AAS Technics) liegt der dokumentierte drehen-oder-eliminieren-Grundsatzentscheid vor — Mess-Anker VR-Sitzung 26.08.2026 (Vorlage beschlussreif bis 24.08.).",
+  "grounding": "projekt.yaml WS3-15; tasks.md #93 (BER Quo Vadis) + TRAK-2026-0003; AAS Technics Wirtschaftlichkeits-Gate 24.08.; DRS-Entscheid 15.07.2026 (strategischer Gate als eigener RUBICON-Milestone, Deutung 1)",
+  "ziel_klartext": "Für BER und AAS Technics ist der strategische Grundsatzentscheid «drehen oder eliminieren» je Einheit getroffen: Eine beschlussreife Vorlage mit belastbarer Zahlengrundlage liegt der VR-Sitzung am 26.08.2026 vor, und der Richtungsentscheid ist je Einheit dokumentiert. Die cash-wirksame Umsetzung folgt erst nach dem Finanzierungs-Closing (Cash-Gate G6, 31.10.). Erledigt, wenn für beide Einheiten der dokumentierte drehen-oder-raus-Entscheid vorliegt (Mess-Anker: VR 26.08.2026)."
  }
 }

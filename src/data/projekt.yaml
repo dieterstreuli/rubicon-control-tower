@@ -453,6 +453,18 @@ workstreams:
     depends_on: []
     nachlauf: false
     progress_source: tasks
+  - id: WS3-15
+    name: 'BER + AAS Technics: strategischer Go/No-Go «drehen oder raus» (VR 26.08.) — beschlussreife Vorlage mit Zahlengrundlage'
+    owner: Dieter Streuli
+    start: '2026-08-14'
+    due: '2026-08-24'
+    date_assumed: false
+    phase: Phase 0
+    gate: null
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
   - id: WS3-02
     name: 'Umsetzungs-Kickoff Gates AAS Technics + BER + MUC: §17/§18-Schwellenprüfung, §613a-Check, MUC geklärt'
     owner: Andreas Fritthum
@@ -463,7 +475,8 @@ workstreams:
     gate: null
     critical: false
     progress: 0
-    depends_on: []
+    depends_on:
+    - WS3-15
     nachlauf: false
     progress_source: tasks
   - id: WS3-03
