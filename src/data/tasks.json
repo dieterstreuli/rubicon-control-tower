@@ -5489,13 +5489,13 @@
     {
       "id": "M18-H05",
       "nr": 423,
-      "ms_id": "M18",
+      "ms_id": null,
       "text": "Der Wirksamkeits-Review 60 Tage nach Einrichtung der Cadence-Aktivitäten (M18-H04) ist durchgeführt und dokumentiert: Die Einhaltung der Cadence ist überprüft und Nachsteuerungsmassnahmen sind festgehalten. Dieser Review ist ein nachlaufender Wirksamkeits-Check (rund Mitte Februar 2027) und keine Voraussetzung für die fristgerechte Erledigung von Milestone M18 (15.12.2026).",
       "owner": "Michael Haeffner",
-      "due": "2026-12-15",
+      "due": "2027-02-15",
       "status": "offen",
       "erledigt_am": null,
-      "source": "zerlegung",
+      "source": "nachlauf",
       "origin": "KI-Zerlegung Phase 1, 13.07.2026 (DRS-Freigabe «alles aktivieren»)",
       "created_at": "2026-07-13"
     },

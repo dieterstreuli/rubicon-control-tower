@@ -160,7 +160,7 @@ def main():
         if not t.get("ms_id"):
             # Commitments aus Sitzungen dürfen ungekoppelt sein (Schnitt 2) —
             # Zerlegungs-Handlungen sollten IMMER gekoppelt sein.
-            (gap if t.get("source") in ("sitzung", "gemini") else err)(tid, "ms_id fehlt (nicht milestone-gekoppelt)")
+            (gap if t.get("source") in ("sitzung", "gemini", "nachlauf") else err)(tid, "ms_id fehlt (nicht milestone-gekoppelt)")
         elif t["ms_id"] not in ids:
             err(tid, f"ms_id verweist auf unbekannten Milestone «{t['ms_id']}»")
         if t.get("status") not in ("offen", "erledigt"):
