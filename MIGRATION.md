@@ -53,6 +53,25 @@ Dieses Runbook ist die vollständige Anleitung. Stand: 13.07.2026.
 9. Dauerbetrieb: systemd-Unit (After=network, WorkingDirectory=Repo, ExecStart=npm run dev …, Restart=always) + Timer für `gen_report.py --auto` (Mo 06:00 + Monatsanfang).
 10. Cutover: Mac-launchd stoppen (`launchctl bootout gui/$UID ch.streuli.chief.rubicon-tower`), Tailscale-Serve entfernen, Nutzer auf neue URL.
 
+## 4b · Laufende Änderungen NACH dem Cutover (Weiterentwicklung)
+
+Die Plattform bleibt nach dem Umzug voll weiterentwickelbar — der Server ist
+Betriebsort, nicht Endstation. Arbeitsmodus:
+
+1. **Entwicklung wie bisher** auf dem Entwickler-Gerät (Clone des gemeinsamen
+   Repos), Änderungen lokal testen (`npm run validate`, Paritätstest).
+2. **Deploy = `git pull` + Neustart** auf dem Server:
+   `git pull && npm ci --omit=dev 2>/dev/null; systemctl restart rubicon`
+   (bzw. Container-Rebuild bei Szenario C). Kein Build-Schritt nötig — Vite dev.
+3. **Daten-Konflikt vermeiden:** Die App schreibt im Betrieb `src/data/*`
+   (Sitzungen, Tasks) auf dem SERVER — dort ist nach Cutover die Daten-Wahrheit.
+   Deshalb: Server-Datenstand regelmässig committen/pushen (Cron
+   `git add src/data && git commit -m "data: auto" && git push`), Entwickler
+   pullen VOR jeder Datenarbeit. Code-Änderungen und Datenpflege sauber in
+   getrennten Commits halten.
+4. **Kein Fork der Wahrheit:** Nach Cutover ist der Mac-Stand nur noch
+   Entwicklungs-Clone — Daten NIE mehr lokal pflegen und hochkopieren.
+
 ## 5 · Was bewusst NICHT mitgeht
 
 DRS-OAuth-Tokens (persönlich) · Tailnet-Konfiguration · launchd-Plists (nur als Vorlage) · caffeinate-Krücken.
