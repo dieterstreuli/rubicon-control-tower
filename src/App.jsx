@@ -1023,6 +1023,7 @@ function ErfassungView({ ms, today, role, me }) {
   const [vorsitz, setVorsitz] = useState(agenda?.vorsitz || '')
   const [erfasstVon, setErfasstVon] = useState('CoS')
   const [eintraege, setEintraege] = useState([])
+  const [sensitiv, setSensitiv] = useState(false)
   const [busy, setBusy] = useState(false)
 
   // Vorsitz nachziehen, wenn Meeting wechselt
@@ -1036,7 +1037,7 @@ function ErfassungView({ ms, today, role, me }) {
     setBusy(true)
     await saveSitzung({
       meeting_id: meetingId, meeting_name: FR_MEETINGS.find(m => m.id === meetingId)?.name || meetingId,
-      datum, vorsitz, erfasst_von: erfasstVon, eintraege, role, me,
+      datum, vorsitz, erfasst_von: erfasstVon, eintraege, role, me, sensitiv,
     })
     setBusy(false)
   }
@@ -1128,6 +1129,10 @@ function ErfassungView({ ms, today, role, me }) {
             </div>
           ))}
         </div>
+        <label className="flex items-center gap-2 mt-3 text-[12px] cursor-pointer" style={{ color: sensitiv ? T.red : T.inkDim }}>
+          <input type="checkbox" checked={sensitiv} onChange={e => setSensitiv(e.target.checked)} />
+          🔒 Sensitiv (HR/Personal) — Protokoll bleibt NUR lokal einsehbar (nicht via Netz/Tailnet), keine Task-/Register-Spiegel, kein Export
+        </label>
         <div className="flex items-center gap-3 mt-4">
           <button onClick={submit} disabled={busy || !eintraege.length}
             className="flex items-center gap-1.5 px-4 py-2 rounded font-semibold text-[13px]"
@@ -1508,8 +1513,19 @@ function AufgabenView({ role, me, prog, onOpenMs }) {
 // ── PROTOKOLLE — erfasste Sitzungen + aggregierte offene Commitments/Entscheide.
 const TYP_ICON = { fortschritt: '▲', commitment: '☑', entscheid: '⚖', blocker: '⛔', notiz: '·' }
 function ProtokolleView({ role, me }) {
-  const protos = PROTO.protokolle || []
   const [busy, setBusy] = useState(null)
+  // Sensitiv-Filter (#6): sensitive Protokolle sind NICHT im Bundle — sie kommen nur
+  // via Loopback-gated API (403 für Netz-/Tailnet-Clients → dann einfach unsichtbar).
+  const [sensProtos, setSensProtos] = useState([])
+  const [sensBlocked, setSensBlocked] = useState(false)
+  useEffect(() => {
+    fetch('/api/protokoll/sensitiv')
+      .then(r => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then(j => setSensProtos(j.protokolle || []))
+      .catch(() => setSensBlocked(true))
+  }, [])
+  const protos = [...sensProtos, ...(PROTO.protokolle || [])]
+    .sort((a, b) => (b.datum || '').localeCompare(a.datum || ''))
   const exportP = async (id) => {
     setBusy(id)
     try {
@@ -1580,7 +1596,7 @@ function ProtokolleView({ role, me }) {
 
       <div className="rounded-xl border overflow-hidden" style={{ background: T.panel, borderColor: T.line }}>
         <div className="px-4 py-2 text-[13px] font-semibold border-b" style={{ borderColor: T.line }}>
-          Sitzungsprotokolle <span className="text-[10px]" style={{ color: T.inkFaint }}>({protos.length} — neueste zuerst; Quelle protokolle.json)</span>
+          Sitzungsprotokolle <span className="text-[10px]" style={{ color: T.inkFaint }}>({protos.length} — neueste zuerst; Quelle protokolle.json{sensProtos.length ? ` + ${sensProtos.length} sensitiv (nur lokal)` : ''}{sensBlocked ? ' · 🔒 sensitive Protokolle nur direkt am Gerät einsehbar' : ''})</span>
         </div>
         {protos.length === 0 && <div className="px-4 py-6 text-[12px]" style={{ color: T.inkFaint }}>Noch keine Sitzung erfasst. → Tab «Sitzung erfassen».</div>}
         <div className="divide-y" style={{ borderColor: T.line }}>
@@ -1588,12 +1604,15 @@ function ProtokolleView({ role, me }) {
             <div key={p.id} className="px-4 py-3" style={{ borderTop: `1px solid ${T.line}` }}>
               <div className="flex flex-wrap items-center gap-2 text-[12px]">
                 <b style={{ color: T.brass }}>{p.meeting_name}</b>
+                {p.sensitiv && <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold" style={{ background: T.red + '22', color: T.red, border: `1px solid ${T.red}55` }} title="nur lokal einsehbar — keine Spiegel, kein Export">🔒 sensitiv</span>}
                 <span style={{ fontFamily: T.mono, color: T.inkDim }}>{fmtDate(p.datum)}</span>
                 {p.vorsitz && <span style={{ color: T.inkFaint }}>· Vorsitz {p.vorsitz}</span>}
                 {p.erfasst_von && <span style={{ color: T.inkFaint }}>· erfasst: {p.erfasst_von}</span>}
                 <span style={{ fontFamily: T.mono, color: T.inkFaint }}>· {p.id}</span>
                 <span className="flex-1" />
-                {p.export?.pdf ? (
+                {p.sensitiv ? (
+                  <span className="text-[10px]" style={{ color: T.inkFaint }}>kein Export (sensitiv)</span>
+                ) : p.export?.pdf ? (
                   <span className="flex items-center gap-1.5">
                     <a href={p.export.pdf} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.brass, color: T.brass }}><FileText size={10} /> PDF</a>
                     {p.export.doc_url && <a href={p.export.doc_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.blue, color: T.blue }}><FileText size={10} /> Doc</a>}

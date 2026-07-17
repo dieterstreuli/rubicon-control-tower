@@ -11,6 +11,7 @@
 //    sind clientseitig, ersetzen keine echte Auth, erzwingen aber das dok. Zugriffsmodell)
 import fs from 'node:fs'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { execFile } from 'node:child_process'
 import yaml from 'js-yaml'
 
@@ -38,7 +39,10 @@ function writeAtomic(p, content) {
 }
 
 export function rubiconApi() {
-  const root = process.cwd()
+  // Root aus dem Modulpfad, NICHT process.cwd() — cwd hängt vom Startort ab
+  // (launchd vs. npx vs. systemd) und zeigte im Preview-Fall auf das falsche
+  // Verzeichnis (Bug 17.07.). Der Plugin-Ordner liegt fix unter <root>/plugins.
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
   const yamlPath = path.join(root, 'src', 'data', 'projekt.yaml')
   const protoPath = path.join(root, 'src', 'data', 'protokolle.json')
   const tasksPath = path.join(root, 'src', 'data', 'tasks.json')
@@ -154,9 +158,47 @@ export function rubiconApi() {
     return true
   }
 
+  // ── Sensitiv-Filter (16.07., Plattform-Roadmap #6): HR-/Personal-sensible Protokolle
+  // leben in einem GETRENNTEN Store (protokolle_sensitiv.json), der NIE über den
+  // Server ausgeliefert wird — weder als Datei noch im Vite-Bundle (kein Import im UI).
+  // Einsehbar ausschliesslich via Loopback-gated API (= nur direkt auf dem Gerät, nicht
+  // via Tailnet/Netz). Das ist ECHTE Trennung, nicht clientseitiges Ausblenden.
+  const sensPath = path.join(root, 'src', 'data', 'protokolle_sensitiv.json')
+  const readSens = () => (fs.existsSync(sensPath) ? JSON.parse(fs.readFileSync(sensPath, 'utf8')) : { protokolle: [] })
+  // ACHTUNG Proxy-Falle (Härtetest 17.07.): Tailscale-Serve proxied Tailnet-Traffic
+  // von 127.0.0.1 — die remoteAddress allein reicht NICHT. Deshalb zusätzlich:
+  // Host-Header muss localhost/127.0.0.1 sein UND keine Forwarded-Header vorhanden
+  // (Tailscale/Reverse-Proxies setzen Host=ts.net-Name bzw. X-Forwarded-*).
+  const isLoopback = (req) => {
+    const a = req.socket?.remoteAddress || ''
+    const ipOk = a === '127.0.0.1' || a === '::1' || a === '::ffff:127.0.0.1'
+    const host = (req.headers.host || '').split(':')[0]
+    const hostOk = host === 'localhost' || host === '127.0.0.1'
+    const fwd = !!(req.headers['x-forwarded-for'] || req.headers['x-forwarded-host'] || req.headers['forwarded'])
+    return ipOk && hostOk && !fwd
+  }
+
   return {
     name: 'rubicon-api',
     configureServer(server) {
+      // Auslieferungs-Sperre: der Sensitiv-Store ist über KEINEN Pfad abrufbar
+      // (auch nicht /src/... oder /@fs/... des Dev-Servers) — hart 403, vor allem anderen.
+      server.middlewares.use((req, res, next) => {
+        if ((req.url || '').includes('protokolle_sensitiv')) {
+          res.statusCode = 403; res.setHeader('Content-Type', 'application/json')
+          return res.end(JSON.stringify({ ok: false, error: 'sensitiver Store wird nicht ausgeliefert' }))
+        }
+        next()
+      })
+
+      // GET /api/protokoll/sensitiv — Liste der sensitiven Protokolle, NUR Loopback
+      // (DRS direkt am Gerät; Tailnet-/Netz-Clients erhalten 403).
+      server.middlewares.use('/api/protokoll/sensitiv', (req, res, next) => {
+        if (req.method !== 'GET') return next()
+        res.setHeader('Content-Type', 'application/json')
+        if (!isLoopback(req)) { res.statusCode = 403; return res.end(JSON.stringify({ ok: false, error: 'nur lokal einsehbar' })) }
+        return res.end(JSON.stringify({ ok: true, protokolle: readSens().protokolle }))
+      })
       // POST /api/sitzung — eine erfasste Sitzung speichern + Milestones aktualisieren
       server.middlewares.use('/api/sitzung', async (req, res, next) => {
         if (req.method !== 'POST') return next()
@@ -170,9 +212,14 @@ export function rubiconApi() {
           const role = body.role, me = body.me
           if (role !== 'CoS' && role !== 'Owner') return json(403, { ok: false, error: `Rolle «${role || '?'}» darf nicht erfassen` })
 
-          // 1) Protokoll-Datensatz anhängen (neueste zuerst) — kollisionssichere ID (Audit #22)
+          // 1) Protokoll-Datensatz anhängen (neueste zuerst) — kollisionssichere ID (Audit #22).
+          // Sensitiv-Filter (#6): sensitive Sitzungen landen im GETRENNTEN, nie
+          // ausgelieferten Store; ID-Zählung über BEIDE Stores (kollisionssicher).
+          const sensitiv = body.sensitiv === true
           const store = JSON.parse(fs.readFileSync(protoPath, 'utf8'))
-          const sameDay = store.protokolle.filter(p => p.meeting_id === body.meeting_id && p.datum === body.datum).length
+          const sstore = readSens()
+          const sameDay = [...store.protokolle, ...sstore.protokolle]
+            .filter(p => p.meeting_id === body.meeting_id && p.datum === body.datum).length
           const id = `P-${body.datum}-${body.meeting_id}-${sameDay + 1}`
           const rec = {
             id,
@@ -184,10 +231,16 @@ export function rubiconApi() {
             // Quellenbindung: nur bei importierten Sitzungen (z.B. Gemini-Meet-Notiz) gesetzt —
             // manuelle Erfassung bleibt schlank. Beleg-Link fürs Protokoll (Datenehrlichkeit).
             ...(body.source ? { source: body.source, gemini_doc_id: body.gemini_doc_id || null, gemini_doc_url: body.gemini_doc_url || null } : {}),
+            ...(sensitiv ? { sensitiv: true } : {}),
             eintraege: Array.isArray(body.eintraege) ? body.eintraege : [],
           }
-          store.protokolle.unshift(rec)
-          writeAtomic(protoPath, JSON.stringify(store, null, 2))
+          if (sensitiv) {
+            sstore.protokolle.unshift(rec)
+            writeAtomic(sensPath, JSON.stringify(sstore, null, 2))
+          } else {
+            store.protokolle.unshift(rec)
+            writeAtomic(protoPath, JSON.stringify(store, null, 2))
+          }
 
           // 2) projekt.yaml: Fortschritt/Blocker anwenden — Owner nur eigene MS (Audit #3)
           const doc = yaml.load(fs.readFileSync(yamlPath, 'utf8'))
@@ -221,8 +274,11 @@ export function rubiconApi() {
           // Fortschritt). ID-Stabilität = De-Dup: Gemini-Importe über das Quell-Doc
           // (Re-Import aktualisiert statt dupliziert), manuelle über die Protokoll-ID.
           // Index = Position im eintraege-Array (bleibt bei Re-Import identisch).
+          // Sensitiv (#6): KEINE Spiegel in geteilte Stores (tasks.json/entscheide.json
+          // sind für alle sichtbar) — Wortlaute sensibler Sitzungen bleiben im
+          // Sensitiv-Store. Nur Fortschritt/Blocker (aggregierte Zahlen) wirken oben.
           let mirrored = []
-          const commitments = rec.eintraege.map((e2, i) => ({ e: e2, i })).filter(x => x.e.typ === 'commitment' && (x.e.text || '').trim())
+          const commitments = sensitiv ? [] : rec.eintraege.map((e2, i) => ({ e: e2, i })).filter(x => x.e.typ === 'commitment' && (x.e.text || '').trim())
           if (commitments.length) {
             const tstore = readTasks()
             const incoming = commitments.map(({ e: e2, i }) => ({
@@ -242,7 +298,7 @@ export function rubiconApi() {
           // E-Nummer. De-Dup analog Commitments: Gemini über das Quell-Doc, manuell über
           // die Protokoll-ID. Status: «getroffen» → entschieden · «offen» → beantragt.
           let registered = []
-          const entsIn = rec.eintraege.map((e2, i) => ({ e: e2, i })).filter(x => x.e.typ === 'entscheid' && (x.e.text || '').trim())
+          const entsIn = sensitiv ? [] : rec.eintraege.map((e2, i) => ({ e: e2, i })).filter(x => x.e.typ === 'entscheid' && (x.e.text || '').trim())
           if (entsIn.length) {
             const estore = readEnts()
             registered = mergeEntscheide(estore, entsIn.map(({ e: e2, i }) => ({
@@ -258,7 +314,8 @@ export function rubiconApi() {
             writeAtomic(entsPath, JSON.stringify(estore, null, 2))
           }
 
-          return json(200, { ok: true, id, applied, skipped, mirrored, registered })
+          return json(200, { ok: true, id, applied, skipped, mirrored, registered, sensitiv,
+            ...(sensitiv ? { hint: 'Sensitiv: Protokoll nur lokal einsehbar; keine Task-/Register-Spiegel' } : {}) })
         } catch (err) {
           return json(500, { ok: false, error: String(err && err.message || err) })
         }
@@ -413,6 +470,10 @@ export function rubiconApi() {
         try {
           const body = JSON.parse((await readBody(req)) || '{}')
           if (!body.id) return json(400, { ok: false, error: 'id fehlt' })
+          // Sensitiv (#6): kein Export — PDF läge im servierten public/, das Doc im
+          // geteilten Drive. Sensitive Protokolle bleiben ausschliesslich im lokalen Store.
+          if (readSens().protokolle.some(p => p.id === body.id))
+            return json(403, { ok: false, error: 'sensitives Protokoll — Export bewusst gesperrt (bleibt nur lokal einsehbar)' })
           execFile(PY_BIN, [path.join(root, 'scripts', 'gen_protokoll.py'), body.id], { cwd: root, timeout: 120000 }, (err, stdout, stderr) => {
             if (err && !stdout) return json(500, { ok: false, error: String(stderr || err).slice(-300) })
             const last = (stdout || '').trim().split('\n').pop()

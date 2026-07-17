@@ -74,7 +74,10 @@ Betriebsort, nicht Endstation. Arbeitsmodus:
 
 ## 5 · Was bewusst NICHT mitgeht
 
-DRS-OAuth-Tokens (persönlich) · Tailnet-Konfiguration · launchd-Plists (nur als Vorlage) · caffeinate-Krücken.
+DRS-OAuth-Tokens (persönlich) · Tailnet-Konfiguration · launchd-Plists (nur als Vorlage) ·
+caffeinate-Krücken · **`src/data/protokolle_sensitiv.json`** (HR-/Personal-sensible
+Protokolle: gitignored, nur lokal einsehbar via Loopback-API — wandert NICHT auf den
+Server/ins geteilte Repo; Sicherung nur übers Nightly-Chief-Backup).
 
 ## 6 · Sicherheit im Mehrbenutzer-Betrieb
 

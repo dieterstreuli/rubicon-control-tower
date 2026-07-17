@@ -234,6 +234,9 @@ def build_payload(args, doc_id, doc_name, title, summary, items, details_lines):
         'source': 'gemini',
         'gemini_doc_id': doc_id,
         'gemini_doc_url': f'https://docs.google.com/document/d/{doc_id}/edit',
+        # Sensitiv-Filter (#6): HR-/Personal-sensible Meetings → getrennter, nie
+        # ausgelieferter Store; keine Task-/Register-Spiegel, kein Export.
+        'sensitiv': bool(getattr(args, 'sensitiv', False)),
         'eintraege': eintraege,
     }
 
@@ -283,6 +286,7 @@ def main():
     ap.add_argument('--me', help='Erfasser für Owner-Scoping (Default: Dieter Streuli)')
     ap.add_argument('--role', default='CoS', choices=['CoS', 'Owner'])
     ap.add_argument('--details', action='store_true', help='Details-Abschnitt als Notizen mitnehmen')
+    ap.add_argument('--sensitiv', action='store_true', help='HR-/Personal-sensibel: Protokoll nur lokal einsehbar, keine Spiegel, kein Export')
     ap.add_argument('--post', action='store_true', help='SCHARF: wirklich an /api/sitzung senden (sonst nur Dry-Run)')
     ap.add_argument('--json', action='store_true', help='nur das JSON-Payload ausgeben')
     args = ap.parse_args()
