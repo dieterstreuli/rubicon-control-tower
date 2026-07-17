@@ -384,6 +384,20 @@ export function rubiconApi() {
           if (body.status === 'entschieden' && !e.datum) e.datum = today
           if (body.status === 'kommuniziert') e.kommunikation = { an: body.an || null, am: today }
           writeAtomic(entsPath, JSON.stringify(store, null, 2))
+          // Übergang «kommuniziert» ⇒ Kommunikations-Paket (16.07., DRS): Entscheid-PDF
+          // (Registerauszug) + Gmail-ENTWURF mit PDF im Anhang — NIE Versand (DRS sendet).
+          // Non-fatal: der Status-Übergang gilt auch, wenn der Paket-Build scheitert.
+          if (body.status === 'kommuniziert') {
+            const args = [path.join(root, 'scripts', 'gen_entscheid_mail.py'), e.id]
+            if (body.an) args.push('--an', body.an)
+            execFile(PY_BIN, args, { cwd: root, timeout: 120000 }, (err, stdout, stderr) => {
+              const last = (stdout || '').trim().split('\n').pop()
+              let mail = null
+              try { mail = JSON.parse(last) } catch { mail = { ok: false, error: (stderr || String(err || '')).slice(-200) } }
+              return json(200, { ok: true, entscheid: e, mail })
+            })
+            return
+          }
           return json(200, { ok: true, entscheid: e })
         } catch (err) {
           return json(500, { ok: false, error: String(err && err.message || err) })

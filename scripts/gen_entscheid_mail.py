@@ -1,0 +1,170 @@
+#!/usr/bin/env python3
+"""gen_entscheid_mail.py <entscheid_id> [--an "Verteiler"] — Kommunikations-Paket
+für einen Register-Entscheid (Säule 3, INS-001 Anhang B):
+
+1. Entscheid-PDF (public/entscheide/<id>.pdf) — der Antragsinhalt überführt in den
+   Entscheid: Wortlaut, Begründung, Datengrundlage, Gremium, Datum, Stempel.
+2. Gmail-ENTWURF mit Kommunikationstext + PDF im Anhang — wird NIE gesendet
+   (harte Regel: Claude/Automation sendet nie, DRS sendet). Empfänger werden nur
+   gesetzt, wenn der Verteiler echte E-Mail-Adressen enthält — nie geraten.
+
+Schreibt den PDF-Link zurück in entscheide.json (record.export).
+Gibt als LETZTE stdout-Zeile ein JSON {ok, pdf, draft_id} aus (für die API).
+"""
+import base64
+import datetime
+import html
+import json
+import os
+import re
+import sys
+import tempfile
+from email.mime.application import MIMEApplication
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, __file__.rsplit('/', 1)[0] + '/_tools')   # vendored Fallback (Portabilität)
+sys.path.insert(0, '/Users/dieterstreuli/Chief/Tools')       # Original gewinnt auf dem DRS-Mac
+from html_to_pdf import html_to_pdf  # noqa: E402
+
+ENTS = ROOT / 'src' / 'data' / 'entscheide.json'
+OUT = ROOT / 'public' / 'entscheide'
+LOGO = (ROOT / 'scripts' / 'axs_logo.png.b64').read_text().strip()
+STAMP = datetime.datetime.now().strftime('%d.%m.%Y %H:%M')
+
+
+def _atomic_write(path, text):
+    tmp = f'{path}.tmp.{os.getpid()}'
+    with open(tmp, 'w') as f:
+        f.write(text)
+    os.replace(tmp, path)
+
+
+def e(s):
+    return html.escape(str(s or ''))
+
+
+def de_date(s):
+    m = re.match(r'^(\d{4})-(\d{2})-(\d{2})$', str(s or ''))
+    return f'{m.group(3)}.{m.group(2)}.{m.group(1)}' if m else (s or '—')
+
+
+CSS = """
+<style>
+ *{margin:0;padding:0;box-sizing:border-box}
+ @page{size:A4;margin:15mm 16mm}
+ body{font-family:Arial,Helvetica,sans-serif;font-size:9.5pt;color:#1a1a1a;line-height:1.45}
+ .logo{text-align:right}.logo img{height:11mm}
+ h1{font-size:15pt;color:#1E3E58;margin-bottom:0.5mm}
+ .sub{font-size:9pt;color:#5a6570;border-bottom:1.5pt solid #1E3E58;padding-bottom:2mm;margin-bottom:4mm}
+ table{width:100%;border-collapse:collapse;table-layout:fixed;margin-bottom:3mm}
+ th{background:#1E3E58;color:#fff;font-size:7.5pt;text-align:left;padding:1.4mm 2mm;width:32mm}
+ td{padding:1.6mm 2mm;vertical-align:top;border-bottom:.4pt solid #d6dde4;font-size:9pt}
+ .beschluss{background:#F5F7FA;border-left:2.5pt solid #b07d2c;padding:2.5mm 3mm;font-size:9.5pt;margin-bottom:3mm}
+ .beschluss b{color:#1E3E58}
+ .foot{margin-top:6mm;border-top:.5pt solid #C9D3DC;padding-top:1.5mm;font-size:7.5pt;color:#8a94a8}
+</style>"""
+
+
+def render_pdf_html(rec):
+    rows = ''.join(
+        f'<tr><th>{k}</th><td>{v}</td></tr>' for k, v in [
+            ('Register-ID', e(rec['id'])),
+            ('Entscheidungstyp', e(rec.get('typ'))),
+            ('Zuständiges Gremium', e(rec.get('gremium'))),
+            ('Antragsteller', e(rec.get('antragsteller'))),
+            ('Entscheid-Datum', de_date(rec.get('datum'))),
+            ('Status', e(rec.get('status'))),
+            ('Begründung', e(rec.get('begruendung')) or '—'),
+            ('Datengrundlage', e(rec.get('datengrundlage')) or '—'),
+            ('Kommuniziert', (f"an {e(rec['kommunikation'].get('an') or '—')} am {de_date(rec['kommunikation'].get('am'))}"
+                              if rec.get('kommunikation') else '—')),
+            ('Quelle', e(rec.get('quelle')) or 'direkte Register-Erfassung'),
+        ])
+    return f"""<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">{CSS}</head><body>
+<div class="logo"><img src="data:image/png;base64,{LOGO}"></div>
+<h1>Entscheid {e(rec['id'])} — {e(rec['titel'])}</h1>
+<div class="sub">Entscheids-Register AXS Group · Entscheidungsordnung INS-001 Anhang B · Auszug vom {STAMP}</div>
+<div class="beschluss"><b>Beschluss:</b> {e(rec.get('entscheid'))}</div>
+<table>{rows}</table>
+<div class="foot">Automatisch generiert aus dem Entscheids-Register (entscheide.json) — entspricht dem registrierten Stand. Revisionssicher, Entscheide werden nie gelöscht. Vertraulich.</div>
+</body></html>"""
+
+
+def mail_html(rec):
+    komm_an = (rec.get('kommunikation') or {}).get('an') or 'Verteiler'
+    return f"""<div style="font-family:Arial,sans-serif;font-size:14px;color:#222;line-height:1.5">
+<p>Liebe Kolleginnen und Kollegen</p>
+<p>hiermit informiere ich über folgenden Entscheid aus dem Entscheids-Register der AXS Group:</p>
+<p><b>{e(rec['id'])} — {e(rec['titel'])}</b></p>
+<p><b>Beschluss:</b> {e(rec.get('entscheid'))}</p>
+<p><b>Gremium:</b> {e(rec.get('gremium') or '—')} · <b>Entscheid-Datum:</b> {de_date(rec.get('datum'))}</p>
+{f'<p><b>Begründung:</b> {e(rec.get("begruendung"))}</p>' if rec.get('begruendung') else ''}
+<p>Der vollständige Registerauszug ist als PDF beigefügt. Der Entscheid ist im Entscheids-Register (RUBICON, Tab «Entscheide») dauerhaft dokumentiert.</p>
+<p>Beste Grüsse<br>Dieter</p>
+<p style="color:#666;font-size:13px">Dieter Streuli<br>Chairman of the Board, AXS Group</p>
+</div>"""
+
+
+def create_draft(rec, pdf_path, an):
+    from _google_auth import load_credentials
+    from googleapiclient.discovery import build
+    creds = load_credentials('d.streuli@axs.aero')
+    gmail = build('gmail', 'v1', credentials=creds)
+
+    msg = MIMEMultipart('mixed')
+    alt = MIMEMultipart('alternative')
+    body_html = mail_html(rec)
+    body_text = re.sub(r'<[^>]+>', '', body_html.replace('<br>', '\n').replace('</p>', '\n\n'))
+    alt.attach(MIMEText(body_text, 'plain', 'utf-8'))
+    alt.attach(MIMEText(body_html, 'html', 'utf-8'))
+    msg.attach(alt)
+    with open(pdf_path, 'rb') as f:
+        att = MIMEApplication(f.read(), _subtype='pdf')
+    att.add_header('Content-Disposition', 'attachment', filename=f"Entscheid_{rec['id']}.pdf")
+    msg.attach(att)
+
+    msg['Subject'] = f"Entscheid {rec['id']} — {rec['titel']}"
+    # Empfänger NUR wenn der Verteiler echte Adressen enthält — nie geraten,
+    # sonst bleibt To leer und DRS füllt es beim Senden.
+    addrs = re.findall(r'[\w.+-]+@[\w-]+\.[\w.]+', an or '')
+    if addrs:
+        msg['To'] = ', '.join(addrs)
+
+    raw = base64.urlsafe_b64encode(msg.as_bytes()).decode()
+    draft = gmail.users().drafts().create(userId='me', body={'message': {'raw': raw}}).execute()
+    return draft.get('id')
+
+
+def main():
+    eid = sys.argv[1]
+    an = None
+    if '--an' in sys.argv:
+        an = sys.argv[sys.argv.index('--an') + 1]
+    store = json.loads(ENTS.read_text())
+    rec = next((x for x in store['entscheide'] if x['id'] == eid), None)
+    if not rec:
+        print(json.dumps({'ok': False, 'error': f'Entscheid {eid} nicht gefunden'})); sys.exit(1)
+
+    OUT.mkdir(parents=True, exist_ok=True)
+    hp = Path(tempfile.mktemp(suffix='.html'))
+    hp.write_text(render_pdf_html(rec))
+    pdf_abs = OUT / f'{eid}.pdf'
+    html_to_pdf(str(hp), str(pdf_abs))
+    pdf_rel = f'/entscheide/{eid}.pdf'
+
+    draft_id, draft_err = None, None
+    try:
+        draft_id = create_draft(rec, pdf_abs, an or (rec.get('kommunikation') or {}).get('an'))
+    except Exception as ex:                                    # PDF bleibt auch ohne Gmail nutzbar
+        draft_err = str(ex)[-200:]
+
+    rec['export'] = {'pdf': pdf_rel, 'draft_id': draft_id, 'stand': STAMP}
+    _atomic_write(ENTS, json.dumps(store, ensure_ascii=False, indent=2))
+    print(json.dumps({'ok': True, 'id': eid, 'pdf': pdf_rel, 'draft_id': draft_id, 'draft_error': draft_err}))
+
+
+if __name__ == '__main__':
+    main()

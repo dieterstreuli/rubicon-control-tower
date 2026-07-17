@@ -1168,7 +1168,15 @@ function EntscheideView({ role, me, today }) {
         body: JSON.stringify({ role, me, id: e.id, status, an, datum: today }),
       })
       const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
-      if (j.ok) window.location.reload()
+      if (j.ok) {
+        // Kommunikations-Paket (16.07.): PDF + Gmail-ENTWURF — Versand bleibt bei DRS
+        if (j.mail) {
+          alert(j.mail.ok
+            ? `Kommunikations-Paket erstellt:\n· Entscheid-PDF (Registerauszug)\n· Gmail-ENTWURF mit PDF im Anhang${j.mail.draft_id ? '' : j.mail.draft_error ? `\n⚠ Entwurf fehlgeschlagen: ${j.mail.draft_error}` : ''}\n\nDer Entwurf liegt in Gmail — DRS sendet.`
+            : `Status gesetzt, aber Paket-Build fehlgeschlagen: ${j.mail.error || 'unbekannt'}`)
+        }
+        window.location.reload()
+      }
       else { alert('Status-Übergang fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(false) }
     } catch (err) { alert('Status-Übergang fehlgeschlagen: ' + err); setBusy(false) }
   }
@@ -1326,6 +1334,8 @@ function EntscheideView({ role, me, today }) {
                             </div>
                             <div style={{ color: T.inkFaint, fontFamily: T.mono }}>
                               {e.quelle ? `Quelle: Protokoll ${e.quelle} · ` : ''}erfasst {fmtDate(e.created_at)}
+                              {e.export?.pdf && <> · <a href={e.export.pdf} target="_blank" rel="noreferrer" style={{ color: T.brass }}>Entscheid-PDF ↗</a></>}
+                              {e.export?.draft_id && <> · <a href="https://mail.google.com/mail/u/0/#drafts" target="_blank" rel="noreferrer" style={{ color: T.brass }} title="Gmail-Entwurf mit PDF-Anhang — DRS sendet">Gmail-Entwurf ↗</a></>}
                             </div>
                           </div>
                         </td>
