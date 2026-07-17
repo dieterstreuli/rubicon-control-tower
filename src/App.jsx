@@ -141,9 +141,20 @@ export default function App() {
   const [prog, setProg] = useState(() => sessionStorage.getItem('rubicon_prog') || BASE.meta.default_programm || null)
   useEffect(() => { if (prog) sessionStorage.setItem('rubicon_prog', prog) }, [prog])
 
-  // effektive Daten = YAML + Session-Overlay, gefiltert aufs aktive Programm
+  // effektive Daten = YAML + Session-Overlay, gefiltert aufs aktive Programm.
+  // Nicht-Default-Programme steuern gegen ihr EIGENES Ende (meta-Override) —
+  // Kern-Ende/Hard-Edge der Transformation gelten dort nicht (Test-Fund 17.07.).
+  const progEntry = (BASE.meta.programme || []).find(p => p.id === prog)
+  const progIsDefault = !prog || prog === BASE.meta.default_programm
   const data = useMemo(() => ({
     ...BASE,
+    meta: progIsDefault ? BASE.meta : {
+      ...BASE.meta,
+      projekt: `${progEntry?.name || prog} — auf der RUBICON-Plattform`,
+      baseline_end: progEntry?.ende || BASE.meta.baseline_end,
+      nachlauf_end: progEntry?.ende || BASE.meta.nachlauf_end,
+      hard_edge: progEntry?.ende || BASE.meta.hard_edge,
+    },
     workstreams: BASE.workstreams.filter(ws => !prog || !ws.programm || ws.programm === prog).map(ws => ({
       ...ws,
       milestones: ws.milestones.map(m => {
@@ -215,7 +226,12 @@ export default function App() {
     ...(role === 'CoS' ? [{ id: 'cos', label: 'CoS-Steuerung', icon: ShieldCheck }] : []),
   ]
 
-  const rubPhases = PHASE_ORDER.filter(ph => ms.some(m => m.phase === ph))
+  // Programm-eigene Phasen (17.07.): andere Programme bringen eigene Phasen-Labels mit
+  // (z.B. Vorbereitung/Ansprache/Abschluss) — kanonische RUBICON-Phasen zuerst, dann
+  // die im aktiven Programm vorkommenden Zusatz-Phasen in Datenreihenfolge.
+  const customPhases = [...new Set(ms.map(m => m.phase)
+    .filter(p => p && !PHASE_ORDER.includes(p) && !p.startsWith('Masterplan')))]
+  const rubPhases = [...PHASE_ORDER.filter(ph => ms.some(m => m.phase === ph)), ...customPhases]
   const mpPhases = [...new Set(ms.filter(m => (m.phase || '').startsWith('Masterplan')).map(m => m.phase))].sort()
   const matchPhase = (m) => phaseFilter === 'alle'
     || (phaseFilter === 'MP-ALL' ? (m.phase || '').startsWith('Masterplan') : m.phase === phaseFilter)
@@ -228,6 +244,7 @@ export default function App() {
   // 5 RUBICON-Phasen + Commercial-Masterplan (aggregiert alle «Masterplan · …»).
   const PHASE_TILES = [
     ...PHASE_ORDER.map(ph => ({ key: ph, label: ph, match: m => m.phase === ph })),
+    ...customPhases.map(ph => ({ key: ph, label: ph, match: m => m.phase === ph })),
   ].map(p => {
     const list = ms.filter(p.match)
     const done = list.filter(m => typeof m.progress === 'number' && m.progress >= 100).length
@@ -246,7 +263,7 @@ export default function App() {
             <div className="text-lg font-bold tracking-wide" style={{ fontFamily: T.mono }}>
               RUBICON <span style={{ color: T.brass }}>CONTROL TOWER</span>
             </div>
-            <div className="text-[11px] italic" style={{ color: T.inkFaint }}>« Alea iacta est. » · {BASE.meta.projekt}</div>
+            <div className="text-[11px] italic" style={{ color: T.inkFaint }}>« Alea iacta est. » · {data.meta.projekt}</div>
           </div>
           <div className="flex items-center gap-2 text-[12px]" style={{ fontFamily: T.mono, color: T.inkDim }}>
             <Clock size={14} /> Steuerungsdatum <b style={{ color: T.ink }}>{fmtDate(BASE.meta.today)}</b>
@@ -260,7 +277,7 @@ export default function App() {
             <b>{fmtDate(proj.base)}</b>
             {proj.slip > 0 && <b style={{ color: T.red }}> → {fmtDate(proj.projected)} (+{proj.slip} T)</b>}
             {proj.slip === 0 && <span style={{ color: T.green }}> · auf Basislinie</span>}
-            <span style={{ color: breaches.length ? T.red : T.brass }}> · HARD EDGE {fmtDate(BASE.meta.hard_edge)}{breaches.length ? ` — ${breaches.length} VERLETZUNG(EN)!` : ' ✓'}</span>
+            <span style={{ color: breaches.length ? T.red : T.brass }}> · HARD EDGE {fmtDate(data.meta.hard_edge)}{breaches.length ? ` — ${breaches.length} VERLETZUNG(EN)!` : ' ✓'}</span>
           </div>
           <div className="ml-auto flex items-center gap-2">
             <button onClick={toggleTheme} aria-label="Hell/Dunkel umschalten" title={theme === 'dark' ? 'Hell-Modus' : 'Dunkel-Modus'}
@@ -369,24 +386,37 @@ export default function App() {
 
         {/* ══ 1 · KONTROLLTURM ══ */}
         {tab === 'tower' && (<>
-          <div className={TASK_STATS.total > 0 ? 'grid grid-cols-2 md:grid-cols-5 gap-3' : 'grid grid-cols-2 md:grid-cols-4 gap-3'}>
+          {(() => {
+            // Handlungen-KPI je Programm (Test-Fund 17.07.): Tasks folgen via ms_id→WS
+            // dem Programm; ungekoppelte zählen überall (konzernweit, z.B. Nachlauf).
+            const progTasks = ALL_TASKS.filter(t => !prog || !t.ms_id || !MS_META[t.ms_id]?.programm || MS_META[t.ms_id].programm === prog)
+            const ts = {
+              total: progTasks.length,
+              offen: progTasks.filter(t => t.status === 'offen').length,
+              erledigt: progTasks.filter(t => t.status === 'erledigt').length,
+              ueberfaellig: progTasks.filter(taskOverdue).length,
+            }
+            return (
+          <div className={ts.total > 0 ? 'grid grid-cols-2 md:grid-cols-5 gap-3' : 'grid grid-cols-2 md:grid-cols-4 gap-3'}>
             <Kpi label="Gesamtstatus" value={STATUS_META[overall].label} color={STATUS_META[overall].color}
               sub={`${cnt.total} Meilensteine · ${cnt.done} erledigt · ${cnt.unknown} unbekannt`} />
             <Kpi label="Auf Kurs" value={cnt.onTrack} color={T.green} />
             <Kpi label="Gefährdet" value={cnt.atRisk} color={T.amber} />
             <Kpi label="Verzug" value={cnt.delayed} color={T.red}
               sub={proj.drivers.length ? `Treiber: ${proj.drivers.map(d => d.id).join(', ')}` : 'kein kritischer Verzug'} />
-            {TASK_STATS.total > 0 && (
-              <Kpi label="Handlungen offen" value={TASK_STATS.offen}
-                color={TASK_STATS.ueberfaellig > 0 ? T.red : TASK_STATS.offen > 0 ? T.amber : T.green}
-                sub={`${TASK_STATS.ueberfaellig} überfällig · ${TASK_STATS.erledigt} erledigt · treiben den Fortschritt`} />
+            {ts.total > 0 && (
+              <Kpi label="Handlungen offen" value={ts.offen}
+                color={ts.ueberfaellig > 0 ? T.red : ts.offen > 0 ? T.amber : T.green}
+                sub={`${ts.ueberfaellig} überfällig · ${ts.erledigt} erledigt · treiben den Fortschritt`} />
             )}
           </div>
+            )
+          })()}
 
           {/* Erfüllungsgrad je Phase */}
           <div>
             <div className="text-[10px] uppercase tracking-widest mb-2" style={{ color: T.inkFaint, fontFamily: T.mono }}>
-              Erfüllungsgrad je Phase (erledigt = 100 % · Programmstart 01.09.2026)
+              Erfüllungsgrad je Phase (erledigt = 100 %{progEntry?.start ? ` · Programmstart ${fmtDate(progEntry.start)}` : ''})
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
               {PHASE_TILES.map(p => {

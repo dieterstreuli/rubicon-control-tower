@@ -1,0 +1,135 @@
+{
+  "_comment": "Programm-Registry jenseits der Transformation (Plattform-Systematik, 17.07.2026). Quelle für build_projekt_yaml.py — Programme + deren Workstreams werden beim Rebuild gemerged. Transformation selbst bleibt in tower_daten.json. Fortschritt wird NIE hier gepflegt (Progress-Preserve aus projekt.yaml).",
+  "programme": [
+    {
+      "id": "finanzierung-2026",
+      "name": "Finanzierung AXS 2026 (EUR 15 Mio)",
+      "status": "aktiv",
+      "start": "2026-07-02",
+      "ende": "2026-10-31"
+    }
+  ],
+  "workstreams": [
+    {
+      "code": "FIN",
+      "name": "Refinanzierung Lieferanten-Ausstände (EUR 15 Mio, Closing 31.10.2026)",
+      "owner": "Dieter Streuli",
+      "support": "Stephanie Rohde, Andreas Fritthum; Advisor Clearwater (Michael Märki)",
+      "programm": "finanzierung-2026",
+      "milestones": [
+        {
+          "id": "FIN-01",
+          "name": "13-Wochen-Liquiditätsplan liegt vor — der Cash-Tiefpunkt bestimmt den Zeitplan rückwärts (Prio 1; Datenpaket gemeinsam mit Clearwater-DE)",
+          "owner": "Stephanie Rohde",
+          "start": "2026-07-02",
+          "due": "2026-07-31",
+          "date_assumed": true,
+          "phase": "Vorbereitung",
+          "gate": null,
+          "critical": true,
+          "progress": null,
+          "depends_on": [],
+          "nachlauf": false
+        },
+        {
+          "id": "FIN-02",
+          "name": "Investoren-Datenpaket mit Clearwater konsolidiert (Financing Teaser, Bilanz-Talking-Points, Cashflow-Story: Timing-Mismatch statt Rettungs-Case)",
+          "owner": "Dieter Streuli",
+          "start": "2026-07-13",
+          "due": "2026-08-14",
+          "date_assumed": true,
+          "phase": "Vorbereitung",
+          "gate": null,
+          "critical": false,
+          "progress": null,
+          "depends_on": ["FIN-01"],
+          "nachlauf": false
+        },
+        {
+          "id": "FIN-03",
+          "name": "Swissport-Waiver-Frage entschieden — Szenario A (Waiver für Cash Injection > CHF 1 Mio) oder Szenario B (Rückzahlung SPI-Loan CHF 3.5 Mio → Gesamtbedarf ~13–15 Mio)",
+          "owner": "Dieter Streuli",
+          "start": "2026-08-01",
+          "due": "2026-08-21",
+          "date_assumed": true,
+          "phase": "Vorbereitung",
+          "gate": null,
+          "critical": true,
+          "progress": null,
+          "depends_on": [],
+          "nachlauf": false
+        },
+        {
+          "id": "FIN-04",
+          "name": "Erstansprache Welle 1 gestartet (Private-Debt-Spur: Rantum, Patrimonium, Swiss Life AM, CIC, HF; Family Offices parallel)",
+          "owner": "Dieter Streuli",
+          "start": "2026-08-14",
+          "due": "2026-08-21",
+          "date_assumed": true,
+          "phase": "Ansprache",
+          "gate": null,
+          "critical": false,
+          "progress": null,
+          "depends_on": ["FIN-02"],
+          "nachlauf": false
+        },
+        {
+          "id": "FIN-05",
+          "name": "Bridge-Option Joeinig entschieden (schnelle Brücke vs. Hauptspur; Wandeldarlehen-Mechanik, Sicherheit Station VIE)",
+          "owner": "Dieter Streuli",
+          "start": "2026-07-13",
+          "due": "2026-08-28",
+          "date_assumed": true,
+          "phase": "Ansprache",
+          "gate": null,
+          "critical": false,
+          "progress": null,
+          "depends_on": [],
+          "nachlauf": false
+        },
+        {
+          "id": "FIN-06",
+          "name": "Fallback-Plan Closing-Verzug steht — Winter-Liquidität 2026/27 auch ohne Closing per 31.10. gesichert",
+          "owner": "Stephanie Rohde",
+          "start": "2026-08-14",
+          "due": "2026-09-15",
+          "date_assumed": true,
+          "phase": "Ansprache",
+          "gate": null,
+          "critical": true,
+          "progress": null,
+          "depends_on": ["FIN-01"],
+          "nachlauf": false
+        },
+        {
+          "id": "FIN-07",
+          "name": "Term Sheets liegen vor und sind verhandelt (Konditionen-Benchmark: all-in 10.5–14%, Cash+PIK, 4–5 Jahre)",
+          "owner": "Dieter Streuli",
+          "start": "2026-08-21",
+          "due": "2026-09-30",
+          "date_assumed": true,
+          "phase": "Abschluss",
+          "gate": null,
+          "critical": true,
+          "progress": null,
+          "depends_on": ["FIN-04"],
+          "nachlauf": false
+        },
+        {
+          "id": "FIN-08",
+          "name": "Closing EUR 15 Mio — Lieferanten-Ausstände refinanziert (unstrukturiertes kurzfristiges FK → strukturiert mittel-/langfristig)",
+          "owner": "Dieter Streuli",
+          "start": "2026-10-01",
+          "due": "2026-10-31",
+          "date_assumed": false,
+          "phase": "Abschluss",
+          "gate": null,
+          "critical": true,
+          "progress": null,
+          "depends_on": ["FIN-07", "FIN-03"],
+          "nachlauf": false
+        }
+      ]
+    }
+  ]
+}

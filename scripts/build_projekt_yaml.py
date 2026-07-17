@@ -199,6 +199,23 @@ def main():
             if m.get('owner'):
                 owners.add(m['owner'])
 
+    # ── Programm-Dimension (17.07., Plattform-Systematik): weitere Programme + deren
+    # Workstreams kommen QUELLENGETRIEBEN aus _sources/programme.json — damit überlebt
+    # Programm #2 (Finanzierung 2026) jeden Rebuild. Transformation bleibt Programm #1.
+    prog_src = SC / 'programme.json'
+    extra = json.loads(prog_src.read_text()) if prog_src.exists() else {}
+    for w in workstreams:
+        w['programm'] = 'transformation'
+    extra_ws = extra.get('workstreams') or []
+    for w in extra_ws:
+        if not w.get('programm'):
+            raise SystemExit(f"programme.json: Workstream {w.get('code')} ohne programm-Zuordnung")
+        for m in w.get('milestones') or []:
+            if m.get('owner'):
+                owners.add(m['owner'])
+        if w.get('owner'):
+            owners.add(w['owner'])
+
     data = {
         'meta': {
             'projekt': 'Projekt RUBICON — Transformationsplan AXS Group 2026/27',
@@ -208,8 +225,14 @@ def main():
             'nachlauf_end': '2027-06-30',
             'hard_edge': '2027-06-30',  # DRS 07.07.: bis 30.06.2027 ist ALLES komplett abgeschlossen
             'owners': sorted(owners),
+            'programme': [
+                {'id': 'transformation', 'name': 'Transformation 2026/27 (Programm RUBICON)',
+                 'status': 'aktiv', 'start': '2026-09-01', 'ende': '2027-04-30'},
+                *(extra.get('programme') or []),
+            ],
+            'default_programm': 'transformation',
         },
-        'workstreams': workstreams,
+        'workstreams': workstreams + extra_ws,
         'inputs': extract.get('inputs') or [],
     }
 
@@ -224,16 +247,8 @@ def main():
             data['meta']['today'] = prev['meta']['today']
         if (prev.get('meta') or {}).get('datenlieferungen_url'):
             data['meta']['datenlieferungen_url'] = prev['meta']['datenlieferungen_url']
-        # Programm-Dimension (16.07.): Registry + Default + WS-Zuordnung überleben den Rebuild
-        for f in ('programme', 'default_programm'):
-            if (prev.get('meta') or {}).get(f) is not None:
-                data['meta'][f] = prev['meta'][f]
-        prev_ws_prog = {w.get('code'): w.get('programm') for w in (prev.get('workstreams') or [])}
-        for w in data['workstreams']:
-            if prev_ws_prog.get(w.get('code')):
-                w['programm'] = prev_ws_prog[w.get('code')]
-            elif (data['meta'].get('default_programm')):
-                w.setdefault('programm', data['meta']['default_programm'])
+        # Programm-Dimension: Registry + WS-Zuordnung sind seit 17.07. QUELLENGETRIEBEN
+        # (programme.json + fixe transformation-Zuordnung oben) — kein Preserve nötig.
         # Inputs: gepflegter Lieferstatus + Task-Kopplung überleben den Rebuild
         prev_in = {i['id']: i for i in (prev.get('inputs') or []) if i.get('id')}
         for inp in data['inputs']:
