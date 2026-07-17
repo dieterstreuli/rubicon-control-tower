@@ -4,7 +4,7 @@
 // klar als «Session — nicht persistiert» markiert; sie duplizieren keinen Zustand.
 import React, { useEffect, useMemo, useState } from 'react'
 import {
-  Radar, Layers, ListChecks, Inbox, ShieldCheck, Diamond, AlertTriangle,
+  Radar, Layers, ListChecks, ShieldCheck, Diamond, AlertTriangle,
   Clock, Send, CalendarClock, Siren, CheckCircle2, Filter, Lock, FileText, X, Compass,
   ClipboardList, FilePlus, Plus, Trash2, Save, Sun, Moon, BarChart3, Circle, Scale,
 } from 'lucide-react'
@@ -94,7 +94,8 @@ export default function App() {
   const [me, setMe] = useState('Andreas Fritthum') // aktive Identität in Rolle «Owner» (volle Namen, 13.07.)
   const [theme, setTheme] = useState(() => { const m = initialTheme(); applyTheme(m); return m })
   const toggleTheme = () => { const next = theme === 'dark' ? 'light' : 'dark'; applyTheme(next); setTheme(next) }
-  const [tab, setTab] = useState(() => sessionStorage.getItem('rubicon_tab') || 'intro')
+  // «inputs» war bis 16.07. ein eigener Tab — lebt jetzt als Sektion im Kontrollturm
+  const [tab, setTab] = useState(() => { const t = sessionStorage.getItem('rubicon_tab'); return t === 'inputs' ? 'tower' : (t || 'intro') })
   // Bestätigung nach Speichern (überlebt den HMR-Reload via sessionStorage)
   const [savedInfo] = useState(() => {
     const s = sessionStorage.getItem('rubicon_saved')
@@ -205,7 +206,6 @@ export default function App() {
     { id: 'entscheide', label: 'Entscheide', icon: Scale },
     { id: 'reports', label: 'Reports', icon: BarChart3 },
     { id: 'log', label: 'Aktions-Log', icon: ListChecks },
-    { id: 'inputs', label: 'Input-Pflichten', icon: Inbox },
     ...(role === 'CoS' ? [{ id: 'cos', label: 'CoS-Steuerung', icon: ShieldCheck }] : []),
   ]
 
@@ -392,6 +392,59 @@ export default function App() {
               })}
             </div>
           </div>
+
+          {/* Offene Datenlieferungen — ersetzt den eigenständigen Tab «Input-Pflichten»
+              (16.07., DRS: 14/16 sind task-getriggert → keine Vollansicht mehr nötig).
+              Zeigt NUR offene Bring-Pflichten (überfällige zuerst); gelieferte verschwinden
+              (Historie steckt in den gekoppelten Handlungen). Datenmodell unverändert:
+              inputs in projekt.yaml — Reminder-Queue (CoS-Steuerung) + Validierung laufen weiter. */}
+          {(() => {
+            const openInputs = data.inputs
+              .filter(i => i.status === 'offen')
+              .sort((a, b) => (a.due || '9999').localeCompare(b.due || '9999'))
+            if (!openInputs.length) return null
+            return (
+              <div className="rounded-xl border overflow-hidden" style={{ background: T.panel, borderColor: T.line }}>
+                <div className="px-4 py-2 text-[12px] font-semibold border-b flex flex-wrap items-center justify-between gap-2" style={{ borderColor: T.line }}>
+                  <span style={{ fontFamily: T.mono, color: T.brass }}>── OFFENE DATENLIEFERUNGEN ({openInputs.length}{overdueInputs.length ? ` · ${overdueInputs.length} überfällig ⚠` : ''}) ──</span>
+                  {BASE.meta.datenlieferungen_url && (
+                    <a href={BASE.meta.datenlieferungen_url} target="_blank" rel="noreferrer"
+                      className="text-[11px] px-2 py-0.5 rounded border font-normal"
+                      style={{ borderColor: T.brass, color: T.brass }}
+                      title="Ablage-Konvention: Daten-Artefakte hierhin liefern (WS-Unterordner; Baseline-Pakete → _Baseline-Datenpakete G2)">
+                      📁 Ablage: RUBICON — Datenlieferungen ↗
+                    </a>
+                  )}
+                </div>
+                <div className="divide-y" style={{ borderColor: T.line }}>
+                  {openInputs.map(i => {
+                    const overdue = parseDate(i.due) && daysBetween(parseDate(i.due), NOW) > 0
+                    return (
+                      <div key={i.id} className="px-4 py-1.5 flex flex-wrap items-center gap-2 text-[12px]"
+                        style={{ borderTop: `1px solid ${T.line}`, background: overdue ? T.red + '0d' : 'transparent' }}>
+                        <b className="w-40 truncate" style={{ fontFamily: T.mono }} title={i.owner}>{i.owner || '—'}</b>
+                        <span className="flex-1 min-w-[220px]">{i.item}</span>
+                        <span style={{ fontFamily: T.mono, color: overdue ? T.red : T.inkDim }}>
+                          {fmtDate(i.due)}{overdue ? ` (+${daysBetween(parseDate(i.due), NOW)} T) ⚠` : ''}
+                        </span>
+                        {(i.liefer_tasks || []).length > 0
+                          ? <span className="text-[10.5px]" style={{ fontFamily: T.mono, color: T.brass }}
+                              title={`auto-geliefert, sobald erledigt: ${i.liefer_tasks.join(' + ')}`}>
+                              ⚙ auto ← {i.liefer_tasks.map(id2 => { const tk = ALL_TASKS.find(x => x.id === id2); return tk ? tnr(tk) : id2 }).join(' + ')}
+                            </span>
+                          : (canEdit &&
+                            <button onClick={() => setInputState(s => ({ ...s, [i.id]: { ...(s[i.id] || {}), status: 'geliefert' } }))}
+                              className="text-[10.5px] px-2 py-0.5 rounded border"
+                              style={{ borderColor: T.green + '88', color: T.green }}>
+                              Als geliefert markieren
+                            </button>)}
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+          })()}
 
           {/* Hard-Edge-Verletzungen */}
           {breaches.length > 0 && (
@@ -600,59 +653,6 @@ export default function App() {
                 ))}
               </div>
             </div>
-          </div>
-        )}
-
-        {/* ══ 4 · INPUT-PFLICHTEN ══ */}
-        {tab === 'inputs' && (
-          <div className="rounded-xl border overflow-hidden" style={{ background: T.panel, borderColor: T.line }}>
-            <div className="px-4 py-2 text-[13px] font-semibold border-b flex flex-wrap items-center justify-between gap-2" style={{ borderColor: T.line }}>
-              <span>Input-Pflichten <span className="text-[10px]" style={{ color: T.inkFaint }}>— Zulieferungen, die das Programm braucht ({overdueInputs.length} überfällig)</span></span>
-              {BASE.meta.datenlieferungen_url && (
-                <a href={BASE.meta.datenlieferungen_url} target="_blank" rel="noreferrer"
-                  className="text-[11px] px-2 py-1 rounded border font-normal"
-                  style={{ borderColor: T.brass, color: T.brass }}
-                  title="Ablage-Konvention: Daten-Artefakte hierhin liefern (WS-Unterordner; Baseline-Pakete → _Baseline-Datenpakete G2)">
-                  📁 Ablage: RUBICON — Datenlieferungen ↗
-                </a>
-              )}
-            </div>
-            <table className="w-full text-[12px]">
-              <thead><tr className="text-left" style={{ color: T.inkFaint, fontFamily: T.mono }}>
-                <th className="px-3 py-1.5">VERANTWORTLICH</th><th className="px-2 py-1.5">INPUT</th>
-                <th className="px-2 py-1.5">FÄLLIG</th><th className="px-2 py-1.5">STATUS</th>
-                <th className="px-2 py-1.5">LETZTE ERINNERUNG</th><th className="px-2 py-1.5">AKTION</th>
-              </tr></thead>
-              <tbody>
-                {data.inputs.map(i => {
-                  const overdue = i.status === 'offen' && parseDate(i.due) && daysBetween(parseDate(i.due), NOW) > 0
-                  return (
-                    <tr key={i.id} className={overdue ? 'row-delayed' : ''} style={{ borderTop: `1px solid ${T.line}` }}>
-                      <td className="px-3 py-1.5" style={{ fontFamily: T.mono }}>{i.owner || '—'}</td>
-                      <td className="px-2 py-1.5">{i.item}</td>
-                      <td className="px-2 py-1.5" style={{ fontFamily: T.mono, color: overdue ? T.red : T.ink }}>{fmtDate(i.due)}</td>
-                      <td className="px-2 py-1.5">{i.status === 'geliefert'
-                        ? <span style={{ color: T.green }}><CheckCircle2 size={13} className="inline mr-1" />geliefert</span>
-                        : <span style={{ color: overdue ? T.red : T.amber }}>offen</span>}</td>
-                      <td className="px-2 py-1.5" style={{ fontFamily: T.mono, color: T.inkDim }}>{i.last_reminder || '—'}</td>
-                      <td className="px-2 py-1.5">
-                        {(i.liefer_tasks || []).length > 0
-                          ? <span className="text-[10.5px]" style={{ fontFamily: T.mono, color: T.brass }}
-                              title={`auto-geliefert, sobald erledigt: ${i.liefer_tasks.join(' + ')}`}>
-                              ⚙ auto ← {i.liefer_tasks.map(id2 => { const tk = ALL_TASKS.find(x => x.id === id2); return tk ? tnr(tk) : id2 }).join(' + ')}
-                            </span>
-                          : (i.status === 'offen' && canEdit &&
-                            <button onClick={() => setInputState(s => ({ ...s, [i.id]: { ...(s[i.id] || {}), status: 'geliefert' } }))}
-                              className="text-[11px] px-2 py-0.5 rounded border"
-                              style={{ borderColor: T.green + '88', color: T.green }}>
-                              Als geliefert markieren
-                            </button>)}
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
           </div>
         )}
 
