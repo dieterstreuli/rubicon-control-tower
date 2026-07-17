@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import {
   Radar, Layers, ListChecks, Inbox, ShieldCheck, Diamond, AlertTriangle,
   Clock, Send, CalendarClock, Siren, CheckCircle2, Filter, Lock, FileText, X, Compass,
-  ClipboardList, FilePlus, Plus, Trash2, Save, Sun, Moon, BarChart3, Circle,
+  ClipboardList, FilePlus, Plus, Trash2, Save, Sun, Moon, BarChart3, Circle, Scale,
 } from 'lucide-react'
 import { T, STATUS_META, ROLES, applyTheme, initialTheme } from './lib/theme.js'
 import { loadProject } from './lib/loader.js'
@@ -17,6 +17,7 @@ import PROTO from './data/protokolle.json'
 import AGENDAS from './data/traktanden.json'
 import REPORTS from './data/reports_index.json'
 import TASKS from './data/tasks.json'
+import ENTS from './data/entscheide.json'
 import {
   statusOf, slipDays, projectedEnd, counts, overallStatus, allMilestones,
   parseDate, fmtDate, daysBetween, hardEdgeBreaches,
@@ -201,6 +202,7 @@ export default function App() {
     { id: 'streams', label: 'Arbeitsströme', icon: Layers },
     ...(canEdit ? [{ id: 'erfassen', label: 'Sitzung erfassen', icon: FilePlus }] : []),
     { id: 'protokolle', label: 'Protokolle', icon: ClipboardList },
+    { id: 'entscheide', label: 'Entscheide', icon: Scale },
     { id: 'reports', label: 'Reports', icon: BarChart3 },
     { id: 'log', label: 'Aktions-Log', icon: ListChecks },
     { id: 'inputs', label: 'Input-Pflichten', icon: Inbox },
@@ -344,6 +346,9 @@ export default function App() {
 
         {/* ══ PROTOKOLLE ══ */}
         {tab === 'protokolle' && <ProtokolleView role={role} me={me} />}
+
+        {/* ══ ENTSCHEIDS-REGISTER ══ */}
+        {tab === 'entscheide' && <EntscheideView role={role} me={me} today={BASE.meta.today} />}
 
         {/* ══ REPORTS ══ */}
         {tab === 'reports' && <ReportsView canEdit={canEdit} today={BASE.meta.today} />}
@@ -1116,6 +1121,224 @@ function ErfassungView({ ms, today, role, me }) {
             <Save size={15} /> {busy ? 'Speichert…' : 'Sitzung speichern → Tower'}
           </button>
           <span className="text-[11px]" style={{ color: T.inkFaint }}>Fortschritt/Blocker aktualisieren Milestones (Ampel folgt automatisch); alles landet im Protokoll.</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── ENTSCHEIDS-REGISTER — Säule 3 der Entscheidungsordnung (INS-001 Anhang B):
+// jeder Entscheid zentral, mit dauerhafter E-Nummer, Begründung, Datengrundlage,
+// 5-Stufen-Status (beantragt→entscheidungsreif→entschieden→kommuniziert→umgesetzt)
+// und Kommunikations-Stempel. Revisionssicher: kein Löschen. Gespeist aus der
+// Sitzungserfassung (Spiegel in /api/sitzung) + manueller Erfassung hier.
+const ENT_FLOW = ['beantragt', 'entscheidungsreif', 'entschieden', 'kommuniziert', 'umgesetzt']
+const ENT_COLOR = (st) => ({ beantragt: T.grey, entscheidungsreif: T.amber, entschieden: T.blue, kommuniziert: T.brass, umgesetzt: T.green }[st] || T.grey)
+const ENT_TYPEN = ['Kundenvertrag', 'Lieferanten-/sonstiger Vertrag', 'Investition / Capex', 'Kredit / Fremdkapital', 'Personal', 'Governance / Reglement', 'Governance / IT-Infrastruktur', 'Governance / Zugriff', 'Strategie', 'Sonstiges']
+const ENT_GREMIEN = ['Ressort', 'CEO', 'ExBoD', 'GL', 'VR']
+
+function EntscheideView({ role, me, today }) {
+  const all = ENTS.entscheide || []
+  const [fStatus, setFStatus] = useState('alle')
+  const [fGremium, setFGremium] = useState('alle')
+  const [open, setOpen] = useState(null)          // aufgeklappte Register-Zeile
+  const [showForm, setShowForm] = useState(false)
+  const [form, setForm] = useState({ titel: '', typ: ENT_TYPEN[0], gremium: 'ExBoD', antragsteller: '', entscheid: '', begruendung: '', datengrundlage: '', frist: '' })
+  const [busy, setBusy] = useState(false)
+  const canWrite = role === 'CoS' || role === 'Owner'
+  const mayAdvance = (e) => role === 'CoS' || (role === 'Owner' && e.antragsteller === me)
+
+  const gremien = [...new Set(all.map(e => e.gremium).filter(Boolean))]
+  const filtered = all.filter(e =>
+    (fStatus === 'alle' || e.status === fStatus) && (fGremium === 'alle' || e.gremium === fGremium)
+  ).sort((a, b) => b.id.localeCompare(a.id))       // neueste E-Nummer zuerst
+  const nOffen = all.filter(e => !['kommuniziert', 'umgesetzt'].includes(e.status)).length
+
+  async function setStatus(e, status) {
+    if (busy || !mayAdvance(e)) return
+    let an = null
+    if (status === 'kommuniziert') {
+      an = window.prompt('Kommuniziert an (Verteiler/Personen)?', e.gremium === 'VR' ? 'VR-Board-Pack + GL' : 'GL')
+      if (an === null) return                        // abgebrochen
+    }
+    setBusy(true)
+    try {
+      const r = await fetch('/api/entscheid/status', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role, me, id: e.id, status, an, datum: today }),
+      })
+      const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
+      if (j.ok) window.location.reload()
+      else { alert('Status-Übergang fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(false) }
+    } catch (err) { alert('Status-Übergang fehlgeschlagen: ' + err); setBusy(false) }
+  }
+
+  async function submitNew() {
+    if (busy || !form.titel.trim() || !form.entscheid.trim()) return
+    setBusy(true)
+    try {
+      const r = await fetch('/api/entscheid/upsert', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          role, me, datum: today,
+          entscheide: [{ key: `MAN-${Date.now()}`, ...form, frist: form.frist || null, antragsteller: form.antragsteller || (role === 'Owner' ? me : null), status: 'beantragt' }],
+        }),
+      })
+      const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
+      if (j.ok) window.location.reload()
+      else { alert('Erfassen fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(false) }
+    } catch (err) { alert('Erfassen fehlgeschlagen: ' + err); setBusy(false) }
+  }
+
+  const sel = { background: T.panelSoft, borderColor: T.line, color: T.ink }
+  const inp = { background: T.panelSoft, borderColor: T.line, color: T.ink }
+  return (
+    <div className="space-y-3">
+      <div className="rounded-xl border overflow-hidden" style={{ background: T.panel, borderColor: T.line }}>
+        <div className="flex items-center justify-between flex-wrap gap-2 px-4 py-2 border-b" style={{ borderColor: T.line }}>
+          <div className="text-[13px] font-semibold tracking-widest" style={{ fontFamily: T.mono, color: T.brass }}>
+            ── ENTSCHEIDS-REGISTER ──
+            <span className="ml-2 text-[11px] font-normal" style={{ color: T.inkDim }}>{all.length} Entscheide · {nOffen} nicht abgeschlossen · {filtered.length} angezeigt</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-[12px] flex-wrap justify-end" style={{ color: T.inkDim }}>
+            <Filter size={13} />
+            <select value={fStatus} onChange={e => setFStatus(e.target.value)} className="bg-transparent border rounded px-1.5 py-0.5" style={sel}>
+              <option value="alle" style={{ color: '#111' }}>alle Status</option>
+              {ENT_FLOW.map(s => <option key={s} value={s} style={{ color: '#111' }}>{s}</option>)}
+            </select>
+            <select value={fGremium} onChange={e => setFGremium(e.target.value)} className="bg-transparent border rounded px-1.5 py-0.5" style={sel}>
+              <option value="alle" style={{ color: '#111' }}>alle Gremien</option>
+              {gremien.map(g => <option key={g} value={g} style={{ color: '#111' }}>{g}</option>)}
+            </select>
+            {canWrite && (
+              <button onClick={() => setShowForm(f => !f)} className="flex items-center gap-1 px-2 py-0.5 rounded border text-[11.5px]"
+                style={{ borderColor: T.brass + '88', color: T.brass }}>
+                <Plus size={12} /> Entscheid erfassen
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Status-Legende — das 5-Stufen-Modell der Entscheidungsordnung */}
+        <div className="px-4 py-1.5 flex items-center gap-2 flex-wrap text-[10.5px] border-b" style={{ borderColor: T.line, color: T.inkFaint, fontFamily: T.mono }}>
+          {ENT_FLOW.map((s, i) => (
+            <React.Fragment key={s}>
+              {i > 0 && <span>→</span>}
+              <span style={{ color: ENT_COLOR(s) }}>{s}</span>
+            </React.Fragment>
+          ))}
+          <span className="ml-2" style={{ color: T.inkFaint }}>· revisionssicher (kein Löschen) · VR-Entscheide erscheinen im VR-Board-Pack</span>
+        </div>
+
+        {showForm && canWrite && (
+          <div className="px-4 py-3 border-b space-y-2" style={{ borderColor: T.line, background: T.panelSoft + '66' }}>
+            <div className="text-[11px] uppercase tracking-wider" style={{ color: T.inkDim, fontFamily: T.mono }}>Neuer Entscheid (Status: beantragt — Pflichtfelder gemäss Beschlussvorlage-Standard folgen in der Vorlage)</div>
+            <div className="flex gap-2 flex-wrap">
+              <input placeholder="Titel *" value={form.titel} onChange={e => setForm(f => ({ ...f, titel: e.target.value }))} className="flex-1 min-w-[220px] rounded border px-2 py-1 text-[12px]" style={inp} />
+              <select value={form.typ} onChange={e => setForm(f => ({ ...f, typ: e.target.value }))} className="rounded border px-2 py-1 text-[12px]" style={inp}>
+                {ENT_TYPEN.map(t => <option key={t} value={t} style={{ color: '#111' }}>{t}</option>)}
+              </select>
+              <select value={form.gremium} onChange={e => setForm(f => ({ ...f, gremium: e.target.value }))} className="rounded border px-2 py-1 text-[12px]" style={inp} title="zuständiges Gremium (aus Kompetenzmatrix)">
+                {ENT_GREMIEN.map(g => <option key={g} value={g} style={{ color: '#111' }}>{g}</option>)}
+              </select>
+              <input placeholder="Antragsteller" value={form.antragsteller} onChange={e => setForm(f => ({ ...f, antragsteller: e.target.value }))} className="w-40 rounded border px-2 py-1 text-[12px]" style={inp} />
+              <input type="date" value={form.frist} onChange={e => setForm(f => ({ ...f, frist: e.target.value }))} className="rounded border px-2 py-1 text-[12px]" style={{ ...inp, fontFamily: T.mono }} title="Frist — bis wann entschieden sein muss" />
+            </div>
+            <textarea placeholder="Entscheid-Frage / beantragter Entscheid *" value={form.entscheid} onChange={e => setForm(f => ({ ...f, entscheid: e.target.value }))} rows={2} className="w-full rounded border px-2 py-1 text-[12px]" style={inp} />
+            <div className="flex gap-2 flex-wrap">
+              <input placeholder="Begründung" value={form.begruendung} onChange={e => setForm(f => ({ ...f, begruendung: e.target.value }))} className="flex-1 min-w-[220px] rounded border px-2 py-1 text-[12px]" style={inp} />
+              <input placeholder="Datengrundlage (Unterlagen/Links)" value={form.datengrundlage} onChange={e => setForm(f => ({ ...f, datengrundlage: e.target.value }))} className="flex-1 min-w-[220px] rounded border px-2 py-1 text-[12px]" style={inp} />
+              <button onClick={submitNew} disabled={busy || !form.titel.trim() || !form.entscheid.trim()}
+                className="flex items-center gap-1.5 px-3 py-1 rounded font-semibold text-[12px]"
+                style={{ background: form.titel.trim() && form.entscheid.trim() ? T.brass : T.line, color: '#0b1220', opacity: busy ? 0.6 : 1 }}>
+                <Save size={13} /> ins Register
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-[12px]">
+            <thead>
+              <tr className="text-left" style={{ color: T.inkFaint, fontFamily: T.mono }}>
+                <th className="px-3 py-1.5 w-24">ID</th>
+                <th className="px-2 py-1.5">TITEL</th>
+                <th className="px-2 py-1.5">TYP</th>
+                <th className="px-2 py-1.5">GREMIUM</th>
+                <th className="px-2 py-1.5">ANTRAGSTELLER</th>
+                <th className="px-2 py-1.5">FRIST / DATUM</th>
+                <th className="px-2 py-1.5">STATUS</th>
+                {canWrite && <th className="px-2 py-1.5 w-28"></th>}
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.length === 0 && (
+                <tr><td colSpan={8} className="px-4 py-6 text-[12px]" style={{ color: T.inkFaint }}>Keine Entscheide für diese Filter.</td></tr>
+              )}
+              {filtered.map(e => {
+                const nextSt = ENT_FLOW[ENT_FLOW.indexOf(e.status) + 1] || null
+                const isOpen = open === e.id
+                return (
+                  <React.Fragment key={e.id}>
+                    <tr onClick={() => setOpen(isOpen ? null : e.id)} style={{ borderTop: `1px solid ${T.line}`, cursor: 'pointer', background: isOpen ? T.panelSoft + '55' : 'transparent' }}>
+                      <td className="px-3 py-1.5 whitespace-nowrap" style={{ fontFamily: T.mono, color: T.brass }}>{e.id}</td>
+                      <td className="px-2 py-1.5">{e.titel}</td>
+                      <td className="px-2 py-1.5 whitespace-nowrap text-[11px]" style={{ color: T.inkDim }}>{e.typ || '—'}</td>
+                      <td className="px-2 py-1.5 whitespace-nowrap" style={{ fontFamily: T.mono, color: e.gremium === 'VR' ? T.red : e.gremium === 'ExBoD' ? T.brass : T.ink }}>{e.gremium || '—'}</td>
+                      <td className="px-2 py-1.5 whitespace-nowrap text-[11px]">{e.antragsteller || '—'}</td>
+                      <td className="px-2 py-1.5 whitespace-nowrap" style={{ fontFamily: T.mono, color: T.inkDim }}>
+                        {e.datum ? fmtDate(e.datum) : e.frist ? `bis ${fmtDate(e.frist)}` : '—'}
+                      </td>
+                      <td className="px-2 py-1.5 whitespace-nowrap">
+                        <span className="px-2 py-0.5 rounded-full text-[10.5px] font-semibold"
+                          style={{ background: ENT_COLOR(e.status) + '22', color: ENT_COLOR(e.status), border: `1px solid ${ENT_COLOR(e.status)}55`, fontFamily: T.mono }}>
+                          {e.status}
+                        </span>
+                      </td>
+                      {canWrite && (
+                        <td className="px-2 py-1.5 whitespace-nowrap">
+                          {nextSt && mayAdvance(e) && (
+                            <button onClick={ev => { ev.stopPropagation(); setStatus(e, nextSt) }} disabled={busy}
+                              className="px-2 py-0.5 rounded border text-[10.5px]"
+                              style={{ borderColor: ENT_COLOR(nextSt) + '88', color: ENT_COLOR(nextSt), fontFamily: T.mono }}
+                              title={`Status-Übergang → ${nextSt}`}>
+                              → {nextSt}
+                            </button>
+                          )}
+                        </td>
+                      )}
+                    </tr>
+                    {isOpen && (
+                      <tr style={{ background: T.panelSoft + '33' }}>
+                        <td colSpan={canWrite ? 8 : 7} className="px-4 py-3">
+                          <div className="grid md:grid-cols-2 gap-x-6 gap-y-2 text-[11.5px]" style={{ color: T.ink }}>
+                            <div><b style={{ color: T.inkDim }}>Entscheid:</b> {e.entscheid || '—'}</div>
+                            <div><b style={{ color: T.inkDim }}>Begründung:</b> {e.begruendung || <span style={{ color: T.amber }}>— fehlt (Pflicht vor «entschieden»)</span>}</div>
+                            <div><b style={{ color: T.inkDim }}>Datengrundlage:</b> {e.datengrundlage || '—'}</div>
+                            <div>
+                              <b style={{ color: T.inkDim }}>Kommunikation:</b>{' '}
+                              {e.kommunikation ? `an ${e.kommunikation.an || '?'} am ${fmtDate(e.kommunikation.am)}` : '— noch nicht kommuniziert'}
+                            </div>
+                            <div><b style={{ color: T.inkDim }}>Umsetzungs-Handlungen:</b>{' '}
+                              {(e.tasks && e.tasks.length)
+                                ? e.tasks.map(tid => { const t = ALL_TASKS.find(x => x.id === tid); return t ? `${tnr(t)}${t.status === 'erledigt' ? ' ✓' : ''}` : tid }).join(' · ')
+                                : '—'}
+                            </div>
+                            <div style={{ color: T.inkFaint, fontFamily: T.mono }}>
+                              {e.quelle ? `Quelle: Protokoll ${e.quelle} · ` : ''}erfasst {fmtDate(e.created_at)}
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div className="px-4 py-1.5 text-[10px] border-t" style={{ borderColor: T.line, color: T.inkFaint }}>
+          Quelle entscheide.json · Säule 3 der Entscheidungsordnung (INS-001 Anhang B) · gespeist aus «Sitzung erfassen» (Typ Entscheid) + manueller Erfassung · E-Nummern dauerhaft, Register revisionssicher · Zeile klicken = Details
         </div>
       </div>
     </div>

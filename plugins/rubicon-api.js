@@ -43,8 +43,54 @@ export function rubiconApi() {
   const protoPath = path.join(root, 'src', 'data', 'protokolle.json')
   const tasksPath = path.join(root, 'src', 'data', 'tasks.json')
 
+  const entsPath = path.join(root, 'src', 'data', 'entscheide.json')
+
   const dumpYaml = (doc) => yaml.dump(doc, { noRefs: true, lineWidth: 200, sortKeys: false, quotingType: "'", forceQuotes: false })
   const readTasks = () => (fs.existsSync(tasksPath) ? JSON.parse(fs.readFileSync(tasksPath, 'utf8')) : { tasks: [] })
+  const readEnts = () => (fs.existsSync(entsPath) ? JSON.parse(fs.readFileSync(entsPath, 'utf8')) : { seq: 0, entscheide: [] })
+
+  // ── Entscheids-Register (16.07., Säule 3 der Entscheidungsordnung INS-001 Anhang B) ──
+  // Jeder Entscheid trägt eine dauerhafte Register-ID «E-<Jahr>-###» (monoton via seq,
+  // NIE neu vergeben) + einen technischen De-Dup-key (analog Tasks: Gemini-Quelle bzw.
+  // Protokoll-ID → Re-Import aktualisiert statt dupliziert). Status-Modell fix:
+  // beantragt → entscheidungsreif → entschieden → kommuniziert → umgesetzt.
+  // Revisionssicher: es gibt KEINEN Lösch-Endpoint — Entscheide bleiben im Register.
+  const ENT_FLOW = ['beantragt', 'entscheidungsreif', 'entschieden', 'kommuniziert', 'umgesetzt']
+  function mergeEntscheide(store, incoming, datum) {
+    const byKey = new Map(store.entscheide.map(e => [e.key, e]))
+    const ids = []
+    for (const e of incoming) {
+      if (!e.key || !(e.titel || e.entscheid)) continue
+      const prev = byKey.get(e.key)
+      let id = prev?.id
+      if (!id) {
+        store.seq = (store.seq || 0) + 1
+        const year = (e.datum || datum || new Date().toISOString()).slice(0, 4)
+        id = `E-${year}-${String(store.seq).padStart(3, '0')}`
+      }
+      byKey.set(e.key, {
+        key: e.key, id,
+        titel: e.titel ?? prev?.titel ?? (e.entscheid || '').slice(0, 90),
+        typ: e.typ ?? prev?.typ ?? null,
+        gremium: e.gremium ?? prev?.gremium ?? null,
+        antragsteller: e.antragsteller ?? prev?.antragsteller ?? null,
+        entscheid: e.entscheid ?? prev?.entscheid ?? null,
+        begruendung: e.begruendung ?? prev?.begruendung ?? null,
+        datengrundlage: e.datengrundlage ?? prev?.datengrundlage ?? null,
+        datum: e.datum ?? prev?.datum ?? null,                 // Entscheid-Datum — nie geraten
+        frist: e.frist ?? prev?.frist ?? null,
+        // Lifecycle nur über /api/entscheid/status — Upsert erhält bestehenden Status
+        status: prev ? prev.status : (ENT_FLOW.includes(e.status) ? e.status : 'beantragt'),
+        kommunikation: prev?.kommunikation ?? null,             // Stempel {an, am} — nur via Status-Übergang
+        tasks: e.tasks ?? prev?.tasks ?? [],                    // Verweis auf Umsetzungs-Handlungen (T-IDs)
+        quelle: e.quelle ?? prev?.quelle ?? null,               // Protokoll-ID bei Sitzungs-Herkunft
+        created_at: prev?.created_at ?? (datum || new Date().toISOString().slice(0, 10)),
+      })
+      ids.push(id)
+    }
+    store.entscheide = [...byKey.values()]
+    return ids
+  }
 
   // UPSERT von Handlungen in den Store — erhält NIE-überschreibbare Lifecycle-Felder
   // (status/erledigt_am/created_at) bestehender Tasks; Stammdaten (text/owner/due/ms_id)
@@ -190,7 +236,28 @@ export function rubiconApi() {
             for (const msId of [...new Set(incoming.map(t => t.ms_id).filter(Boolean))]) rollupMs(msId, tstore)
           }
 
-          return json(200, { ok: true, id, applied, skipped, mirrored })
+          // 4) Entscheid→Register-Spiegel (16.07., Säule 3): jeder erfasste Entscheid
+          // landet automatisch im Entscheids-Register (entscheide.json) mit dauerhafter
+          // E-Nummer. De-Dup analog Commitments: Gemini über das Quell-Doc, manuell über
+          // die Protokoll-ID. Status: «getroffen» → entschieden · «offen» → beantragt.
+          let registered = []
+          const entsIn = rec.eintraege.map((e2, i) => ({ e: e2, i })).filter(x => x.e.typ === 'entscheid' && (x.e.text || '').trim())
+          if (entsIn.length) {
+            const estore = readEnts()
+            registered = mergeEntscheide(estore, entsIn.map(({ e: e2, i }) => ({
+              key: body.gemini_doc_id ? `G-${body.gemini_doc_id}-E${i}` : `${id}-E${i}`,
+              titel: e2.text.slice(0, 90),
+              entscheid: e2.text,
+              gremium: e2.ebene || null,
+              antragsteller: body.erfasst_von || body.vorsitz || null,
+              datum: e2.status === 'getroffen' ? body.datum : null,
+              status: e2.status === 'getroffen' ? 'entschieden' : 'beantragt',
+              quelle: id,
+            })), body.datum)
+            writeAtomic(entsPath, JSON.stringify(estore, null, 2))
+          }
+
+          return json(200, { ok: true, id, applied, skipped, mirrored, registered })
         } catch (err) {
           return json(500, { ok: false, error: String(err && err.message || err) })
         }
@@ -266,6 +333,58 @@ export function rubiconApi() {
           }
           if (changed2) writeAtomic(yamlPath, dumpYaml(doc2))
           return json(200, { ok: true, task: t, rollup: roll, input_sync: inputSync })
+        } catch (err) {
+          return json(500, { ok: false, error: String(err && err.message || err) })
+        }
+      })
+
+      // POST /api/entscheid/upsert — Entscheid im Register anlegen/aktualisieren.
+      // CoS immer; Owner darf als Antragsteller eigene Entscheide erfassen (analog Audit #3).
+      // Lifecycle (status/kommunikation) wird hier NICHT verändert — nur via /api/entscheid/status.
+      server.middlewares.use('/api/entscheid/upsert', async (req, res, next) => {
+        if (req.method !== 'POST') return next()
+        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
+        if (!guard(req, res)) return
+        try {
+          const body = JSON.parse((await readBody(req)) || '{}')
+          const role = body.role, me = body.me
+          if (role !== 'CoS' && role !== 'Owner') return json(403, { ok: false, error: `Rolle «${role || '?'}» darf keine Entscheide erfassen` })
+          const incoming = Array.isArray(body.entscheide) ? body.entscheide : []
+          for (const e of incoming) {
+            if (!e.key || !(e.titel || e.entscheid)) return json(400, { ok: false, error: 'Entscheid braucht key und titel/entscheid' })
+            if (role === 'Owner') e.antragsteller = me   // Owner erfasst nur im eigenen Namen
+          }
+          const store = readEnts()
+          const upserted = mergeEntscheide(store, incoming, body.datum)
+          writeAtomic(entsPath, JSON.stringify(store, null, 2))
+          return json(200, { ok: true, upserted })
+        } catch (err) {
+          return json(500, { ok: false, error: String(err && err.message || err) })
+        }
+      })
+
+      // POST /api/entscheid/status — Status-Übergang im 5-Stufen-Modell {id, status, an?}.
+      // CoS immer; Owner nur eigene (antragsteller === me). Übergang zu «kommuniziert»
+      // setzt den Kommunikations-Stempel {an, am}; «entschieden» stempelt das Entscheid-Datum.
+      server.middlewares.use('/api/entscheid/status', async (req, res, next) => {
+        if (req.method !== 'POST') return next()
+        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
+        if (!guard(req, res)) return
+        try {
+          const body = JSON.parse((await readBody(req)) || '{}')
+          if (!body.id || !ENT_FLOW.includes(body.status)) return json(400, { ok: false, error: `id und status (${ENT_FLOW.join('|')}) sind Pflicht` })
+          const role = body.role, me = body.me
+          if (role !== 'CoS' && role !== 'Owner') return json(403, { ok: false, error: `Rolle «${role || '?'}» darf den Status nicht ändern` })
+          const store = readEnts()
+          const e = store.entscheide.find(x => x.id === body.id)
+          if (!e) return json(404, { ok: false, error: `Entscheid ${body.id} nicht gefunden` })
+          if (role === 'Owner' && e.antragsteller !== me) return json(403, { ok: false, error: 'Owner darf nur eigene Entscheide fortschreiben' })
+          const today = body.datum || new Date().toISOString().slice(0, 10)
+          e.status = body.status
+          if (body.status === 'entschieden' && !e.datum) e.datum = today
+          if (body.status === 'kommuniziert') e.kommunikation = { an: body.an || null, am: today }
+          writeAtomic(entsPath, JSON.stringify(store, null, 2))
+          return json(200, { ok: true, entscheid: e })
         } catch (err) {
           return json(500, { ok: false, error: String(err && err.message || err) })
         }

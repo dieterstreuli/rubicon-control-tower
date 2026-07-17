@@ -222,8 +222,46 @@ def main():
                     if inp.get("status") != soll:
                         err(iid, f"Input-Status-Drift: status={inp.get('status')} aber gekoppelte Tasks ⇒ {soll}")
 
+    # ── Entscheids-Register (16.07., Säule 3 INS-001 Anhang B): entscheide.json —
+    # E-Nummern + keys eindeutig, Status im 5-Stufen-Modell, kommuniziert ⇒ Stempel,
+    # Task-Verweise müssen existieren. Revisionssicherheit ist API-seitig (kein Delete).
+    ENT_FLOW = ("beantragt", "entscheidungsreif", "entschieden", "kommuniziert", "umgesetzt")
+    ents_path = ROOT / "src" / "data" / "entscheide.json"
+    n_ents = 0
+    if ents_path.exists():
+        try:
+            estore = json.loads(ents_path.read_text())
+        except Exception as ex:
+            estore = {"entscheide": []}
+            err("entscheide.json", f"kein gültiges JSON: {ex}")
+        ents = estore.get("entscheide") or []
+        n_ents = len(ents)
+        seen_eid, seen_ekey = set(), set()
+        task_ids = {t.get("id") for t in tasks}
+        for e in ents:
+            eid = e.get("id") or "?"
+            if not e.get("id") or not e.get("key"):
+                err("entscheide.json", f"Entscheid ohne id/key ({eid})")
+            if eid in seen_eid:
+                err(eid, "doppelte Register-ID")
+            seen_eid.add(eid)
+            if e.get("key") in seen_ekey:
+                err(eid, f"doppelter key «{e.get('key')}»")
+            seen_ekey.add(e.get("key"))
+            if e.get("status") not in ENT_FLOW:
+                err(eid, f"Status «{e.get('status')}» ungültig ({'|'.join(ENT_FLOW)})")
+            if e.get("status") in ("kommuniziert", "umgesetzt") and not (e.get("kommunikation") or {}).get("am"):
+                err(eid, "Status kommuniziert/umgesetzt ohne Kommunikations-Stempel {an, am}")
+            if e.get("status") in ("entschieden", "kommuniziert", "umgesetzt") and not e.get("datum"):
+                gap(eid, "entschieden ohne Entscheid-Datum")
+            if not e.get("begruendung") and e.get("status") in ("entschieden", "kommuniziert", "umgesetzt"):
+                gap(eid, "Entscheid ohne Begründung (Register-Pflichtfeld)")
+            for ref in e.get("tasks") or []:
+                if ref not in task_ids:
+                    err(eid, f"tasks verweist auf unbekannte Handlung «{ref}»")
+
     print("── RUBICON Control Tower · Datenintegrität " + "─" * 30)
-    print(f"  Meilensteine: {n_ms}   Ströme: {len(doc.get('workstreams') or [])}   Inputs: {n_in}   Handlungen: {n_tasks}")
+    print(f"  Meilensteine: {n_ms}   Ströme: {len(doc.get('workstreams') or [])}   Inputs: {n_in}   Handlungen: {n_tasks}   Entscheide: {n_ents}")
     for line in errors + warnings + gaps:
         print(line)
     print(f"  Summe: {len(errors)} Fehler · {len(warnings)} Warnungen · {len(gaps)} Datenlücken")

@@ -1,0 +1,59 @@
+{
+  "seq": 3,
+  "entscheide": [
+    {
+      "key": "MAN-EXBOD-B1",
+      "id": "E-2026-001",
+      "titel": "Kompetenzordnung: Kompetenzmatrix V1.0 + Entscheidungsordnung als VR-Vorlage freigeben",
+      "typ": "Governance / Reglement",
+      "gremium": "ExBoD",
+      "antragsteller": "Dieter Streuli",
+      "entscheid": "Der ExBoD gibt die Kompetenzmatrix V1.0 und die Entscheidungsordnung (INS-001 Anhang B) als VR-Vorlage für die Sitzung vom 26.08.2026 frei — vorbehältlich der Schwellen-Validierung durch CFO (Rohde) und Legal (Charisius) bis 31.07.",
+      "begruendung": "Klare Entscheidungswege sind in der Sanierungs- und Refinanzierungsphase zwingend: ein Accountable je Entscheid, ExBoD-Ebene als schnelles Board-nahes Gremium, jeder Kundenvertrag ans ExBoD (VR nur Kenntnisnahme).",
+      "datengrundlage": "ExBoD-Beschlussvorlage 21.07. (Doc 18XdwhXN-BZPyaZSe9PWgkbkWYinbfIhPpPkBayaJxGE) · Kompetenzmatrix V1.0 · Entscheidungsordnung INS-001 Anhang B",
+      "datum": null,
+      "frist": "2026-07-21",
+      "status": "entscheidungsreif",
+      "kommunikation": null,
+      "tasks": [],
+      "quelle": null,
+      "created_at": "2026-07-16"
+    },
+    {
+      "key": "MAN-EXBOD-B2",
+      "id": "E-2026-002",
+      "titel": "RUBICON als dauerhafte AXS-Steuerungsplattform + Migration auf AXS-Server bis Mitte August",
+      "typ": "Governance / IT-Infrastruktur",
+      "gremium": "ExBoD",
+      "antragsteller": "Dieter Streuli",
+      "entscheid": "Der ExBoD bestätigt RUBICON als dauerhafte Steuerungs- und Governance-Plattform der AXS Group (über April 2027 hinaus) und gibt die Migration auf einen AXS-gehosteten Server (VM hinter Didit-IAP) bis Mitte August frei.",
+      "begruendung": "Plattform muss VR-tauglich, zugriffsgeschützt und geräteunabhängig sein; technische Machbarkeit und Termin von Didit (Gordon Suchomski) am 16.07. bestätigt.",
+      "datengrundlage": "ExBoD-Beschlussvorlage 21.07. · Plattform-Zielbild (Doc 1ph_YAtXlbJIQQ9hpQQrEEepuL7eXl_IiP1SGn4GS93I) · Zusage Didit 16.07. + Migrations-Runbook (MIGRATION.md)",
+      "datum": null,
+      "frist": "2026-07-21",
+      "status": "entscheidungsreif",
+      "kommunikation": null,
+      "tasks": [],
+      "quelle": null,
+      "created_at": "2026-07-16"
+    },
+    {
+      "key": "MAN-EXBOD-B3",
+      "id": "E-2026-003",
+      "titel": "Zugriffsgruppe der Plattform: Geschäftsleitung (6) + Verwaltungsrat + Chief of Staff",
+      "typ": "Governance / Zugriff",
+      "gremium": "ExBoD",
+      "antragsteller": "Dieter Streuli",
+      "entscheid": "Der ExBoD legt den Zugriffskreis der Plattform fest: GL (6 Mitglieder) + VR + Chief of Staff, umgesetzt über eine bestehende AXS-Leadership-Gruppe (Google IAP, Empfehlung Didit). Vorab an Didit als vorbehaltener Entscheid kommuniziert (DRS 16.07.).",
+      "begruendung": "Zugriff per Gruppe statt pro Person (auditierbar, zentral protokolliert); Kreis deckt alle Gremien ab, die mit der Plattform arbeiten.",
+      "datengrundlage": "ExBoD-Beschlussvorlage 21.07. · Didit-Gruppenmodell (AXS-GWS-Group-Management)",
+      "datum": null,
+      "frist": "2026-07-21",
+      "status": "entscheidungsreif",
+      "kommunikation": null,
+      "tasks": [],
+      "quelle": null,
+      "created_at": "2026-07-16"
+    }
+  ]
+}
