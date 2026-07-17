@@ -16,6 +16,13 @@ meta:
   - Thomas Pajor
   - Tine Petric
   datenlieferungen_url: https://drive.google.com/drive/folders/1Ayrl95zUeO25skpvhMF6qlNOTHTG4DKC
+  programme:
+  - id: transformation
+    name: Transformation 2026/27 (Programm RUBICON)
+    status: aktiv
+    start: '2026-09-01'
+    ende: '2027-04-30'
+  default_programm: transformation
 workstreams:
 - code: WS1
   name: Accountability & Target Operating Model (TOM)
@@ -206,6 +213,7 @@ workstreams:
     depends_on: []
     nachlauf: true
     progress_source: tasks
+  programm: transformation
 - code: WS2
   name: Führungsprozesse & Management Operating System (MOS)
   owner: Andreas Fritthum
@@ -435,6 +443,7 @@ workstreams:
     - WS2-16
     nachlauf: false
     progress_source: tasks
+  programm: transformation
 - code: WS3
   name: Overhead, Kosten & Kostenführerschaft
   owner: Stephanie Rohde
@@ -640,6 +649,7 @@ workstreams:
     - WS3-12
     nachlauf: true
     progress_source: tasks
+  programm: transformation
 - code: OE
   name: Operational Excellence / Stabilisierung
   owner: Cüneyt Gökcöl
@@ -789,6 +799,7 @@ workstreams:
     depends_on: []
     nachlauf: true
     progress_source: tasks
+  programm: transformation
 - code: WS4
   name: Commercial & Kundennähe (inkl. Commercial-Masterplan 1:1)
   owner: Michael Haeffner
@@ -1625,6 +1636,7 @@ workstreams:
     depends_on:
     - M05
     progress_source: tasks
+  programm: transformation
 - code: WS5
   name: Kultur & Execution-Disziplin
   owner: Amélie Charisius
@@ -1786,6 +1798,7 @@ workstreams:
     progress: 0
     depends_on: []
     progress_source: tasks
+  programm: transformation
 - code: WS6
   name: AI-Enablement (AI@AXS ≡ Elysium 3.0)
   owner: Tine Petric
@@ -1948,6 +1961,7 @@ workstreams:
     progress: 0
     depends_on: []
     progress_source: tasks
+  programm: transformation
 inputs:
 - id: IN-01
   owner: Thomas Pajor

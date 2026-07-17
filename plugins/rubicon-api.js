@@ -83,6 +83,7 @@ export function rubiconApi() {
         status: prev ? prev.status : (ENT_FLOW.includes(e.status) ? e.status : 'beantragt'),
         kommunikation: prev?.kommunikation ?? null,             // Stempel {an, am} — nur via Status-Übergang
         tasks: e.tasks ?? prev?.tasks ?? [],                    // Verweis auf Umsetzungs-Handlungen (T-IDs)
+        programm: e.programm ?? prev?.programm ?? null,         // null = konzernweit (z.B. Governance)
         quelle: e.quelle ?? prev?.quelle ?? null,               // Protokoll-ID bei Sitzungs-Herkunft
         created_at: prev?.created_at ?? (datum || new Date().toISOString().slice(0, 10)),
       })

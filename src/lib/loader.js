@@ -26,11 +26,24 @@ export function loadProject() {
   const owners = new Set((data.meta.owners || []).map(String))
   if (!owners.size) push(issues, 'WARNUNG', 'meta', 'meta.owners ist leer — Owner-Prüfung eingeschränkt')
 
+  // --- Programm-Dimension (16.07., Plattform-Zielbild): meta.programme = Registry,
+  // jeder Workstream trägt sein Programm (Fallback default_programm). Solange nur
+  // ein Programm aktiv ist, ändert sich im UI nichts — Programm #2 wird damit
+  // reines Daten-Onboarding statt Umbau.
+  data.meta.programme = Array.isArray(data.meta.programme) ? data.meta.programme : []
+  if (!data.meta.programme.length) push(issues, 'LÜCKE', 'meta', 'meta.programme fehlt (Programm-Registry)')
+  const progIds = new Set(data.meta.programme.map(p => p.id))
+  if (data.meta.default_programm && !progIds.has(data.meta.default_programm))
+    push(issues, 'FEHLER', 'meta', `default_programm «${data.meta.default_programm}» nicht in programme registriert`)
+
   // --- workstreams / milestones ---
   const ids = new Set()
   for (const ws of doc?.workstreams || []) {
-    const w = { code: ws.code ?? null, name: ws.name ?? null, owner: ws.owner ?? null, support: ws.support ?? null, milestones: [] }
+    const w = { code: ws.code ?? null, name: ws.name ?? null, owner: ws.owner ?? null, support: ws.support ?? null,
+                programm: ws.programm ?? data.meta.default_programm ?? null, milestones: [] }
     if (!w.code) push(issues, 'FEHLER', 'workstream', 'workstream ohne code')
+    if (w.programm && progIds.size && !progIds.has(w.programm))
+      push(issues, 'FEHLER', `WS ${w.code}`, `programm «${w.programm}» nicht in meta.programme registriert`)
     if (!w.owner) push(issues, 'LÜCKE', `WS ${w.code}`, 'owner fehlt')
     else if (owners.size && !owners.has(w.owner)) push(issues, 'WARNUNG', `WS ${w.code}`, `unbekannter Owner «${w.owner}»`)
 

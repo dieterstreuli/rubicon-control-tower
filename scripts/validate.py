@@ -58,12 +58,33 @@ def main():
     if not owners:
         warn("meta", "meta.owners leer — Owner-Prüfung eingeschränkt")
 
+    # Programm-Dimension (16.07.): Registry eindeutig, Default registriert, WS-Referenzen gültig
+    programme = meta.get("programme") or []
+    prog_ids = set()
+    for p in programme:
+        pid = p.get("id")
+        if not pid:
+            err("meta.programme", "Programm ohne id")
+        elif pid in prog_ids:
+            err("meta.programme", f"doppelte Programm-ID «{pid}»")
+        prog_ids.add(pid)
+        if p.get("status") not in ("aktiv", "abgeschlossen", "geplant"):
+            err(f"programm {pid}", f"status «{p.get('status')}» ungültig (aktiv|abgeschlossen|geplant)")
+    if not programme:
+        gap("meta", "meta.programme fehlt (Programm-Registry)")
+    if meta.get("default_programm") and prog_ids and meta["default_programm"] not in prog_ids:
+        err("meta", f"default_programm «{meta['default_programm']}» nicht registriert")
+
     ids, adj = set(), {}
     n_ms = 0
     for ws in doc.get("workstreams") or []:
         code = ws.get("code") or "?"
         if not ws.get("code"):
             err("workstream", "workstream ohne code")
+        if prog_ids and ws.get("programm") and str(ws["programm"]) not in prog_ids:
+            err(f"WS {code}", f"programm «{ws['programm']}» nicht in meta.programme registriert")
+        if programme and not ws.get("programm"):
+            gap(f"WS {code}", "programm fehlt (Fallback default_programm)")
         if not ws.get("owner"):
             gap(f"WS {code}", "owner fehlt")
         elif owners and str(ws["owner"]) not in owners:

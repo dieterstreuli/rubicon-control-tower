@@ -34,7 +34,7 @@ const NOW = parseDate(BASE.meta.today)
 const ALL_TASKS = TASKS.tasks || []
 // Milestone-Metadaten für die Aufgabenliste (Phase/WS/Fälligkeit je ms_id)
 const MS_META = Object.fromEntries(BASE.workstreams.flatMap(w =>
-  (w.milestones || []).map(m => [m.id, { ws: w.code, phase: m.phase, name: m.name, due: m.due }])))
+  (w.milestones || []).map(m => [m.id, { ws: w.code, phase: m.phase, name: m.name, due: m.due, programm: w.programm || null }])))
 const tasksFor = (msId) => ALL_TASKS.filter(t => t.ms_id === msId)
 const tnr = (t) => 'T-' + String(t.nr || 0).padStart(3, '0')   // kurze Referenz-Nummer (dauerhaft, nie neu vergeben)
 const taskOverdue = (t) => t.status === 'offen' && !!t.due && !!NOW && parseDate(t.due) < NOW
@@ -135,10 +135,16 @@ export default function App() {
 
   useEffect(() => { const t = setInterval(() => setClock(new Date()), 1000); return () => clearInterval(t) }, [])
 
-  // effektive Daten = YAML + Session-Overlay
+  // Programm-Dimension (16.07., Plattform-Zielbild): alle Sichten gelten je Programm.
+  // Solange nur EIN Programm registriert ist, bleibt der Umschalter unsichtbar und
+  // die Filterung ist Identität — Programm #2 wird reines Daten-Onboarding.
+  const [prog, setProg] = useState(() => sessionStorage.getItem('rubicon_prog') || BASE.meta.default_programm || null)
+  useEffect(() => { if (prog) sessionStorage.setItem('rubicon_prog', prog) }, [prog])
+
+  // effektive Daten = YAML + Session-Overlay, gefiltert aufs aktive Programm
   const data = useMemo(() => ({
     ...BASE,
-    workstreams: BASE.workstreams.map(ws => ({
+    workstreams: BASE.workstreams.filter(ws => !prog || !ws.programm || ws.programm === prog).map(ws => ({
       ...ws,
       milestones: ws.milestones.map(m => {
         const o = overlay[m.id]
@@ -146,7 +152,7 @@ export default function App() {
       }),
     })),
     inputs: BASE.inputs.map(i => ({ ...i, ...(inputState[i.id] || {}) })),
-  }), [overlay, inputState])
+  }), [overlay, inputState, prog])
 
   const ms = useMemo(() => allMilestones(data), [data])
   const cnt = useMemo(() => counts(data), [data])
@@ -266,6 +272,14 @@ export default function App() {
               style={{ borderColor: nErr ? T.red : T.line, color: nErr ? T.red : T.inkDim, fontFamily: T.mono }}>
               Integrität: {nErr} Fehler · {nGap} Lücken
             </button>
+            {(BASE.meta.programme || []).length > 1 && (
+              <select value={prog || ''} onChange={e => setProg(e.target.value)}
+                className="text-[12px] rounded px-2 py-1 border bg-transparent"
+                style={{ borderColor: T.brass + '88', color: T.brass, background: T.panelSoft }}
+                title="Aktives Programm — alle Sichten gelten je Programm">
+                {BASE.meta.programme.map(p => <option key={p.id} value={p.id} style={{ color: '#111' }}>Programm: {p.name}</option>)}
+              </select>
+            )}
             <select value={role} onChange={e => setRole(e.target.value)}
               className="text-[12px] rounded px-2 py-1 border bg-transparent"
               style={{ borderColor: T.line, color: T.ink, background: T.panelSoft }}>
@@ -342,7 +356,7 @@ export default function App() {
           : <div className="text-[13px]" style={{ color: T.inkDim }}><Lock size={14} className="inline mr-1" /> Rolle «{role}» darf nicht erfassen.</div>)}
 
         {/* ══ AUFGABEN ══ */}
-        {tab === 'aufgaben' && <AufgabenView role={role} me={me} onOpenMs={(id) => { const m = ms.find(x => x.id === id); if (m) setSelMs(m) }} />}
+        {tab === 'aufgaben' && <AufgabenView role={role} me={me} prog={prog} onOpenMs={(id) => { const m = ms.find(x => x.id === id); if (m) setSelMs(m) }} />}
 
         {/* ══ PROTOKOLLE ══ */}
         {tab === 'protokolle' && <ProtokolleView role={role} me={me} />}
@@ -1359,14 +1373,17 @@ function EntscheideView({ role, me, today }) {
 // Status), sortiert nach Fälligkeit. Beantwortet «was muss ICH bis wann tun?» —
 // das Gegenstück zur Milestone-Sicht des Kontrollturms. Abhaken wie überall:
 // /api/task/status, CoS alles / Owner nur eigene, Ampel bleibt abgeleitet.
-function AufgabenView({ role, me, onOpenMs }) {
+function AufgabenView({ role, me, prog, onOpenMs }) {
   const [fPhase, setFPhase] = useState('alle')
   const [fWs, setFWs] = useState('alle')
   const [fOwner, setFOwner] = useState(role === 'Owner' ? me : 'alle')
   const [fStatus, setFStatus] = useState('offen')
   const [busy, setBusy] = useState(null)
 
+  // Programm-Filter: milestone-gekoppelte Handlungen folgen dem Programm ihres WS;
+  // ungekoppelte (ms_id null, z.B. Nachlauf-Reviews) bleiben in jedem Programm sichtbar.
   const rows = ALL_TASKS.map(t => ({ ...t, _m: t.ms_id ? MS_META[t.ms_id] : null }))
+    .filter(t => !prog || !t._m || !t._m.programm || t._m.programm === prog)
   const owners = [...new Set(rows.map(t => t.owner).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'de'))
   const wss = [...new Set(rows.map(t => t._m?.ws).filter(Boolean))].sort()
   const phases = PHASE_ORDER.filter(p => rows.some(t => t._m?.phase === p))

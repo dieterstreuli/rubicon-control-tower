@@ -224,6 +224,16 @@ def main():
             data['meta']['today'] = prev['meta']['today']
         if (prev.get('meta') or {}).get('datenlieferungen_url'):
             data['meta']['datenlieferungen_url'] = prev['meta']['datenlieferungen_url']
+        # Programm-Dimension (16.07.): Registry + Default + WS-Zuordnung überleben den Rebuild
+        for f in ('programme', 'default_programm'):
+            if (prev.get('meta') or {}).get(f) is not None:
+                data['meta'][f] = prev['meta'][f]
+        prev_ws_prog = {w.get('code'): w.get('programm') for w in (prev.get('workstreams') or [])}
+        for w in data['workstreams']:
+            if prev_ws_prog.get(w.get('code')):
+                w['programm'] = prev_ws_prog[w.get('code')]
+            elif (data['meta'].get('default_programm')):
+                w.setdefault('programm', data['meta']['default_programm'])
         # Inputs: gepflegter Lieferstatus + Task-Kopplung überleben den Rebuild
         prev_in = {i['id']: i for i in (prev.get('inputs') or []) if i.get('id')}
         for inp in data['inputs']:
