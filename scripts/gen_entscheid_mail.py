@@ -30,6 +30,18 @@ sys.path.insert(0, '/Users/dieterstreuli/Chief/Tools')       # Original gewinnt 
 from html_to_pdf import html_to_pdf  # noqa: E402
 
 ENTS = ROOT / 'src' / 'data' / 'entscheide.json'
+
+# Fester Verteiler (DRS 16.07.: «der Versand geht immer an die GL») — identisch mit dem
+# etablierten GL-Verteiler in Tools/adv_newsletter_to_gl.py (ohne DRS selbst = Absender).
+# Gökcöl-Adresse mailbox-verifiziert 16.07. (c.gokcol@, nicht c.goelcoel@).
+GL_VERTEILER = [
+    'a.fritthum@axs.aero',
+    'c.gokcol@axs.aero',
+    'stephanie.Rohde@ahs-aero.de',
+    't.pajor@group.aas.aero',
+    'm.haeffner@axs.aero',
+    'Amelie.Charisius@ahs-aero.de',
+]
 OUT = ROOT / 'public' / 'entscheide'
 LOGO = (ROOT / 'scripts' / 'axs_logo.png.b64').read_text().strip()
 STAMP = datetime.datetime.now().strftime('%d.%m.%Y %H:%M')
@@ -127,11 +139,11 @@ def create_draft(rec, pdf_path, an):
     msg.attach(att)
 
     msg['Subject'] = f"Entscheid {rec['id']} — {rec['titel']}"
-    # Empfänger NUR wenn der Verteiler echte Adressen enthält — nie geraten,
-    # sonst bleibt To leer und DRS füllt es beim Senden.
-    addrs = re.findall(r'[\w.+-]+@[\w-]+\.[\w.]+', an or '')
-    if addrs:
-        msg['To'] = ', '.join(addrs)
+    # Empfänger: IMMER der feste GL-Verteiler (DRS 16.07.); enthält der beim Klick
+    # eingegebene Verteiler zusätzlich echte Adressen, kommen sie dazu — nie geraten.
+    extra = re.findall(r'[\w.+-]+@[\w-]+\.[\w.]+', an or '')
+    lower = {a.lower() for a in GL_VERTEILER}
+    msg['To'] = ', '.join(GL_VERTEILER + [a for a in extra if a.lower() not in lower])
 
     raw = base64.urlsafe_b64encode(msg.as_bytes()).decode()
     draft = gmail.users().drafts().create(userId='me', body={'message': {'raw': raw}}).execute()
@@ -156,10 +168,11 @@ def main():
     pdf_rel = f'/entscheide/{eid}.pdf'
 
     draft_id, draft_err = None, None
-    try:
-        draft_id = create_draft(rec, pdf_abs, an or (rec.get('kommunikation') or {}).get('an'))
-    except Exception as ex:                                    # PDF bleibt auch ohne Gmail nutzbar
-        draft_err = str(ex)[-200:]
+    if '--pdf-only' not in sys.argv:                           # Vorschau/Beispiel ohne Gmail-Entwurf
+        try:
+            draft_id = create_draft(rec, pdf_abs, an or (rec.get('kommunikation') or {}).get('an'))
+        except Exception as ex:                                # PDF bleibt auch ohne Gmail nutzbar
+            draft_err = str(ex)[-200:]
 
     rec['export'] = {'pdf': pdf_rel, 'draft_id': draft_id, 'stand': STAMP}
     _atomic_write(ENTS, json.dumps(store, ensure_ascii=False, indent=2))
