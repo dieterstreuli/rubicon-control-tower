@@ -1967,6 +1967,101 @@ workstreams:
     depends_on: []
     progress_source: tasks
   programm: transformation
+- code: WS7
+  name: VIE-Wegfall & Restrukturierung (Kompensation & Overhead-Abbau)
+  owner: Stephanie Rohde
+  support: Gökcöl (Umsetzung), Matthei (VIE-Abwicklung/Ops), Pajor (Zahlen/Elysium), DRS (Governance)
+  programm: transformation
+  milestones:
+  - id: WS7-01
+    name: 'Restrukturierungs-Zielbild & Business Case beschlussreif — Ziel 1 Kompensation ~CHF 4.6 Mio EBITDA (VIE-Stationsgewinn) + Ziel 2 Overhead-Abbau (EUR aus Pajor/Elysium-Update); zwei Szenarien (Weiterbetrieb bei Beschwerde-Erfolg vs. VIE-Ende 25.10.2026)'
+    owner: Stephanie Rohde
+    start: '2026-07-28'
+    due: '2026-08-14'
+    date_assumed: true
+    phase: Phase 0
+    gate: null
+    critical: true
+    progress: 0
+    depends_on: []
+    nachlauf: false
+  - id: WS7-02
+    name: 'Overhead-Zahlengrundlage final: per-Kopf-OPEX + aktualisierte Gruppenfunktionsliste + Elysium-Letztstand; von VIE getragener Overhead in EUR beziffert (Schlüssel 9,8% AXS / 20,5% AAS)'
+    owner: Thomas Pajor
+    start: '2026-07-28'
+    due: '2026-08-04'
+    date_assumed: true
+    phase: Phase 0
+    gate: null
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+  - id: WS7-03
+    name: 'Group-Finance-Shared-Service aus VIE lösen — Verlagerungs-/Abbau-Entscheid für die in Wien gehosteten Konzern-Funktionen (~17 Köpfe, v.a. Finance Group KST 8002); Kontinuität des Konzern-Finance sichern'
+    owner: Cüneyt Gökcöl
+    start: '2026-08-04'
+    due: '2026-08-28'
+    date_assumed: true
+    phase: Phase 0
+    gate: null
+    critical: true
+    progress: 0
+    depends_on:
+    - WS7-01
+    - WS7-02
+    nachlauf: false
+  - id: WS7-04
+    name: 'Ziel 2 — von VIE getragene Overheads vollständig eliminiert (NICHT auf die übrigen Stationen umverteilt); Umsetzung gekoppelt an Projekt Elysium'
+    owner: Stephanie Rohde
+    start: '2026-08-28'
+    due: '2026-10-31'
+    date_assumed: true
+    phase: Phase 1
+    gate: null
+    critical: true
+    progress: 0
+    depends_on:
+    - WS7-03
+    nachlauf: false
+  - id: WS7-05
+    name: 'Ziel 1 — Kompensationspaket ~CHF 4.6 Mio EBITDA beschlossen und in Umsetzung (Hebel: übrige Stationen, Kostenblock, Pricing/Renewal, Ressourcen-Redeployment)'
+    owner: Cüneyt Gökcöl
+    start: '2026-08-14'
+    due: '2026-10-31'
+    date_assumed: true
+    phase: Phase 1
+    gate: null
+    critical: true
+    progress: 0
+    depends_on:
+    - WS7-01
+    nachlauf: false
+  - id: WS7-06
+    name: 'VIE-Abwicklungsplan startbereit (Contingency Szenario B: kein Beschwerde-Aufschub) — Personal (Kündigungsfristen 3+ Monate), Kunden-Übergabe, Assets/Verträge; Auslösung nur bei VIE-Ende 25.10.2026'
+    owner: Florian Matthei
+    start: '2026-07-28'
+    due: '2026-08-21'
+    date_assumed: true
+    phase: Phase 0
+    gate: null
+    critical: true
+    progress: 0
+    depends_on: []
+    nachlauf: false
+  - id: WS7-07
+    name: 'VR-Vorlage VIE-Restrukturierung (Stations-/Marktaufgabe = VR-Vorbehalt) beschlussreif — inkl. Finanzierungs-Kaskade (VIE-Sicherheit neu bewertet mit Clearwater/Märki)'
+    owner: Dieter Streuli
+    start: '2026-08-14'
+    due: '2026-08-26'
+    date_assumed: true
+    phase: Phase 0
+    gate: null
+    critical: false
+    progress: 0
+    depends_on:
+    - WS7-01
+    nachlauf: false
 - code: FIN
   name: Refinanzierung Lieferanten-Ausstände (EUR 15 Mio, Closing 31.10.2026)
   owner: Dieter Streuli
@@ -2186,3 +2281,8 @@ inputs:
   liefer_tasks:
   - WS6-01-H04
   - WS6-02-H02
+- id: IN-17
+  owner: Thomas Pajor
+  item: 'VIE-Overhead in EUR + aktualisierte Gruppenfunktionsliste + Elysium-Letztstand (Basis für den Restrukturierungs-Business-Case; per-Kopf-OPEX)'
+  due: '2026-08-04'
+  status: offen
