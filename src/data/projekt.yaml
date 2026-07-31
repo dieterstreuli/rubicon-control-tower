@@ -15,6 +15,7 @@ meta:
   - Stephanie Rohde
   - Thomas Pajor
   - Tine Petric
+  - Jörg Ehlers
   programme:
   - id: transformation
     name: Transformation 2026/27 (Programm RUBICON)
@@ -2237,6 +2238,19 @@ workstreams:
     phase: Phase 0
     gate:
     critical: true
+    progress: 0
+    depends_on: []
+    nachlauf: false
+  - id: WS7-14
+    name: Finance-Personalbedarf + Restrukturierungsplanung definiert (inkl. VIE-Minimalbesetzung für Betriebsfortführung) — Input zu WS7-03
+    owner: Jörg Ehlers
+    support: Stephanie Rohde
+    start: '2026-07-31'
+    due: '2026-08-14'
+    date_assumed: true
+    phase: Phase 0
+    gate:
+    critical: false
     progress: 0
     depends_on: []
     nachlauf: false
