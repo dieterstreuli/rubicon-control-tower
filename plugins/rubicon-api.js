@@ -20,17 +20,38 @@ const CLAUDE_BIN = process.env.RUBICON_CLAUDE || '/Users/dieterstreuli/.local/bi
 
 // K4/K7 (01.08.): headless-Claude-Aufruf — Prompt via stdin (Grössen-sicher),
 // Sonnet, hartes Timeout. Reine Text-Antwort; JSON extrahiert der Aufrufer.
-function runClaude(prompt, cb, timeoutMs = 240000) {
+// Auth-Härtung 01.08.: «OAuth session expired» entsteht, wenn parallel eine
+// interaktive Claude-Session das Token rotiert — einmalige Wiederholung nach
+// kurzer Pause behebt das fast immer (frisches Token liegt dann im Keychain).
+function runClaudeOnce(prompt, cb, timeoutMs) {
   let done = false
-  const fin = (err, out) => { if (!done) { done = true; cb(err, out) } }
-  const p = spawn(CLAUDE_BIN, ['-p', '--model', 'claude-sonnet-4-6'], { stdio: ['pipe', 'pipe', 'pipe'] })
+  const fin = (err, out, errS) => { if (!done) { done = true; cb(err, out, errS) } }
+  const p = spawn(CLAUDE_BIN, ['-p', '--model', 'claude-sonnet-4-6'],
+    { stdio: ['pipe', 'pipe', 'pipe'], env: { ...process.env, HOME: process.env.HOME || '/Users/dieterstreuli' } })
   let out = '', errS = ''
-  const to = setTimeout(() => { p.kill('SIGKILL'); fin(new Error(`Timeout nach ${timeoutMs / 1000}s`), out) }, timeoutMs)
+  const to = setTimeout(() => { p.kill('SIGKILL'); fin(new Error(`Timeout nach ${timeoutMs / 1000}s`), out, errS) }, timeoutMs)
   p.stdout.on('data', d => { out += d })
   p.stderr.on('data', d => { errS += d })
-  p.on('error', e2 => { clearTimeout(to); fin(e2, out) })
-  p.on('close', code => { clearTimeout(to); fin(code === 0 ? null : new Error((errS || `exit ${code}`).slice(-300)), out) })
+  p.on('error', e2 => { clearTimeout(to); fin(e2, out, errS) })
+  p.on('close', code => { clearTimeout(to); fin(code === 0 ? null : new Error((errS || `exit ${code}`).slice(-300)), out, errS) })
   p.stdin.write(prompt); p.stdin.end()
+}
+
+function runClaude(prompt, cb, timeoutMs = 240000) {
+  // ACHTUNG: der Auth-Fehler kommt teils mit Exit 0 über STDOUT — deshalb Text
+  // in stdout UND stderr prüfen, sonst landet er als «Antwort» im UI (Fund 01.08.).
+  const AUTH_RE = /oauth session expired|failed to authenticate|could not be refreshed|please run \/login/i
+  runClaudeOnce(prompt, (err, out, errS) => {
+    if (AUTH_RE.test((out || '') + (errS || '') + String(err?.message || ''))) {
+      // 1× Retry (deckt Token-Rotations-Rennen ab), dann klare Handlungsanweisung
+      return setTimeout(() => runClaudeOnce(prompt, (e2, o2, s2) => {
+        if (AUTH_RE.test((o2 || '') + (s2 || '') + String(e2?.message || '')))
+          return cb(new Error('Claude-Anmeldung auf diesem Mac abgelaufen (betrifft ALLE Headless-Jobs inkl. Morning-Scan). Fix: Terminal öffnen → `claude` → `/login` durchlaufen — danach hier einfach erneut klicken.'), '')
+        cb(e2, o2)
+      }, timeoutMs), 3000)
+    }
+    cb(err, out)
+  }, timeoutMs)
 }
 
 // erstes JSON-Objekt/-Array aus einer Modell-Antwort ziehen (Code-Fences tolerant)
