@@ -98,6 +98,24 @@ Parität 16/16, vendored Module standalone). Tower-Kern braucht KEIN Google — 
 GDoc-/Drive-Exporte + Gemini-Import (Creds ersetzen, s. Runbook §7). Nach jeder
 substanziellen Änderung: `git add -A && git commit` (Repo-Identität d.streuli@axs.aero).
 
+## Code-Struktur (Refactoring-Programm 01.08.2026 — Q1-Q6, R1-R4)
+
+**Absicherung zuerst:** `npm test` = `scripts/test_api_smoke.mjs` (33 Prüfungen über alle 15 Endpoints: Guards 415/403, Rollen-Gates, Pflichtfelder, 404/409, read-only, Sensitiv-Sperre). **Mutationsfrei** — schreibt auch dann nichts, wenn ein Gate bricht (Fortschritt wird als No-Op-Wert gesendet). `npm run test:parity` = Statuslogik JS↔Python. `npm run validate` = Daten- + Schema-Gate.
+
+**⚠️ Vite lädt Plugins NUR beim Serverstart.** Nach jeder Änderung an `plugins/*` den Tower neu starten (`launchctl kickstart -k gui/501/ch.streuli.chief.rubicon-tower`), sonst testet man den alten Stand — genau das ist am 01.08. passiert.
+
+| Baustein | Zweck |
+|---|---|
+| `src/data/domain.json` + `src/lib/domain.js` + `scripts/_domain.py` | **Domänen-SSOT**: Rollen, Status (Label/Token/PDF-Farbe), Phasen, Entscheids-Flow/Typen/Gremien, Sitzungs-Eintragstypen, Report-Ebenen, 25%-Stufen. Neuer Status/Phase/Workflow-Schritt = NUR hier. |
+| `src/lib/permissions.js` | **Rechte-Matrix** (Rolle × Aktion; `true` \| `'eigene'` \| fehlt). `can()/canAny()` im UI, `requireCan()` im Server — eine Quelle, kann nicht auseinanderlaufen. Neue Rolle = 1 Eintrag. |
+| `src/data/schema.json` + `scripts/_schema.py` | **Feld-SSOT** der JSON-Stores (Typ/Pflicht/null_ok/Enum/Muster/Eindeutigkeit); von validate.py erzwungen, meldet auch unbekannte Felder (Drift). |
+| `src/data/kontakte.json` + `scripts/_kontakte.py` | **Personen-SSOT**: GL-Verteiler + Owner→E-Mail + Sprachregel. Personelle Änderung = Datenpflege, kein Code. |
+| `plugins/api-core.js` | **API-Kern**: 15 Endpoints über die Factory `ep(path, opts, handler)` (Guard/Body/Fehler zentral) + `db.<store>.read()/write()` als **einzige** Datenzugriffs-Schicht + Dispatcher `handle(req,res)`. |
+| `plugins/rubicon-api.js` | dünne Vite-Plugin-Hülle um den Kern (Entwicklung) |
+| `server.mjs` | **eigenständiger App-Server** (`npm start`): derselbe Kern + `dist/`/`public/` statisch, SPA-Fallback, Traversal-Schutz. Damit hängt die API nicht mehr am Dev-Server. Zusätzliche Origins via `RUBICON_ORIGINS`. |
+| `src/App.jsx` (796 Z.) | nur noch Rahmen + Kontrollturm; Views in `src/views/*.jsx`, Bausteine in `src/components/ui.jsx`, Daten/Radar in `src/lib/data.js` |
+| `scripts/_lib.py` | gemeinsame Python-Helfer (atomic_write, e/pdate/de) |
+
 ## Arbeitsregeln für Änderungen
 
 - Datenänderungen IMMER in `projekt.yaml`, danach `npm run validate`.
