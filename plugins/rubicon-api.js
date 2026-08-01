@@ -92,16 +92,6 @@ export function rubiconApi() {
   // (launchd vs. npx vs. systemd) und zeigte im Preview-Fall auf das falsche
   // Verzeichnis (Bug 17.07.). Der Plugin-Ordner liegt fix unter <root>/plugins.
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-  const yamlPath = path.join(root, 'src', 'data', 'projekt.yaml')
-  const protoPath = path.join(root, 'src', 'data', 'protokolle.json')
-  const tasksPath = path.join(root, 'src', 'data', 'tasks.json')
-
-  const entsPath = path.join(root, 'src', 'data', 'entscheide.json')
-
-  const dumpYaml = (doc) => yaml.dump(doc, { noRefs: true, lineWidth: 200, sortKeys: false, quotingType: "'", forceQuotes: false })
-  const readTasks = () => (fs.existsSync(tasksPath) ? JSON.parse(fs.readFileSync(tasksPath, 'utf8')) : { tasks: [] })
-  const readEnts = () => (fs.existsSync(entsPath) ? JSON.parse(fs.readFileSync(entsPath, 'utf8')) : { seq: 0, entscheide: [] })
-
   // ── Entscheids-Register (16.07., Säule 3 der Entscheidungsordnung INS-001 Anhang B) ──
   // Jeder Entscheid trägt eine dauerhafte Register-ID «E-<Jahr>-###» (monoton via seq,
   // NIE neu vergeben) + einen technischen De-Dup-key (analog Tasks: Gemini-Quelle bzw.
@@ -109,7 +99,7 @@ export function rubiconApi() {
   // beantragt → entscheidungsreif → entschieden → kommuniziert → umgesetzt.
   // Revisionssicher: es gibt KEINEN Lösch-Endpoint — Entscheide bleiben im Register.
   // Domänen-SSOT (Q2, 01.08.): identische Liste wie im UI — src/data/domain.json
-  const DOMAIN = JSON.parse(fs.readFileSync(path.join(root, 'src', 'data', 'domain.json'), 'utf8'))
+  const DOMAIN = db.domain.read()
   const ENT_FLOW = DOMAIN.entscheide.flow
   const ENT_BEGRUENDUNG_AB = DOMAIN.entscheide.begruendung_pflicht_ab
   function mergeEntscheide(store, incoming, datum) {
@@ -186,18 +176,18 @@ export function rubiconApi() {
   // half-up gerundet — identisch in validate.py gespiegelt). Der Prozentwert wird
   // damit VERDIENT, nicht getippt; die Ampel bleibt unverändert aus status.js
   // abgeleitet (Status ← Fortschritt ← erledigte Handlungen).
-  function rollupMs(msId, store) {
-    const doc = yaml.load(fs.readFileSync(yamlPath, 'utf8'))
+  function rollupMs(msId, tstore) {
+    const doc = db.projekt.read()
     let target = null
     for (const ws of doc.workstreams || []) for (const m of ws.milestones || []) if (m.id === msId) target = m
     if (!target) return { rolled: false, reason: `Milestone ${msId} unbekannt` }
     if (target.progress_source !== 'tasks') return { rolled: false, reason: 'progress_source nicht «tasks» (manueller Modus)' }
-    const ts = (store.tasks || []).filter(t => t.ms_id === msId)
+    const ts = (tstore.tasks || []).filter(t => t.ms_id === msId)
     if (!ts.length) return { rolled: false, reason: 'keine Handlungen hinterlegt' }
     const done = ts.filter(t => t.status === 'erledigt').length
     const prog = Math.floor((100 * done) / ts.length + 0.5)   // half-up, parity mit validate.py
     const changed = target.progress !== prog
-    if (changed) { target.progress = prog; writeAtomic(yamlPath, dumpYaml(doc)) }
+    if (changed) { target.progress = prog; db.projekt.write(doc) }
     return { rolled: true, changed, progress: prog, done, total: ts.length }
   }
 
@@ -242,8 +232,6 @@ export function rubiconApi() {
   // Server ausgeliefert wird — weder als Datei noch im Vite-Bundle (kein Import im UI).
   // Einsehbar ausschliesslich via Loopback-gated API (= nur direkt auf dem Gerät, nicht
   // via Tailnet/Netz). Das ist ECHTE Trennung, nicht clientseitiges Ausblenden.
-  const sensPath = path.join(root, 'src', 'data', 'protokolle_sensitiv.json')
-  const readSens = () => (fs.existsSync(sensPath) ? JSON.parse(fs.readFileSync(sensPath, 'utf8')) : { protokolle: [] })
   // ACHTUNG Proxy-Falle (Härtetest 17.07.): Tailscale-Serve proxied Tailnet-Traffic
   // von 127.0.0.1 — die remoteAddress allein reicht NICHT. Deshalb zusätzlich:
   // Host-Header muss localhost/127.0.0.1 sein UND keine Forwarded-Header vorhanden
@@ -274,7 +262,7 @@ export function rubiconApi() {
       // (DRS direkt am Gerät; Tailnet-/Netz-Clients erhalten 403).
       ep('/api/protokoll/sensitiv', { method: 'GET', guard: false }, ({ req, json }) => {
         if (!isLoopback(req)) return json(403, { ok: false, error: 'nur lokal einsehbar' })
-        return json(200, { ok: true, protokolle: readSens().protokolle })
+        return json(200, { ok: true, protokolle: db.sensitiv.read().protokolle })
       })
       // POST /api/sitzung — eine erfasste Sitzung speichern + Milestones aktualisieren
       ep('/api/sitzung', {}, async ({ body, json, fail }) => {
@@ -288,9 +276,9 @@ export function rubiconApi() {
           // Sensitiv-Filter (#6): sensitive Sitzungen landen im GETRENNTEN, nie
           // ausgelieferten Store; ID-Zählung über BEIDE Stores (kollisionssicher).
           const sensitiv = body.sensitiv === true
-          const store = JSON.parse(fs.readFileSync(protoPath, 'utf8'))
-          const sstore = readSens()
-          const sameDay = [...store.protokolle, ...sstore.protokolle]
+          const pstore = db.protokolle.read()
+          const sstore = db.sensitiv.read()
+          const sameDay = [...pstore.protokolle, ...sstore.protokolle]
             .filter(p => p.meeting_id === body.meeting_id && p.datum === body.datum).length
           const id = `P-${body.datum}-${body.meeting_id}-${sameDay + 1}`
           const rec = {
@@ -308,14 +296,14 @@ export function rubiconApi() {
           }
           if (sensitiv) {
             sstore.protokolle.unshift(rec)
-            writeAtomic(sensPath, JSON.stringify(sstore, null, 2))
+            db.sensitiv.write(sstore)
           } else {
-            store.protokolle.unshift(rec)
-            writeAtomic(protoPath, JSON.stringify(store, null, 2))
+            pstore.protokolle.unshift(rec)
+            db.protokolle.write(pstore)
           }
 
           // 2) projekt.yaml: Fortschritt/Blocker anwenden — Owner nur eigene MS (Audit #3)
-          const doc = yaml.load(fs.readFileSync(yamlPath, 'utf8'))
+          const doc = db.projekt.read()
           const idx = {}
           for (const ws of doc.workstreams || []) for (const m of ws.milestones || []) idx[m.id] = { m, wsOwner: ws.owner }
           const applied = [], skipped = []
@@ -337,7 +325,7 @@ export function rubiconApi() {
           // sonst bleibt die SSOT bytegleich stabil (z.B. Gemini-Importe ohne Prozentwert
           // erzeugen nur Commitments/Notizen und dürfen die Wahrheitsquelle nicht anfassen).
           if (applied.length) {
-            writeAtomic(yamlPath, yaml.dump(doc, { noRefs: true, lineWidth: 200, sortKeys: false, quotingType: "'", forceQuotes: false }))
+            db.projekt.write(doc)
           }
 
           // 3) Commitment→Handlung-Spiegel (Schnitt 2, 13.07.): jedes Commitment wird
@@ -352,7 +340,7 @@ export function rubiconApi() {
           let mirrored = []
           const commitments = sensitiv ? [] : rec.eintraege.map((e2, i) => ({ e: e2, i })).filter(x => x.e.typ === 'commitment' && (x.e.text || '').trim())
           if (commitments.length) {
-            const tstore = readTasks()
+            const tstore = db.tasks.read()
             const incoming = commitments.map(({ e: e2, i }) => ({
               id: body.gemini_doc_id ? `G-${body.gemini_doc_id}-C${i}` : `${id}-C${i}`,
               ms_id: e2.ms_id || null,
@@ -361,7 +349,7 @@ export function rubiconApi() {
               origin: id,
             }))
             mirrored = mergeTasks(tstore, incoming, body.datum)
-            writeAtomic(tasksPath, JSON.stringify(tstore, null, 2))
+            db.tasks.write(tstore)
             for (const msId of [...new Set(incoming.map(t => t.ms_id).filter(Boolean))]) rollupMs(msId, tstore)
           }
 
@@ -372,7 +360,7 @@ export function rubiconApi() {
           let registered = []
           const entsIn = sensitiv ? [] : rec.eintraege.map((e2, i) => ({ e: e2, i })).filter(x => x.e.typ === 'entscheid' && (x.e.text || '').trim())
           if (entsIn.length) {
-            const estore = readEnts()
+            const estore = db.entscheide.read()
             registered = mergeEntscheide(estore, entsIn.map(({ e: e2, i }) => ({
               key: body.gemini_doc_id ? `G-${body.gemini_doc_id}-E${i}` : `${id}-E${i}`,
               titel: e2.text.slice(0, 90),
@@ -383,7 +371,7 @@ export function rubiconApi() {
               status: e2.status === 'getroffen' ? 'entschieden' : 'beantragt',
               quelle: id,
             })), body.datum)
-            writeAtomic(entsPath, JSON.stringify(estore, null, 2))
+            db.entscheide.write(estore)
           }
 
           return json(200, { ok: true, id, applied, skipped, mirrored, registered, sensitiv,
@@ -401,7 +389,7 @@ export function rubiconApi() {
           const hasProg = typeof body.progress === 'number'
           const hasSlip = typeof body.slip === 'number'
           if (!hasProg && !hasSlip) return json(400, { ok: false, error: 'progress oder slip nötig' })
-          const doc = yaml.load(fs.readFileSync(yamlPath, 'utf8'))
+          const doc = db.projekt.read()
           let target = null, wsOwner = null
           for (const ws of doc.workstreams || []) for (const m of ws.milestones || []) if (m.id === body.ms_id) { target = m; wsOwner = ws.owner }
           if (!target) return json(404, { ok: false, error: `Milestone ${body.ms_id} unbekannt` })
@@ -417,7 +405,7 @@ export function rubiconApi() {
             const s = Math.max(0, Math.min(365, Math.round(body.slip)))
             if ((target.reported_slip_days || 0) !== s) { target.reported_slip_days = s; changes.push(`Verzug → +${s} T`) }
           }
-          if (changes.length) writeAtomic(yamlPath, dumpYaml(doc))
+          if (changes.length) db.projekt.write(doc)
           return json(200, { ok: true, ms_id: body.ms_id, changed: changes, unveraendert: !changes.length })
       })
 
@@ -430,17 +418,17 @@ export function rubiconApi() {
           for (const t of incoming) {
             if (!t.id || !t.text) return json(400, { ok: false, error: 'Task braucht id und text (ms_id optional = ungekoppelt)' })
           }
-          const store = readTasks()
-          const upserted = mergeTasks(store, incoming, body.datum)
-          writeAtomic(tasksPath, JSON.stringify(store, null, 2))
+          const tstore = db.tasks.read()
+          const upserted = mergeTasks(tstore, incoming, body.datum)
+          db.tasks.write(tstore)
           // Aktivierung + Roll-up (in dieser Reihenfolge: erst Flag, dann rechnen)
           let activation = null, roll = null
           if (body.activate_ms) {
-            const doc = yaml.load(fs.readFileSync(yamlPath, 'utf8'))
+            const doc = db.projekt.read()
             let target = null
             for (const ws of doc.workstreams || []) for (const m of ws.milestones || []) if (m.id === body.activate_ms) target = m
             if (!target) return json(400, { ok: false, error: `activate_ms: Milestone ${body.activate_ms} unbekannt` })
-            if (target.progress_source !== 'tasks') { target.progress_source = 'tasks'; writeAtomic(yamlPath, dumpYaml(doc)) }
+            if (target.progress_source !== 'tasks') { target.progress_source = 'tasks'; db.projekt.write(doc) }
             activation = body.activate_ms
           }
           // Roll-up für alle berührten MS — auch bei reiner Aktivierung ohne neue Tasks
@@ -455,22 +443,22 @@ export function rubiconApi() {
           if (!body.id || !['offen', 'erledigt'].includes(body.status)) return json(400, { ok: false, error: 'id und status (offen|erledigt) sind Pflicht' })
           const role = body.role, me = body.me
           requireCan(fail, role, me, 'task.abhaken')
-          const store = readTasks()
-          const t = store.tasks.find(x => x.id === body.id)
+          const tstore = db.tasks.read()
+          const t = tstore.tasks.find(x => x.id === body.id)
           if (!t) return json(404, { ok: false, error: `Task ${body.id} nicht gefunden` })
           if (!can(role, me, 'task.abhaken', t)) return json(403, { ok: false, error: 'Owner darf nur eigene Handlungen abhaken' })
           t.status = body.status
           t.erledigt_am = body.status === 'erledigt' ? (body.datum || new Date().toISOString().slice(0, 10)) : null
           // A5 (01.08.): Audit-Spur — WER hat abgehakt (Rolle bzw. Owner-Name)
           t.erledigt_von = body.status === 'erledigt' ? (role === 'Owner' ? me : 'CoS') : null
-          writeAtomic(tasksPath, JSON.stringify(store, null, 2))
-          const roll = rollupMs(t.ms_id, store)
+          db.tasks.write(tstore)
+          const roll = rollupMs(t.ms_id, tstore)
           // Input-Kopplung (13.07., DRS «auto-geliefert»): Inputs mit liefer_tasks werden
           // ABGELEITET — geliefert, sobald ALLE gekoppelten Handlungen erledigt sind;
           // Wiederöffnen einer Handlung setzt den Input deterministisch zurück auf offen.
           let inputSync = null
-          const doc2 = yaml.load(fs.readFileSync(yamlPath, 'utf8'))
-          const byTaskId = new Map(store.tasks.map(x => [x.id, x]))
+          const doc2 = db.projekt.read()
+          const byTaskId = new Map(tstore.tasks.map(x => [x.id, x]))
           let changed2 = false
           for (const inp of doc2.inputs || []) {
             const lt = inp.liefer_tasks
@@ -478,7 +466,7 @@ export function rubiconApi() {
             const soll = lt.every(id2 => byTaskId.get(id2)?.status === 'erledigt') ? 'geliefert' : 'offen'
             if (inp.status !== soll) { inp.status = soll; changed2 = true; inputSync = { input: inp.id, status: soll } }
           }
-          if (changed2) writeAtomic(yamlPath, dumpYaml(doc2))
+          if (changed2) db.projekt.write(doc2)
           return json(200, { ok: true, task: t, rollup: roll, input_sync: inputSync })
       })
 
@@ -543,13 +531,12 @@ export function rubiconApi() {
       ep('/api/task/suggest', {}, async ({ body, json, fail }) => {
           requireCan(fail, body.role, body.me, 'ki.nutzen')
           if (!body.ms_id) return json(400, { ok: false, error: 'ms_id fehlt' })
-          const doc = yaml.load(fs.readFileSync(yamlPath, 'utf8'))
+          const doc = db.projekt.read()
           let target = null, wsCode = null
           for (const ws of doc.workstreams || []) for (const m of ws.milestones || []) if (m.id === body.ms_id) { target = m; wsCode = ws.code }
           if (!target) return json(404, { ok: false, error: `Milestone ${body.ms_id} unbekannt` })
-          const briefPath = path.join(root, 'src', 'data', 'briefings.json')
-          const briefing = fs.existsSync(briefPath) ? (JSON.parse(fs.readFileSync(briefPath, 'utf8'))[body.ms_id] || {}) : {}
-          const existing = readTasks().tasks.filter(t => t.ms_id === body.ms_id).map(t => t.text)
+          const briefing = db.briefings.read()[body.ms_id] || {}
+          const existing = db.tasks.read().tasks.filter(t => t.ms_id === body.ms_id).map(t => t.text)
           const owners = doc.meta?.owners || []
           const prompt = 'Du zerlegst einen Meilenstein des AXS-Transformationsprogramms RUBICON in 5-10 binär abhakbare Handlungen.\n'
             + 'Antworte NUR mit einem JSON-Array: [{"text": "<Handlung, beginnt mit Verb, konkret prüfbar>", "owner": "<voller Name aus der Owner-Liste oder null>", "due": "YYYY-MM-DD oder null"}]\n'
@@ -579,9 +566,9 @@ export function rubiconApi() {
           const frage = (body.frage || '').trim()
           if (!frage) return json(400, { ok: false, error: 'frage fehlt' })
           if (frage.length > 500) return json(400, { ok: false, error: 'Frage zu lang (max 500 Zeichen)' })
-          const doc = yaml.load(fs.readFileSync(yamlPath, 'utf8'))
-          const tasksC = readTasks().tasks.map(t => ({ nr: 'T-' + String(t.nr || 0).padStart(3, '0'), text: (t.text || '').slice(0, 140), owner: t.owner, due: t.due, status: t.status, ms: t.ms_id }))
-          const ents = readEnts().entscheide.map(e2 => ({ id: e2.id, titel: e2.titel, status: e2.status, gremium: e2.gremium, frist: e2.frist, datum: e2.datum }))
+          const doc = db.projekt.read()
+          const tasksC = db.tasks.read().tasks.map(t => ({ nr: 'T-' + String(t.nr || 0).padStart(3, '0'), text: (t.text || '').slice(0, 140), owner: t.owner, due: t.due, status: t.status, ms: t.ms_id }))
+          const ents = db.entscheide.read().entscheide.map(e2 => ({ id: e2.id, titel: e2.titel, status: e2.status, gremium: e2.gremium, frist: e2.frist, datum: e2.datum }))
           const prompt = 'Du beantwortest Fragen zum AXS-Transformationsprogramm RUBICON — AUSSCHLIESSLICH aus den folgenden Plattform-Daten.\n'
             + 'HARTE REGELN: (1) Jede Aussage mit IDs belegen (MS-IDs, T-Nummern, E-Nummern, IN-IDs). (2) Steht etwas nicht in den Daten: '
             + 'sag genau das («nicht in den Plattform-Daten») — NIE raten oder Weltwissen einmischen. (3) Deutsch, kompakt, '
@@ -607,9 +594,9 @@ export function rubiconApi() {
             if (!e.key || !(e.titel || e.entscheid)) return json(400, { ok: false, error: 'Entscheid braucht key und titel/entscheid' })
             if (role === 'Owner') e.antragsteller = me   // Owner erfasst nur im eigenen Namen
           }
-          const store = readEnts()
-          const upserted = mergeEntscheide(store, incoming, body.datum)
-          writeAtomic(entsPath, JSON.stringify(store, null, 2))
+          const estore = db.entscheide.read()
+          const upserted = mergeEntscheide(estore, incoming, body.datum)
+          db.entscheide.write(estore)
           return json(200, { ok: true, upserted })
       })
 
@@ -620,8 +607,8 @@ export function rubiconApi() {
           if (!body.id || !ENT_FLOW.includes(body.status)) return json(400, { ok: false, error: `id und status (${ENT_FLOW.join('|')}) sind Pflicht` })
           const role = body.role, me = body.me
           requireCan(fail, role, me, 'entscheid.fortschreiben')
-          const store = readEnts()
-          const e = store.entscheide.find(x => x.id === body.id)
+          const estore = db.entscheide.read()
+          const e = estore.entscheide.find(x => x.id === body.id)
           if (!e) return json(404, { ok: false, error: `Entscheid ${body.id} nicht gefunden` })
           if (!can(role, me, 'entscheid.fortschreiben', e)) return json(403, { ok: false, error: 'Owner darf nur eigene Entscheide fortschreiben' })
           // A4 (01.08.): Beschluss-Qualität hart — ohne Begründung kein «entschieden»
@@ -632,7 +619,7 @@ export function rubiconApi() {
           e.status = body.status
           if (body.status === 'entschieden' && !e.datum) e.datum = today
           if (body.status === 'kommuniziert') e.kommunikation = { an: body.an || null, am: today }
-          writeAtomic(entsPath, JSON.stringify(store, null, 2))
+          db.entscheide.write(estore)
           // Übergang «kommuniziert» ⇒ Kommunikations-Paket (16.07., DRS): Entscheid-PDF
           // (Registerauszug) + Gmail-ENTWURF mit PDF im Anhang — NIE Versand (DRS sendet).
           // Non-fatal: der Status-Übergang gilt auch, wenn der Paket-Build scheitert.
@@ -655,7 +642,7 @@ export function rubiconApi() {
           if (!body.id) return json(400, { ok: false, error: 'id fehlt' })
           // Sensitiv (#6): kein Export — PDF läge im servierten public/, das Doc im
           // geteilten Drive. Sensitive Protokolle bleiben ausschliesslich im lokalen Store.
-          if (readSens().protokolle.some(p => p.id === body.id))
+          if (db.sensitiv.read().protokolle.some(p => p.id === body.id))
             return json(403, { ok: false, error: 'sensitives Protokoll — Export bewusst gesperrt (bleibt nur lokal einsehbar)' })
           execFile(PY_BIN, [path.join(root, 'scripts', 'gen_protokoll.py'), body.id], { cwd: root, timeout: 120000 }, (err, stdout, stderr) => {
             if (err && !stdout) return json(500, { ok: false, error: String(stderr || err).slice(-300) })
@@ -681,10 +668,9 @@ export function rubiconApi() {
       // POST /api/report/comment — optionalen Freitext-Kommentar speichern {key, text}
       ep('/api/report/comment', {}, async ({ body, json, fail }) => {
           if (!body.key) return json(400, { ok: false, error: 'key fehlt' })
-          const p = path.join(root, 'src', 'data', 'report_comments.json')
-          const store = JSON.parse(fs.readFileSync(p, 'utf8'))
-          if (body.text) store[body.key] = body.text; else delete store[body.key]
-          writeAtomic(p, JSON.stringify(store, null, 2))
+          const kstore = db.kommentare.read()
+          if (body.text) kstore[body.key] = body.text; else delete kstore[body.key]
+          db.kommentare.write(kstore)
           return json(200, { ok: true })
       })
     },
