@@ -2614,8 +2614,10 @@ function BriefingModal({ m, role, me, onClose, onNav }) {
           {Object.keys(b).length === 0 && (
             <div className="mt-3 text-[12px] rounded border p-2"
               style={{ borderColor: T.amber + '88', color: T.amber }}>
-              Für diesen Meilenstein liegt noch kein Briefing vor (Datenlücke) — Generierung läuft bzw. via
-              scripts/build_projekt_yaml.py + rubicon_briefings.json nachziehen.
+              Für diesen Meilenstein liegt noch kein Briefing vor — er wurde NACH der ursprünglichen
+              Programm-Assemblierung eingebucht (WS7/FIN/Kickoff-Ergänzungen). Termine, Ampel und
+              Handlungen sind vollständig; es fehlt nur die ausführliche Aufgaben-Definition
+              (Kontext/Leistung/Vorgehen/KPI/Risiken). Nachziehen: Briefing-Text erfassen → PDFs regenerieren.
             </div>
           )}
           {b.kontext && <Sect title="KONTEXT — WARUM DIESER MILESTONE">{b.kontext}</Sect>}
