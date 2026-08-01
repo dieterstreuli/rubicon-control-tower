@@ -12,7 +12,7 @@
           "name": "Steering Committee (SC)",
           "wann": "alle 2 Wochen · physisch · ~2h",
           "teilnehmer": "DRS + Fritthum + Gökcöl + Rohde (Format analog Kickoff 31.07.)",
-          "zweck": "Programm-Steuerung über alle Ströme: Ampel-Lage & Δ, Eskalationen, Ressourcen-/Zielentscheide, Cash-Lage (13-Wo-Liquidität als fester Punkt), Gate-/VR-Vorbereitung — ersetzt die wöchentliche 3er-Steuerung",
+          "zweck": "Programm-Steuerung über alle Ströme: Ampel-Lage & Δ, Eskalationen, Ressourcen-/Zielentscheide, Cash-Lage (13-Wo-Liquidität als fester Punkt), Gate-/VR-Vorbereitung — das strukturierte Steuerungsgremium (Brände laufen in der wöchentlichen 3er-Runde)",
           "output": "Sitzungserfassung im Tower (Meet-Notiz-Import = Primärweg) · Beschlüsse → Entscheids-Register · Commitments → Handlungen"
         }
       ]
@@ -21,6 +21,15 @@
       "kadenz": "Wöchentlich",
       "farbe": "green",
       "meetings": [
+        {
+          "id": "3er-runde",
+          "typ": "extern",
+          "name": "3er-Runde (DRS/AFR/CGO)",
+          "wann": "wöchentlich · Wochenstart (Mo) · 45 Min · virtuell",
+          "teilnehmer": "DRS + Fritthum + Gökcöl",
+          "zweck": "Bewusst informelles Gefäss für aktuelle Brände und Themenaustausch — ohne Traktanden, ohne Protokoll-Pflicht (DRS 01.08.)",
+          "output": "AUSSERHALB RUBICON — kein Tower-Protokoll. Einzige Regel: Entscheide mit Programm-/Governance-Bezug trotzdem ins Entscheids-Register; Grösseres → SC"
+        },
         {
           "id": "gl-weekly",
           "typ": "sitzung",
