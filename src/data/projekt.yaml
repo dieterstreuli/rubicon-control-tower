@@ -423,8 +423,8 @@ workstreams:
       - id: WS2-16
         name: 'WS-Freigabe aller Verantwortlichen: jede/r analysiert eigenen Strom + Handlungen, gibt frei bzw. passt an'
         owner: Andreas Fritthum
-        start: '2026-08-28'
-        due: '2026-08-28'
+        start: '2026-08-03'
+        due: '2026-08-14'
         date_assumed: false
         phase: Phase 0
         gate: null
