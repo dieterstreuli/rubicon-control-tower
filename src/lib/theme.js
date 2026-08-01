@@ -3,6 +3,8 @@
 // alle Styles T.* zur Render-Zeit lesen, greift ein Re-Render sofort. STATUS_META
 // liefert die Signalfarben über Getter → zieht bei Theme-Wechsel automatisch mit.
 
+import DOMAIN from '../data/domain.json'
+
 const FONTS = {
   mono: "'SF Mono','JetBrains Mono','Roboto Mono',ui-monospace,monospace",
   sans: "-apple-system,'Segoe UI',system-ui,sans-serif",
@@ -46,12 +48,12 @@ export function initialTheme() {
 }
 
 // Signalfarben via Getter → immer die aktuellen Token-Werte (Theme-sicher).
-export const STATUS_META = {
-  done:    { label: 'Erledigt',  get color() { return T.blue } },
-  onTrack: { label: 'Auf Kurs',  get color() { return T.green } },
-  atRisk:  { label: 'Gefährdet', get color() { return T.amber } },
-  delayed: { label: 'Verzug',    get color() { return T.red } },
-  unknown: { label: 'Unbekannt', get color() { return T.grey } },
-}
+// Labels/Token kommen aus der Domänen-SSOT (src/data/domain.json, Q2 01.08.2026).
+// Bewusst die JSON direkt (nicht lib/domain.js) — sonst entstünde ein Import-Zyklus
+// theme ↔ domain; domain.js liegt eine Ebene darüber und darf T verwenden.
+export const STATUS_META = Object.fromEntries(
+  Object.entries(DOMAIN.status.meta).map(([st, m]) => [
+    st, { label: m.label, get color() { return T[m.token] } },
+  ]))
 
-export const ROLES = ['CoS', 'Chairman', 'Owner', 'Teilnehmer']
+export const ROLES = DOMAIN.rollen

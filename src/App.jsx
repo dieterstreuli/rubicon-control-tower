@@ -9,6 +9,10 @@ import {
   ClipboardList, Plus, Trash2, Save, Sun, Moon, BarChart3, Circle, Scale,
 } from 'lucide-react'
 import { T, STATUS_META, ROLES, applyTheme, initialTheme } from './lib/theme.js'
+import {
+  PHASE_ORDER, phaseToken, ENT_FLOW, ENT_TYPEN, ENT_GREMIEN, ENT_COLOR,
+  TYP_LABEL, TYP_ICON, LVL_LABEL, LVL_AUSWAHL, LVL_COLOR, PROGRESS_STEPS, roleInfo,
+} from './lib/domain.js'
 import { loadProject } from './lib/loader.js'
 import BRIEFINGS from './data/briefings.json'
 import FR from './data/fuehrungsrhythmus.json'
@@ -115,11 +119,11 @@ const Kpi = ({ label, value, color, sub }) => (
 )
 
 // Phasen — kanonische Reihenfolge, Farbe (analog Intro) und Kurzlabel.
-const PHASE_ORDER = ['Phase 0', 'Phase 1', 'Phase 2', 'Phase 3', 'Nachlauf Q2/27']
 const phaseColor = (p) => {
   if (!p) return T.grey
   if (p.startsWith('Masterplan')) return T.inkFaint
-  return { 'Phase 0': T.brass, 'Phase 1': T.green, 'Phase 2': T.blue, 'Phase 3': T.brass, 'Nachlauf Q2/27': T.red }[p] || T.inkDim
+  const tok = phaseToken(p)
+  return tok ? T[tok] : T.inkDim
 }
 const phaseShort = (p) => !p ? '—' : p.startsWith('Masterplan') ? p.replace('Masterplan · ', 'MP · ') : p
 const FR_COL = { grey: '#64748b', green: '#34d399', blue: '#60a5fa', brass: '#d4a95c' }
@@ -428,12 +432,8 @@ export default function App() {
       {/* Rollen-Kontextband — macht den Rollenwechsel sofort sichtbar (welche
           Perspektive aktiv ist + was sie darf). */}
       {(() => {
-        const info = {
-          CoS: { c: T.brass, t: 'CoS — Projektleitung', d: 'Volle Steuerung: Fortschritt/Blocker erfassen, Inputs abhaken, Durchsetzungs-Queue (Reminder/Kalender/Eskalation).' },
-          Chairman: { c: T.blue, t: 'Chairman (DRS) — steuert & kontrolliert', d: 'Nur-Lesen-Aufsicht über alle 7 Ströme. Steuerung erfolgt über Cockpit + VR, nicht durch Editieren im Tool.' },
-          Owner: { c: T.green, t: `Owner — ${me}`, d: 'Editierbar sind nur die eigenen Meilensteine; die übrigen Ströme sind sichtbar (Nur-Lesen).' },
-          Teilnehmer: { c: T.grey, t: 'Teilnehmer', d: 'Nur-Lesen-Ansicht des gesamten Programms.' },
-        }[role]
+        const ri = roleInfo(role)
+        const info = { c: ri.color, t: role === 'Owner' ? `${ri.titel} — ${me}` : ri.titel, d: ri.beschreibung }
         return (
           <div className="px-4 md:px-6 py-1.5 flex items-center gap-2 text-[11.5px] border-b"
             style={{ background: info.c + '14', borderColor: info.c + '44', color: T.ink }}>
@@ -1302,7 +1302,6 @@ const AGENDA_BY_ID = Object.fromEntries((AGENDAS.agendas || []).map(a => [a.meet
 // Erfassbar sind NUR echte Tower-Sitzungen (typ 'sitzung') — Reports/Backbone sind keine
 // Meetings, Ops-Ebene bleibt ausserhalb, VR läuft in Sherpany (typ 'extern'). (01.08.)
 const FR_MEETINGS = FR.gruppen.flatMap(g => g.meetings.filter(m => (m.typ || 'sitzung') === 'sitzung').map(m => ({ id: m.id, name: m.name })))
-const TYP_LABEL = { fortschritt: 'Fortschritt (%)', commitment: 'Commitment', entscheid: 'Entscheid', blocker: 'Blocker/Verzug', notiz: 'Notiz' }
 
 // K1 (01.08.): Meet-Notiz (Gemini) → Vorschau → Übernahme. PRIMÄRWEG für
 // Sitzungsprotokolle; das manuelle Formular darunter bleibt Fallback (Meetings
@@ -1552,7 +1551,7 @@ function ErfassungView({ ms, today, role, me }) {
               {e.typ === 'fortschritt' && (
                 <select value={e.wert} onChange={ev => upd(i, { wert: +ev.target.value })}
                   className="rounded border px-2 py-1 text-[11px]" style={{ ...inp, fontFamily: T.mono }} title="Fortschritt in 25%-Stufen (DRS 01.08.)">
-                  {[0, 25, 50, 75, 100].map(p => <option key={p} value={p} style={{ color: '#111' }}>{p}%</option>)}
+                  {PROGRESS_STEPS.map(p => <option key={p} value={p} style={{ color: '#111' }}>{p}%</option>)}
                 </select>
               )}
               {e.typ === 'blocker' && (
@@ -1602,10 +1601,6 @@ function ErfassungView({ ms, today, role, me }) {
 // 5-Stufen-Status (beantragt→entscheidungsreif→entschieden→kommuniziert→umgesetzt)
 // und Kommunikations-Stempel. Revisionssicher: kein Löschen. Gespeist aus der
 // Sitzungserfassung (Spiegel in /api/sitzung) + manueller Erfassung hier.
-const ENT_FLOW = ['beantragt', 'entscheidungsreif', 'entschieden', 'kommuniziert', 'umgesetzt']
-const ENT_COLOR = (st) => ({ beantragt: T.grey, entscheidungsreif: T.amber, entschieden: T.blue, kommuniziert: T.brass, umgesetzt: T.green }[st] || T.grey)
-const ENT_TYPEN = ['Kundenvertrag', 'Lieferanten-/sonstiger Vertrag', 'Investition / Capex', 'Kredit / Fremdkapital', 'Personal', 'Governance / Reglement', 'Governance / IT-Infrastruktur', 'Governance / Zugriff', 'Strategie', 'Sonstiges']
-const ENT_GREMIEN = ['Ressort', 'CEO', 'ExBoD', 'GL', 'VR']
 
 // A4 (01.08.): Begründung/Datengrundlage direkt im Register-Detail nachpflegen —
 // nötig, weil der Server «entschieden» ohne Begründung jetzt hart ablehnt.
@@ -2062,7 +2057,6 @@ function AufgabenView({ role, me, prog, onOpenMs }) {
 }
 
 // ── PROTOKOLLE — erfasste Sitzungen + aggregierte offene Commitments/Entscheide.
-const TYP_ICON = { fortschritt: '▲', commitment: '☑', entscheid: '⚖', blocker: '⛔', notiz: '·' }
 function ProtokolleView({ role, me }) {
   const [busy, setBusy] = useState(null)
   // Sensitiv-Filter (#6): sensitive Protokolle sind NICHT im Bundle — sie kommen nur
@@ -2202,7 +2196,6 @@ function ProtokolleView({ role, me }) {
 
 // ── REPORTS — verdichtete Standard-Reports (Woche/Monat/Quartal), auto-generiert
 // aus projekt.yaml + protokolle.json via /api/report/generate. Kein Neu-Erfassen.
-const LVL_LABEL = { woche: 'Wochen-Report', monat: 'Monats-Report', vr: 'VR-Report (Quartal)' }
 function ReportsView({ canEdit, today }) {
   const reports = REPORTS.reports || []
   const qOf = (d) => `${d.slice(0, 4)}-Q${Math.ceil(parseInt(d.slice(5, 7), 10) / 3)}`
@@ -2223,7 +2216,6 @@ function ReportsView({ canEdit, today }) {
       else { alert('Report fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(false) }
     } catch (err) { alert('Report fehlgeschlagen: ' + err); setBusy(false) }
   }
-  const badge = { woche: T.green, monat: T.blue, vr: T.brass }
   const inp = { background: T.panelSoft, borderColor: T.line, color: T.ink }
   return (
     <div className="max-w-5xl space-y-4">
@@ -2237,9 +2229,7 @@ function ReportsView({ canEdit, today }) {
         <div className="flex flex-wrap items-end gap-3">
           <label className="flex flex-col gap-1 text-[12px]"><span style={{ color: T.inkDim }}>Ebene</span>
             <select value={level} onChange={e => changeLevel(e.target.value)} className="rounded border px-2 py-1" style={inp}>
-              <option value="woche" style={{ color: '#111' }}>Woche (GL-Weekly)</option>
-              <option value="monat" style={{ color: '#111' }}>Monat (MBR)</option>
-              <option value="vr" style={{ color: '#111' }}>Quartal (VR)</option>
+              {Object.entries(LVL_AUSWAHL).map(([k, lbl]) => <option key={k} value={k} style={{ color: '#111' }}>{lbl}</option>)}
             </select>
           </label>
           <label className="flex flex-col gap-1 text-[12px]"><span style={{ color: T.inkDim }}>Periode</span>
@@ -2274,7 +2264,7 @@ function ReportsView({ canEdit, today }) {
         <div className="divide-y" style={{ borderColor: T.line }}>
           {reports.map(r => (
             <div key={r.id} className="px-4 py-2.5 flex flex-wrap items-center gap-2 text-[12px]" style={{ borderTop: `1px solid ${T.line}` }}>
-              <span className="px-1.5 py-0.5 rounded text-[10px]" style={{ background: (badge[r.level] || T.grey) + '22', color: badge[r.level] || T.grey, fontFamily: T.mono }}>{LVL_LABEL[r.level] || r.level}</span>
+              <span className="px-1.5 py-0.5 rounded text-[10px]" style={{ background: LVL_COLOR(r.level) + '22', color: LVL_COLOR(r.level), fontFamily: T.mono }}>{LVL_LABEL[r.level] || r.level}</span>
               <b style={{ color: T.ink }}>{r.label}</b>
               <span className="muted" style={{ color: T.inkFaint, fontFamily: T.mono }}>Stand {r.stand}</span>
               <span className="flex-1" />
@@ -2508,7 +2498,7 @@ function WhatIf({ m, role, me }) {
         {kind === 'progress'
           ? (
             <span className="inline-flex rounded border overflow-hidden" style={{ borderColor: T.line }}>
-              {[0, 25, 50, 75, 100].map(p => (
+              {PROGRESS_STEPS.map(p => (
                 <button key={p} onClick={() => setVal(p)}
                   className="px-2.5 py-1 text-[11px] font-semibold"
                   style={val === p

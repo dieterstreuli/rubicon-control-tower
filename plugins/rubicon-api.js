@@ -107,7 +107,10 @@ export function rubiconApi() {
   // Protokoll-ID → Re-Import aktualisiert statt dupliziert). Status-Modell fix:
   // beantragt → entscheidungsreif → entschieden → kommuniziert → umgesetzt.
   // Revisionssicher: es gibt KEINEN Lösch-Endpoint — Entscheide bleiben im Register.
-  const ENT_FLOW = ['beantragt', 'entscheidungsreif', 'entschieden', 'kommuniziert', 'umgesetzt']
+  // Domänen-SSOT (Q2, 01.08.): identische Liste wie im UI — src/data/domain.json
+  const DOMAIN = JSON.parse(fs.readFileSync(path.join(root, 'src', 'data', 'domain.json'), 'utf8'))
+  const ENT_FLOW = DOMAIN.entscheide.flow
+  const ENT_BEGRUENDUNG_AB = DOMAIN.entscheide.begruendung_pflicht_ab
   function mergeEntscheide(store, incoming, datum) {
     const byKey = new Map(store.entscheide.map(e => [e.key, e]))
     const ids = []
@@ -677,7 +680,7 @@ export function rubiconApi() {
           if (role === 'Owner' && e.antragsteller !== me) return json(403, { ok: false, error: 'Owner darf nur eigene Entscheide fortschreiben' })
           // A4 (01.08.): Beschluss-Qualität hart — ohne Begründung kein «entschieden»
           // (Pflichtfeld der Beschlussvorlage; bisher nur UI-Warnung, jetzt Server-Gate).
-          if (body.status === 'entschieden' && !(e.begruendung || '').trim())
+          if (body.status === ENT_BEGRUENDUNG_AB && !(e.begruendung || '').trim())
             return json(400, { ok: false, error: 'Begründung ist Pflicht vor «entschieden» — im Register-Detail ergänzen.' })
           const today = body.datum || new Date().toISOString().slice(0, 10)
           e.status = body.status

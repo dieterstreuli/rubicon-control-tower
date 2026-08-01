@@ -1,0 +1,67 @@
+{
+  "_kommentar": "SSOT der Domänen-Konstanten (Q2, 01.08.2026). Wird von JS (src/lib/domain.js → App/Plugin) UND Python (scripts/_domain.py → gen_report/validate) gelesen. Neue Status/Phasen/Workflow-Schritte NUR hier ändern. Farben stehen als Theme-Token-NAMEN (Bildschirm, theme.js löst auf) plus fixem pdf-Hex (Druck).",
+  "rollen": ["CoS", "Chairman", "Owner", "Teilnehmer"],
+  "rollen_meta": {
+    "CoS": { "titel": "CoS — Projektleitung", "token": "brass", "beschreibung": "Volle Steuerung: Fortschritt/Blocker erfassen, Inputs abhaken, Durchsetzungs-Queue (Reminder/Kalender/Eskalation)." },
+    "Chairman": { "titel": "Chairman (DRS) — steuert & kontrolliert", "token": "blue", "beschreibung": "Nur-Lesen-Aufsicht über alle Ströme. Steuerung erfolgt über Cockpit + VR, nicht durch Editieren im Tool." },
+    "Owner": { "titel": "Owner", "token": "green", "beschreibung": "Editierbar sind nur die eigenen Meilensteine; die übrigen Ströme sind sichtbar (Nur-Lesen)." },
+    "Teilnehmer": { "titel": "Teilnehmer", "token": "grey", "beschreibung": "Nur-Lesen-Ansicht des gesamten Programms." }
+  },
+  "status": {
+    "reihenfolge": ["delayed", "atRisk", "unknown", "onTrack", "done"],
+    "meta": {
+      "done":    { "label": "Erledigt",  "token": "blue",  "pdf": "#2f6fb0" },
+      "onTrack": { "label": "Auf Kurs",  "token": "green", "pdf": "#2f9e6f" },
+      "atRisk":  { "label": "Gefährdet", "token": "amber", "pdf": "#b8860b" },
+      "delayed": { "label": "Verzug",    "token": "red",   "pdf": "#c0392b" },
+      "unknown": { "label": "Unbekannt", "token": "grey",  "pdf": "#6b7480" }
+    }
+  },
+  "phasen": {
+    "reihenfolge": ["Phase 0", "Phase 1", "Phase 2", "Phase 3", "Nachlauf Q2/27"],
+    "token": {
+      "Phase 0": "brass",
+      "Phase 1": "green",
+      "Phase 2": "blue",
+      "Phase 3": "brass",
+      "Nachlauf Q2/27": "red"
+    }
+  },
+  "entscheide": {
+    "flow": ["beantragt", "entscheidungsreif", "entschieden", "kommuniziert", "umgesetzt"],
+    "token": {
+      "beantragt": "grey",
+      "entscheidungsreif": "amber",
+      "entschieden": "blue",
+      "kommuniziert": "brass",
+      "umgesetzt": "green"
+    },
+    "begruendung_pflicht_ab": "entschieden",
+    "typen": [
+      "Kundenvertrag",
+      "Lieferanten-/sonstiger Vertrag",
+      "Investition / Capex",
+      "Kredit / Fremdkapital",
+      "Personal",
+      "Governance / Reglement",
+      "Governance / IT-Infrastruktur",
+      "Governance / Zugriff",
+      "Strategie",
+      "Sonstiges"
+    ],
+    "gremien": ["Ressort", "CEO", "ExBoD", "GL", "VR"]
+  },
+  "sitzung_eintragstypen": {
+    "fortschritt": { "label": "Fortschritt (%)", "icon": "▲" },
+    "commitment":  { "label": "Commitment",      "icon": "☑" },
+    "entscheid":   { "label": "Entscheid",       "icon": "⚖" },
+    "blocker":     { "label": "Blocker/Verzug",  "icon": "⛔" },
+    "notiz":       { "label": "Notiz",           "icon": "·" }
+  },
+  "report_ebenen": {
+    "woche": { "label": "Wochen-Report", "auswahl": "Woche (GL-Weekly)", "token": "green" },
+    "monat": { "label": "Monats-Report", "auswahl": "Monat (MBR)",       "token": "blue" },
+    "vr":    { "label": "VR-Report (Quartal)", "auswahl": "Quartal (VR)", "token": "brass" }
+  },
+  "fortschritt_stufen": [0, 25, 50, 75, 100]
+}

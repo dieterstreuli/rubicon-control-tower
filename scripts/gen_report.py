@@ -44,8 +44,7 @@ OUT = ROOT / 'public' / 'reports'
 LOGO = (ROOT / 'scripts' / 'axs_logo.png.b64').read_text().strip()
 STAMP = dt.datetime.now().strftime('%d.%m.%Y %H:%M')
 MON = ['', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
-SIG = {'done': '#2f6fb0', 'onTrack': '#2f9e6f', 'atRisk': '#b8860b', 'delayed': '#c0392b', 'unknown': '#6b7480'}
-SIG_LBL = {'done': 'Erledigt', 'onTrack': 'Auf Kurs', 'atRisk': 'Gefährdet', 'delayed': 'Verzug', 'unknown': 'Unbekannt'}
+from _domain import SIG, SIG_LBL, ORDER, PHASEN  # Domänen-SSOT (Q2, 01.08.) — src/data/domain.json
 
 
 def e(s):
@@ -89,7 +88,6 @@ def status_of(m, now):
     return 'onTrack'
 
 
-ORDER = ['delayed', 'atRisk', 'unknown', 'onTrack', 'done']
 
 
 def ws_ampel(ws, now):
@@ -406,7 +404,7 @@ def _ms_buckets(ws, now, start, end):
 
 def render_monat(doc, meta, now, inper, start, end, label, kom):
     # Deckblatt: Erfüllungsgrad je Phase
-    PH = ['Phase 0', 'Phase 1', 'Phase 2', 'Phase 3', 'Nachlauf Q2/27']
+    PH = PHASEN
     allms = [m for w in doc['workstreams'] for m in w['milestones']]
     phrows = ''
     for ph in PH:
@@ -466,7 +464,7 @@ def render_vr(doc, meta, now, inper, label, kom):
     gates = sorted(gate_due.items())
     grows = ''.join(f'<tr><td style="width:14%"><b>{e(g)}</b></td><td>{de(d)}</td></tr>' for g, d in gates)
     # Phasen
-    PH = ['Phase 0', 'Phase 1', 'Phase 2', 'Phase 3', 'Nachlauf Q2/27']
+    PH = PHASEN
     phrows = ''
     for ph in PH:
         ms = [m for m in allms if m.get('phase') == ph]
@@ -507,7 +505,7 @@ def build_md(title, label, prog_ampel, level, doc, meta, now, inper, start, end,
     def esc(s): return str(s if s is not None else '').replace('|', '\\|').replace('\n', ' ')
     allms = [m for w in doc['workstreams'] for m in w['milestones']]
     L = [f"# {title}", "", f"Projekt RUBICON · Programm-Ampel: {SIG_LBL[prog_ampel]} · Stand {STAMP} · verdichtet aus der RUBICON-Plattform", ""]
-    PH = ['Phase 0', 'Phase 1', 'Phase 2', 'Phase 3', 'Nachlauf Q2/27']
+    PH = PHASEN
     if level in ('monat', 'vr'):
         L += ["## Erfüllungsgrad je Phase", "", "| Phase | Erledigt | % |", "|---|---|---|"]
         for ph in PH:
