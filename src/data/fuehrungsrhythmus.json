@@ -1,18 +1,19 @@
 {
   "titel": "Führungsrhythmus — Management Operating System (MOS)",
-  "untertitel": "Von der Schicht bis zum VR · ein Tracking-Backbone: der RUBICON Control Tower",
+  "untertitel": "RUBICON bildet die Programm-/GL-Ebene ab · Ops-Ebene erreicht den Tower nur aggregiert (MBR) · VR läuft in Sherpany",
   "gruppen": [
     {
-      "kadenz": "Täglich / je Schicht",
-      "farbe": "grey",
+      "kadenz": "Alle 2 Wochen",
+      "farbe": "brass",
       "meetings": [
         {
-          "name": "Shift-Huddle (Stationsebene)",
-          "wann": "je Schicht, ~10 Min",
-          "teilnehmer": "Stationsleiter + Schicht-Team",
-          "zweck": "Tagessteuerung Ops: Pünktlichkeit/Turnaround, Vorkommnisse, Safety, Tagesziele",
-          "output": "Lokale KPIs (aggregiert, ohne MA-Bezug) → Station-Scorecard; Eskalationen an COO",
-          "id": "shift-huddle"
+          "id": "steuerungsrunde",
+          "typ": "sitzung",
+          "name": "Steuerungsrunde (physisch)",
+          "wann": "alle 2 Wochen · physisch · ~2h",
+          "teilnehmer": "DRS + Fritthum + Gökcöl + Rohde (Format analog Kickoff 31.07.)",
+          "zweck": "Programm-Steuerung über alle Ströme: Ampel-Lage & Δ, Eskalationen, Ressourcen-/Zielentscheide, Cash-Lage (13-Wo-Liquidität als fester Punkt), Gate-/VR-Vorbereitung — ersetzt die wöchentliche 3er-Steuerung",
+          "output": "Sitzungserfassung im Tower (Meet-Notiz-Import = Primärweg) · Beschlüsse → Entscheids-Register · Commitments → Handlungen"
         }
       ]
     },
@@ -21,36 +22,13 @@
       "farbe": "green",
       "meetings": [
         {
-          "name": "Gruppen-Commitment-Tracker (Backbone)",
-          "wann": "laufend · 48h-Reminder · Wochen-Review",
-          "teilnehmer": "GL + CEO-Office (Betrieb) · AFR (Kadenz/Struktur)",
-          "zweck": "Commitment-Status aller 7 Ströme, Ampel, Gruppen A–D, Konsequenz-Mechanik",
-          "output": "Einträge/Updates DIREKT im RUBICON Control Tower (kein Parallelsystem)",
-          "id": "commitment-tracker"
-        },
-        {
+          "id": "gl-weekly",
+          "typ": "sitzung",
           "name": "GL-Weekly (Dienstag)",
           "wann": "wöchentlich · Di",
           "teilnehmer": "GL-6 · Vorsitz CGO · Commitment-Review vorangestellt",
-          "zweck": "7-WS-Ampel, Commitment-Review, Entscheids-Queue, Gate-Status (Do-18:00-Serie geht hier auf)",
-          "output": "Beschlüsse + Commitments → Tower (Aktions-Log); offene Entscheide → Entscheids-Queue; Kurzprotokoll",
-          "id": "gl-weekly"
-        },
-        {
-          "name": "3er-Steuerung (Chairman-Steuerung)",
-          "wann": "wöchentlich · kurz",
-          "teilnehmer": "DRS + AFR + CGO",
-          "zweck": "Eskalationen Stufe 3, Ressourcen-/Zielentscheide, Gate-Vorbereitung",
-          "output": "Steuerungsentscheide → Tower; Eskalationen geschlossen",
-          "id": "3er-steuerung"
-        },
-        {
-          "name": "13-Wochen-Liquidität",
-          "wann": "wöchentlich",
-          "teilnehmer": "CFO Rohde → GL",
-          "zweck": "Cash-Steuerung, Cash-Gate (G6 — cash-wirksame Schritte erst nach Closing 31.10.)",
-          "output": "Liquiditätsstatus → Monthly Report / Tower",
-          "id": "liquiditaet-13w"
+          "zweck": "7-WS-Ampel, Commitment-Review, Entscheids-Queue, Gate-Status · fixer Punkt: 13-Wochen-Liquiditätsstatus (Rohde) · im 1. Termin des Quartals: erweitertes Commitment-Review je Strom (ersetzt die Quartals-Runde)",
+          "output": "Beschlüsse + Commitments → Tower · offene Entscheide → Entscheids-Queue · Kurzprotokoll"
         }
       ]
     },
@@ -59,36 +37,22 @@
       "farbe": "blue",
       "meetings": [
         {
+          "id": "mbr",
+          "typ": "sitzung",
           "name": "Monthly Business / Ops-Performance-Review",
           "wann": "monatlich",
           "teilnehmer": "CGO + COO Matthei + CFO · Top-Verluststationen",
-          "zweck": "Station-Scorecards, P&L-Owner-Review, Zentralkosten-Deckel-Fortschritt",
-          "output": "MBR-Protokoll + Scorecards → Tower",
-          "id": "mbr"
+          "zweck": "Station-Scorecards, P&L-Owner-Review, Zentralkosten-Deckel-Fortschritt — der EINZIGE Aggregationspunkt, über den die Ops-Ebene den Tower erreicht",
+          "output": "MBR-Protokoll + Scorecards → Tower; programm-relevante Blocker/Commitments werden hier erfasst"
         },
         {
-          "name": "Monthly Report",
-          "wann": "bis 20. des Folgemonats",
-          "teilnehmer": "CFO Rohde/Lesch → GL / Chairman Cockpit",
-          "zweck": "P&L (ab M4 + 13-Wochen-Liquidität; ab M8 + Bilanz/Cashflow, Art. 963 OR)",
-          "output": "Report-Doc (Drive) + Kennzahlen → Tower",
-          "id": "monthly-report"
-        },
-        {
-          "name": "Chairman Cockpit Review",
-          "wann": "monatlich · 1-Seiter Pre-Read",
-          "teilnehmer": "DRS (steuert & kontrolliert)",
-          "zweck": "Programm-Ampel, Execution-Rate, Gates, überfällige Entscheide, Commitment-Status",
-          "output": "Kontroll-Vermerk / Steuerimpulse → Tower",
-          "id": "chairman-cockpit"
-        },
-        {
+          "id": "commercial-cafes",
+          "typ": "sitzung",
           "name": "Commercial Cafés",
           "wann": "monatlich",
           "teilnehmer": "CCO Haeffner + Stationsleiter",
           "zweck": "Kundennähe, Renewal-Frühwarnung, «Dieters Liste» Top-Accounts",
-          "output": "Touchpoint-Log → CRM-Cockpit (:8600)",
-          "id": "commercial-cafes"
+          "output": "Touchpoint-Log → CRM-Cockpit (:8600)"
         }
       ]
     },
@@ -97,28 +61,80 @@
       "farbe": "brass",
       "meetings": [
         {
-          "name": "VR-Sitzung",
-          "wann": "4×/Jahr · Pre-Read T−14 (Sherpany)",
-          "teilnehmer": "VR · Vorsitz DRS · Vorlage AFR/CGO",
+          "id": "vr-sitzung",
+          "typ": "extern",
+          "name": "VR-Sitzung (Sherpany)",
+          "wann": "4×/Jahr · Pre-Read T−14",
+          "teilnehmer": "VR · Vorsitz DRS · Vorlagen AFR/CGO",
           "zweck": "Genehmigungen (TOM-Blueprint, Zielvereinbarungen, Budget), Beschluss-Umsetzungs-Tracking",
-          "output": "VR-Protokoll (Sherpany) + Beschlüsse → Tower",
-          "id": "vr-sitzung"
+          "output": "Erfassung, Protokoll & Beschlüsse in SHERPANY (führendes System) — RUBICON spiegelt nur Beschlüsse ins Entscheids-Register und liefert den Quartals-Report als Beilage"
+        }
+      ]
+    },
+    {
+      "kadenz": "Standing Reports & Backbone (keine Sitzungen)",
+      "farbe": "grey",
+      "meetings": [
+        {
+          "id": "commitment-tracker",
+          "typ": "report",
+          "name": "Commitment-Tracker",
+          "wann": "laufend · 48h-Reminder",
+          "teilnehmer": "alle Owner · Betrieb CoS",
+          "zweck": "Der Tower SELBST ist der Tracker — Handlungen, Ampeln, Konsequenz-Mechanik",
+          "output": "kein Meeting: direkt im RUBICON Control Tower"
         },
         {
-          "name": "Quartals-Commitment-Runde",
-          "wann": "quartalsweise",
-          "teilnehmer": "AFR (Steuerung DRS)",
-          "zweck": "Gesamt-Commitment-Review je Strom, Zielnachjustierung",
-          "output": "Review-Vermerk → Tower",
-          "id": "quartals-commitment"
+          "id": "liquiditaet-13w",
+          "typ": "report",
+          "name": "13-Wochen-Liquidität",
+          "wann": "wöchentlich fortgeschrieben",
+          "teilnehmer": "CFO Rohde",
+          "zweck": "Cash-Steuerung, Cash-Gate G6 — Bericht, kein eigenes Meeting",
+          "output": "Vortrag im GL-Weekly (fixer Punkt) + in der Steuerungsrunde"
+        },
+        {
+          "id": "monthly-report",
+          "typ": "report",
+          "name": "Monthly Report",
+          "wann": "bis 20. des Folgemonats",
+          "teilnehmer": "CFO Rohde/Lesch → GL / Chairman",
+          "zweck": "P&L (ab M4 + 13-Wo-Liqui; ab M8 + Bilanz/Cashflow, Art. 963 OR)",
+          "output": "Report-Doc (Drive) + Kennzahlen → Tower"
+        },
+        {
+          "id": "chairman-cockpit",
+          "typ": "report",
+          "name": "Chairman Cockpit Review",
+          "wann": "monatlich · 1-Seiter",
+          "teilnehmer": "DRS (Solo-Routine)",
+          "zweck": "Programm-Ampel, Execution-Rate, Gates, überfällige Entscheide",
+          "output": "Kontroll-Vermerk / Steuerimpulse → Tower"
+        }
+      ]
+    },
+    {
+      "kadenz": "Ops-Ebene (ausserhalb RUBICON)",
+      "farbe": "grey",
+      "meetings": [
+        {
+          "id": "shift-huddle",
+          "typ": "ops",
+          "name": "Shift-Huddle (Stationsebene)",
+          "wann": "je Schicht, ~10 Min",
+          "teilnehmer": "Stationsleiter + Schicht-Team",
+          "zweck": "Tagessteuerung Ops: Pünktlichkeit/Turnaround, Vorkommnisse, Safety",
+          "output": "KEIN Tower-Eintrag — lokale KPIs aggregiert → Station-Scorecard → erreicht RUBICON nur über das MBR"
         }
       ]
     }
   ],
   "grundsaetze": [
     "3-Ebenen-Führung: DRS steuert & kontrolliert · AFR + CGO treiben · GL-6 liefert.",
+    "RUBICON-Scope = Programm-/GL-Ebene (Meilensteine, Handlungen, Entscheide, Reports). Die Ops-Ebene läuft ausserhalb und erreicht den Tower NUR aggregiert über das MBR.",
+    "VR-Sitzungen werden in Sherpany erfasst und geführt — RUBICON übernimmt Beschlüsse ins Register und liefert Reports zu (keine Doppelführung).",
     "Commitment-Review IMMER zuerst — vor den Sachthemen.",
-    "Entscheids-Queue: Liegedauer jedes offenen Entscheids sichtbar; GL-Norm «10 Entscheide/Tag».",
+    "Entscheids-Queue: Liegedauer jedes offenen Entscheids sichtbar.",
     "Konsequenz-Mechanik: 48h-Reminder → 2× Nichtlieferung = Eskalation eine Ebene höher.",
     "Ein Tracking-Backbone: der RUBICON Control Tower — kein Parallelbetrieb, keine doppelte Pflege."
   ]

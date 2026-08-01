@@ -34,11 +34,13 @@ ENTS = ROOT / 'src' / 'data' / 'entscheide.json'
 # Fester Verteiler (DRS 16.07.: «der Versand geht immer an die GL») — identisch mit dem
 # etablierten GL-Verteiler in Tools/adv_newsletter_to_gl.py (ohne DRS selbst = Absender).
 # Gökcöl-Adresse mailbox-verifiziert 16.07. (c.gokcol@, nicht c.goelcoel@).
+# Matthei ergänzt 01.08. (DRS: «Florian fehlt») — Adresse aus echten Inbound-Mails verifiziert.
 GL_VERTEILER = [
     'a.fritthum@axs.aero',
     'c.gokcol@axs.aero',
     'stephanie.Rohde@ahs-aero.de',
     't.pajor@group.aas.aero',
+    'f.matthei@axs.aero',
     'm.haeffner@axs.aero',
     'Amelie.Charisius@ahs-aero.de',
 ]

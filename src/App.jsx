@@ -1262,20 +1262,22 @@ function FuehrungsrhythmusCard() {
                     <td className="px-2 py-1.5" style={{ color: T.inkDim }}>{m.zweck}</td>
                     <td className="px-2 py-1.5" style={{ color: T.brass }}>{m.output}</td>
                     <td className="px-2 py-1.5">
-                      <div className="flex flex-col gap-1" style={{ minWidth: 58 }}>
-                        <a href={`/traktanden/${m.id}.pdf`} target="_blank" rel="noreferrer"
-                          className="inline-flex items-center justify-center gap-1 px-2 py-1 rounded border text-[10px]"
-                          style={{ borderColor: T.brass, color: T.brass }}>
-                          <FileText size={10} /> PDF
-                        </a>
-                        {TRAKT_DOCS[m.id] && (
-                          <a href={`https://docs.google.com/document/d/${TRAKT_DOCS[m.id]}/edit`} target="_blank" rel="noreferrer"
+                      {AGENDA_BY_ID[m.id] ? (
+                        <div className="flex flex-col gap-1" style={{ minWidth: 58 }}>
+                          <a href={`/traktanden/${m.id}.pdf`} target="_blank" rel="noreferrer"
                             className="inline-flex items-center justify-center gap-1 px-2 py-1 rounded border text-[10px]"
-                            style={{ borderColor: T.blue, color: T.blue }}>
-                            <FileText size={10} /> Doc
+                            style={{ borderColor: T.brass, color: T.brass }}>
+                            <FileText size={10} /> PDF
                           </a>
-                        )}
-                      </div>
+                          {TRAKT_DOCS[m.id] && (
+                            <a href={`https://docs.google.com/document/d/${TRAKT_DOCS[m.id]}/edit`} target="_blank" rel="noreferrer"
+                              className="inline-flex items-center justify-center gap-1 px-2 py-1 rounded border text-[10px]"
+                              style={{ borderColor: T.blue, color: T.blue }}>
+                              <FileText size={10} /> Doc
+                            </a>
+                          )}
+                        </div>
+                      ) : <span style={{ color: T.inkFaint }}>—</span>}
                     </td>
                   </tr>
                 ))}
@@ -1297,7 +1299,9 @@ function FuehrungsrhythmusCard() {
 // ── SITZUNG ERFASSEN — Sitzungs-Output strukturiert erfassen (5 Typen),
 // schreibt via /api/sitzung in projekt.yaml (Fortschritt/Blocker) + protokolle.json.
 const AGENDA_BY_ID = Object.fromEntries((AGENDAS.agendas || []).map(a => [a.meeting_id, a]))
-const FR_MEETINGS = FR.gruppen.flatMap(g => g.meetings.map(m => ({ id: m.id, name: m.name })))
+// Erfassbar sind NUR echte Tower-Sitzungen (typ 'sitzung') — Reports/Backbone sind keine
+// Meetings, Ops-Ebene bleibt ausserhalb, VR läuft in Sherpany (typ 'extern'). (01.08.)
+const FR_MEETINGS = FR.gruppen.flatMap(g => g.meetings.filter(m => (m.typ || 'sitzung') === 'sitzung').map(m => ({ id: m.id, name: m.name })))
 const TYP_LABEL = { fortschritt: 'Fortschritt (%)', commitment: 'Commitment', entscheid: 'Entscheid', blocker: 'Blocker/Verzug', notiz: 'Notiz' }
 
 // K1 (01.08.): Meet-Notiz (Gemini) → Vorschau → Übernahme. PRIMÄRWEG für

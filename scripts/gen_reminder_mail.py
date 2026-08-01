@@ -54,6 +54,7 @@ OWNER_EMAILS = {
     'Cüneyt Gökcöl': 'c.gokcol@axs.aero',
     'Stephanie Rohde': 'stephanie.Rohde@ahs-aero.de',
     'Thomas Pajor': 't.pajor@group.aas.aero',
+    'Florian Matthei': 'f.matthei@axs.aero',   # ergänzt 01.08. (DRS) — aus Inbound-Mails verifiziert
     'Michael Haeffner': 'm.haeffner@axs.aero',
     'Amélie Charisius': 'Amelie.Charisius@ahs-aero.de',
 }

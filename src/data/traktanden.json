@@ -1,6 +1,39 @@
 {
   "agendas": [
     {
+      "meeting_id": "steuerungsrunde",
+      "dauer": "~2h (physisch)",
+      "vorsitz": "Dieter Streuli",
+      "teilnehmer": "DRS + Andreas Fritthum + Cüneyt Gökcöl + Stephanie Rohde",
+      "standing_rule": "Physisch, alle 2 Wochen (Format analog Kickoff 31.07.) — ersetzt die wöchentliche 3er-Steuerung; Ad-hoc-Eskalationen zwischen den Terminen bilateral.",
+      "traktanden": [
+        {
+          "titel": "Commitment-/Handlungs-Review (Tower — überfällige zuerst)",
+          "output": "abgehakte bzw. eskalierte Handlungen"
+        },
+        {
+          "titel": "Ampel-Lage & Δ seit letzter Runde (Kontrollturm)",
+          "output": "Steuerimpulse je Strom"
+        },
+        {
+          "titel": "Cash-Lage: 13-Wochen-Liquidität + Finanzierungs-Stand (Rohde)",
+          "output": "Cash-Entscheide / Gate-Status"
+        },
+        {
+          "titel": "Eskalationen & Ressourcen-/Zielentscheide",
+          "output": "Entscheide → Register (E-Nummern)"
+        },
+        {
+          "titel": "Gate-/VR-Vorbereitung (nächste Kanten)",
+          "output": "Aufträge mit Owner + Termin"
+        },
+        {
+          "titel": "Varia + Bestätigung nächste Runde",
+          "output": "Termin fixiert"
+        }
+      ]
+    },
+    {
       "meeting_id": "shift-huddle",
       "dauer": "~10 Min (je Schicht, stehend)",
       "vorsitz": "Stationsleiter",
@@ -164,58 +197,6 @@
       ],
       "meeting_name": "GL-Weekly (Dienstag)",
       "kadenz": "wöchentlich · Di (~60–75 Min)"
-    },
-    {
-      "meeting_id": "3er-steuerung",
-      "dauer": "~30 Min · wöchentlich",
-      "vorsitz": "DRS (Chairman)",
-      "teilnehmer": "DRS + AFR (Vice Chairman) + CGO (CEO Gökcöl)",
-      "standing_rule": "Hier wird nur entschieden, was GL-6 nicht lösen kann — jede Eskalation verlässt die Sitzung als Entscheid mit Owner + Datum oder mit begründeter Rückdelegation; nichts bleibt liegen.",
-      "traktanden": [
-        {
-          "nr": 1,
-          "titel": "Commitment-Review (Eskalationen der Woche)",
-          "zeit": "5 Min",
-          "verantwortlich": "AFR",
-          "output": "Bestätigte/aktualisierte ROT-Eskalationen → Tower/Aktions-Log"
-        },
-        {
-          "nr": 2,
-          "titel": "Entscheids-Queue: überfällige Stufe-3-Entscheide abarbeiten",
-          "zeit": "10 Min",
-          "verantwortlich": "DRS (Vorlage AFR/CGO)",
-          "output": "Beschlüsse (Owner + Datum) → Tower/Entscheids-Queue geschlossen"
-        },
-        {
-          "nr": 3,
-          "titel": "Ressourcen- & Zielkonflikte über Ströme (WS1–WS6/OE)",
-          "zeit": "6 Min",
-          "verantwortlich": "CGO",
-          "output": "Ressourcen-/Priorisierungs-Entscheid → Tower/Aktions-Log"
-        },
-        {
-          "nr": 4,
-          "titel": "Gate-Vorbereitung (G1/G2/G6, TOM Q4-VR, Verfahren)",
-          "zeit": "6 Min",
-          "verantwortlich": "AFR",
-          "output": "Gate-Ampel-Update + nächste Schritte → Tower; VR-Vorlagen → Sherpany (T−14)"
-        },
-        {
-          "nr": 5,
-          "titel": "2×-Nichtlieferung: CEO-Gespräch & namentliche Eskalation",
-          "zeit": "3 Min",
-          "verantwortlich": "CGO",
-          "output": "Eskalations-Entscheid namentlich → Tower/Chairman Cockpit"
-        }
-      ],
-      "ergebnis": "Gefällte Stufe-3-Entscheide, Ressourcen-/Zielentscheide und Gate-Freigaben → RUBICON Control Tower (Aktions-Log, Entscheids-Queue, Ampel); VR-relevante Punkte → Sherpany (Pre-Read T−14).",
-      "hinweise": [
-        "Commitment-Review steht immer zuerst; nur echte GL-6-Blocker landen hier.",
-        "Konsequenz-Mechanik gilt: T−48h-Reminder → verpasst = ROT + Eskalation; 2× = CEO-Gespräch + Cockpit-Nennung.",
-        "Kein Parallelsystem — Ergebnisse ausschliesslich in den Control Tower; DRS steuert/kontrolliert, greift nicht operativ ein."
-      ],
-      "meeting_name": "3er-Steuerung (Chairman-Steuerung)",
-      "kadenz": "wöchentlich · kurz (~30 Min)"
     },
     {
       "meeting_id": "liquiditaet-13w",
@@ -584,72 +565,6 @@
       ],
       "meeting_name": "VR-Sitzung",
       "kadenz": "4×/Jahr · Pre-Read T−14 via Sherpany (halbtägig)"
-    },
-    {
-      "meeting_id": "quartals-commitment",
-      "dauer": "halbtägig (~4 Std)",
-      "vorsitz": "AFR (Vice Chairman) — Steuerung/Kontrolle DRS (Chairman)",
-      "teilnehmer": "AFR (Vorsitz) · DRS (Steuerung/Kontrolle) · CGO/CEO Gökcöl · Strom-Owner: CFO Rohde (WS3) · CCO Haeffner (WS4) · COO Matthei (OE) · CHRO Charisius (WS1/WS5) · Petric (WS6). Support: CEO-Office (Tracker/Queue-Betrieb), CFO-Stv Pajor (Finance/Baseline)",
-      "standing_rule": "Kein Zielwert wird nachjustiert ohne validierte Baseline (G2) und CFO-testierte Zahl — Commitment-Review steht immer zuerst, jede Nachjustierung landet als Beschluss im RUBICON Control Tower.",
-      "traktanden": [
-        {
-          "nr": 1,
-          "titel": "Commitment-Review Vorquartal (alle 7 Ströme, Ampel + überfällige Commitments namentlich)",
-          "zeit": "30 Min",
-          "verantwortlich": "AFR (Betrieb: CEO-Office)",
-          "output": "Ampel-Update + abgeschlossene/eskalierte Commitments → Tower/Aktions-Log"
-        },
-        {
-          "nr": 2,
-          "titel": "Entscheids-Queue-Durchsicht: überfällige Entscheide (Liegedauer > Schwelle), 2×-Nichtlieferungs-Eskalationen",
-          "zeit": "20 Min",
-          "verantwortlich": "AFR (CGO)",
-          "output": "Entscheide gefällt/eskaliert → Tower/Entscheids-Queue"
-        },
-        {
-          "nr": 3,
-          "titel": "Ziel-Nachjustierung gegen Baseline (G2, 15.10.): KPI-Soll je Strom bestätigen/anpassen (Execution-Rate, Overhead −30%, CpT −5%, Verlustquellen −50%, Renewal)",
-          "zeit": "60 Min",
-          "verantwortlich": "CFO Rohde (Finance) + Strom-Owner",
-          "output": "Beschluss Zielwerte je KPI → Tower/Aktions-Log; VR-relevante Änderungen → Sherpany (Pre-Read T−14)"
-        },
-        {
-          "nr": 4,
-          "titel": "Phasen-Fortschritt je Strom (Phase 0–3 / Nachlauf) gegen kritischen Pfad & Gates (G6 Closing 31.10. · TOM Q4-VR · Verfahren eingeleitet · Zielnachweis Apr 27)",
-          "zeit": "60 Min",
-          "verantwortlich": "Strom-Owner (je 7 Ströme, moderiert AFR)",
-          "output": "Phasen-Ampel + Gate-Status → Tower; Roadmap-Abweichungen als Commitment → Tower/Aktions-Log"
-        },
-        {
-          "nr": 5,
-          "titel": "Ressourcen-Rebalancing: Kapazität/Budget/Personal zwischen Strömen nach Engpässen & kritischem Pfad",
-          "zeit": "40 Min",
-          "verantwortlich": "AFR (DRS entscheidet Ressourcen)",
-          "output": "Rebalancing-Beschluss → Tower/Aktions-Log; Budget-/GL-relevantes → VR/Sherpany"
-        },
-        {
-          "nr": 6,
-          "titel": "Neue Quartals-Commitments + Owner + Termin je Strom (Konsequenz-Mechanik 48h/2×-Eskalation aktiviert)",
-          "zeit": "30 Min",
-          "verantwortlich": "AFR (Owner je Strom)",
-          "output": "Commitments mit Owner/Termin → Tower/Aktions-Log (Gruppen A–D)"
-        },
-        {
-          "nr": 7,
-          "titel": "Steuerungs-/Kontroll-Fazit DRS: Eskalations-Endpunkt, Richtungs-Setzung, VR-Traktandierung",
-          "zeit": "20 Min",
-          "verantwortlich": "DRS (Chairman)",
-          "output": "Chairman-Fazit + VR-Pre-Read-Punkte → Chairman Cockpit / Sherpany"
-        }
-      ],
-      "ergebnis": "Quartals-Gesamtbild aller 7 Ströme (Ampel, Phasen-Fortschritt, nachjustierte Zielwerte, Rebalancing- und neue Commitment-Beschlüsse) — vollständig im RUBICON Control Tower (Aktions-Log, Entscheids-Queue, Ampel); VR-relevante Beschlüsse zusätzlich via Sherpany (Pre-Read T−14).",
-      "hinweise": [
-        "Kein Parallelsystem: alle Ergebnisse ausschliesslich in den RUBICON Control Tower — der Chairman-Aufträge-Tracker ist absorbiert.",
-        "GL-Norm «10 Entscheide/Tag, 2 korrigierbar» gilt auch hier — Entscheide werden gefällt, nicht vertagt.",
-        "Zeitboxen sind Deckel; überzogene Punkte werden als Commitment in den Tracker verschoben, nicht ausgesessen."
-      ],
-      "meeting_name": "Quartals-Commitment-Runde",
-      "kadenz": "quartalsweise (~half-day)"
     }
   ]
 }
