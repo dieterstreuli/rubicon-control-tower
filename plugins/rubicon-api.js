@@ -375,6 +375,8 @@ export function rubiconApi() {
           if (role === 'Owner' && t.owner !== me) return json(403, { ok: false, error: 'Owner darf nur eigene Handlungen abhaken' })
           t.status = body.status
           t.erledigt_am = body.status === 'erledigt' ? (body.datum || new Date().toISOString().slice(0, 10)) : null
+          // A5 (01.08.): Audit-Spur — WER hat abgehakt (Rolle bzw. Owner-Name)
+          t.erledigt_von = body.status === 'erledigt' ? (role === 'Owner' ? me : 'CoS') : null
           writeAtomic(tasksPath, JSON.stringify(store, null, 2))
           const roll = rollupMs(t.ms_id, store)
           // Input-Kopplung (13.07., DRS «auto-geliefert»): Inputs mit liefer_tasks werden
@@ -413,6 +415,38 @@ export function rubiconApi() {
           else if (body.scope && Array.isArray(body.scope.ids) && body.scope.ids.length) args.push('--ids', body.scope.ids.join(','))
           else return json(400, { ok: false, error: 'scope fehlt («alle» oder {ids:[...]})' })
           if (body.force) args.push('--force')
+          execFile(PY_BIN, args, { cwd: root, timeout: 120000 }, (err, stdout, stderr) => {
+            if (err && !stdout) return json(500, { ok: false, error: String(stderr || err).slice(-300) })
+            const last = (stdout || '').trim().split('\n').pop()
+            try { return json(200, JSON.parse(last)) }
+            catch { return json(500, { ok: false, error: 'Parse: ' + (stderr || last || '').slice(-200) }) }
+          })
+        } catch (err) {
+          return json(500, { ok: false, error: String(err && err.message || err) })
+        }
+      })
+
+      // POST /api/gemini/import — K1 (01.08.): Meet-Notiz (Gemini) → Vorschau/Übernahme
+      // via import_gemini_doc.py --api. post:false = Dry-Run-VORSCHAU (nichts geschrieben);
+      // post:true = Übernahme über den regulären /api/sitzung-Pfad. Menschliche Freigabe =
+      // der Übernehmen-Klick NACH der Vorschau (gleiches Gate wie CLI --post). CoS/Owner.
+      server.middlewares.use('/api/gemini/import', async (req, res, next) => {
+        if (req.method !== 'POST') return next()
+        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
+        if (!guard(req, res)) return
+        try {
+          const body = JSON.parse((await readBody(req)) || '{}')
+          if (body.role !== 'CoS' && body.role !== 'Owner') return json(403, { ok: false, error: `Rolle «${body.role || '?'}» darf nicht importieren` })
+          if (!body.meeting_id) return json(400, { ok: false, error: 'meeting_id fehlt' })
+          const args = [path.join(root, 'scripts', 'import_gemini_doc.py')]
+          if (body.doc_id) args.push(body.doc_id)
+          args.push('--meeting-id', body.meeting_id, '--api', '--role', body.role)
+          if (body.me) args.push('--me', body.me)
+          if (body.on) args.push('--on', body.on)
+          if (body.days) args.push('--days', String(body.days))
+          if (body.datum) args.push('--datum', body.datum)
+          if (body.sensitiv) args.push('--sensitiv')
+          if (body.post) args.push('--post')
           execFile(PY_BIN, args, { cwd: root, timeout: 120000 }, (err, stdout, stderr) => {
             if (err && !stdout) return json(500, { ok: false, error: String(stderr || err).slice(-300) })
             const last = (stdout || '').trim().split('\n').pop()
@@ -465,6 +499,10 @@ export function rubiconApi() {
           const e = store.entscheide.find(x => x.id === body.id)
           if (!e) return json(404, { ok: false, error: `Entscheid ${body.id} nicht gefunden` })
           if (role === 'Owner' && e.antragsteller !== me) return json(403, { ok: false, error: 'Owner darf nur eigene Entscheide fortschreiben' })
+          // A4 (01.08.): Beschluss-Qualität hart — ohne Begründung kein «entschieden»
+          // (Pflichtfeld der Beschlussvorlage; bisher nur UI-Warnung, jetzt Server-Gate).
+          if (body.status === 'entschieden' && !(e.begruendung || '').trim())
+            return json(400, { ok: false, error: 'Begründung ist Pflicht vor «entschieden» — im Register-Detail ergänzen.' })
           const today = body.datum || new Date().toISOString().slice(0, 10)
           e.status = body.status
           if (body.status === 'entschieden' && !e.datum) e.datum = today

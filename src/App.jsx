@@ -411,9 +411,10 @@ export default function App() {
         {/* ══ AUFGABEN ══ */}
         {tab === 'aufgaben' && <AufgabenView role={role} me={me} prog={prog} onOpenMs={(id) => { const m = ms.find(x => x.id === id); if (m) setSelMs(m) }} />}
 
-        {/* ══ SITZUNGEN — Erfassen (CoS/Owner) + Protokoll-Archiv (B0, 01.08.) ══ */}
+        {/* ══ SITZUNGEN — Gemini-Import (Primärweg) + Erfassen (Fallback) + Archiv ══ */}
         {tab === 'sitzungen' && (
           <div className="space-y-5">
+            {canEdit && <GeminiImport role={role} me={me} />}
             {canEdit && <ErfassungView ms={ms} today={BASE.meta.today} role={role} me={me} />}
             <ProtokolleView role={role} me={me} />
           </div>
@@ -1100,6 +1101,140 @@ const AGENDA_BY_ID = Object.fromEntries((AGENDAS.agendas || []).map(a => [a.meet
 const FR_MEETINGS = FR.gruppen.flatMap(g => g.meetings.map(m => ({ id: m.id, name: m.name })))
 const TYP_LABEL = { fortschritt: 'Fortschritt (%)', commitment: 'Commitment', entscheid: 'Entscheid', blocker: 'Blocker/Verzug', notiz: 'Notiz' }
 
+// K1 (01.08.): Meet-Notiz (Gemini) → Vorschau → Übernahme. PRIMÄRWEG für
+// Sitzungsprotokolle; das manuelle Formular darunter bleibt Fallback (Meetings
+// ohne Gemini-Notiz, Ad-hoc-Gespräche). Immer Mensch im Loop: «Suchen & Vorschau»
+// = Dry-Run (nichts geschrieben) → «Übernehmen» = regulärer /api/sitzung-Pfad.
+function GeminiImport({ role, me }) {
+  const realToday = new Date().toISOString().slice(0, 10)
+  const [meetingId, setMeetingId] = useState(FR_MEETINGS[0]?.id || '')
+  const [on, setOn] = useState(realToday)
+  const [days, setDays] = useState(1)
+  const [sensitiv, setSensitiv] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [res, setRes] = useState(null)
+  const inp = { background: T.panelSoft, borderColor: T.line, color: T.ink }
+
+  async function call(post, docId) {
+    setBusy(true)
+    if (!post) setRes(null)
+    try {
+      const r = await fetch('/api/gemini/import', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role, me, meeting_id: meetingId, on, days, sensitiv, doc_id: docId || undefined, post }),
+      })
+      const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
+      if (post && j.ok && j.posted?.ok) {
+        alert(`Sitzung übernommen (${j.posted.id}).`
+          + ((j.posted.mirrored || []).length ? ` ${j.posted.mirrored.length} Commitment(s) als Handlungen gespiegelt.` : '')
+          + (j.posted.sensitiv ? ' 🔒 sensitiv (nur lokal).' : ''))
+        sessionStorage.setItem('rubicon_tab', 'sitzungen')
+        reloadKeepScroll()
+        return
+      }
+      setRes(j)
+    } catch (err) { setRes({ ok: false, error: String(err) }) }
+    setBusy(false)
+  }
+
+  const p = res?.ok ? res.payload : null
+  return (
+    <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.brass + '55' }}>
+      <div className="text-[11px] uppercase tracking-widest mb-1" style={{ color: T.inkFaint, fontFamily: T.mono }}>
+        Aus Meet-Notiz importieren (Gemini) — Primärweg: Vorschau, dann Übernahme
+      </div>
+      <div className="text-[11px] mb-3" style={{ color: T.inkDim }}>
+        Sucht die «Notizen von Gemini»-Doc zum Meeting, zeigt ALLE erkannten Einträge zur Prüfung — geschrieben wird erst nach «Übernehmen». Erzeugt nie Fortschritt/Verzug aus Prosa.
+      </div>
+      <div className="flex flex-wrap items-end gap-3 text-[12px]">
+        <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>Meeting</span>
+          <select value={meetingId} onChange={e => setMeetingId(e.target.value)} className="rounded border px-2 py-1" style={inp}>
+            {FR_MEETINGS.map(m => <option key={m.id} value={m.id} style={{ color: '#111' }}>{m.name}</option>)}
+          </select></label>
+        <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>Meeting-Tag</span>
+          <input type="date" value={on} onChange={e => setOn(e.target.value)} className="rounded border px-2 py-1" style={{ ...inp, fontFamily: T.mono }} /></label>
+        <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>Suchfenster</span>
+          <select value={days} onChange={e => setDays(+e.target.value)} className="rounded border px-2 py-1" style={inp}>
+            <option value={1} style={{ color: '#111' }}>nur dieser Tag</option>
+            <option value={3} style={{ color: '#111' }}>3 Tage rückwärts</option>
+            <option value={7} style={{ color: '#111' }}>7 Tage rückwärts</option>
+          </select></label>
+        <label className="flex items-center gap-1.5 pb-1 cursor-pointer" style={{ color: sensitiv ? T.red : T.inkDim }}>
+          <input type="checkbox" checked={sensitiv} onChange={e => setSensitiv(e.target.checked)} /> 🔒 Sensitiv
+        </label>
+        <button onClick={() => call(false)} disabled={busy}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded border font-semibold text-[12px]"
+          style={{ borderColor: T.brass, color: T.brass, opacity: busy ? .5 : 1 }}>
+          {busy ? 'sucht…' : 'Notiz suchen & Vorschau'}
+        </button>
+      </div>
+
+      {res && !res.ok && res.error === 'not_found' && (
+        <div className="mt-3 text-[12px] rounded border p-2" style={{ borderColor: T.amber + '88', color: T.amber }}>
+          Keine Gemini-Notiz für dieses Meeting im Fenster {res.fenster} gefunden — Fenster erweitern, Meeting-Tag prüfen oder unten manuell erfassen.
+        </div>
+      )}
+      {res && !res.ok && res.error === 'ambiguous' && (
+        <div className="mt-3 text-[12px] rounded border p-2 space-y-1" style={{ borderColor: T.amber + '88', color: T.inkDim }}>
+          <b style={{ color: T.amber }}>Mehrdeutig — {res.kandidaten.length} Notizen im Fenster {res.fenster}. Welche?</b>
+          {res.kandidaten.map(k => (
+            <div key={k.id} className="flex items-center gap-2">
+              <span style={{ fontFamily: T.mono, color: T.inkFaint }}>{k.datum}</span>
+              <span className="flex-1 truncate">{k.name}</span>
+              <button onClick={() => call(false, k.id)} disabled={busy} className="px-2 py-0.5 rounded border text-[11px]"
+                style={{ borderColor: T.brass, color: T.brass }}>diese verwenden</button>
+            </div>
+          ))}
+        </div>
+      )}
+      {res && !res.ok && !['not_found', 'ambiguous'].includes(res.error) && (
+        <div className="mt-3 text-[12px] rounded border p-2" style={{ borderColor: T.red + '88', color: T.red }}>
+          Import fehlgeschlagen: {res.error}
+        </div>
+      )}
+
+      {p && (
+        <div className="mt-3 rounded-xl border overflow-hidden" style={{ borderColor: T.brass + '66' }}>
+          <div className="px-3 py-2 flex flex-wrap items-center gap-2 text-[12px] border-b" style={{ borderColor: T.line, background: T.panelSoft }}>
+            <b style={{ color: T.brass }}>VORSCHAU — nichts geschrieben</b>
+            <span>{p.meeting_name}</span>
+            <span style={{ fontFamily: T.mono, color: T.inkDim }}>{fmtDate(p.datum)}</span>
+            {p.sensitiv && <span style={{ color: T.red }}>🔒 sensitiv</span>}
+            <a href={p.gemini_doc_url} target="_blank" rel="noreferrer" className="text-[11px]" style={{ color: T.blue }}>Quelle: Gemini-Doc ↗</a>
+            <span className="flex-1" />
+            <span className="text-[11px]" style={{ color: T.green }}>projekt.yaml-Wirkung: KEINE</span>
+          </div>
+          <table className="w-full text-[12px]">
+            <thead><tr className="text-left" style={{ color: T.inkFaint, fontFamily: T.mono }}>
+              <th className="px-3 py-1.5 w-24">TYP</th><th className="px-2 py-1.5">TEXT</th>
+              <th className="px-2 py-1.5">OWNER</th><th className="px-2 py-1.5 w-24">BIS</th>
+            </tr></thead>
+            <tbody>
+              {p.eintraege.map((e, i) => (
+                <tr key={i} style={{ borderTop: `1px solid ${T.line}` }}>
+                  <td className="px-3 py-1.5" style={{ fontFamily: T.mono, color: T.brass }}>{e.typ}</td>
+                  <td className="px-2 py-1.5">{e.text}</td>
+                  <td className="px-2 py-1.5 whitespace-nowrap" style={{ fontFamily: T.mono }}>{e.owner || '—'}</td>
+                  <td className="px-2 py-1.5 whitespace-nowrap" style={{ fontFamily: T.mono, color: e.bis ? T.amber : T.grey }}>{e.bis ? fmtDate(e.bis) : '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="px-3 py-2 flex items-center gap-3 border-t" style={{ borderColor: T.line }}>
+            <button onClick={() => call(true, res.doc.id)} disabled={busy}
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded font-semibold text-[12px]"
+              style={{ background: T.brass, color: '#0b1220', opacity: busy ? .6 : 1 }}>
+              <Save size={13} /> {busy ? 'übernimmt…' : 'Übernehmen → Tower'}
+            </button>
+            <button onClick={() => setRes(null)} disabled={busy} className="px-3 py-1.5 rounded border text-[12px]" style={{ borderColor: T.line, color: T.inkDim }}>Verwerfen</button>
+            <span className="text-[10.5px]" style={{ color: T.inkFaint }}>Commitments werden als Handlungen gespiegelt (De-Dup über die Doc-ID — Re-Import dupliziert nicht).</span>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // A2 (01.08.): MS-Auswahl mit Textfilter — 167 Meilensteine sind per nativem
 // Select nicht mehr greifbar. Tippen filtert die Optionsliste live.
 function MsPicker({ ms, value, onChange, optional, style: inp }) {
@@ -1267,6 +1402,43 @@ const ENT_COLOR = (st) => ({ beantragt: T.grey, entscheidungsreif: T.amber, ents
 const ENT_TYPEN = ['Kundenvertrag', 'Lieferanten-/sonstiger Vertrag', 'Investition / Capex', 'Kredit / Fremdkapital', 'Personal', 'Governance / Reglement', 'Governance / IT-Infrastruktur', 'Governance / Zugriff', 'Strategie', 'Sonstiges']
 const ENT_GREMIEN = ['Ressort', 'CEO', 'ExBoD', 'GL', 'VR']
 
+// A4 (01.08.): Begründung/Datengrundlage direkt im Register-Detail nachpflegen —
+// nötig, weil der Server «entschieden» ohne Begründung jetzt hart ablehnt.
+// Upsert über denselben key erhält Lifecycle (Status/Kommunikation/E-Nummer).
+function EntEdit({ e, role, me, today }) {
+  const [beg, setBeg] = useState(e.begruendung || '')
+  const [dat, setDat] = useState(e.datengrundlage || '')
+  const [busy, setBusy] = useState(false)
+  const dirty = beg !== (e.begruendung || '') || dat !== (e.datengrundlage || '')
+  const inp = { background: T.panelSoft, borderColor: T.line, color: T.ink }
+  const save = async () => {
+    if (busy || !dirty) return
+    setBusy(true)
+    try {
+      const r = await fetch('/api/entscheid/upsert', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role, me, datum: today, entscheide: [{ key: e.key, titel: e.titel, entscheid: e.entscheid, begruendung: beg.trim() || null, datengrundlage: dat.trim() || null }] }),
+      })
+      const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
+      if (j.ok) reloadKeepScroll()
+      else { alert('Speichern fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(false) }
+    } catch (err) { alert('Speichern fehlgeschlagen: ' + err); setBusy(false) }
+  }
+  return (
+    <div className="mt-2 pt-2 border-t flex flex-wrap items-center gap-2 text-[11.5px]" style={{ borderColor: T.line }}>
+      <span className="text-[10px] uppercase tracking-wider" style={{ color: T.inkFaint, fontFamily: T.mono }}>Pflege</span>
+      <input placeholder="Begründung (Pflicht vor «entschieden»)" value={beg} onChange={ev => setBeg(ev.target.value)}
+        className="flex-1 min-w-[220px] rounded border px-2 py-1" style={inp} />
+      <input placeholder="Datengrundlage (Unterlagen/Links)" value={dat} onChange={ev => setDat(ev.target.value)}
+        className="flex-1 min-w-[220px] rounded border px-2 py-1" style={inp} />
+      <button onClick={save} disabled={busy || !dirty} className="px-2.5 py-1 rounded border text-[11px]"
+        style={{ borderColor: dirty ? T.brass : T.line, color: dirty ? T.brass : T.inkFaint, opacity: busy ? .5 : 1 }}>
+        <Save size={11} className="inline mr-1" />{busy ? 'speichert…' : 'Speichern'}
+      </button>
+    </div>
+  )
+}
+
 function EntscheideView({ role, me, today }) {
   const all = ENTS.entscheide || []
   // A1 (01.08.): Filter überleben den Reload nach Status-Übergängen
@@ -1277,6 +1449,7 @@ function EntscheideView({ role, me, today }) {
     sessionStorage.setItem('rubicon_e_gremium', fGremium)
   }, [fStatus, fGremium])
   const [open, setOpen] = useState(null)          // aufgeklappte Register-Zeile
+  const [confirm, setConfirm] = useState(null)    // A4: {id, next, an} — Bestätigung vor Status-Übergang
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({ titel: '', typ: ENT_TYPEN[0], gremium: 'ExBoD', antragsteller: '', entscheid: '', begruendung: '', datengrundlage: '', frist: '' })
   const [busy, setBusy] = useState(false)
@@ -1289,13 +1462,10 @@ function EntscheideView({ role, me, today }) {
   ).sort((a, b) => b.id.localeCompare(a.id))       // neueste E-Nummer zuerst
   const nOffen = all.filter(e => !['kommuniziert', 'umgesetzt'].includes(e.status)).length
 
-  async function setStatus(e, status) {
+  // A4 (01.08.): Übergang läuft IMMER über die Bestätigungs-Zeile (kein Direkt-Klick,
+  // kein window.prompt mehr) — der Server erzwingt zusätzlich Begründung vor «entschieden».
+  async function setStatus(e, status, an = null) {
     if (busy || !mayAdvance(e)) return
-    let an = null
-    if (status === 'kommuniziert') {
-      an = window.prompt('Kommuniziert an (Verteiler/Personen)?', e.gremium === 'VR' ? 'VR-Board-Pack + GL' : 'GL')
-      if (an === null) return                        // abgebrochen
-    }
     setBusy(true)
     try {
       const r = await fetch('/api/entscheid/status', {
@@ -1441,16 +1611,43 @@ function EntscheideView({ role, me, today }) {
                       {canWrite && (
                         <td className="px-2 py-1.5 whitespace-nowrap">
                           {nextSt && mayAdvance(e) && (
-                            <button onClick={ev => { ev.stopPropagation(); setStatus(e, nextSt) }} disabled={busy}
+                            <button onClick={ev => { ev.stopPropagation(); setConfirm(confirm?.id === e.id ? null : { id: e.id, next: nextSt, an: e.gremium === 'VR' ? 'VR-Board-Pack + GL' : 'GL' }) }} disabled={busy}
                               className="px-2 py-0.5 rounded border text-[10.5px]"
                               style={{ borderColor: ENT_COLOR(nextSt) + '88', color: ENT_COLOR(nextSt), fontFamily: T.mono }}
-                              title={`Status-Übergang → ${nextSt}`}>
+                              title={`Status-Übergang → ${nextSt} (mit Bestätigung)`}>
                               → {nextSt}
                             </button>
                           )}
                         </td>
                       )}
                     </tr>
+                    {confirm?.id === e.id && (
+                      <tr style={{ background: ENT_COLOR(confirm.next) + '0d' }}>
+                        <td colSpan={canWrite ? 8 : 7} className="px-4 py-2">
+                          <div className="flex flex-wrap items-center gap-2 text-[12px]">
+                            <b style={{ color: ENT_COLOR(confirm.next) }}>Übergang bestätigen: {e.status} → {confirm.next}</b>
+                            {confirm.next === 'entschieden' && !(e.begruendung || '').trim() && (
+                              <span style={{ color: T.red }}>⚠ Begründung fehlt — zuerst in der Detail-Zeile ergänzen (Pflicht, Server lehnt sonst ab).</span>
+                            )}
+                            {confirm.next === 'kommuniziert' && (
+                              <label className="flex items-center gap-1.5"><span style={{ color: T.inkDim }}>an</span>
+                                <input value={confirm.an} onChange={ev => setConfirm(c => ({ ...c, an: ev.target.value }))}
+                                  className="w-64 rounded border px-2 py-1 text-[11px]" style={inp} />
+                              </label>
+                            )}
+                            <button onClick={() => { const c = confirm; setConfirm(null); setStatus(e, c.next, c.an) }}
+                              disabled={busy || (confirm.next === 'entschieden' && !(e.begruendung || '').trim())}
+                              className="px-3 py-1 rounded font-semibold text-[11.5px]"
+                              style={{ background: ENT_COLOR(confirm.next), color: '#0b1220', opacity: (busy || (confirm.next === 'entschieden' && !(e.begruendung || '').trim())) ? .4 : 1 }}>
+                              Bestätigen
+                            </button>
+                            <button onClick={() => setConfirm(null)} className="px-3 py-1 rounded border text-[11.5px]" style={{ borderColor: T.line, color: T.inkDim }}>Abbrechen</button>
+                            {confirm.next === 'kommuniziert' && <span className="text-[10.5px]" style={{ color: T.inkFaint }}>erzeugt Entscheid-PDF + Gmail-Entwurf — DRS sendet</span>}
+                            <span className="text-[10.5px]" style={{ color: T.inkFaint }}>Register ist revisionssicher — Übergänge sind nicht rückgängig zu machen.</span>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
                     {isOpen && (
                       <tr style={{ background: T.panelSoft + '33' }}>
                         <td colSpan={canWrite ? 8 : 7} className="px-4 py-3">
@@ -1473,6 +1670,7 @@ function EntscheideView({ role, me, today }) {
                               {e.export?.draft_id && <> · <a href="https://mail.google.com/mail/u/0/#drafts" target="_blank" rel="noreferrer" style={{ color: T.brass }} title="Gmail-Entwurf mit PDF-Anhang — DRS sendet">Gmail-Entwurf ↗</a></>}
                             </div>
                           </div>
+                          {mayAdvance(e) && <EntEdit e={e} role={role} me={me} today={today} />}
                         </td>
                       </tr>
                     )}
@@ -1923,7 +2121,7 @@ function TaskSection({ m, role, me }) {
                   {t.due
                     ? <span style={{ color: ov ? T.red : T.inkFaint }}>fällig {fmtDate(t.due)}{ov ? ' ⚠ überfällig' : ''}</span>
                     : <span>fällig — (Datenlücke)</span>}
-                  {t.erledigt_am && <span style={{ color: T.green }}>erledigt {fmtDate(t.erledigt_am)}</span>}
+                  {t.erledigt_am && <span style={{ color: T.green }}>erledigt {fmtDate(t.erledigt_am)}{t.erledigt_von ? ` · ${t.erledigt_von}` : ''}</span>}
                 </div>
               </div>
             </div>

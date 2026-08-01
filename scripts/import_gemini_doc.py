@@ -289,6 +289,7 @@ def main():
     ap.add_argument('--sensitiv', action='store_true', help='HR-/Personal-sensibel: Protokoll nur lokal einsehbar, keine Spiegel, kein Export')
     ap.add_argument('--post', action='store_true', help='SCHARF: wirklich an /api/sitzung senden (sonst nur Dry-Run)')
     ap.add_argument('--json', action='store_true', help='nur das JSON-Payload ausgeben')
+    ap.add_argument('--api', action='store_true', help='K1 (01.08.): genau EINE JSON-Zeile ausgeben (für POST /api/gemini/import) — auch für not_found/ambiguous')
     args = ap.parse_args()
 
     drive = get_drive()
@@ -296,6 +297,9 @@ def main():
     # ── --list: alle Gemini-Notiz-Docs zeigen (Titel ablesen fürs Mapping) ──
     if args.list:
         docs = find_gemini_docs(drive)
+        if args.api:
+            print(json.dumps({'ok': True, 'docs': [{'id': d['id'], 'name': d['name'], 'datum': d.get('datum')} for d in docs[:40]]}, ensure_ascii=False))
+            return
         print(f'Gefundene Gemini-Notiz-Docs ({len(docs)}), neueste zuerst:')
         for d in docs[:40]:
             print(f"  {d.get('datum') or '????-??-??'}  {d['id']}  {d['name']}")
@@ -310,17 +314,25 @@ def main():
         label, cands = resolve_doc(drive, args.meeting_id, target, args.days)
         span = target if args.days <= 1 else f'{(date.fromisoformat(target) - timedelta(days=args.days - 1)).isoformat()} … {target}'
         if not cands:
+            if args.api:
+                print(json.dumps({'ok': False, 'error': 'not_found', 'fenster': span, 'meeting': label or args.meeting_id}, ensure_ascii=False))
+                return
             print(f'Keine Gemini-Notiz für «{label or args.meeting_id}» im Fenster {span} gefunden.')
             print('Tipp: Fenster erweitern (--days N), Datum setzen (--on YYYY-MM-DD) oder --list zum Nachsehen.')
             print('Falls das Meeting neu ist: Suchbegriffe in src/data/gemini_meetings.json ergänzen.')
             return
         if len(cands) > 1:
+            if args.api:
+                print(json.dumps({'ok': False, 'error': 'ambiguous', 'fenster': span,
+                                  'kandidaten': [{'id': d['id'], 'name': d['name'], 'datum': d['datum']} for d in cands]}, ensure_ascii=False))
+                return
             print(f'Mehrdeutig — {len(cands)} Kandidaten im Fenster {span}. Bitte die passende Doc-ID direkt angeben:')
             for d in cands:
                 print(f"  {d['datum']}  {d['id']}  {d['name']}")
             return
         doc_id = cands[0]['id']
-        print(f"✓ Gefunden: {cands[0]['name']}\n  Doc-ID {doc_id}\n")
+        if not args.api:
+            print(f"✓ Gefunden: {cands[0]['name']}\n  Doc-ID {doc_id}\n")
 
     if not args.meeting_id:
         sys.exit('FEHLER: --meeting-id nötig.')
@@ -330,6 +342,17 @@ def main():
     details_lines = [strip_md(x) for x in section(md.splitlines(), 'Details')]
     details_lines = [x for x in details_lines if x and not x.startswith('*') and not any(b in x for b in BOILERPLATE)]
     payload = build_payload(args, doc_id, doc_name, title, summary, items, details_lines)
+
+    if args.api:
+        out = {'ok': True, 'doc': {'id': doc_id, 'name': doc_name}, 'payload': payload, 'posted': None}
+        if args.post:
+            try:
+                out['posted'] = post_sitzung(payload)
+            except Exception as ex:  # noqa: BLE001 — Fehler sauber als JSON melden
+                out['ok'] = False
+                out['error'] = f'post_failed: {ex}'
+        print(json.dumps(out, ensure_ascii=False))
+        return
 
     if args.json:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
