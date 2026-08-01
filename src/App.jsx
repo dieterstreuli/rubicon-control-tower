@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import {
   Radar, Layers, ListChecks, ShieldCheck, Diamond, AlertTriangle,
   Clock, Send, CalendarClock, Siren, CheckCircle2, Filter, Lock, FileText, X, Compass,
-  ClipboardList, FilePlus, Plus, Trash2, Save, Sun, Moon, BarChart3, Circle, Scale,
+  ClipboardList, Plus, Trash2, Save, Sun, Moon, BarChart3, Circle, Scale,
 } from 'lucide-react'
 import { T, STATUS_META, ROLES, applyTheme, initialTheme } from './lib/theme.js'
 import { loadProject } from './lib/loader.js'
@@ -26,6 +26,13 @@ import {
 
 const { data: BASE, issues: ISSUES } = loadProject()
 const NOW = parseDate(BASE.meta.today)
+
+// A1 (01.08.): Datei-Writes lösen einen Vite-HMR-Reload aus — Scroll-Position vorher
+// merken, damit die Ansicht nach dem Reload nicht an den Seitenanfang springt.
+function reloadKeepScroll() {
+  sessionStorage.setItem('rubicon_scroll', String(window.scrollY || 0))
+  window.location.reload()
+}
 
 // ---------- Handlungen (Tasks, «treibend» 13.07.) ----------
 // tasks.json = aus Milestones abgeleitete, binär abhakbare Handlungen. Bei
@@ -95,31 +102,50 @@ export default function App() {
   const [me, setMe] = useState('Andreas Fritthum') // aktive Identität in Rolle «Owner» (volle Namen, 13.07.)
   const [theme, setTheme] = useState(() => { const m = initialTheme(); applyTheme(m); return m })
   const toggleTheme = () => { const next = theme === 'dark' ? 'light' : 'dark'; applyTheme(next); setTheme(next) }
-  // «inputs» war bis 16.07. ein eigener Tab — lebt jetzt als Sektion im Kontrollturm
-  const [tab, setTab] = useState(() => { const t = sessionStorage.getItem('rubicon_tab'); return t === 'inputs' ? 'tower' : (t || 'intro') })
+  // IA-Konsolidierung 01.08. (B0): 5 Tabs. Alte Tab-IDs (inputs/intro/streams/
+  // erfassen/protokolle/log/cos) werden auf die neuen Heimaten gemappt.
+  const LEGACY_TAB = { inputs: 'tower', intro: 'tower', streams: 'tower', erfassen: 'sitzungen', protokolle: 'sitzungen', log: 'tower', cos: 'tower' }
+  const [tab, setTab] = useState(() => { const t = sessionStorage.getItem('rubicon_tab'); return LEGACY_TAB[t] || t || 'tower' })
+  const [showIntro, setShowIntro] = useState(false)   // Intro lebt als ⓘ-Overlay (B0)
+  // Kontrollturm-Darstellung: Abflugtafel (Tabelle) ⇄ Arbeitsströme (Karten) — ehem. eigener Tab
+  const [towerView, setTowerView] = useState(() => sessionStorage.getItem('rubicon_view') || 'tafel')
+  useEffect(() => { sessionStorage.setItem('rubicon_view', towerView) }, [towerView])
   // Bestätigung nach Speichern (überlebt den HMR-Reload via sessionStorage)
   const [savedInfo] = useState(() => {
     const s = sessionStorage.getItem('rubicon_saved')
     if (s) { sessionStorage.removeItem('rubicon_saved'); sessionStorage.removeItem('rubicon_tab'); try { return JSON.parse(s) } catch { return null } }
     return null
   })
-  const [wsFilter, setWsFilter] = useState('alle')
-  const [phaseFilter, setPhaseFilter] = useState('alle')
-  const [ownerFilter, setOwnerFilter] = useState('alle')
+  // A1 (01.08.): Filter + Suche überleben den HMR-Reload (sessionStorage)
+  const [wsFilter, setWsFilter] = useState(() => sessionStorage.getItem('rubicon_f_ws') || 'alle')
+  const [phaseFilter, setPhaseFilter] = useState(() => sessionStorage.getItem('rubicon_f_phase') || 'alle')
+  const [ownerFilter, setOwnerFilter] = useState(() => sessionStorage.getItem('rubicon_f_owner') || 'alle')
+  const [msSearch, setMsSearch] = useState(() => sessionStorage.getItem('rubicon_f_search') || '')
+  useEffect(() => {
+    sessionStorage.setItem('rubicon_f_ws', wsFilter)
+    sessionStorage.setItem('rubicon_f_phase', phaseFilter)
+    sessionStorage.setItem('rubicon_f_owner', ownerFilter)
+    sessionStorage.setItem('rubicon_f_search', msSearch)
+  }, [wsFilter, phaseFilter, ownerFilter, msSearch])
   const [clock, setClock] = useState(new Date())
   const [showIntegrity, setShowIntegrity] = useState(false)
 
   // Session-Overlays (flüchtig, nicht persistiert — Wahrheit bleibt projekt.yaml)
-  const [overlay, setOverlay] = useState({})       // id -> {progress?, slip?}
+  const [overlay, setOverlay] = useState({})       // id -> {progress?, slip?} (What-if im Modal)
   const [inputState, setInputState] = useState({}) // id -> {status?, last_reminder?}
-  const [actions, setActions] = useState([])       // Aktions-Log
   const [autoLog, setAutoLog] = useState([])       // CoS-Automations-Log (simuliert)
   const [remBusy, setRemBusy] = useState(false)    // K2: Gmail-Entwurf läuft
   const [selMs, setSelMs] = useState(null)         // Milestone-Detail-Modal
 
   useEffect(() => {
-    const onKey = e => { if (e.key === 'Escape') setSelMs(null) }
+    const onKey = e => { if (e.key === 'Escape') { setSelMs(null); setShowIntro(false) } }
     window.addEventListener('keydown', onKey); return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
+  // A1 (01.08.): Scroll-Position nach HMR-Reload wiederherstellen
+  useEffect(() => {
+    const y = sessionStorage.getItem('rubicon_scroll')
+    if (y) { sessionStorage.removeItem('rubicon_scroll'); window.scrollTo(0, +y) }
   }, [])
 
   // Tab überlebt den Reload (HMR nach Daten-Writes) — konsistent mit Erfassen/Export.
@@ -177,35 +203,6 @@ export default function App() {
   const nErr = ISSUES.filter(i => i.level === 'FEHLER').length
   const nGap = ISSUES.filter(i => i.level === 'LÜCKE').length
 
-  // Aktion erfassen: Wirkung deterministisch vorher/nachher berechnen + loggen
-  function recordAction(mId, kind, value) {
-    const before = { st: statusOf(ms.find(x => x.id === mId), NOW), end: proj.projected }
-    const next = { ...overlay, [mId]: { ...(overlay[mId] || {}) } }
-    if (kind === 'progress') next[mId].progress = value
-    else next[mId].slip = value
-    // Wirkung auf Basis der neuen Overlays berechnen
-    const dataAfter = {
-      ...BASE,
-      workstreams: BASE.workstreams.map(ws => ({
-        ...ws,
-        milestones: ws.milestones.map(m => {
-          const o = next[m.id]
-          return o ? { ...m, progress: o.progress ?? m.progress, reported_slip_days: o.slip ?? m.reported_slip_days } : m
-        }),
-      })),
-    }
-    const mAfter = allMilestones(dataAfter).find(x => x.id === mId)
-    const after = { st: statusOf(mAfter, NOW), end: projectedEnd(dataAfter).projected }
-    setOverlay(next)
-    const endShift = before.end && after.end ? daysBetween(before.end, after.end) : 0
-    setActions(a => [{
-      ts: new Date(), who: role === 'Owner' ? me : role, mId,
-      what: kind === 'progress' ? `Fortschritt gemeldet: ${value}%` : `Blocker gemeldet: +${value} Tage Verzug`,
-      effect: `Status ${STATUS_META[before.st].label} → ${STATUS_META[after.st].label}` +
-              (endShift !== 0 ? ` · Projektende ${endShift > 0 ? '+' : ''}${endShift} Tage` : ' · Projektende unverändert'),
-    }, ...a])
-  }
-
   function remind(input, kind) {
     const stamp = fmtDate(BASE.meta.today) + ' ' + clock.toTimeString().slice(0, 5)
     setInputState(s => ({ ...s, [input.id]: { ...(s[input.id] || {}), last_reminder: stamp } }))
@@ -233,24 +230,31 @@ export default function App() {
             + (j.hinweise?.length ? '\n\n' + j.hinweise.join('\n') : '')
           : 'Keine Entwürfe erstellt'
             + (j.uebersprungen?.length ? ` — ${j.uebersprungen.length} Item(s) übersprungen (7-Tage-Bremse / Owner fehlt / DRS selbst).` : ' — nichts fällig.'))
-        sessionStorage.setItem('rubicon_tab', 'cos')
-        window.location.reload()
+        sessionStorage.setItem('rubicon_tab', 'tower')
+        reloadKeepScroll()
       } else { alert('Entwurf fehlgeschlagen: ' + (j.error || 'unbekannt')); setRemBusy(false) }
     } catch (err) { alert('Entwurf fehlgeschlagen: ' + err); setRemBusy(false) }
   }
 
+  // B0 (01.08.): 5 Tabs. Intro = ⓘ-Overlay · Arbeitsströme = Umschalter im Kontrollturm ·
+  // CoS-Steuerung = CoS-Sektion im Kontrollturm · Erfassen+Protokolle = «Sitzungen» ·
+  // Aktions-Log entfällt (What-if lebt im Milestone-Modal).
   const tabs = [
-    { id: 'intro', label: 'Intro', icon: Compass },
     { id: 'tower', label: 'Kontrollturm', icon: Radar },
     { id: 'aufgaben', label: 'Aufgaben', icon: CheckCircle2 },
-    { id: 'streams', label: 'Arbeitsströme', icon: Layers },
-    ...(canEdit ? [{ id: 'erfassen', label: 'Sitzung erfassen', icon: FilePlus }] : []),
-    { id: 'protokolle', label: 'Protokolle', icon: ClipboardList },
+    { id: 'sitzungen', label: 'Sitzungen', icon: ClipboardList },
     { id: 'entscheide', label: 'Entscheide', icon: Scale },
     { id: 'reports', label: 'Reports', icon: BarChart3 },
-    { id: 'log', label: 'Aktions-Log', icon: ListChecks },
-    ...(role === 'CoS' ? [{ id: 'cos', label: 'CoS-Steuerung', icon: ShieldCheck }] : []),
   ]
+
+  // A3 (01.08.): Drift zwischen manuellem Steuerungsdatum (meta.today) und realem
+  // Datum sichtbar machen — meta.today bleibt bewusst manuell (reproduzierbare Sichten).
+  const driftDays = (() => {
+    if (!NOW) return 0
+    const r = clock
+    const realUTC = Date.UTC(r.getFullYear(), r.getMonth(), r.getDate())
+    return Math.round((realUTC - NOW.getTime()) / 86400000)
+  })()
 
   // Programm-eigene Phasen (17.07.): andere Programme bringen eigene Phasen-Labels mit
   // (z.B. Vorbereitung/Ansprache/Abschluss) — kanonische RUBICON-Phasen zuerst, dann
@@ -262,8 +266,11 @@ export default function App() {
   const matchPhase = (m) => phaseFilter === 'alle'
     || (phaseFilter === 'MP-ALL' ? (m.phase || '').startsWith('Masterplan') : m.phase === phaseFilter)
   const owners = [...new Set(ms.map(m => m.owner).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'de'))
+  // A2 (01.08.): Textsuche über Code / Name / Owner (case-insensitiv)
+  const q = msSearch.trim().toLowerCase()
+  const msMatch = (m) => !q || [m.id, m.name, m.owner].some(v => (v || '').toLowerCase().includes(q))
   const filtered = ms.filter(m => (wsFilter === 'alle' || m._ws === wsFilter) && matchPhase(m)
-    && (ownerFilter === 'alle' || m.owner === ownerFilter))
+    && (ownerFilter === 'alle' || m.owner === ownerFilter) && msMatch(m))
   const sorted = [...filtered].sort((a, b) => (a.due || '9999') < (b.due || '9999') ? -1 : 1)
 
   // Erfüllungsgrad je Phase (erledigt = progress ≥ 100). Deckt alle 131 MS ab:
@@ -306,6 +313,10 @@ export default function App() {
             <span style={{ color: breaches.length ? T.red : T.brass }}> · HARD EDGE {fmtDate(data.meta.hard_edge)}{breaches.length ? ` — ${breaches.length} VERLETZUNG(EN)!` : ' ✓'}</span>
           </div>
           <div className="ml-auto flex items-center gap-2">
+            <button onClick={() => setShowIntro(true)} aria-label="Programm-Übersicht (Intro)" title="Programm-Übersicht: Sinn & Zweck · Ströme · Phasen · Zeitachse · Führungsrhythmus"
+              className="p-1.5 rounded border" style={{ borderColor: T.line, color: T.brass }}>
+              <Compass size={14} />
+            </button>
             <button onClick={toggleTheme} aria-label="Hell/Dunkel umschalten" title={theme === 'dark' ? 'Hell-Modus' : 'Dunkel-Modus'}
               className="p-1.5 rounded border" style={{ borderColor: T.line, color: T.brass }}>
               {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
@@ -382,6 +393,13 @@ export default function App() {
       })()}
 
       <main className="p-4 md:p-6 space-y-5">
+        {driftDays > 2 && (
+          <div className="rounded-lg border px-4 py-2 text-[12px] flex items-center gap-2"
+            style={{ borderColor: T.amber + '88', background: T.amber + '14', color: T.amber }}>
+            <AlertTriangle size={14} /> Steuerungsdatum <b style={{ fontFamily: T.mono }}>{fmtDate(BASE.meta.today)}</b> ist {driftDays} Tage alt —
+            Ampeln &amp; «überfällig» rechnen damit. Bei der nächsten Steuerungssitzung <span style={{ fontFamily: T.mono }}>meta.today</span> in projekt.yaml aktualisieren.
+          </div>
+        )}
         {savedInfo && (
           <div className="rounded-lg border px-4 py-2 text-[12px] flex items-center gap-2"
             style={{ borderColor: T.green + '88', background: T.green + '14', color: T.green }}>
@@ -390,19 +408,16 @@ export default function App() {
             {' '}Ampel &amp; Erfüllungsgrad sind aktualisiert.
           </div>
         )}
-        {/* ══ 0 · INTRO ══ */}
-        {tab === 'intro' && <IntroView data={data} goStreams={() => setTab('streams')} />}
-
-        {/* ══ SITZUNG ERFASSEN ══ */}
-        {tab === 'erfassen' && (canEdit
-          ? <ErfassungView ms={ms} today={BASE.meta.today} role={role} me={me} />
-          : <div className="text-[13px]" style={{ color: T.inkDim }}><Lock size={14} className="inline mr-1" /> Rolle «{role}» darf nicht erfassen.</div>)}
-
         {/* ══ AUFGABEN ══ */}
         {tab === 'aufgaben' && <AufgabenView role={role} me={me} prog={prog} onOpenMs={(id) => { const m = ms.find(x => x.id === id); if (m) setSelMs(m) }} />}
 
-        {/* ══ PROTOKOLLE ══ */}
-        {tab === 'protokolle' && <ProtokolleView role={role} me={me} />}
+        {/* ══ SITZUNGEN — Erfassen (CoS/Owner) + Protokoll-Archiv (B0, 01.08.) ══ */}
+        {tab === 'sitzungen' && (
+          <div className="space-y-5">
+            {canEdit && <ErfassungView ms={ms} today={BASE.meta.today} role={role} me={me} />}
+            <ProtokolleView role={role} me={me} />
+          </div>
+        )}
 
         {/* ══ ENTSCHEIDS-REGISTER ══ */}
         {tab === 'entscheide' && <EntscheideView role={role} me={me} today={BASE.meta.today} />}
@@ -562,13 +577,31 @@ export default function App() {
             </div>
           )}
 
+          {/* Darstellungs-Umschalter (B0): Abflugtafel ⇄ Arbeitsströme — gleiche Daten */}
+          <div className="flex items-center gap-1.5">
+            {[['tafel', 'Abflugtafel', Radar], ['stroeme', 'Arbeitsströme', Layers]].map(([id, lbl, Ic]) => (
+              <button key={id} onClick={() => setTowerView(id)}
+                className="flex items-center gap-1.5 px-3 py-1 rounded border text-[12px]"
+                style={towerView === id
+                  ? { borderColor: T.brass, color: T.brass, background: T.brass + '14' }
+                  : { borderColor: T.line, color: T.inkDim }}>
+                <Ic size={13} /> {lbl}
+              </button>
+            ))}
+          </div>
+
           {/* Abflugtafel */}
+          {towerView === 'tafel' && (
           <div className="rounded-xl border overflow-hidden" style={{ background: T.panel, borderColor: T.line }}>
             <div className="flex items-center justify-between px-4 py-2 border-b" style={{ borderColor: T.line }}>
               <div className="text-[13px] font-semibold tracking-widest" style={{ fontFamily: T.mono, color: T.brass }}>
                 ── ABFLUGTAFEL · MEILENSTEINE ──
               </div>
               <div className="flex items-center gap-1.5 text-[12px] flex-wrap justify-end" style={{ color: T.inkDim }}>
+                <input value={msSearch} onChange={e => setMsSearch(e.target.value)}
+                  placeholder="Suchen: Code / Name / Owner…" aria-label="Meilensteine durchsuchen"
+                  className="bg-transparent border rounded px-2 py-0.5 w-48"
+                  style={{ borderColor: msSearch ? T.brass : T.line, background: T.panelSoft, color: T.ink }} />
                 <Filter size={13} />
                 <select value={wsFilter} onChange={e => setWsFilter(e.target.value)}
                   className="bg-transparent border rounded px-1.5 py-0.5"
@@ -640,13 +673,13 @@ export default function App() {
               </table>
             </div>
             <div className="px-4 py-1.5 text-[10px] border-t" style={{ borderColor: T.line, color: T.inkFaint }}>
-              ◆ = kritischer Pfad · ⏳ = gesetzlicher Nachlauf Q2/27 (zählt nicht gegen Kern-Ende) · * = Termin Monatsende (Annahme) · G1–G7 = Sequenz-Gates · ☑ x/y = Handlungen erledigt (bei aktiviertem Roll-up treiben sie den Fortschritt) · Filter oben: Strom × Phase
+              ◆ = kritischer Pfad · ⏳ = gesetzlicher Nachlauf Q2/27 (zählt nicht gegen Kern-Ende) · * = Termin Monatsende (Annahme) · G1–G7 = Sequenz-Gates · ☑ x/y = Handlungen erledigt (bei aktiviertem Roll-up treiben sie den Fortschritt) · Suche + Filter oben: Strom × Phase × Owner
             </div>
           </div>
-        </>)}
+          )}
 
-        {/* ══ 2 · ARBEITSSTRÖME ══ */}
-        {tab === 'streams' && (
+          {/* Arbeitsströme-Sicht (B0: ehem. eigener Tab — gleiche Meilensteine als WS-Karten) */}
+          {towerView === 'stroeme' && (
           <div className="grid md:grid-cols-2 gap-4">
             {data.workstreams.map(ws => {
               const list = ws.milestones
@@ -699,36 +732,10 @@ export default function App() {
               )
             })}
           </div>
-        )}
+          )}
 
-        {/* ══ 3 · AKTIONS-LOG ══ */}
-        {tab === 'log' && (
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
-              <div className="text-[13px] font-semibold mb-2">Aktion erfassen <span className="text-[10px]" style={{ color: T.inkFaint }}>(Session — nicht persistiert)</span></div>
-              {!canEdit
-                ? <div className="flex items-center gap-2 text-[12px]" style={{ color: T.inkDim }}><Lock size={13} /> Rolle «{role}» ist nur lesend.</div>
-                : <ActionForm ms={ms} canEditMs={canEditMs} onSubmit={recordAction} />}
-            </div>
-            <div className="md:col-span-2 rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
-              <div className="text-[13px] font-semibold mb-2">Chronologie</div>
-              {actions.length === 0 && <div className="text-[12px]" style={{ color: T.inkFaint }}>Noch keine Aktionen in dieser Session.</div>}
-              <div className="space-y-2">
-                {actions.map((a, k) => (
-                  <div key={k} className="text-[12px] rounded border p-2" style={{ borderColor: T.line, background: T.panelSoft }}>
-                    <span style={{ fontFamily: T.mono, color: T.inkFaint }}>{a.ts.toLocaleTimeString('de-CH')}</span>
-                    {' · '}<b>{a.who}</b> · <span style={{ fontFamily: T.mono, color: T.brass }}>{a.mId}</span> — {a.what}
-                    <div style={{ color: T.inkDim }}>Wirkung: {a.effect}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ══ 5 · CoS-STEUERUNG ══ */}
-        {tab === 'cos' && role === 'CoS' && (
-          <div className="space-y-4">
+          {/* CoS-Steuerung (B0: ehem. eigener Tab — Durchsetzung gehört zu den Datenlieferungen) */}
+          {role === 'CoS' && (<>
             <div className="rounded-lg border px-4 py-2 text-[12px] flex items-center gap-2"
               style={{ borderColor: T.amber + '88', background: T.amber + '14', color: T.amber }}>
               <Siren size={14} /> <b>Reminder = echte Gmail-ENTWÜRFE</b> (je Owner gebündelt · 7-Tage-Bremse · Versand bleibt bei DRS — K2 Stufe 1, 01.08.).
@@ -764,36 +771,53 @@ export default function App() {
                 ))}
               </div>
             </div>
-            <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
-              <div className="text-[13px] font-semibold mb-2">Reminder-Protokoll <span className="text-[10px]" style={{ color: T.inkFaint }}>(persistent — reminder_log.json)</span></div>
-              {!(REMLOG.reminders || []).length && <div className="text-[12px]" style={{ color: T.inkFaint }}>Noch keine Reminder-Entwürfe erzeugt.</div>}
-              <div className="space-y-1 text-[12px]">
-                {(REMLOG.reminders || []).slice(0, 15).map((r, k) => (
-                  <div key={k} style={{ color: T.inkDim }}>
-                    <span style={{ fontFamily: T.mono, color: T.inkFaint }}>{(r.created_at || '').slice(0, 16).replace('T', ' ')}</span>
-                    {' · '}<b style={{ color: T.ink }}>{r.owner}</b>{r.email ? '' : ' (ohne Empfänger)'}
-                    {' · '}<span style={{ fontFamily: T.mono }}>{(r.items || []).join(', ')}</span>
-                    {' · '}<span style={{ color: T.brass, fontFamily: T.mono }}>{r.mode}</span>
-                  </div>
-                ))}
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
+                <div className="text-[13px] font-semibold mb-2">Reminder-Protokoll <span className="text-[10px]" style={{ color: T.inkFaint }}>(persistent — reminder_log.json)</span></div>
+                {!(REMLOG.reminders || []).length && <div className="text-[12px]" style={{ color: T.inkFaint }}>Noch keine Reminder-Entwürfe erzeugt.</div>}
+                <div className="space-y-1 text-[12px]">
+                  {(REMLOG.reminders || []).slice(0, 15).map((r, k) => (
+                    <div key={k} style={{ color: T.inkDim }}>
+                      <span style={{ fontFamily: T.mono, color: T.inkFaint }}>{(r.created_at || '').slice(0, 16).replace('T', ' ')}</span>
+                      {' · '}<b style={{ color: T.ink }}>{r.owner}</b>{r.email ? '' : ' (ohne Empfänger)'}
+                      {' · '}<span style={{ fontFamily: T.mono }}>{(r.items || []).join(', ')}</span>
+                      {' · '}<span style={{ color: T.brass, fontFamily: T.mono }}>{r.mode}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
+                <div className="text-[13px] font-semibold mb-2">Automations-Log <span className="text-[10px]" style={{ color: T.inkFaint }}>(Session)</span></div>
+                {autoLog.length === 0 && <div className="text-[12px]" style={{ color: T.inkFaint }}>Noch keine Automationen ausgelöst.</div>}
+                <div className="space-y-1 text-[12px]" style={{ fontFamily: T.mono }}>
+                  {autoLog.map((l, k) => (
+                    <div key={k} style={{ color: T.inkDim }}>
+                      {l.ts.toLocaleTimeString('de-CH')} · {l.msg}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-            <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
-              <div className="text-[13px] font-semibold mb-2">Automations-Log <span className="text-[10px]" style={{ color: T.inkFaint }}>(Session)</span></div>
-              {autoLog.length === 0 && <div className="text-[12px]" style={{ color: T.inkFaint }}>Noch keine Automationen ausgelöst.</div>}
-              <div className="space-y-1 text-[12px]" style={{ fontFamily: T.mono }}>
-                {autoLog.map((l, k) => (
-                  <div key={k} style={{ color: T.inkDim }}>
-                    {l.ts.toLocaleTimeString('de-CH')} · {l.msg}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+          </>)}
+        </>)}
+
       </main>
 
       {selMs && <BriefingModal m={selMs} role={role} me={me} onClose={() => setSelMs(null)} />}
+
+      {/* Intro als ⓘ-Overlay (B0, 01.08. — ehem. eigener Tab) */}
+      {showIntro && (
+        <div className="fixed inset-0 z-50 overflow-auto p-3 md:p-8" style={{ background: '#000c' }} onClick={() => setShowIntro(false)}>
+          <div className="max-w-6xl mx-auto rounded-xl border p-4 md:p-5" style={{ background: T.bg, borderColor: T.brass + '66' }} onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-3">
+              <div className="text-[13px] font-semibold tracking-widest" style={{ fontFamily: T.mono, color: T.brass }}>── PROGRAMM-ÜBERSICHT ──</div>
+              <button onClick={() => setShowIntro(false)} aria-label="Schliessen"
+                className="p-1.5 rounded border" style={{ borderColor: T.line, color: T.inkDim }}><X size={15} /></button>
+            </div>
+            <IntroView data={data} goStreams={() => { setShowIntro(false); setTab('tower'); setTowerView('stroeme') }} />
+          </div>
+        </div>
+      )}
 
       <footer className="px-6 py-3 text-[10px] border-t" style={{ borderColor: T.line, color: T.inkFaint, fontFamily: T.mono }}>
         RUBICON Control Tower · Wahrheitsquelle: src/data/projekt.yaml · Statuslogik deterministisch (status.js) ·
@@ -1076,13 +1100,35 @@ const AGENDA_BY_ID = Object.fromEntries((AGENDAS.agendas || []).map(a => [a.meet
 const FR_MEETINGS = FR.gruppen.flatMap(g => g.meetings.map(m => ({ id: m.id, name: m.name })))
 const TYP_LABEL = { fortschritt: 'Fortschritt (%)', commitment: 'Commitment', entscheid: 'Entscheid', blocker: 'Blocker/Verzug', notiz: 'Notiz' }
 
+// A2 (01.08.): MS-Auswahl mit Textfilter — 167 Meilensteine sind per nativem
+// Select nicht mehr greifbar. Tippen filtert die Optionsliste live.
+function MsPicker({ ms, value, onChange, optional, style: inp }) {
+  const [q, setQ] = useState('')
+  const qq = q.trim().toLowerCase()
+  const hits = qq ? ms.filter(m => (m.id + ' ' + (m.name || '') + ' ' + (m.owner || '')).toLowerCase().includes(qq)) : ms
+  // gewählter MS bleibt sichtbar, auch wenn der Filter ihn gerade ausblendet
+  const opts = value && !hits.some(m => m.id === value) ? [...ms.filter(m => m.id === value), ...hits] : hits
+  return (
+    <span className="inline-flex items-center gap-1">
+      <input value={q} onChange={ev => setQ(ev.target.value)} placeholder="filtern…"
+        aria-label="Milestone filtern" className="w-24 rounded border px-2 py-1 text-[11px]" style={inp} />
+      <select value={value || ''} onChange={ev => onChange(ev.target.value)}
+        className="rounded border px-2 py-1 text-[11px]" style={inp}
+        title={optional ? 'Optional: an Milestone koppeln — wird dann als treibende Handlung gespiegelt' : undefined}>
+        <option value="" style={{ color: '#111' }}>{optional ? '— optional: Milestone —' : `— Milestone (${hits.length}) —`}</option>
+        {opts.map(m => <option key={m.id} value={m.id} style={{ color: '#111' }}>{m.id} · {m.name.slice(0, 44)}</option>)}
+      </select>
+    </span>
+  )
+}
+
 async function saveSitzung(payload) {
   const r = await fetch('/api/sitzung', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
   const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
   if (j.ok) {
     sessionStorage.setItem('rubicon_saved', JSON.stringify({ id: j.id, applied: j.applied }))
-    sessionStorage.setItem('rubicon_tab', 'protokolle')
-    window.location.reload()
+    sessionStorage.setItem('rubicon_tab', 'sitzungen')
+    reloadKeepScroll()
   } else {
     alert('Speichern fehlgeschlagen: ' + (j.error || 'unbekannt'))
   }
@@ -1163,10 +1209,7 @@ function ErfassungView({ ms, today, role, me }) {
             <div key={i} className="rounded border p-2.5 flex flex-wrap items-start gap-2" style={{ borderColor: T.line, background: T.panelSoft }}>
               <span className="text-[10px] px-2 py-1 rounded" style={{ background: T.brass + '22', color: T.brass, fontFamily: T.mono }}>{TYP_LABEL[e.typ]}</span>
               {(e.typ === 'fortschritt' || e.typ === 'blocker') && (
-                <select value={e.ms_id} onChange={ev => upd(i, { ms_id: ev.target.value })} className="rounded border px-2 py-1 text-[11px]" style={inp}>
-                  <option value="" style={{ color: '#111' }}>— Milestone —</option>
-                  {ms.map(m => <option key={m.id} value={m.id} style={{ color: '#111' }}>{m.id} · {m.name.slice(0, 44)}</option>)}
-                </select>
+                <MsPicker ms={ms} value={e.ms_id} onChange={v => upd(i, { ms_id: v })} style={inp} />
               )}
               {e.typ === 'fortschritt' && (
                 <input type="number" min={0} max={100} value={e.wert} onChange={ev => upd(i, { wert: +ev.target.value })}
@@ -1179,11 +1222,7 @@ function ErfassungView({ ms, today, role, me }) {
               {e.typ === 'commitment' && (<>
                 <input placeholder="Owner" value={e.owner} onChange={ev => upd(i, { owner: ev.target.value })} className="w-28 rounded border px-2 py-1 text-[11px]" style={inp} />
                 <input type="date" value={e.bis} onChange={ev => upd(i, { bis: ev.target.value })} className="rounded border px-2 py-1 text-[11px]" style={{ ...inp, fontFamily: T.mono }} title="bis wann" />
-                <select value={e.ms_id || ''} onChange={ev => upd(i, { ms_id: ev.target.value })} className="rounded border px-2 py-1 text-[11px]" style={inp}
-                  title="Optional: an Milestone koppeln — wird dann als treibende Handlung gespiegelt">
-                  <option value="" style={{ color: '#111' }}>— optional: Milestone —</option>
-                  {ms.map(m => <option key={m.id} value={m.id} style={{ color: '#111' }}>{m.id} · {m.name.slice(0, 44)}</option>)}
-                </select>
+                <MsPicker ms={ms} value={e.ms_id} onChange={v => upd(i, { ms_id: v })} style={inp} optional />
               </>)}
               {e.typ === 'entscheid' && (<>
                 <select value={e.status} onChange={ev => upd(i, { status: ev.target.value })} className="rounded border px-2 py-1 text-[11px]" style={inp}>
@@ -1230,8 +1269,13 @@ const ENT_GREMIEN = ['Ressort', 'CEO', 'ExBoD', 'GL', 'VR']
 
 function EntscheideView({ role, me, today }) {
   const all = ENTS.entscheide || []
-  const [fStatus, setFStatus] = useState('alle')
-  const [fGremium, setFGremium] = useState('alle')
+  // A1 (01.08.): Filter überleben den Reload nach Status-Übergängen
+  const [fStatus, setFStatus] = useState(() => sessionStorage.getItem('rubicon_e_status') || 'alle')
+  const [fGremium, setFGremium] = useState(() => sessionStorage.getItem('rubicon_e_gremium') || 'alle')
+  useEffect(() => {
+    sessionStorage.setItem('rubicon_e_status', fStatus)
+    sessionStorage.setItem('rubicon_e_gremium', fGremium)
+  }, [fStatus, fGremium])
   const [open, setOpen] = useState(null)          // aufgeklappte Register-Zeile
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({ titel: '', typ: ENT_TYPEN[0], gremium: 'ExBoD', antragsteller: '', entscheid: '', begruendung: '', datengrundlage: '', frist: '' })
@@ -1266,7 +1310,7 @@ function EntscheideView({ role, me, today }) {
             ? `Kommunikations-Paket erstellt:\n· Entscheid-PDF (Registerauszug)\n· Gmail-ENTWURF mit PDF im Anhang${j.mail.draft_id ? '' : j.mail.draft_error ? `\n⚠ Entwurf fehlgeschlagen: ${j.mail.draft_error}` : ''}\n\nDer Entwurf liegt in Gmail — DRS sendet.`
             : `Status gesetzt, aber Paket-Build fehlgeschlagen: ${j.mail.error || 'unbekannt'}`)
         }
-        window.location.reload()
+        reloadKeepScroll()
       }
       else { alert('Status-Übergang fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(false) }
     } catch (err) { alert('Status-Übergang fehlgeschlagen: ' + err); setBusy(false) }
@@ -1284,7 +1328,7 @@ function EntscheideView({ role, me, today }) {
         }),
       })
       const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
-      if (j.ok) window.location.reload()
+      if (j.ok) reloadKeepScroll()
       else { alert('Erfassen fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(false) }
     } catch (err) { alert('Erfassen fehlgeschlagen: ' + err); setBusy(false) }
   }
@@ -1451,10 +1495,19 @@ function EntscheideView({ role, me, today }) {
 // das Gegenstück zur Milestone-Sicht des Kontrollturms. Abhaken wie überall:
 // /api/task/status, CoS alles / Owner nur eigene, Ampel bleibt abgeleitet.
 function AufgabenView({ role, me, prog, onOpenMs }) {
-  const [fPhase, setFPhase] = useState('alle')
-  const [fWs, setFWs] = useState('alle')
-  const [fOwner, setFOwner] = useState(role === 'Owner' ? me : 'alle')
-  const [fStatus, setFStatus] = useState('offen')
+  // A1 (01.08.): Filter + Suche überleben den HMR-Reload nach jedem Abhaken
+  const [fPhase, setFPhase] = useState(() => sessionStorage.getItem('rubicon_t_phase') || 'alle')
+  const [fWs, setFWs] = useState(() => sessionStorage.getItem('rubicon_t_ws') || 'alle')
+  const [fOwner, setFOwner] = useState(() => sessionStorage.getItem('rubicon_t_owner') || (role === 'Owner' ? me : 'alle'))
+  const [fStatus, setFStatus] = useState(() => sessionStorage.getItem('rubicon_t_status') || 'offen')
+  const [search, setSearch] = useState(() => sessionStorage.getItem('rubicon_t_search') || '')
+  useEffect(() => {
+    sessionStorage.setItem('rubicon_t_phase', fPhase)
+    sessionStorage.setItem('rubicon_t_ws', fWs)
+    sessionStorage.setItem('rubicon_t_owner', fOwner)
+    sessionStorage.setItem('rubicon_t_status', fStatus)
+    sessionStorage.setItem('rubicon_t_search', search)
+  }, [fPhase, fWs, fOwner, fStatus, search])
   const [busy, setBusy] = useState(null)
 
   // Programm-Filter: milestone-gekoppelte Handlungen folgen dem Programm ihres WS;
@@ -1465,11 +1518,15 @@ function AufgabenView({ role, me, prog, onOpenMs }) {
   const wss = [...new Set(rows.map(t => t._m?.ws).filter(Boolean))].sort()
   const phases = PHASE_ORDER.filter(p => rows.some(t => t._m?.phase === p))
 
+  // A2 (01.08.): Textsuche über Handlung / Verantwortlich / T-Nr / Milestone
+  const q = search.trim().toLowerCase()
+  const tMatch = (t) => !q || [t.text, t.owner, tnr(t), t.id, t.ms_id].some(v => (v || '').toLowerCase().includes(q))
   const filtered = rows.filter(t =>
     (fPhase === 'alle' || (fPhase === 'ohne' ? !t._m : t._m?.phase === fPhase))
     && (fWs === 'alle' || (fWs === 'ohne' ? !t._m : t._m?.ws === fWs))
     && (fOwner === 'alle' || t.owner === fOwner)
     && (fStatus === 'alle' || (fStatus === 'ueberfaellig' ? taskOverdue(t) : t.status === fStatus))
+    && tMatch(t)
   ).sort((a, b) => {
     if (a.status !== b.status) return a.status === 'offen' ? -1 : 1
     if (!a.due && !b.due) return a.id.localeCompare(b.id)
@@ -1489,7 +1546,7 @@ function AufgabenView({ role, me, prog, onOpenMs }) {
         body: JSON.stringify({ role, me, id: t.id, status: t.status === 'erledigt' ? 'offen' : 'erledigt' }),
       })
       const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
-      if (j.ok) { window.location.reload() }
+      if (j.ok) { reloadKeepScroll() }
       else { alert('Abhaken fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(null) }
     } catch (e) { alert('Abhaken fehlgeschlagen: ' + e); setBusy(null) }
   }
@@ -1503,6 +1560,10 @@ function AufgabenView({ role, me, prog, onOpenMs }) {
             <span className="ml-2 text-[11px] font-normal" style={{ color: T.inkDim }}>{nOffen} offen{nOver ? ` · ${nOver} überfällig ⚠` : ''} · {filtered.length} angezeigt / {rows.length} gesamt</span>
           </div>
           <div className="flex items-center gap-1.5 text-[12px] flex-wrap justify-end" style={{ color: T.inkDim }}>
+            <input value={search} onChange={e => setSearch(e.target.value)}
+              placeholder="Suchen: Handlung / Person / T-Nr…" aria-label="Handlungen durchsuchen"
+              className="bg-transparent border rounded px-2 py-0.5 w-52"
+              style={{ borderColor: search ? T.brass : T.line, background: T.panelSoft, color: T.ink }} />
             <Filter size={13} />
             <select value={fStatus} onChange={e => setFStatus(e.target.value)} className="bg-transparent border rounded px-1.5 py-0.5" style={sel}>
               <option value="offen" style={{ color: '#111' }}>offen</option>
@@ -1603,7 +1664,7 @@ function ProtokolleView({ role, me }) {
     try {
       const r = await fetch('/api/protokoll/export', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) })
       const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
-      if (j.ok) { sessionStorage.setItem('rubicon_tab', 'protokolle'); window.location.reload() }
+      if (j.ok) { sessionStorage.setItem('rubicon_tab', 'protokolle'); reloadKeepScroll() }
       else { alert('Export fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(null) }
     } catch (e) { alert('Export fehlgeschlagen: ' + e); setBusy(null) }
   }
@@ -1621,7 +1682,7 @@ function ProtokolleView({ role, me }) {
         body: JSON.stringify({ role, me, id: t.id, status: 'erledigt' }),
       })
       const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
-      if (j.ok) { window.location.reload() }
+      if (j.ok) { reloadKeepScroll() }
       else { alert('Erledigen fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(null) }
     } catch (e) { alert('Erledigen fehlgeschlagen: ' + e); setBusy(null) }
   }
@@ -1670,7 +1731,7 @@ function ProtokolleView({ role, me }) {
         <div className="px-4 py-2 text-[13px] font-semibold border-b" style={{ borderColor: T.line }}>
           Sitzungsprotokolle <span className="text-[10px]" style={{ color: T.inkFaint }}>({protos.length} — neueste zuerst; Quelle protokolle.json{sensProtos.length ? ` + ${sensProtos.length} sensitiv (nur lokal)` : ''}{sensBlocked ? ' · 🔒 sensitive Protokolle nur direkt am Gerät einsehbar' : ''})</span>
         </div>
-        {protos.length === 0 && <div className="px-4 py-6 text-[12px]" style={{ color: T.inkFaint }}>Noch keine Sitzung erfasst. → Tab «Sitzung erfassen».</div>}
+        {protos.length === 0 && <div className="px-4 py-6 text-[12px]" style={{ color: T.inkFaint }}>Noch keine Sitzung erfasst — oben im Formular erfassen (Rolle CoS/Owner).</div>}
         <div className="divide-y" style={{ borderColor: T.line }}>
           {protos.map(p => (
             <div key={p.id} className="px-4 py-3" style={{ borderTop: `1px solid ${T.line}` }}>
@@ -1739,7 +1800,7 @@ function ReportsView({ canEdit, today }) {
       if (comment.trim()) await fetch('/api/report/comment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: `${level}:${period}:programm`, text: comment.trim() }) })
       const r = await fetch('/api/report/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ level, period }) })
       const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
-      if (j.ok) { sessionStorage.setItem('rubicon_tab', 'reports'); window.location.reload() }
+      if (j.ok) { sessionStorage.setItem('rubicon_tab', 'reports'); reloadKeepScroll() }
       else { alert('Report fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(false) }
     } catch (err) { alert('Report fehlgeschlagen: ' + err); setBusy(false) }
   }
@@ -1825,7 +1886,7 @@ function TaskSection({ m, role, me }) {
         body: JSON.stringify({ role, me, id: t.id, status: t.status === 'erledigt' ? 'offen' : 'erledigt' }),
       })
       const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
-      if (j.ok) { window.location.reload() }
+      if (j.ok) { reloadKeepScroll() }
       else { sessionStorage.removeItem('rubicon_selms'); alert('Abhaken fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(null) }
     } catch (e) { sessionStorage.removeItem('rubicon_selms'); alert('Abhaken fehlgeschlagen: ' + e); setBusy(null) }
   }
@@ -1873,6 +1934,52 @@ function TaskSection({ m, role, me }) {
         {anyToggle
           ? <>Abhaken schreibt persistent (tasks.json{driving ? ' + verdienter Fortschritt in projekt.yaml' : ''}) · Ampel bleibt abgeleitet</>
           : <><Lock size={11} /> Rolle «{role}» ist hier nur lesend{role === 'Owner' ? ' (keine eigene Handlung)' : ''}</>}
+      </div>
+    </div>
+  )
+}
+
+// What-if-Simulation (B0, 01.08. — die Wirkungsrechnung des entfernten Aktions-Log-
+// Tabs, jetzt im Milestone-Modal): rechnet deterministisch vor, was ein gemeldeter
+// Fortschritt/Verzug mit Ampel und Projektende täte. Reine Ansicht — NICHTS wird
+// gespeichert; echte Meldungen laufen über Tab «Sitzungen».
+function WhatIf({ m }) {
+  const [kind, setKind] = useState('progress')
+  const [val, setVal] = useState(typeof m.progress === 'number' ? m.progress : 50)
+  const dataAfter = useMemo(() => ({
+    ...BASE,
+    workstreams: BASE.workstreams.map(ws => ({
+      ...ws,
+      milestones: ws.milestones.map(x => x.id === m.id
+        ? { ...x, ...(kind === 'progress' ? { progress: val } : { reported_slip_days: val }) }
+        : x),
+    })),
+  }), [kind, val, m.id])
+  const stNow = statusOf(m, NOW)
+  const mAfter = allMilestones(dataAfter).find(x => x.id === m.id)
+  const stAfter = mAfter ? statusOf(mAfter, NOW) : stNow
+  const pNow = projectedEnd(BASE).projected
+  const pAfter = projectedEnd(dataAfter).projected
+  const shift = pNow && pAfter ? daysBetween(pNow, pAfter) : 0
+  const inp = { background: T.panelSoft, borderColor: T.line, color: T.ink }
+  return (
+    <div className="mx-5 mt-3 rounded-xl border p-3" style={{ borderColor: T.line, background: T.panelSoft + '55' }}>
+      <div className="flex flex-wrap items-center gap-2 text-[12px]">
+        <b className="text-[11px] tracking-wide" style={{ color: T.brass, fontFamily: T.mono }}>WAS-WÄRE-WENN</b>
+        <select value={kind} onChange={e => { setKind(e.target.value); setVal(e.target.value === 'progress' ? (typeof m.progress === 'number' ? m.progress : 50) : 7) }}
+          className="rounded border px-2 py-1 text-[11px]" style={inp}>
+          <option value="progress" style={{ color: '#111' }}>Fortschritt gemeldet (%)</option>
+          <option value="blocker" style={{ color: '#111' }}>Blocker gemeldet (+Tage)</option>
+        </select>
+        <input type="number" min={0} max={kind === 'progress' ? 100 : 365} value={val} onChange={e => setVal(+e.target.value)}
+          className="w-20 rounded border px-2 py-1 text-[11px]" style={{ ...inp, fontFamily: T.mono }} />
+        <span style={{ color: T.inkDim }}>Ampel</span> <Pill st={stNow} /> <span style={{ color: T.inkDim }}>→</span> <Pill st={stAfter} />
+        <span style={{ fontFamily: T.mono, color: shift > 0 ? T.red : shift < 0 ? T.green : T.inkDim }}>
+          · Projektende {shift !== 0 ? `${shift > 0 ? '+' : ''}${shift} T` : 'unverändert'}
+        </span>
+      </div>
+      <div className="text-[10px] mt-1.5" style={{ color: T.inkFaint }}>
+        Simulation — nichts wird gespeichert. Echte Meldung: Tab «Sitzungen» (Fortschritt/Blocker) bzw. Handlungen abhaken.
       </div>
     </div>
   )
@@ -1940,6 +2047,8 @@ function BriefingModal({ m, role, me, onClose }) {
         </div>
         {/* Handlungen (abhakbar — treiben bei aktiviertem Roll-up den Fortschritt) */}
         <TaskSection m={m} role={role} me={me} />
+        {/* What-if (B0, 01.08. — ersetzt den Aktions-Log-Tab): Wirkung vorrechnen, nichts speichern */}
+        <WhatIf m={m} />
         {/* Briefing-Sektionen */}
         <div className="px-5 pb-4">
           {Object.keys(b).length === 0 && (
@@ -1974,38 +2083,6 @@ function BriefingModal({ m, role, me, onClose }) {
           </div>
         </div>
       </div>
-    </div>
-  )
-}
-
-// Formular «Aktion erfassen»
-function ActionForm({ ms, canEditMs, onSubmit }) {
-  const editable = ms.filter(canEditMs)
-  const [mId, setMId] = useState(editable[0]?.id || '')
-  const [kind, setKind] = useState('progress')
-  const [val, setVal] = useState(50)
-  if (!editable.length) return <div className="text-[12px]" style={{ color: T.inkDim }}>Kein Strom für diese Identität editierbar.</div>
-  return (
-    <div className="space-y-2 text-[12px]">
-      <select value={mId} onChange={e => setMId(e.target.value)} className="w-full rounded border px-2 py-1"
-        style={{ borderColor: T.line, background: T.panelSoft, color: T.ink }}>
-        {editable.map(m => <option key={m.id} value={m.id} style={{ color: '#111' }}>{m.id} — {m.name.slice(0, 60)}</option>)}
-      </select>
-      <div className="flex gap-2">
-        <select value={kind} onChange={e => setKind(e.target.value)} className="rounded border px-2 py-1"
-          style={{ borderColor: T.line, background: T.panelSoft, color: T.ink }}>
-          <option value="progress" style={{ color: '#111' }}>Fortschritt melden (%)</option>
-          <option value="blocker" style={{ color: '#111' }}>Blocker melden (+Tage Verzug)</option>
-        </select>
-        <input type="number" value={val} min={0} max={kind === 'progress' ? 100 : 365}
-          onChange={e => setVal(+e.target.value)}
-          className="w-24 rounded border px-2 py-1" style={{ borderColor: T.line, background: T.panelSoft, color: T.ink, fontFamily: T.mono }} />
-      </div>
-      <button onClick={() => onSubmit(mId, kind, val)}
-        className="w-full py-1.5 rounded font-semibold text-[12px]"
-        style={{ background: T.brass, color: '#0b1220' }}>
-        Erfassen &amp; Wirkung berechnen
-      </button>
     </div>
   )
 }
