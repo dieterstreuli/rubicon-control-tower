@@ -179,7 +179,7 @@ def entries_in(protos, start, end, typ=None, ws_prefix=None):
     return out
 
 
-def generate(level, period):
+def generate(level, period, ki=False):
     doc, protos, comments = load()
     # «Stand» aus dem Steuerungsdatum meta.today, nicht aus der Systemuhr (Audit #7) →
     # gleicher Input + gleiches meta.today = bit-identischer Report.
@@ -208,6 +208,19 @@ def generate(level, period):
     else:
         body = render_woche(doc, meta, now, inper, start, end, label, kom)
         title = f"Wochen-Report — {label}"
+        # K3 (01.08.): deterministischer Δ-Block («Was hat sich geändert?») aus
+        # git-Historie + Stores — reine Fakten, vorangestellt.
+        try:
+            import gen_delta
+            body = render_delta_html(gen_delta.compute(7)) + body
+        except Exception as ex:  # noqa: BLE001 — Report bleibt auch ohne Δ nutzbar
+            body = f'<p class="muted">Δ-Woche nicht verfügbar ({e(str(ex)[:100])})</p>' + body
+
+    # K5/K3 (01.08.): optionaler KI-Block — Narrativ (nur Woche) + 2-Satz-Begründung
+    # je gefährdetem/verzögertem MS. IMMER als ENTWURF gekennzeichnet; die Ampel
+    # selbst bleibt deterministisch. Fehler sind non-fatal.
+    if ki:
+        body += ki_block(level, doc, now)
 
     html_doc = f"""<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">{CSS}</head><body>
 <div class="logo"><img src="data:image/png;base64,{LOGO}"></div>
@@ -265,7 +278,81 @@ def main():
                 res.append({'ok': False, 'level': lvl, 'error': str(ex)})
         print(json.dumps({'auto': True, 'results': res}, ensure_ascii=False))
     else:
-        print(json.dumps(generate(sys.argv[1], sys.argv[2]), ensure_ascii=False))
+        print(json.dumps(generate(sys.argv[1], sys.argv[2], ki='--ki' in sys.argv), ensure_ascii=False))
+
+
+# ---------- Δ-Woche (K3) + KI-Entwurf (K5) ----------
+CLAUDE_BIN = os.environ.get('RUBICON_CLAUDE', '/Users/dieterstreuli/.local/bin/claude')
+
+
+def render_delta_html(d):
+    s = d.get('summe', {})
+    if not any(s.values()):
+        return '<h2>Δ zur Vorwoche</h2><p class="muted">Keine Veränderungen im Fenster.</p>'
+    parts = [f'<h2>Δ zur Vorwoche ({de(d["fenster"]["von"])} – {de(d["fenster"]["bis"])})</h2>']
+    if d.get('ampel'):
+        rows = ''.join(f'<tr><td>{e(x["id"])}</td><td>{e(x["name"])}</td><td>{pill(x["von"])} → {pill(x["zu"])}</td></tr>' for x in d['ampel'][:10])
+        parts.append(f'<h3>Ampel-Wechsel</h3><table><tr><th>MS</th><th>Meilenstein</th><th>Wechsel</th></tr>{rows}</table>')
+    if d.get('fortschritt'):
+        rows = ''.join(f'<tr><td>{e(x["id"])}</td><td>{e(x["name"])}</td><td>{e(x.get("von"))}% → {e(x.get("zu"))}%</td></tr>' for x in d['fortschritt'][:12])
+        parts.append(f'<h3>Fortschritts-Änderungen</h3><table><tr><th>MS</th><th>Meilenstein</th><th>Δ</th></tr>{rows}</table>')
+    if d.get('erledigt'):
+        rows = ''.join(f'<tr><td>{e(x["nr"])}</td><td>{e(x["text"])}</td><td>{e(x.get("owner"))}</td><td>{de(x["am"])}</td></tr>' for x in d['erledigt'][:15])
+        parts.append(f'<h3>Erledigte Handlungen ({len(d["erledigt"])})</h3><table><tr><th>Nr</th><th>Handlung</th><th>Owner</th><th>am</th></tr>{rows}</table>')
+    if d.get('entscheide'):
+        rows = ''.join(f'<tr><td>{e(x["id"])}</td><td>{e(x["titel"])}</td><td>{e(x["status"])}</td></tr>' for x in d['entscheide'])
+        parts.append(f'<h3>Entscheide (neu/bewegt)</h3><table><tr><th>ID</th><th>Titel</th><th>Status</th></tr>{rows}</table>')
+    return ''.join(parts)
+
+
+def ki_block(level, doc, now):
+    """KI-ENTWURF: Narrativ (woche) + Ampel-Begründungen. Fakten-gebunden — der
+    Prompt erhält NUR Daten aus der Plattform; Ausgabe klar als Entwurf markiert."""
+    try:
+        allms = [m for w in doc['workstreams'] for m in w['milestones']]
+        problems = [m for m in allms if status_of(m, now) in ('delayed', 'atRisk')][:12]
+        briefings = {}
+        bp = DATA / 'briefings.json'
+        if bp.exists():
+            briefings = json.loads(bp.read_text())
+        facts = {
+            'stichtag': doc['meta'].get('today'),
+            'problem_ms': [{
+                'id': m['id'], 'name': m.get('name'), 'owner': m.get('owner'), 'due': m.get('due'),
+                'progress': m.get('progress'), 'verzug_tage': m.get('reported_slip_days') or 0,
+                'status': status_of(m, now),
+                'kontext': (briefings.get(m['id'], {}).get('kontext') or '')[:280],
+            } for m in problems],
+        }
+        if level == 'woche':
+            import gen_delta
+            facts['delta'] = gen_delta.compute(7)
+        prompt = (
+            'Du bist Programm-Analyst des AXS-Transformationsprogramms RUBICON. Antworte NUR mit einem JSON-Objekt:\n'
+            '{"narrativ": "<5-8 Sätze Management-Zusammenfassung der Woche — was geschah, was es fürs Programm bedeutet; nüchtern, deutsch>",\n'
+            ' "begruendungen": {"<ms_id>": "<2 Sätze: warum gefährdet/verzögert + welche Gegenmassnahme naheliegt>"}}\n'
+            'HARTE REGELN: Nutze AUSSCHLIESSLICH die folgenden Fakten — nichts erfinden, keine Zahlen ausserhalb der Daten. '
+            'Wenn die Fakten für eine Begründung nicht reichen: "Datenlage unzureichend — beim Owner nachfassen." '
+            'Kein Lob, kein Alarmismus.\n\nFAKTEN:\n' + json.dumps(facts, ensure_ascii=False)
+        )
+        r = subprocess.run([CLAUDE_BIN, '-p', '--model', 'claude-sonnet-4-6'], input=prompt,
+                           capture_output=True, text=True, timeout=240)
+        out = r.stdout.strip()
+        m = re.search(r'\{[\s\S]*\}', out)
+        data = json.loads(m.group(0)) if m else {}
+        parts = ['<h2 style="color:#b07d2c">🤖 KI-Entwurf — ungeprüft, Freigabe durch CoS/DRS</h2>']
+        if level == 'woche' and data.get('narrativ'):
+            parts.append(f'<p>{e(data["narrativ"])}</p>')
+        beg = data.get('begruendungen') or {}
+        if beg:
+            rows = ''.join(f'<tr><td>{e(k)}</td><td>{e(v)}</td></tr>' for k, v in beg.items())
+            parts.append(f'<h3>Ampel-Begründungen (Entwurf)</h3><table><tr><th>MS</th><th>Warum + Gegenmassnahme</th></tr>{rows}</table>')
+        if len(parts) == 1:
+            return ''
+        parts.append('<p class="muted">Automatisch entworfen (Claude Sonnet) auf Basis der Plattform-Daten — Ampel und Zahlen bleiben deterministisch; dieser Block ist Interpretation und wird vor Verteilung geprüft.</p>')
+        return ''.join(parts)
+    except Exception as ex:  # noqa: BLE001
+        return f'<p class="muted">KI-Entwurf nicht verfügbar ({e(str(ex)[:120])})</p>'
 
 
 # ---------- Templates ----------

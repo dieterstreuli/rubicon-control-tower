@@ -12,10 +12,36 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { execFile } from 'node:child_process'
+import { execFile, spawn } from 'node:child_process'
 import yaml from 'js-yaml'
 
 const PY_BIN = process.env.RUBICON_PY || '/Library/Frameworks/Python.framework/Versions/3.14/bin/python3'  // Portabilität: env-Override (MIGRATION.md)
+const CLAUDE_BIN = process.env.RUBICON_CLAUDE || '/Users/dieterstreuli/.local/bin/claude'  // K4/K7: KI-Aufrufe (headless, Sonnet)
+
+// K4/K7 (01.08.): headless-Claude-Aufruf — Prompt via stdin (Grössen-sicher),
+// Sonnet, hartes Timeout. Reine Text-Antwort; JSON extrahiert der Aufrufer.
+function runClaude(prompt, cb, timeoutMs = 240000) {
+  let done = false
+  const fin = (err, out) => { if (!done) { done = true; cb(err, out) } }
+  const p = spawn(CLAUDE_BIN, ['-p', '--model', 'claude-sonnet-4-6'], { stdio: ['pipe', 'pipe', 'pipe'] })
+  let out = '', errS = ''
+  const to = setTimeout(() => { p.kill('SIGKILL'); fin(new Error(`Timeout nach ${timeoutMs / 1000}s`), out) }, timeoutMs)
+  p.stdout.on('data', d => { out += d })
+  p.stderr.on('data', d => { errS += d })
+  p.on('error', e2 => { clearTimeout(to); fin(e2, out) })
+  p.on('close', code => { clearTimeout(to); fin(code === 0 ? null : new Error((errS || `exit ${code}`).slice(-300)), out) })
+  p.stdin.write(prompt); p.stdin.end()
+}
+
+// erstes JSON-Objekt/-Array aus einer Modell-Antwort ziehen (Code-Fences tolerant)
+function extractJson(s) {
+  const t = (s || '').replace(/```json|```/g, '')
+  for (const re of [/\[[\s\S]*\]/, /\{[\s\S]*\}/]) {
+    const m = t.match(re)
+    if (m) { try { return JSON.parse(m[0]) } catch { /* weiter */ } }
+  }
+  return null
+}
 const OK_ORIGINS = [
   'http://localhost:8621', 'http://127.0.0.1:8621',
   'https://macbook-air-von-dieter.tail018620.ts.net:8621', // Tailnet-Zugang (Andreas etc.)
@@ -88,6 +114,7 @@ export function rubiconApi() {
         status: prev ? prev.status : (ENT_FLOW.includes(e.status) ? e.status : 'beantragt'),
         kommunikation: prev?.kommunikation ?? null,             // Stempel {an, am} — nur via Status-Übergang
         tasks: e.tasks ?? prev?.tasks ?? [],                    // Verweis auf Umsetzungs-Handlungen (T-IDs)
+        anhaenge: e.anhaenge ?? prev?.anhaenge ?? [],           // Drive-Links/IDs — gehen bei «kommuniziert» als PDF mit (DRS 01.08.)
         programm: e.programm ?? prev?.programm ?? null,         // null = konzernweit (z.B. Governance)
         quelle: e.quelle ?? prev?.quelle ?? null,               // Protokoll-ID bei Sitzungs-Herkunft
         created_at: prev?.created_at ?? (datum || new Date().toISOString().slice(0, 10)),
@@ -426,6 +453,20 @@ export function rubiconApi() {
         }
       })
 
+      // GET /api/delta?days=7 — B2 (01.08.): deterministischer Wochen-Delta aus
+      // git-Historie (projekt.yaml) + Stores. Read-only, keine Guards nötig.
+      server.middlewares.use('/api/delta', (req, res, next) => {
+        if (req.method !== 'GET') return next()
+        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
+        const days = Math.max(1, Math.min(90, parseInt(new URL(req.url, 'http://x').searchParams.get('days') || '7', 10) || 7))
+        execFile(PY_BIN, [path.join(root, 'scripts', 'gen_delta.py'), '--days', String(days)], { cwd: root, timeout: 60000 }, (err, stdout, stderr) => {
+          if (err && !stdout) return json(500, { ok: false, error: String(stderr || err).slice(-300) })
+          const last = (stdout || '').trim().split('\n').pop()
+          try { return json(200, JSON.parse(last)) }
+          catch { return json(500, { ok: false, error: 'Parse: ' + (stderr || last || '').slice(-200) }) }
+        })
+      })
+
       // POST /api/gemini/import — K1 (01.08.): Meet-Notiz (Gemini) → Vorschau/Übernahme
       // via import_gemini_doc.py --api. post:false = Dry-Run-VORSCHAU (nichts geschrieben);
       // post:true = Übernahme über den regulären /api/sitzung-Pfad. Menschliche Freigabe =
@@ -452,6 +493,81 @@ export function rubiconApi() {
             const last = (stdout || '').trim().split('\n').pop()
             try { return json(200, JSON.parse(last)) }
             catch { return json(500, { ok: false, error: 'Parse: ' + (stderr || last || '').slice(-200) }) }
+          })
+        } catch (err) {
+          return json(500, { ok: false, error: String(err && err.message || err) })
+        }
+      })
+
+      // POST /api/task/suggest — K4 (01.08.): KI-Zerlegungsvorschlag für einen Milestone.
+      // Liefert NUR Entwürfe (nichts wird gespeichert) — Übernahme läuft über den
+      // bestehenden /api/task/upsert nach menschlicher Prüfung im UI. Nur CoS.
+      server.middlewares.use('/api/task/suggest', async (req, res, next) => {
+        if (req.method !== 'POST') return next()
+        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
+        if (!guard(req, res)) return
+        try {
+          const body = JSON.parse((await readBody(req)) || '{}')
+          if (body.role !== 'CoS') return json(403, { ok: false, error: 'nur CoS darf Zerlegungen vorschlagen lassen' })
+          if (!body.ms_id) return json(400, { ok: false, error: 'ms_id fehlt' })
+          const doc = yaml.load(fs.readFileSync(yamlPath, 'utf8'))
+          let target = null, wsCode = null
+          for (const ws of doc.workstreams || []) for (const m of ws.milestones || []) if (m.id === body.ms_id) { target = m; wsCode = ws.code }
+          if (!target) return json(404, { ok: false, error: `Milestone ${body.ms_id} unbekannt` })
+          const briefPath = path.join(root, 'src', 'data', 'briefings.json')
+          const briefing = fs.existsSync(briefPath) ? (JSON.parse(fs.readFileSync(briefPath, 'utf8'))[body.ms_id] || {}) : {}
+          const existing = readTasks().tasks.filter(t => t.ms_id === body.ms_id).map(t => t.text)
+          const owners = doc.meta?.owners || []
+          const prompt = 'Du zerlegst einen Meilenstein des AXS-Transformationsprogramms RUBICON in 5-10 binär abhakbare Handlungen.\n'
+            + 'Antworte NUR mit einem JSON-Array: [{"text": "<Handlung, beginnt mit Verb, konkret prüfbar>", "owner": "<voller Name aus der Owner-Liste oder null>", "due": "YYYY-MM-DD oder null"}]\n'
+            + 'HARTE REGELN: due NUR setzen, wenn aus Briefing/Fälligkeit klar ableitbar — sonst null (nie raten; alle due ≤ Milestone-Fälligkeit). '
+            + 'Owner nur aus der Liste oder null. Keine Handlung, die es unten schon gibt. Deutsch, nüchtern, keine Deko.\n'
+            + `MILESTONE: ${JSON.stringify({ id: target.id, name: target.name, ws: wsCode, owner: target.owner, start: target.start, due: target.due, phase: target.phase, kpi: target.kpi })}\n`
+            + `OWNER-LISTE: ${JSON.stringify(owners)}\n`
+            + `BRIEFING: ${JSON.stringify(briefing)}\n`
+            + `BESTEHENDE HANDLUNGEN: ${JSON.stringify(existing)}`
+          runClaude(prompt, (err, out) => {
+            if (err && !out) return json(500, { ok: false, error: String(err.message || err) })
+            const arr = extractJson(out)
+            if (!Array.isArray(arr)) return json(500, { ok: false, error: 'KI-Antwort nicht parsebar: ' + (out || '').slice(0, 200) })
+            const clean = arr.filter(x => x && x.text).slice(0, 12).map(x => ({
+              text: String(x.text).slice(0, 300),
+              owner: owners.includes(x.owner) ? x.owner : null,
+              due: /^\d{4}-\d{2}-\d{2}$/.test(x.due || '') ? x.due : null,
+            }))
+            return json(200, { ok: true, ms_id: body.ms_id, vorschlaege: clean })
+          })
+        } catch (err) {
+          return json(500, { ok: false, error: String(err && err.message || err) })
+        }
+      })
+
+      // POST /api/ask — K7 (01.08.): «Frag die Daten» — read-only NL-Abfrage über die
+      // Plattform-Stores mit harter Quellenbindung (IDs zitieren, nie raten). Alle Rollen
+      // (rein lesend); Daten verlassen den Rechner nicht ausser an die Anthropic-API.
+      server.middlewares.use('/api/ask', async (req, res, next) => {
+        if (req.method !== 'POST') return next()
+        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
+        if (!guard(req, res)) return
+        try {
+          const body = JSON.parse((await readBody(req)) || '{}')
+          const frage = (body.frage || '').trim()
+          if (!frage) return json(400, { ok: false, error: 'frage fehlt' })
+          if (frage.length > 500) return json(400, { ok: false, error: 'Frage zu lang (max 500 Zeichen)' })
+          const doc = yaml.load(fs.readFileSync(yamlPath, 'utf8'))
+          const tasksC = readTasks().tasks.map(t => ({ nr: 'T-' + String(t.nr || 0).padStart(3, '0'), text: (t.text || '').slice(0, 140), owner: t.owner, due: t.due, status: t.status, ms: t.ms_id }))
+          const ents = readEnts().entscheide.map(e2 => ({ id: e2.id, titel: e2.titel, status: e2.status, gremium: e2.gremium, frist: e2.frist, datum: e2.datum }))
+          const prompt = 'Du beantwortest Fragen zum AXS-Transformationsprogramm RUBICON — AUSSCHLIESSLICH aus den folgenden Plattform-Daten.\n'
+            + 'HARTE REGELN: (1) Jede Aussage mit IDs belegen (MS-IDs, T-Nummern, E-Nummern, IN-IDs). (2) Steht etwas nicht in den Daten: '
+            + 'sag genau das («nicht in den Plattform-Daten») — NIE raten oder Weltwissen einmischen. (3) Deutsch, kompakt, '
+            + 'bei Aufzählungen ≥3 als Markdown-Tabelle. (4) Stichtag der Daten nennen, wenn Zeitbezug relevant.\n\n'
+            + `FRAGE: ${frage}\n\n`
+            + `PROJEKT (meta+workstreams+milestones+inputs):\n${JSON.stringify(doc)}\n\n`
+            + `HANDLUNGEN:\n${JSON.stringify(tasksC)}\n\n`
+            + `ENTSCHEIDE:\n${JSON.stringify(ents)}`
+          runClaude(prompt, (err, out) => {
+            if (err && !out) return json(500, { ok: false, error: String(err.message || err) })
+            return json(200, { ok: true, antwort: (out || '').trim() })
           })
         } catch (err) {
           return json(500, { ok: false, error: String(err && err.message || err) })
@@ -559,7 +675,9 @@ export function rubiconApi() {
         try {
           const body = JSON.parse((await readBody(req)) || '{}')
           if (!body.level || !body.period) return json(400, { ok: false, error: 'level und period sind Pflicht' })
-          execFile(PY_BIN, [path.join(root, 'scripts', 'gen_report.py'), body.level, body.period], { cwd: root, timeout: 120000 }, (err, stdout, stderr) => {
+          const rargs = [path.join(root, 'scripts', 'gen_report.py'), body.level, body.period]
+          if (body.ki) rargs.push('--ki')   // K5: KI-Entwurf (Narrativ + Ampel-Begründungen) — dauert länger
+          execFile(PY_BIN, rargs, { cwd: root, timeout: body.ki ? 300000 : 120000 }, (err, stdout, stderr) => {
             if (err && !stdout) return json(500, { ok: false, error: String(stderr || err).slice(-300) })
             const last = (stdout || '').trim().split('\n').pop()
             try { return json(200, JSON.parse(last)) }

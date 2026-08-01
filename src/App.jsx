@@ -53,6 +53,40 @@ const TASK_STATS = {
   ueberfaellig: ALL_TASKS.filter(taskOverdue).length,
 }
 
+// ── K6 (01.08.): Plausibilitäts-Radar — rein regelbasierte Muster-Checks über
+// Milestones + Handlungen (kein KI-Raten). Befunde erscheinen im Integritäts-
+// Panel als eigene Stufe «RADAR» (informativ — kein Gate, kein Abbruch).
+const RADAR = (() => {
+  const out = []
+  const byId = Object.fromEntries(BASE.workstreams.flatMap(w => (w.milestones || []).map(m => [m.id, m])))
+  // 1) Abhängigkeits-Terminlogik: Nachfolger fällig VOR einem Vorgänger
+  for (const m of Object.values(byId)) {
+    for (const dep of (m.depends_on || [])) {
+      const d = byId[dep]
+      if (d && m.due && d.due && m.due < d.due)
+        out.push({ level: 'RADAR', where: m.id, msg: `fällig ${m.due}, hängt aber von ${dep} ab (fällig erst ${d.due}) — Terminlogik prüfen` })
+    }
+  }
+  // 2) Owner-Wochenlast: >8 offene Handlungen desselben Owners in derselben ISO-Woche fällig
+  const week = (iso) => { const d = new Date(iso + 'T00:00:00Z'); const t = new Date(d); t.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7)); const y0 = new Date(Date.UTC(t.getUTCFullYear(), 0, 1)); return `${t.getUTCFullYear()}-KW${String(Math.ceil(((t - y0) / 86400000 + 1) / 7)).padStart(2, '0')}` }
+  const load = {}
+  for (const t of ALL_TASKS) {
+    if (t.status !== 'offen' || !t.due || !t.owner) continue
+    const k = `${t.owner}|${week(t.due)}`
+    load[k] = (load[k] || 0) + 1
+  }
+  for (const [k, n] of Object.entries(load).sort((a, b) => b[1] - a[1])) {
+    if (n > 8) { const [o, w] = k.split('|'); out.push({ level: 'RADAR', where: o, msg: `${n} offene Handlungen fällig in ${w} — Überlast/Priorisierung prüfen` }) }
+  }
+  // 3) Fristen-Cluster: >15 offene Handlungen am selben Tag fällig
+  const perDay = {}
+  for (const t of ALL_TASKS) if (t.status === 'offen' && t.due) perDay[t.due] = (perDay[t.due] || 0) + 1
+  for (const [d, n] of Object.entries(perDay).sort()) {
+    if (n > 15) out.push({ level: 'RADAR', where: d, msg: `${n} offene Handlungen am selben Tag fällig — Fristen-Cluster entzerren?` })
+  }
+  return out
+})()
+
 // ---------- kleine Bausteine ----------
 const Pill = ({ st }) => {
   const m = STATUS_META[st] || STATUS_META.unknown
@@ -200,6 +234,7 @@ export default function App() {
   const breaches = useMemo(() => hardEdgeBreaches(data), [data])
   const canEdit = role === 'CoS' || role === 'Owner'
   const canEditMs = (m) => role === 'CoS' || (role === 'Owner' && (m.owner === me || m._wsOwner === me))
+  const ALL_ISSUES = [...ISSUES, ...RADAR]
   const nErr = ISSUES.filter(i => i.level === 'FEHLER').length
   const nGap = ISSUES.filter(i => i.level === 'LÜCKE').length
 
@@ -273,6 +308,25 @@ export default function App() {
     && (ownerFilter === 'alle' || m.owner === ownerFilter) && msMatch(m))
   const sorted = [...filtered].sort((a, b) => (a.due || '9999') < (b.due || '9999') ? -1 : 1)
 
+  // A6 (01.08.): Vor/Zurück im Milestone-Modal — navigiert durch die aktuell
+  // gefilterte/sortierte Tafel-Liste (Fallback: alle MS); Pfeiltasten ← →.
+  const navMs = (m, dir) => {
+    const list = sorted.some(x => x.id === m.id) ? sorted : ms
+    const i = list.findIndex(x => x.id === m.id)
+    const n = list[i + dir]
+    if (n) setSelMs(n)
+  }
+  useEffect(() => {
+    if (!selMs) return undefined
+    const onKey = e => {
+      if (['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target?.tagName)) return
+      if (e.key === 'ArrowRight') navMs(selMs, 1)
+      if (e.key === 'ArrowLeft') navMs(selMs, -1)
+    }
+    window.addEventListener('keydown', onKey); return () => window.removeEventListener('keydown', onKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selMs, sorted])
+
   // Erfüllungsgrad je Phase (erledigt = progress ≥ 100). Deckt alle 131 MS ab:
   // 5 RUBICON-Phasen + Commercial-Masterplan (aggregiert alle «Masterplan · …»).
   const PHASE_TILES = [
@@ -324,7 +378,7 @@ export default function App() {
             <button onClick={() => setShowIntegrity(v => !v)}
               className="text-[11px] px-2 py-1 rounded border"
               style={{ borderColor: nErr ? T.red : T.line, color: nErr ? T.red : T.inkDim, fontFamily: T.mono }}>
-              Integrität: {nErr} Fehler · {nGap} Lücken
+              Integrität: {nErr} Fehler · {nGap} Lücken{RADAR.length ? ` · ${RADAR.length} Radar` : ''}
             </button>
             {(BASE.meta.programme || []).length > 1 && (
               <select value={prog || ''} onChange={e => setProg(e.target.value)}
@@ -351,8 +405,8 @@ export default function App() {
         {showIntegrity && (
           <div className="mt-2 max-h-40 overflow-auto rounded border p-2 text-[11px]"
             style={{ borderColor: T.line, background: T.bg, fontFamily: T.mono, color: T.inkDim }}>
-            {ISSUES.length === 0 ? 'Keine Befunde.' : ISSUES.map((i, k) => (
-              <div key={k} style={{ color: i.level === 'FEHLER' ? T.red : i.level === 'WARNUNG' ? T.amber : T.grey }}>
+            {ALL_ISSUES.length === 0 ? 'Keine Befunde.' : ALL_ISSUES.map((i, k) => (
+              <div key={k} style={{ color: i.level === 'FEHLER' ? T.red : i.level === 'WARNUNG' ? T.amber : i.level === 'RADAR' ? T.brass : T.grey }}>
                 [{i.level}] {i.where}: {i.msg}
               </div>
             ))}
@@ -478,6 +532,13 @@ export default function App() {
               })}
             </div>
           </div>
+
+          {/* Δ Woche (B2, 01.08.): Was hat sich seit letzter Woche geändert — deterministisch
+              aus git-Historie (projekt.yaml) + erledigt_am/Protokollen/Entscheiden. */}
+          <DeltaWoche />
+
+          {/* Frag die Daten (K7, 01.08.): read-only NL-Abfrage, quellengebunden */}
+          <FragDieDaten />
 
           {/* Offene Datenlieferungen — ersetzt den eigenständigen Tab «Input-Pflichten»
               (16.07., DRS: 14/16 sind task-getriggert → keine Vollansicht mehr nötig).
@@ -642,7 +703,9 @@ export default function App() {
                     const st = statusOf(m, NOW)
                     return (
                       <tr key={m.id} className={(st === 'delayed' ? 'row-delayed ' : '') + 'cursor-pointer hover:opacity-80'}
-                        onClick={() => setSelMs(m)} title="Klicken für Aufgaben-Definition (Briefing)"
+                        onClick={() => setSelMs(m)} title="Öffnen für Aufgaben-Definition (Briefing)"
+                        tabIndex={0} role="button" aria-label={`${m.id} ${m.name} — Briefing öffnen`}
+                        onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelMs(m) } }}
                         style={{ borderTop: `1px solid ${T.line}` }}>
                         <td className="px-3 py-1.5">{m.critical && <Diamond size={11} style={{ color: T.brass }} fill={T.brass} />}</td>
                         <td className="px-2 py-1.5" style={{ fontFamily: T.mono, color: T.inkDim }}>
@@ -804,7 +867,7 @@ export default function App() {
 
       </main>
 
-      {selMs && <BriefingModal m={selMs} role={role} me={me} onClose={() => setSelMs(null)} />}
+      {selMs && <BriefingModal m={selMs} role={role} me={me} onClose={() => setSelMs(null)} onNav={(d) => navMs(selMs, d)} />}
 
       {/* Intro als ⓘ-Overlay (B0, 01.08. — ehem. eigener Tab) */}
       {showIntro && (
@@ -824,6 +887,142 @@ export default function App() {
         RUBICON Control Tower · Wahrheitsquelle: src/data/projekt.yaml · Statuslogik deterministisch (status.js) ·
         Erfasste Sitzungen/Reports werden persistiert · Reminder = Gmail-Entwürfe (DRS sendet) · Kalender/Eskalation simuliert · Vertraulich ExBoD/VR
       </footer>
+    </div>
+  )
+}
+
+// ── Δ WOCHE (B2, 01.08.) — Führungs-Delta: erledigte Handlungen, Fortschritts-/
+// Ampel-Änderungen (git-Vergleich), neue Protokolle/Entscheide. Reine Fakten.
+function DeltaWoche() {
+  const [d, setD] = useState(null)
+  const [err, setErr] = useState(null)
+  useEffect(() => {
+    fetch('/api/delta?days=7')
+      .then(r => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then(j => (j.ok ? setD(j) : setErr(j.error || 'Fehler')))
+      .catch(e => setErr(String(e)))
+  }, [])
+  if (err) return null   // Delta ist Komfort — bei Fehlern still weglassen (Log hat den Fehler)
+  if (!d) return <div className="text-[11px]" style={{ color: T.inkFaint, fontFamily: T.mono }}>Δ Woche wird berechnet…</div>
+  const s = d.summe || {}
+  const none = !s.erledigt && !s.fortschritt && !s.ampel && !s.protokolle && !s.entscheide
+  const cap = (arr, n = 8) => ({ show: arr.slice(0, n), rest: Math.max(0, arr.length - n) })
+  return (
+    <div className="rounded-xl border overflow-hidden" style={{ background: T.panel, borderColor: T.line }}>
+      <div className="px-4 py-2 text-[12px] font-semibold border-b flex flex-wrap items-center gap-2" style={{ borderColor: T.line }}>
+        <span style={{ fontFamily: T.mono, color: T.brass }}>── Δ WOCHE ({fmtDate(d.fenster.von)} – {fmtDate(d.fenster.bis)}) ──</span>
+        <span className="font-normal text-[11px]" style={{ color: T.inkDim }}>
+          {s.erledigt} erledigt · {s.fortschritt} Fortschritts-Änderungen · {s.ampel} Ampel-Wechsel · {s.protokolle} Protokolle · {s.entscheide} Entscheide
+        </span>
+        {d.basis && <span className="font-normal text-[10px] ml-auto" style={{ color: T.inkFaint, fontFamily: T.mono }}>Basis: {d.basis}</span>}
+      </div>
+      {none
+        ? <div className="px-4 py-3 text-[12px]" style={{ color: T.inkFaint }}>Keine Veränderungen im Fenster.</div>
+        : (
+          <div className="grid md:grid-cols-2 gap-x-6 gap-y-2 px-4 py-3 text-[12px]">
+            {s.ampel > 0 && (
+              <div>
+                <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: T.amber, fontFamily: T.mono }}>Ampel-Wechsel</div>
+                {cap(d.ampel).show.map((x, i) => (
+                  <div key={i} className="flex items-center gap-2 py-0.5">
+                    <span style={{ fontFamily: T.mono, color: T.inkDim }}>{x.id}</span>
+                    <span className="flex-1 truncate" title={x.name}>{x.name}</span>
+                    <Pill st={x.von} /> <span style={{ color: T.inkFaint }}>→</span> <Pill st={x.zu} />
+                  </div>
+                ))}
+                {cap(d.ampel).rest > 0 && <div className="text-[10px]" style={{ color: T.inkFaint }}>+ {cap(d.ampel).rest} weitere</div>}
+              </div>
+            )}
+            {s.fortschritt > 0 && (
+              <div>
+                <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: T.green, fontFamily: T.mono }}>Fortschritt</div>
+                {cap(d.fortschritt).show.map((x, i) => (
+                  <div key={i} className="flex items-center gap-2 py-0.5">
+                    <span style={{ fontFamily: T.mono, color: T.inkDim }}>{x.id}</span>
+                    <span className="flex-1 truncate" title={x.name}>{x.name}</span>
+                    <b style={{ fontFamily: T.mono, color: T.green }}>{x.von ?? '—'}% → {x.zu ?? '—'}%</b>
+                  </div>
+                ))}
+                {cap(d.fortschritt).rest > 0 && <div className="text-[10px]" style={{ color: T.inkFaint }}>+ {cap(d.fortschritt).rest} weitere</div>}
+              </div>
+            )}
+            {s.erledigt > 0 && (
+              <div>
+                <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: T.blue, fontFamily: T.mono }}>Erledigte Handlungen</div>
+                {cap(d.erledigt).show.map((x, i) => (
+                  <div key={i} className="flex items-center gap-2 py-0.5">
+                    <span style={{ fontFamily: T.mono, color: T.brass }}>{x.nr}</span>
+                    <span className="flex-1 truncate" title={x.text}>{x.text}</span>
+                    <span style={{ fontFamily: T.mono, color: T.inkFaint }}>{x.owner || ''} · {fmtDate(x.am)}</span>
+                  </div>
+                ))}
+                {cap(d.erledigt).rest > 0 && <div className="text-[10px]" style={{ color: T.inkFaint }}>+ {cap(d.erledigt).rest} weitere</div>}
+              </div>
+            )}
+            {(s.protokolle > 0 || s.entscheide > 0) && (
+              <div>
+                <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: T.brass, fontFamily: T.mono }}>Protokolle & Entscheide</div>
+                {d.protokolle.map((p, i) => (
+                  <div key={'p' + i} className="py-0.5" style={{ color: T.inkDim }}>
+                    <span style={{ fontFamily: T.mono, color: T.inkFaint }}>{fmtDate(p.datum)}</span> {p.meeting} <span style={{ color: T.inkFaint }}>({p.eintraege} Einträge)</span>
+                  </div>
+                ))}
+                {d.entscheide.map((x, i) => (
+                  <div key={'e' + i} className="py-0.5" style={{ color: T.inkDim }}>
+                    <span style={{ fontFamily: T.mono, color: T.brass }}>{x.id}</span> {x.titel} <span style={{ fontFamily: T.mono, color: T.inkFaint }}>[{x.status}]</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+    </div>
+  )
+}
+
+// ── FRAG DIE DATEN (K7, 01.08.) — read-only NL-Abfrage über die Plattform-Stores.
+// Harte Quellenbindung (IDs zitieren, «nicht in den Daten» statt raten); alle Rollen.
+function FragDieDaten() {
+  const [frage, setFrage] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [antwort, setAntwort] = useState(null)
+  const [err, setErr] = useState(null)
+  const ask = async () => {
+    const f = frage.trim()
+    if (!f || busy) return
+    setBusy(true); setErr(null); setAntwort(null)
+    try {
+      const r = await fetch('/api/ask', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ frage: f }) })
+      const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
+      if (j.ok) setAntwort(j.antwort)
+      else setErr(j.error || 'unbekannt')
+    } catch (e2) { setErr(String(e2)) }
+    setBusy(false)
+  }
+  return (
+    <div className="rounded-xl border p-3" style={{ background: T.panel, borderColor: T.line }}>
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-[11px] font-semibold tracking-wide" style={{ fontFamily: T.mono, color: T.brass }}>🤖 FRAG DIE DATEN</span>
+        <input value={frage} onChange={e => setFrage(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') ask() }}
+          placeholder="z.B. «Welche kritischen Meilensteine von Stephanie Rohde sind vor dem 31.10. fällig?»"
+          aria-label="Frage an die Plattform-Daten" maxLength={500}
+          className="flex-1 min-w-[280px] rounded border px-3 py-1.5 text-[12px]"
+          style={{ background: T.panelSoft, borderColor: T.line, color: T.ink }} />
+        <button onClick={ask} disabled={busy || !frage.trim()} className="px-3 py-1.5 rounded border text-[12px]"
+          style={{ borderColor: T.brass, color: T.brass, opacity: busy || !frage.trim() ? .5 : 1 }}>
+          {busy ? 'liest… (~20-40s)' : 'Fragen'}
+        </button>
+        <span className="text-[10px]" style={{ color: T.inkFaint }}>read-only · antwortet NUR aus projekt.yaml/Handlungen/Entscheiden, mit IDs belegt</span>
+      </div>
+      {err && <div className="mt-2 text-[11.5px]" style={{ color: T.red }}>Abfrage fehlgeschlagen: {err}</div>}
+      {antwort && (
+        <div className="mt-2 rounded border p-3 text-[12px] whitespace-pre-wrap" style={{ borderColor: T.brass + '44', background: T.panelSoft + '55', color: T.ink }}>
+          {antwort}
+          <div className="mt-2 pt-1.5 border-t text-[10px]" style={{ borderColor: T.line, color: T.inkFaint }}>
+            KI-Antwort (Sonnet) auf Basis des Plattform-Stands — bei Entscheidungsrelevanz im Tower/Register gegenprüfen.
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -1408,8 +1607,9 @@ const ENT_GREMIEN = ['Ressort', 'CEO', 'ExBoD', 'GL', 'VR']
 function EntEdit({ e, role, me, today }) {
   const [beg, setBeg] = useState(e.begruendung || '')
   const [dat, setDat] = useState(e.datengrundlage || '')
+  const [anh, setAnh] = useState((e.anhaenge || []).join(', '))
   const [busy, setBusy] = useState(false)
-  const dirty = beg !== (e.begruendung || '') || dat !== (e.datengrundlage || '')
+  const dirty = beg !== (e.begruendung || '') || dat !== (e.datengrundlage || '') || anh !== (e.anhaenge || []).join(', ')
   const inp = { background: T.panelSoft, borderColor: T.line, color: T.ink }
   const save = async () => {
     if (busy || !dirty) return
@@ -1417,7 +1617,7 @@ function EntEdit({ e, role, me, today }) {
     try {
       const r = await fetch('/api/entscheid/upsert', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ role, me, datum: today, entscheide: [{ key: e.key, titel: e.titel, entscheid: e.entscheid, begruendung: beg.trim() || null, datengrundlage: dat.trim() || null }] }),
+        body: JSON.stringify({ role, me, datum: today, entscheide: [{ key: e.key, titel: e.titel, entscheid: e.entscheid, begruendung: beg.trim() || null, datengrundlage: dat.trim() || null, anhaenge: anh.split(',').map(x => x.trim()).filter(Boolean) }] }),
       })
       const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
       if (j.ok) reloadKeepScroll()
@@ -1431,6 +1631,9 @@ function EntEdit({ e, role, me, today }) {
         className="flex-1 min-w-[220px] rounded border px-2 py-1" style={inp} />
       <input placeholder="Datengrundlage (Unterlagen/Links)" value={dat} onChange={ev => setDat(ev.target.value)}
         className="flex-1 min-w-[220px] rounded border px-2 py-1" style={inp} />
+      <input placeholder="Anhänge: Drive-Links, kommagetrennt — gehen bei «kommuniziert» als PDF mit" value={anh} onChange={ev => setAnh(ev.target.value)}
+        title="z.B. Kompetenzordnung — Google-Docs werden als PDF exportiert und dem Gmail-Entwurf angehängt"
+        className="flex-1 min-w-[260px] rounded border px-2 py-1" style={inp} />
       <button onClick={save} disabled={busy || !dirty} className="px-2.5 py-1 rounded border text-[11px]"
         style={{ borderColor: dirty ? T.brass : T.line, color: dirty ? T.brass : T.inkFaint, opacity: busy ? .5 : 1 }}>
         <Save size={11} className="inline mr-1" />{busy ? 'speichert…' : 'Speichern'}
@@ -1593,7 +1796,10 @@ function EntscheideView({ role, me, today }) {
                 const isOpen = open === e.id
                 return (
                   <React.Fragment key={e.id}>
-                    <tr onClick={() => setOpen(isOpen ? null : e.id)} style={{ borderTop: `1px solid ${T.line}`, cursor: 'pointer', background: isOpen ? T.panelSoft + '55' : 'transparent' }}>
+                    <tr onClick={() => setOpen(isOpen ? null : e.id)}
+                      tabIndex={0} role="button" aria-label={`${e.id} ${e.titel} — Details ${isOpen ? 'schliessen' : 'öffnen'}`}
+                      onKeyDown={ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); setOpen(isOpen ? null : e.id) } }}
+                      style={{ borderTop: `1px solid ${T.line}`, cursor: 'pointer', background: isOpen ? T.panelSoft + '55' : 'transparent' }}>
                       <td className="px-3 py-1.5 whitespace-nowrap" style={{ fontFamily: T.mono, color: T.brass }}>{e.id}</td>
                       <td className="px-2 py-1.5">{e.titel}</td>
                       <td className="px-2 py-1.5 whitespace-nowrap text-[11px]" style={{ color: T.inkDim }}>{e.typ || '—'}</td>
@@ -1655,6 +1861,14 @@ function EntscheideView({ role, me, today }) {
                             <div><b style={{ color: T.inkDim }}>Entscheid:</b> {e.entscheid || '—'}</div>
                             <div><b style={{ color: T.inkDim }}>Begründung:</b> {e.begruendung || <span style={{ color: T.amber }}>— fehlt (Pflicht vor «entschieden»)</span>}</div>
                             <div><b style={{ color: T.inkDim }}>Datengrundlage:</b> {e.datengrundlage || '—'}</div>
+                            <div><b style={{ color: T.inkDim }}>Anhänge:</b>{' '}
+                              {(e.anhaenge || []).length
+                                ? e.anhaenge.map((a, i) => (
+                                  <a key={i} href={a.startsWith('http') ? a : `https://drive.google.com/open?id=${a}`}
+                                    target="_blank" rel="noreferrer" className="mr-2" style={{ color: T.blue }}>Dokument {i + 1} ↗</a>
+                                ))
+                                : <span style={{ color: T.inkFaint }}>— (gehen bei «kommuniziert» als PDF mit, unten pflegbar)</span>}
+                            </div>
                             <div>
                               <b style={{ color: T.inkDim }}>Kommunikation:</b>{' '}
                               {e.kommunikation ? `an ${e.kommunikation.an || '?'} am ${fmtDate(e.kommunikation.am)}` : '— noch nicht kommuniziert'}
@@ -1990,13 +2204,14 @@ function ReportsView({ canEdit, today }) {
   const [level, setLevel] = useState('vr')
   const [period, setPeriod] = useState(defP('vr'))
   const [comment, setComment] = useState('')
+  const [ki, setKi] = useState(false)   // K5 (01.08.): KI-Entwurf mitgenerieren
   const [busy, setBusy] = useState(false)
   const changeLevel = (l) => { setLevel(l); setPeriod(defP(l)); setComment('') }
   const gen = async () => {
     setBusy(true)
     try {
       if (comment.trim()) await fetch('/api/report/comment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: `${level}:${period}:programm`, text: comment.trim() }) })
-      const r = await fetch('/api/report/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ level, period }) })
+      const r = await fetch('/api/report/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ level, period, ki }) })
       const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
       if (j.ok) { sessionStorage.setItem('rubicon_tab', 'reports'); reloadKeepScroll() }
       else { alert('Report fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(false) }
@@ -2033,8 +2248,14 @@ function ReportsView({ canEdit, today }) {
           <label className="flex flex-col gap-1 text-[12px] flex-1 min-w-[240px]"><span style={{ color: T.inkDim }}>{level === 'vr' ? 'Chairman-Statement (optional)' : 'Programm-Kommentar (optional)'}</span>
             <input value={comment} onChange={e => setComment(e.target.value)} placeholder="das Urteil, das die Daten nicht liefern …" className="rounded border px-2 py-1" style={inp} />
           </label>
+          {canEdit && (
+            <label className="flex items-center gap-1.5 pb-2 text-[11.5px] cursor-pointer" style={{ color: ki ? T.brass : T.inkDim }}
+              title="Ergänzt den Report um einen klar markierten KI-ENTWURF: Wochen-Narrativ + 2-Satz-Begründung je gefährdetem/verzögertem Meilenstein. Ampel & Zahlen bleiben deterministisch; du gibst vor Verteilung frei.">
+              <input type="checkbox" checked={ki} onChange={e => setKi(e.target.checked)} /> 🤖 KI-Entwurf (Narrativ + Ampel-Begründungen)
+            </label>
+          )}
           {canEdit
-            ? <button onClick={gen} disabled={busy} className="flex items-center gap-1.5 px-4 py-2 rounded font-semibold text-[13px]" style={{ background: T.brass, color: '#0b1220', opacity: busy ? 0.6 : 1 }}><BarChart3 size={15} /> {busy ? 'erzeugt… (~15s)' : `${LVL_LABEL[level]} erzeugen`}</button>
+            ? <button onClick={gen} disabled={busy} className="flex items-center gap-1.5 px-4 py-2 rounded font-semibold text-[13px]" style={{ background: T.brass, color: '#0b1220', opacity: busy ? 0.6 : 1 }}><BarChart3 size={15} /> {busy ? (ki ? 'erzeugt… (~1-2 Min mit KI)' : 'erzeugt… (~15s)') : `${LVL_LABEL[level]} erzeugen`}</button>
             : <span className="text-[11px]" style={{ color: T.inkFaint }}><Lock size={12} className="inline mr-1" />nur Lesen</span>}
         </div>
       </div>
@@ -2137,6 +2358,88 @@ function TaskSection({ m, role, me }) {
   )
 }
 
+// K4 (01.08.): KI-Zerlegungsvorschlag — Agent entwirft 5-10 Handlungen aus dem
+// Briefing, CoS prüft/editiert/übernimmt (Grad 2: Agent entwirft, Mensch bestätigt).
+// due-Vorschläge sind Annahmen; Übernahme läuft über den regulären /api/task/upsert.
+// Roll-up-Aktivierung («treibend») bleibt ein separater, bewusster Haken.
+function ZerlegungKI({ m, role }) {
+  const [busy, setBusy] = useState(false)
+  const [drafts, setDrafts] = useState(null)   // [{text, owner, due, use}]
+  const [activate, setActivate] = useState(false)
+  const [err, setErr] = useState(null)
+  const inp = { background: T.panelSoft, borderColor: T.line, color: T.ink }
+
+  const suggest = async () => {
+    setBusy(true); setErr(null)
+    try {
+      const r = await fetch('/api/task/suggest', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ role, ms_id: m.id }) })
+      const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
+      if (j.ok) setDrafts(j.vorschlaege.map(v => ({ ...v, use: true })))
+      else setErr(j.error || 'unbekannt')
+    } catch (e2) { setErr(String(e2)) }
+    setBusy(false)
+  }
+  const upd = (i, patch) => setDrafts(d => d.map((x, k) => k === i ? { ...x, ...patch } : x))
+  const take = async () => {
+    const chosen = (drafts || []).filter(d => d.use && d.text.trim())
+    if (busy || !chosen.length) return
+    setBusy(true)
+    sessionStorage.setItem('rubicon_selms', m.id)
+    try {
+      const ts = Date.now()
+      const r = await fetch('/api/task/upsert', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          role, tasks: chosen.map((d, i) => ({ id: `${m.id}-KI${ts}-${i}`, ms_id: m.id, text: d.text.trim(), owner: d.owner || null, due: d.due || null, source: 'zerlegung', origin: 'KI-Vorschlag (CoS freigegeben)' })),
+          ...(activate ? { activate_ms: m.id } : {}),
+        }),
+      })
+      const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
+      if (j.ok) reloadKeepScroll()
+      else { sessionStorage.removeItem('rubicon_selms'); setErr(j.error || 'unbekannt'); setBusy(false) }
+    } catch (e2) { sessionStorage.removeItem('rubicon_selms'); setErr(String(e2)); setBusy(false) }
+  }
+
+  return (
+    <div className="mx-5 mt-3 rounded-xl border p-3" style={{ borderColor: T.line, background: T.panelSoft + '33' }}>
+      <div className="flex flex-wrap items-center gap-2 text-[12px]">
+        <b className="text-[11px] tracking-wide" style={{ color: T.brass, fontFamily: T.mono }}>🤖 ZERLEGUNG (KI-ENTWURF)</b>
+        {!drafts && (
+          <button onClick={suggest} disabled={busy} className="px-3 py-1 rounded border text-[11.5px]"
+            style={{ borderColor: T.brass + '88', color: T.brass, opacity: busy ? .5 : 1 }}>
+            {busy ? 'entwirft… (~30-60s)' : 'Handlungen vorschlagen lassen'}
+          </button>
+        )}
+        <span className="text-[10.5px]" style={{ color: T.inkFaint }}>Agent entwirft aus dem Briefing — nichts wird ohne deine Übernahme gespeichert; due-Vorschläge sind Annahmen.</span>
+      </div>
+      {err && <div className="mt-2 text-[11.5px]" style={{ color: T.red }}>Fehlgeschlagen: {err}</div>}
+      {drafts && (
+        <div className="mt-2 space-y-1.5">
+          {drafts.map((d, i) => (
+            <div key={i} className="flex flex-wrap items-center gap-2 text-[11.5px]">
+              <input type="checkbox" checked={d.use} onChange={e2 => upd(i, { use: e2.target.checked })} aria-label="Vorschlag übernehmen" />
+              <input value={d.text} onChange={e2 => upd(i, { text: e2.target.value })} className="flex-1 min-w-[260px] rounded border px-2 py-1" style={inp} />
+              <input value={d.owner || ''} onChange={e2 => upd(i, { owner: e2.target.value })} placeholder="Owner" className="w-36 rounded border px-2 py-1" style={inp} />
+              <input type="date" value={d.due || ''} onChange={e2 => upd(i, { due: e2.target.value })} className="rounded border px-2 py-1" style={{ ...inp, fontFamily: T.mono }} title="Vorschlag — prüfen!" />
+            </div>
+          ))}
+          <div className="flex flex-wrap items-center gap-3 pt-1.5">
+            <button onClick={take} disabled={busy || !drafts.some(d => d.use)} className="px-3 py-1.5 rounded font-semibold text-[11.5px]"
+              style={{ background: T.brass, color: '#0b1220', opacity: busy ? .5 : 1 }}>
+              {busy ? 'übernimmt…' : `Übernehmen (${drafts.filter(d => d.use).length})`}
+            </button>
+            <label className="flex items-center gap-1.5 text-[11px] cursor-pointer" style={{ color: activate ? T.brass : T.inkDim }}
+              title="progress_source: tasks — der Milestone-Fortschritt wird ab dann aus den Handlungen VERDIENT (bewusster Akt)">
+              <input type="checkbox" checked={activate} onChange={e2 => setActivate(e2.target.checked)} /> Roll-up aktivieren («treibend»)
+            </label>
+            <button onClick={() => { setDrafts(null); setErr(null) }} className="px-2.5 py-1 rounded border text-[11px]" style={{ borderColor: T.line, color: T.inkDim }}>Verwerfen</button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // What-if-Simulation (B0, 01.08. — die Wirkungsrechnung des entfernten Aktions-Log-
 // Tabs, jetzt im Milestone-Modal): rechnet deterministisch vor, was ein gemeldeter
 // Fortschritt/Verzug mit Ampel und Projektende täte. Reine Ansicht — NICHTS wird
@@ -2186,7 +2489,7 @@ function WhatIf({ m }) {
 // Milestone-Detail-Modal — ausführliche Aufgaben-Definition (Briefing),
 // Struktur analog Commercial-Masterplan (KONTEXT/LEISTUNG/VORGEHEN/KPI/RISIKEN)
 // + eingebettetes Briefing-PDF (public/briefings/<id>.pdf).
-function BriefingModal({ m, role, me, onClose }) {
+function BriefingModal({ m, role, me, onClose, onNav }) {
   const b = BRIEFINGS[m.id] || {}
   const st = statusOf(m, NOW)
   const Sect = ({ title, children }) => (
@@ -2217,6 +2520,14 @@ function BriefingModal({ m, role, me, onClose }) {
             </div>
             <div className="text-[16px] font-bold mt-1" style={{ color: T.ink }}>{m.name}</div>
           </div>
+          {onNav && (
+            <span className="flex items-center gap-1">
+              <button onClick={() => onNav(-1)} aria-label="Vorheriger Meilenstein" title="Vorheriger Meilenstein (←)"
+                className="px-2 py-1 rounded border text-[13px]" style={{ borderColor: T.line, color: T.inkDim }}>‹</button>
+              <button onClick={() => onNav(1)} aria-label="Nächster Meilenstein" title="Nächster Meilenstein (→)"
+                className="px-2 py-1 rounded border text-[13px]" style={{ borderColor: T.line, color: T.inkDim }}>›</button>
+            </span>
+          )}
           <a href={pdfUrl} target="_blank" rel="noreferrer"
             className="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded border whitespace-nowrap"
             style={{ borderColor: T.brass, color: T.brass }}>
@@ -2245,6 +2556,8 @@ function BriefingModal({ m, role, me, onClose }) {
         </div>
         {/* Handlungen (abhakbar — treiben bei aktiviertem Roll-up den Fortschritt) */}
         <TaskSection m={m} role={role} me={me} />
+        {/* Zerlegungs-Vorschlag (K4, 01.08.): KI entwirft Handlungen — CoS prüft & übernimmt */}
+        {role === 'CoS' && <ZerlegungKI m={m} role={role} />}
         {/* What-if (B0, 01.08. — ersetzt den Aktions-Log-Tab): Wirkung vorrechnen, nichts speichern */}
         <WhatIf m={m} />
         {/* Briefing-Sektionen */}

@@ -120,11 +120,49 @@ def mail_html(rec):
 </div>"""
 
 
+def _drive_id(s):
+    """Drive-ID aus Link ODER roher ID — nie raten (None, wenn nicht erkennbar)."""
+    m = re.search(r'/d/([A-Za-z0-9_-]{20,})', s or '') or re.search(r'[?&]id=([A-Za-z0-9_-]{20,})', s or '')
+    if m:
+        return m.group(1)
+    s = (s or '').strip()
+    return s if re.fullmatch(r'[A-Za-z0-9_-]{20,}', s) else None
+
+
+def fetch_anhaenge(drive, rec):
+    """Hinterlegte Anhänge (rec['anhaenge'], DRS 01.08.) laden: Google-Docs als
+    PDF-Export, sonstige Dateien roh (Cap 15 MB). Fehler sind non-fatal —
+    die Kommunikation geht nicht an einem Anhang zugrunde."""
+    atts, errs = [], []
+    for a in rec.get('anhaenge') or []:
+        fid = _drive_id(a)
+        if not fid:
+            errs.append(f'{a[:60]}: keine Drive-ID erkennbar'); continue
+        try:
+            meta = drive.files().get(fileId=fid, fields='name,mimeType,size', supportsAllDrives=True).execute()
+            name = re.sub(r'[^\w. \-()]+', '_', meta.get('name') or 'Dokument')
+            mt = meta.get('mimeType', '')
+            if mt.startswith('application/vnd.google-apps'):
+                data = drive.files().export(fileId=fid, mimeType='application/pdf').execute()
+                fname = name + ('.pdf' if not name.lower().endswith('.pdf') else '')
+            else:
+                if int(meta.get('size') or 0) > 15 * 1024 * 1024:
+                    errs.append(f'{name}: > 15 MB — übersprungen'); continue
+                data = drive.files().get_media(fileId=fid).execute()
+                fname = name
+            atts.append((fname, data if isinstance(data, bytes) else bytes(data)))
+        except Exception as ex:  # noqa: BLE001
+            errs.append(f'{fid[:24]}…: {str(ex)[-120:]}')
+    return atts, errs
+
+
 def create_draft(rec, pdf_path, an):
     from _google_auth import load_credentials
     from googleapiclient.discovery import build
     creds = load_credentials('d.streuli@axs.aero')
     gmail = build('gmail', 'v1', credentials=creds)
+    drive = build('drive', 'v3', credentials=creds)
+    extra_atts, att_errs = fetch_anhaenge(drive, rec)
 
     msg = MIMEMultipart('mixed')
     alt = MIMEMultipart('alternative')
@@ -137,6 +175,11 @@ def create_draft(rec, pdf_path, an):
         att = MIMEApplication(f.read(), _subtype='pdf')
     att.add_header('Content-Disposition', 'attachment', filename=f"Entscheid_{rec['id']}.pdf")
     msg.attach(att)
+    # Hinterlegte Dokumente (z.B. Kompetenzordnung) mitsenden — DRS 01.08.
+    for fname, data in extra_atts:
+        xa = MIMEApplication(data, _subtype='pdf' if fname.lower().endswith('.pdf') else 'octet-stream')
+        xa.add_header('Content-Disposition', 'attachment', filename=fname)
+        msg.attach(xa)
 
     msg['Subject'] = f"Entscheid {rec['id']} — {rec['titel']}"
     # Empfänger: IMMER der feste GL-Verteiler (DRS 16.07.); enthält der beim Klick
@@ -147,7 +190,7 @@ def create_draft(rec, pdf_path, an):
 
     raw = base64.urlsafe_b64encode(msg.as_bytes()).decode()
     draft = gmail.users().drafts().create(userId='me', body={'message': {'raw': raw}}).execute()
-    return draft.get('id')
+    return draft.get('id'), len(extra_atts), att_errs
 
 
 def main():
@@ -167,16 +210,17 @@ def main():
     html_to_pdf(str(hp), str(pdf_abs))
     pdf_rel = f'/entscheide/{eid}.pdf'
 
-    draft_id, draft_err = None, None
+    draft_id, draft_err, n_anh, anh_err = None, None, 0, []
     if '--pdf-only' not in sys.argv:                           # Vorschau/Beispiel ohne Gmail-Entwurf
         try:
-            draft_id = create_draft(rec, pdf_abs, an or (rec.get('kommunikation') or {}).get('an'))
+            draft_id, n_anh, anh_err = create_draft(rec, pdf_abs, an or (rec.get('kommunikation') or {}).get('an'))
         except Exception as ex:                                # PDF bleibt auch ohne Gmail nutzbar
             draft_err = str(ex)[-200:]
 
     rec['export'] = {'pdf': pdf_rel, 'draft_id': draft_id, 'stand': STAMP}
     _atomic_write(ENTS, json.dumps(store, ensure_ascii=False, indent=2))
-    print(json.dumps({'ok': True, 'id': eid, 'pdf': pdf_rel, 'draft_id': draft_id, 'draft_error': draft_err}))
+    print(json.dumps({'ok': True, 'id': eid, 'pdf': pdf_rel, 'draft_id': draft_id, 'draft_error': draft_err,
+                      'anhaenge': n_anh, 'anhang_fehler': anh_err}))
 
 
 if __name__ == '__main__':
