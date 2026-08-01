@@ -9,6 +9,7 @@ import {
   ClipboardList, Plus, Trash2, Save, Sun, Moon, BarChart3, Circle, Scale,
 } from 'lucide-react'
 import { T, STATUS_META, ROLES, applyTheme, initialTheme } from './lib/theme.js'
+import { can, canAny } from './lib/permissions.js'   // Q4: EINE Rechte-Matrix (identisch auf dem Server)
 import {
   PHASE_ORDER, phaseToken, ENT_FLOW, ENT_TYPEN, ENT_GREMIEN, ENT_COLOR,
   TYP_LABEL, TYP_ICON, LVL_LABEL, LVL_AUSWAHL, LVL_COLOR, PROGRESS_STEPS, roleInfo,
@@ -236,8 +237,8 @@ export default function App() {
   const proj = useMemo(() => projectedEnd(data), [data])
   const overall = useMemo(() => overallStatus(data), [data])
   const breaches = useMemo(() => hardEdgeBreaches(data), [data])
-  const canEdit = role === 'CoS' || role === 'Owner'
-  const canEditMs = (m) => role === 'CoS' || (role === 'Owner' && (m.owner === me || m._wsOwner === me))
+  const canEdit = canAny(role, 'sitzung.erfassen')
+  const canEditMs = (m) => can(role, me, 'ms.melden', m)
   const ALL_ISSUES = [...ISSUES, ...RADAR]
   const nErr = ISSUES.filter(i => i.level === 'FEHLER').length
   const nGap = ISSUES.filter(i => i.level === 'LÜCKE').length
@@ -437,7 +438,7 @@ export default function App() {
         return (
           <div className="px-4 md:px-6 py-1.5 flex items-center gap-2 text-[11.5px] border-b"
             style={{ background: info.c + '14', borderColor: info.c + '44', color: T.ink }}>
-            {role === 'CoS' ? <ShieldCheck size={13} style={{ color: info.c }} />
+            {canAny(role, 'reminder.entwerfen') ? <ShieldCheck size={13} style={{ color: info.c }} />
               : role === 'Owner' ? <ListChecks size={13} style={{ color: info.c }} />
               : <Lock size={13} style={{ color: info.c }} />}
             <b style={{ color: info.c }}>Aktive Rolle: {info.t}</b>
@@ -799,7 +800,7 @@ export default function App() {
           )}
 
           {/* CoS-Steuerung (B0: ehem. eigener Tab — Durchsetzung gehört zu den Datenlieferungen) */}
-          {role === 'CoS' && (<>
+          {canAny(role, 'reminder.entwerfen') && (<>
             <div className="rounded-lg border px-4 py-2 text-[12px] flex items-center gap-2"
               style={{ borderColor: T.amber + '88', background: T.amber + '14', color: T.amber }}>
               <Siren size={14} /> <b>Reminder = echte Gmail-ENTWÜRFE</b> (je Owner gebündelt · 7-Tage-Bremse · Versand bleibt bei DRS — K2 Stufe 1, 01.08.).
@@ -1657,8 +1658,8 @@ function EntscheideView({ role, me, today }) {
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({ titel: '', typ: ENT_TYPEN[0], gremium: 'ExBoD', antragsteller: '', entscheid: '', begruendung: '', datengrundlage: '', frist: '' })
   const [busy, setBusy] = useState(false)
-  const canWrite = role === 'CoS' || role === 'Owner'
-  const mayAdvance = (e) => role === 'CoS' || (role === 'Owner' && e.antragsteller === me)
+  const canWrite = canAny(role, 'entscheid.erfassen')
+  const mayAdvance = (e) => can(role, me, 'entscheid.fortschreiben', e)
 
   const gremien = [...new Set(all.map(e => e.gremium).filter(Boolean))]
   const filtered = all.filter(e =>
@@ -1949,7 +1950,7 @@ function AufgabenView({ role, me, prog, onOpenMs }) {
   })
   const nOffen = filtered.filter(t => t.status === 'offen').length
   const nOver = filtered.filter(taskOverdue).length
-  const mayToggle = (t) => role === 'CoS' || (role === 'Owner' && t.owner === me)
+  const mayToggle = (t) => can(role, me, 'task.abhaken', t)
   const toggle = async (t) => {
     if (busy || !mayToggle(t)) return
     setBusy(t.id)
@@ -2084,7 +2085,7 @@ function ProtokolleView({ role, me }) {
   const commitmentTasks = ALL_TASKS.filter(t => t.source === 'sitzung' || t.source === 'gemini')
   const offeneCommitments = commitmentTasks.filter(t => t.status === 'offen')
   const nErledigt = commitmentTasks.length - offeneCommitments.length
-  const mayToggle = (t) => role === 'CoS' || (role === 'Owner' && t.owner === me)
+  const mayToggle = (t) => can(role, me, 'task.abhaken', t)
   const erledige = async (t) => {
     if (busy || !mayToggle(t)) return
     setBusy(t.id)
@@ -2295,7 +2296,7 @@ function TaskSection({ m, role, me }) {
   )
   const done = ts.filter(t => t.status === 'erledigt').length
   const driving = m.progress_source === 'tasks'
-  const mayToggle = (t) => role === 'CoS' || (role === 'Owner' && t.owner === me)
+  const mayToggle = (t) => can(role, me, 'task.abhaken', t)
   const anyToggle = ts.some(mayToggle)
   const toggle = async (t) => {
     if (busy || !mayToggle(t)) return
@@ -2453,7 +2454,7 @@ function WhatIf({ m, role, me }) {
   const [val, setVal] = useState(typeof m.progress === 'number' ? m.progress : 50)
   const [busy, setBusy] = useState(false)
   const driving = m.progress_source === 'tasks'
-  const maySave = role === 'CoS' || (role === 'Owner' && m.owner === me)
+  const maySave = can(role, me, 'ms.melden', m)
   const current = kind === 'progress' ? (typeof m.progress === 'number' ? m.progress : null) : (m.reported_slip_days || 0)
   const dirty = val !== current
   const save = async () => {
@@ -2608,7 +2609,7 @@ function BriefingModal({ m, role, me, onClose, onNav }) {
         {/* Handlungen (abhakbar — treiben bei aktiviertem Roll-up den Fortschritt) */}
         <TaskSection m={m} role={role} me={me} />
         {/* Zerlegungs-Vorschlag (K4, 01.08.): KI entwirft Handlungen — CoS prüft & übernimmt */}
-        {role === 'CoS' && <ZerlegungKI m={m} role={role} />}
+        {canAny(role, 'ki.nutzen') && <ZerlegungKI m={m} role={role} />}
         {/* Fortschritt melden (25%-Stufen) + Was-wäre-wenn-Vorschau (DRS 01.08.) */}
         <WhatIf m={m} role={role} me={me} />
         {/* Briefing-Sektionen */}

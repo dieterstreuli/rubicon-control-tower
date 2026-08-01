@@ -14,6 +14,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { execFile, spawn } from 'node:child_process'
 import yaml from 'js-yaml'
+import { can, requireCan } from '../src/lib/permissions.js'   // Q4: EINE Rechte-Matrix für UI + Server
 
 const PY_BIN = process.env.RUBICON_PY || '/Library/Frameworks/Python.framework/Versions/3.14/bin/python3'  // Portabilität: env-Override (MIGRATION.md)
 const CLAUDE_BIN = process.env.RUBICON_CLAUDE || '/Users/dieterstreuli/.local/bin/claude'  // K4/K7: KI-Aufrufe (headless, Sonnet)
@@ -276,12 +277,12 @@ export function rubiconApi() {
         return json(200, { ok: true, protokolle: readSens().protokolle })
       })
       // POST /api/sitzung — eine erfasste Sitzung speichern + Milestones aktualisieren
-      ep('/api/sitzung', {}, async ({ body, json }) => {
+      ep('/api/sitzung', {}, async ({ body, json, fail }) => {
           if (!body.meeting_id || !body.datum) return json(400, { ok: false, error: 'meeting_id und datum sind Pflicht' })
 
           // Rollen-Gate (Audit #3): nur CoS/Owner dürfen schreiben
           const role = body.role, me = body.me
-          if (role !== 'CoS' && role !== 'Owner') return json(403, { ok: false, error: `Rolle «${role || '?'}» darf nicht erfassen` })
+          requireCan(fail, role, me, 'sitzung.erfassen')
 
           // 1) Protokoll-Datensatz anhängen (neueste zuerst) — kollisionssichere ID (Audit #22).
           // Sensitiv-Filter (#6): sensitive Sitzungen landen im GETRENNTEN, nie
@@ -319,8 +320,8 @@ export function rubiconApi() {
           for (const ws of doc.workstreams || []) for (const m of ws.milestones || []) idx[m.id] = { m, wsOwner: ws.owner }
           const applied = [], skipped = []
           const mayEdit = (msId) => {
-            if (role === 'CoS') return true
-            const rec2 = idx[msId]; return !!rec2 && (rec2.m.owner === me || rec2.wsOwner === me)
+            const rec2 = idx[msId]
+            return !!rec2 && can(role, me, 'ms.melden', { ...rec2.m, _wsOwner: rec2.wsOwner })
           }
           for (const e of rec.eintraege) {
             if (e.typ === 'fortschritt' && e.ms_id && idx[e.ms_id] && typeof e.wert === 'number') {
@@ -393,9 +394,9 @@ export function rubiconApi() {
       // DRS 01.08.). Gleiche Gates wie /api/sitzung: CoS alles, Owner nur eigene
       // (MS-Owner oder WS-Owner); task-getriebene MS sind GESPERRT (Fortschritt
       // wird verdient). Journal = git-Historie (Δ-Woche zeigt die Änderung).
-      ep('/api/ms/progress', {}, async ({ body, json }) => {
+      ep('/api/ms/progress', {}, async ({ body, json, fail }) => {
           const { role, me } = body
-          if (role !== 'CoS' && role !== 'Owner') return json(403, { ok: false, error: `Rolle «${role || '?'}» darf nicht melden` })
+          requireCan(fail, role, me, 'ms.melden')
           if (!body.ms_id) return json(400, { ok: false, error: 'ms_id fehlt' })
           const hasProg = typeof body.progress === 'number'
           const hasSlip = typeof body.slip === 'number'
@@ -404,7 +405,7 @@ export function rubiconApi() {
           let target = null, wsOwner = null
           for (const ws of doc.workstreams || []) for (const m of ws.milestones || []) if (m.id === body.ms_id) { target = m; wsOwner = ws.owner }
           if (!target) return json(404, { ok: false, error: `Milestone ${body.ms_id} unbekannt` })
-          if (role === 'Owner' && target.owner !== me && wsOwner !== me) return json(403, { ok: false, error: 'Owner darf nur eigene Meilensteine melden' })
+          if (!can(role, me, 'ms.melden', { ...target, _wsOwner: wsOwner })) return json(403, { ok: false, error: 'Owner darf nur eigene Meilensteine melden' })
           if (hasProg && target.progress_source === 'tasks')
             return json(409, { ok: false, error: 'Fortschritt wird bei diesem Milestone aus den Handlungen VERDIENT — bitte Handlungen abhaken statt Prozent tippen.' })
           const changes = []
@@ -423,8 +424,8 @@ export function rubiconApi() {
       // POST /api/task/upsert — Handlungen (Tasks) anlegen/aktualisieren (nur CoS).
       // Optional body.activate_ms: schaltet den Milestone auf progress_source:'tasks'
       // («treibend») — bewusst expliziter Akt NACH menschlicher Freigabe der Zerlegung.
-      ep('/api/task/upsert', {}, async ({ body, json }) => {
-          if (body.role !== 'CoS') return json(403, { ok: false, error: 'nur CoS darf Handlungen anlegen/ändern' })
+      ep('/api/task/upsert', {}, async ({ body, json, fail }) => {
+          requireCan(fail, body.role, body.me, 'task.anlegen')
           const incoming = Array.isArray(body.tasks) ? body.tasks : []
           for (const t of incoming) {
             if (!t.id || !t.text) return json(400, { ok: false, error: 'Task braucht id und text (ms_id optional = ungekoppelt)' })
@@ -450,14 +451,14 @@ export function rubiconApi() {
 
       // POST /api/task/status — Handlung abhaken/wiedereröffnen {id, status} → Roll-up.
       // CoS immer; Owner nur eigene Handlungen (analog Audit #3 in /api/sitzung).
-      ep('/api/task/status', {}, async ({ body, json }) => {
+      ep('/api/task/status', {}, async ({ body, json, fail }) => {
           if (!body.id || !['offen', 'erledigt'].includes(body.status)) return json(400, { ok: false, error: 'id und status (offen|erledigt) sind Pflicht' })
           const role = body.role, me = body.me
-          if (role !== 'CoS' && role !== 'Owner') return json(403, { ok: false, error: `Rolle «${role || '?'}» darf nicht abhaken` })
+          requireCan(fail, role, me, 'task.abhaken')
           const store = readTasks()
           const t = store.tasks.find(x => x.id === body.id)
           if (!t) return json(404, { ok: false, error: `Task ${body.id} nicht gefunden` })
-          if (role === 'Owner' && t.owner !== me) return json(403, { ok: false, error: 'Owner darf nur eigene Handlungen abhaken' })
+          if (!can(role, me, 'task.abhaken', t)) return json(403, { ok: false, error: 'Owner darf nur eigene Handlungen abhaken' })
           t.status = body.status
           t.erledigt_am = body.status === 'erledigt' ? (body.datum || new Date().toISOString().slice(0, 10)) : null
           // A5 (01.08.): Audit-Spur — WER hat abgehakt (Rolle bzw. Owner-Name)
@@ -485,8 +486,8 @@ export function rubiconApi() {
       // aus der Durchsetzungs-Queue (je Owner gebündelt, 7-Tage-Bremse, persistentes
       // Log in reminder_log.json). NIE Versand — DRS sendet. Nur CoS.
       // Eskalation/Kalender bleiben bewusst simuliert (Führungssignale, nie automatisch).
-      ep('/api/reminder/draft', {}, async ({ body, json }) => {
-          if (body.role !== 'CoS') return json(403, { ok: false, error: 'nur CoS darf Reminder-Entwürfe erzeugen' })
+      ep('/api/reminder/draft', {}, async ({ body, json, fail }) => {
+          requireCan(fail, body.role, body.me, 'reminder.entwerfen')
           const args = [path.join(root, 'scripts', 'gen_reminder_mail.py')]
           if (body.scope === 'alle') args.push('--alle')
           else if (body.scope && Array.isArray(body.scope.ids) && body.scope.ids.length) args.push('--ids', body.scope.ids.join(','))
@@ -516,8 +517,8 @@ export function rubiconApi() {
       // via import_gemini_doc.py --api. post:false = Dry-Run-VORSCHAU (nichts geschrieben);
       // post:true = Übernahme über den regulären /api/sitzung-Pfad. Menschliche Freigabe =
       // der Übernehmen-Klick NACH der Vorschau (gleiches Gate wie CLI --post). CoS/Owner.
-      ep('/api/gemini/import', {}, async ({ body, json }) => {
-          if (body.role !== 'CoS' && body.role !== 'Owner') return json(403, { ok: false, error: `Rolle «${body.role || '?'}» darf nicht importieren` })
+      ep('/api/gemini/import', {}, async ({ body, json, fail }) => {
+          requireCan(fail, body.role, body.me, 'sitzung.erfassen')
           if (!body.meeting_id) return json(400, { ok: false, error: 'meeting_id fehlt' })
           const args = [path.join(root, 'scripts', 'import_gemini_doc.py')]
           if (body.doc_id) args.push(body.doc_id)
@@ -539,8 +540,8 @@ export function rubiconApi() {
       // POST /api/task/suggest — K4 (01.08.): KI-Zerlegungsvorschlag für einen Milestone.
       // Liefert NUR Entwürfe (nichts wird gespeichert) — Übernahme läuft über den
       // bestehenden /api/task/upsert nach menschlicher Prüfung im UI. Nur CoS.
-      ep('/api/task/suggest', {}, async ({ body, json }) => {
-          if (body.role !== 'CoS') return json(403, { ok: false, error: 'nur CoS darf Zerlegungen vorschlagen lassen' })
+      ep('/api/task/suggest', {}, async ({ body, json, fail }) => {
+          requireCan(fail, body.role, body.me, 'ki.nutzen')
           if (!body.ms_id) return json(400, { ok: false, error: 'ms_id fehlt' })
           const doc = yaml.load(fs.readFileSync(yamlPath, 'utf8'))
           let target = null, wsCode = null
@@ -574,7 +575,7 @@ export function rubiconApi() {
       // POST /api/ask — K7 (01.08.): «Frag die Daten» — read-only NL-Abfrage über die
       // Plattform-Stores mit harter Quellenbindung (IDs zitieren, nie raten). Alle Rollen
       // (rein lesend); Daten verlassen den Rechner nicht ausser an die Anthropic-API.
-      ep('/api/ask', {}, async ({ body, json }) => {
+      ep('/api/ask', {}, async ({ body, json, fail }) => {
           const frage = (body.frage || '').trim()
           if (!frage) return json(400, { ok: false, error: 'frage fehlt' })
           if (frage.length > 500) return json(400, { ok: false, error: 'Frage zu lang (max 500 Zeichen)' })
@@ -598,9 +599,9 @@ export function rubiconApi() {
       // POST /api/entscheid/upsert — Entscheid im Register anlegen/aktualisieren.
       // CoS immer; Owner darf als Antragsteller eigene Entscheide erfassen (analog Audit #3).
       // Lifecycle (status/kommunikation) wird hier NICHT verändert — nur via /api/entscheid/status.
-      ep('/api/entscheid/upsert', {}, async ({ body, json }) => {
+      ep('/api/entscheid/upsert', {}, async ({ body, json, fail }) => {
           const role = body.role, me = body.me
-          if (role !== 'CoS' && role !== 'Owner') return json(403, { ok: false, error: `Rolle «${role || '?'}» darf keine Entscheide erfassen` })
+          requireCan(fail, role, me, 'entscheid.erfassen')
           const incoming = Array.isArray(body.entscheide) ? body.entscheide : []
           for (const e of incoming) {
             if (!e.key || !(e.titel || e.entscheid)) return json(400, { ok: false, error: 'Entscheid braucht key und titel/entscheid' })
@@ -615,14 +616,14 @@ export function rubiconApi() {
       // POST /api/entscheid/status — Status-Übergang im 5-Stufen-Modell {id, status, an?}.
       // CoS immer; Owner nur eigene (antragsteller === me). Übergang zu «kommuniziert»
       // setzt den Kommunikations-Stempel {an, am}; «entschieden» stempelt das Entscheid-Datum.
-      ep('/api/entscheid/status', {}, async ({ body, json }) => {
+      ep('/api/entscheid/status', {}, async ({ body, json, fail }) => {
           if (!body.id || !ENT_FLOW.includes(body.status)) return json(400, { ok: false, error: `id und status (${ENT_FLOW.join('|')}) sind Pflicht` })
           const role = body.role, me = body.me
-          if (role !== 'CoS' && role !== 'Owner') return json(403, { ok: false, error: `Rolle «${role || '?'}» darf den Status nicht ändern` })
+          requireCan(fail, role, me, 'entscheid.fortschreiben')
           const store = readEnts()
           const e = store.entscheide.find(x => x.id === body.id)
           if (!e) return json(404, { ok: false, error: `Entscheid ${body.id} nicht gefunden` })
-          if (role === 'Owner' && e.antragsteller !== me) return json(403, { ok: false, error: 'Owner darf nur eigene Entscheide fortschreiben' })
+          if (!can(role, me, 'entscheid.fortschreiben', e)) return json(403, { ok: false, error: 'Owner darf nur eigene Entscheide fortschreiben' })
           // A4 (01.08.): Beschluss-Qualität hart — ohne Begründung kein «entschieden»
           // (Pflichtfeld der Beschlussvorlage; bisher nur UI-Warnung, jetzt Server-Gate).
           if (body.status === ENT_BEGRUENDUNG_AB && !(e.begruendung || '').trim())
@@ -650,7 +651,7 @@ export function rubiconApi() {
       })
 
       // POST /api/protokoll/export — Protokoll als PDF + Google Doc rendern (shellt Python)
-      ep('/api/protokoll/export', {}, async ({ body, json }) => {
+      ep('/api/protokoll/export', {}, async ({ body, json, fail }) => {
           if (!body.id) return json(400, { ok: false, error: 'id fehlt' })
           // Sensitiv (#6): kein Export — PDF läge im servierten public/, das Doc im
           // geteilten Drive. Sensitive Protokolle bleiben ausschliesslich im lokalen Store.
@@ -665,7 +666,7 @@ export function rubiconApi() {
       })
 
       // POST /api/report/generate — verdichteten Report rendern (shellt gen_report.py)
-      ep('/api/report/generate', {}, async ({ body, json }) => {
+      ep('/api/report/generate', {}, async ({ body, json, fail }) => {
           if (!body.level || !body.period) return json(400, { ok: false, error: 'level und period sind Pflicht' })
           const rargs = [path.join(root, 'scripts', 'gen_report.py'), body.level, body.period]
           if (body.ki) rargs.push('--ki')   // K5: KI-Entwurf (Narrativ + Ampel-Begründungen) — dauert länger
@@ -678,7 +679,7 @@ export function rubiconApi() {
       })
 
       // POST /api/report/comment — optionalen Freitext-Kommentar speichern {key, text}
-      ep('/api/report/comment', {}, async ({ body, json }) => {
+      ep('/api/report/comment', {}, async ({ body, json, fail }) => {
           if (!body.key) return json(400, { ok: false, error: 'key fehlt' })
           const p = path.join(root, 'src', 'data', 'report_comments.json')
           const store = JSON.parse(fs.readFileSync(p, 'utf8'))
