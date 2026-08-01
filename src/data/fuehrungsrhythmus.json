@@ -9,7 +9,7 @@
         {
           "id": "steuerungsrunde",
           "typ": "sitzung",
-          "name": "Steuerungsrunde (physisch)",
+          "name": "Steering Committee (SC)",
           "wann": "alle 2 Wochen · physisch · ~2h",
           "teilnehmer": "DRS + Fritthum + Gökcöl + Rohde (Format analog Kickoff 31.07.)",
           "zweck": "Programm-Steuerung über alle Ströme: Ampel-Lage & Δ, Eskalationen, Ressourcen-/Zielentscheide, Cash-Lage (13-Wo-Liquidität als fester Punkt), Gate-/VR-Vorbereitung — ersetzt die wöchentliche 3er-Steuerung",
@@ -26,7 +26,7 @@
           "typ": "sitzung",
           "name": "GL-Weekly (Dienstag)",
           "wann": "wöchentlich · Di",
-          "teilnehmer": "GL-6 · Vorsitz CGO · Commitment-Review vorangestellt",
+          "teilnehmer": "GL-6 · Vorsitz CGO · ohne DRS/AFR (bestätigt AFR 01.08.)",
           "zweck": "7-WS-Ampel, Commitment-Review, Entscheids-Queue, Gate-Status · fixer Punkt: 13-Wochen-Liquiditätsstatus (Rohde) · im 1. Termin des Quartals: erweitertes Commitment-Review je Strom (ersetzt die Quartals-Runde)",
           "output": "Beschlüsse + Commitments → Tower · offene Entscheide → Entscheids-Queue · Kurzprotokoll"
         }
@@ -37,13 +37,22 @@
       "farbe": "blue",
       "meetings": [
         {
-          "id": "mbr",
+          "id": "monatsergebnisse",
           "typ": "sitzung",
-          "name": "Monthly Business / Ops-Performance-Review",
-          "wann": "monatlich",
-          "teilnehmer": "CGO + COO Matthei + CFO · Top-Verluststationen",
-          "zweck": "Station-Scorecards, P&L-Owner-Review, Zentralkosten-Deckel-Fortschritt — der EINZIGE Aggregationspunkt, über den die Ops-Ebene den Tower erreicht",
-          "output": "MBR-Protokoll + Scorecards → Tower; programm-relevante Blocker/Commitments werden hier erfasst"
+          "name": "AXS Monatsergebnisse",
+          "wann": "monatlich · virtuell · 2-3h · Vortag des Elysium-Tags",
+          "teilnehmer": "ExBoD + GL",
+          "zweck": "Monats-P&L je Einheit, Station-Scorecards, Forecast-Abgleich, Zentralkosten-Fortschritt — der Aggregationspunkt, über den die Ops-Ebene den Tower erreicht",
+          "output": "Beschlüsse/Commitments → Tower · Kennzahlen → Monthly Report"
+        },
+        {
+          "id": "elysium-tag",
+          "typ": "sitzung",
+          "name": "Elysium-Tag (physisch, ganztags)",
+          "wann": "monatlich · meist Monatsende · ganztags · physisch",
+          "teilnehmer": "ExBoD + GL",
+          "zweck": "Arbeitstag Restrukturierung/Transformation: Elysium-Massnahmen, ab Sep 26 verzahnt mit den RUBICON-Strömen (WS3/WS7-Massnahmen laufen hier)",
+          "output": "Sitzungserfassung im Tower (Meet-Notiz-Import bei Virtual-Anteilen) · Massnahmen-Fortschritt → Handlungen"
         },
         {
           "id": "commercial-cafes",
@@ -124,14 +133,14 @@
           "wann": "je Schicht, ~10 Min",
           "teilnehmer": "Stationsleiter + Schicht-Team",
           "zweck": "Tagessteuerung Ops: Pünktlichkeit/Turnaround, Vorkommnisse, Safety",
-          "output": "KEIN Tower-Eintrag — lokale KPIs aggregiert → Station-Scorecard → erreicht RUBICON nur über das MBR"
+          "output": "KEIN Tower-Eintrag — lokale KPIs aggregiert → Station-Scorecard → erreicht RUBICON nur über die Monatsergebnis-Sitzung"
         }
       ]
     }
   ],
   "grundsaetze": [
     "3-Ebenen-Führung: DRS steuert & kontrolliert · AFR + CGO treiben · GL-6 liefert.",
-    "RUBICON-Scope = Programm-/GL-Ebene (Meilensteine, Handlungen, Entscheide, Reports). Die Ops-Ebene läuft ausserhalb und erreicht den Tower NUR aggregiert über das MBR.",
+    "RUBICON-Scope = Programm-/GL-Ebene (Meilensteine, Handlungen, Entscheide, Reports). Die Ops-Ebene läuft ausserhalb und erreicht den Tower NUR aggregiert über die Monatsergebnis-Sitzung.",
     "VR-Sitzungen werden in Sherpany erfasst und geführt — RUBICON übernimmt Beschlüsse ins Register und liefert Reports zu (keine Doppelführung).",
     "Commitment-Review IMMER zuerst — vor den Sachthemen.",
     "Entscheids-Queue: Liegedauer jedes offenen Entscheids sichtbar.",

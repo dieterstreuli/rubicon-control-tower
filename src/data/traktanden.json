@@ -258,65 +258,6 @@
       "kadenz": "wöchentlich (~30 Min)"
     },
     {
-      "meeting_id": "mbr",
-      "dauer": "~90 Min (monatlich)",
-      "vorsitz": "CGO (Gökcöl, CEO) — als Umsetzungsmotor des Power-Duos",
-      "teilnehmer": "CGO (Vorsitz) · COO Matthei · CFO Rohde (Support Lesch/Pajor) · Station-/P&L-Owner der Top-Verluststationen BER/MUC/FRA/DUS. Ab M7 alle ~15 Stationen (rollierend/On-Demand zugeschaltet).",
-      "standing_rule": "Commitment-Review zuerst — kein Station-Deep-Dive, bevor die offenen Commitments der Vorperiode auf ROT/GELB/GRÜN gestellt sind; jede Zahl kommt aus WINGMAN bzw. der Ops-Scorecard, keine Ad-hoc-Zahlen, jeder Beschluss landet im RUBICON Control Tower (Aktions-Log/Entscheids-Queue).",
-      "ergebnis": "Aktualisierte Station-Ampel + P&L-Owner-Status und alle Beschlüsse/Turnaround-Massnahmen → RUBICON Control Tower (Aktions-Log + Entscheids-Queue); Verlustquellen-/Kostendeckel-relevante Beschlussvorlagen → VR/GL via Sherpany; MBR-Protokoll → Tower.",
-      "hinweise": [
-        "Station-Scorecards nur aggregiert (kein MA-Personenbezug) — in DE/AT Mitbestimmungs-Vorbehalt (§87 BetrVG / §96 ArbVG).",
-        "VIE-relevante Kosten-/Personalmassnahmen bis BVD-Entscheid eingefroren; SLA-Untergrenze (SGHA Annex B §9) ist nicht verhandelbar.",
-        "Datenehrlichkeit: bis Baseline-Gate G2 (15.10.) offene Zahlen als Datenlücke markieren, keine Zielwerte vor validierter Baseline fixieren."
-      ],
-      "traktanden": [
-        {
-          "nr": 1,
-          "titel": "Commitment-Review (Vorperiode) — offene Ops-/P&L-Commitments auf Ampel stellen, 2× Nichtlieferung eskalieren",
-          "zeit": "10 Min",
-          "verantwortlich": "CGO (Vorsitz), Betrieb CEO-Office",
-          "output": "Ampel-Update + Eskalationen → RUBICON Control Tower (Aktions-Log)"
-        },
-        {
-          "nr": 2,
-          "titel": "Station-Scorecards Top-Verluststationen (BER/MUC/FRA/DUS): Pünktlichkeit/Turnaround, Ground Damage, Baggage Mishandling, Safety (AHM 730 / G31–39, DG52)",
-          "zeit": "30 Min",
-          "verantwortlich": "COO Matthei (je Station der P&L-Owner)",
-          "output": "Konsolidierte Ops-Scorecard je Station + Massnahmen → Tower"
-        },
-        {
-          "nr": 3,
-          "titel": "P&L-Owner-Review: Ist vs. Plan je Station (WINGMAN), Cost-per-Turn-Entwicklung, Abweichungs-Ursachen",
-          "zeit": "20 Min",
-          "verantwortlich": "CFO Rohde (Support Lesch/Pajor)",
-          "output": "P&L-/CpT-Sicht + Owner-Zusagen → Tower (Aktions-Log)"
-        },
-        {
-          "nr": 4,
-          "titel": "Zentralkosten-Deckel & externe Kosten: Fortschritt gegen Deckel/−30%-Pfad, Doppelspurigkeits-Abbau",
-          "zeit": "12 Min",
-          "verantwortlich": "CFO Rohde (Support AFR Finanz-Challenge)",
-          "output": "Kostendeckel-Status/Ampel → Tower; beschlussreife Vorlagen → VR/GL (Sherpany)"
-        },
-        {
-          "nr": 5,
-          "titel": "Verlustquellen-Turnaround (Top-3 AAS Technics/BER/MUC + ZRH-Residual): drehen vs. eliminieren, harte Daten/Gates",
-          "zeit": "13 Min",
-          "verantwortlich": "AFR (AAS Technics in charge) / CGO (BER/MUC)",
-          "output": "Turnaround-Beschlüsse + Gate-Status → Tower; VR-Beschlussvorlagen → Sherpany"
-        },
-        {
-          "nr": 6,
-          "titel": "Entscheids-Queue & neue Commitments: offene Entscheide mit Liegedauer zwingen, Owner + Termin je neuem Item setzen",
-          "zeit": "5 Min",
-          "verantwortlich": "CGO (Vorsitz)",
-          "output": "Neue Commitments/Entscheide mit Owner+Termin → RUBICON Control Tower (Entscheids-Queue)"
-        }
-      ],
-      "meeting_name": "Monthly Business / Ops-Performance-Review",
-      "kadenz": "monatlich (~90 Min)"
-    },
-    {
       "meeting_id": "monthly-report",
       "dauer": "monatlich, bis 20. des Folgemonats (~45 Min)",
       "vorsitz": "CFO Rohde",
@@ -565,6 +506,60 @@
       ],
       "meeting_name": "VR-Sitzung",
       "kadenz": "4×/Jahr · Pre-Read T−14 via Sherpany (halbtägig)"
+    },
+    {
+      "meeting_id": "monatsergebnisse",
+      "dauer": "2-3h (virtuell)",
+      "vorsitz": "Cüneyt Gökcöl",
+      "teilnehmer": "ExBoD + GL",
+      "standing_rule": "Vortag des Elysium-Tags — Zahlen zuerst, damit der Arbeitstag auf validierter Basis arbeitet.",
+      "traktanden": [
+        {
+          "titel": "Monats-P&L je Einheit (CFO)",
+          "output": "abgenommene Monatszahlen"
+        },
+        {
+          "titel": "Station-Scorecards / Top-Verluststationen",
+          "output": "Massnahmen-Aufträge mit Owner"
+        },
+        {
+          "titel": "Forecast-Abgleich (FC vs. Ist) + 13-Wo-Liquidität",
+          "output": "FC-Anpassungen, Cash-Hinweise"
+        },
+        {
+          "titel": "Zentralkosten-/Overhead-Fortschritt",
+          "output": "Status Richtung −30%-Ziel"
+        },
+        {
+          "titel": "Commitments & Entscheids-Queue",
+          "output": "Beschlüsse → Register, Commitments → Tower"
+        }
+      ]
+    },
+    {
+      "meeting_id": "elysium-tag",
+      "dauer": "ganztags (physisch)",
+      "vorsitz": "Cüneyt Gökcöl",
+      "teilnehmer": "ExBoD + GL",
+      "standing_rule": "Meist am Monatsende, Vortag = Monatsergebnisse (virtuell). Ab Programmstart 01.09. laufen die RUBICON-Massnahmen (WS3/WS7) in diesem Format.",
+      "traktanden": [
+        {
+          "titel": "Review Massnahmen-Fortschritt (Elysium + WS3/WS7)",
+          "output": "abgehakte/eskalierte Handlungen"
+        },
+        {
+          "titel": "Vertiefungs-Blöcke je Schwerpunkt (rotierend)",
+          "output": "erarbeitete Entscheidungsgrundlagen"
+        },
+        {
+          "titel": "Entscheide des Tages",
+          "output": "Beschlüsse → Register (E-Nummern)"
+        },
+        {
+          "titel": "Nächste 30 Tage: Commitments je Owner",
+          "output": "Handlungen mit Frist → Tower"
+        }
+      ]
     }
   ]
 }
