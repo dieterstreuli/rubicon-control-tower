@@ -210,6 +210,32 @@ export function rubiconApi() {
     return true
   }
 
+  // ── Endpoint-Factory (Q3, 01.08.2026) ──────────────────────────────────────
+  // Vorher stand in JEDEM der 15 Endpoints derselbe Vorspann: Methoden-Check,
+  // json-Helper, guard(), readBody+JSON.parse, try/catch. Querschnitts-Änderungen
+  // (Audit-Log, Auth-Header für IAP) hätten 15 Einzel-Edits gebraucht — jetzt eine.
+  //
+  // handler({ body, req, res, json, fail }):
+  //   · json(code, obj) antwortet selbst (bestehendes Muster, unverändert)
+  //   · fail(code, msg)  wirft einen Fehler mit HTTP-Status (kurze Validierungen)
+  //   · ein zurückgegebenes Objekt wird als 200 gesendet; undefined = hat selbst geantwortet
+  const ep = (routePath, opts, handler) => {
+    const method = opts.method || 'POST'
+    server.middlewares.use(routePath, async (req, res, next) => {
+      if (req.method !== method) return next()
+      const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
+      if (opts.guard !== false && !guard(req, res)) return
+      try {
+        const body = method === 'POST' ? JSON.parse((await readBody(req)) || '{}') : {}
+        const fail = (code, msg) => { const e = new Error(msg); e.status = code; throw e }
+        const out = await handler({ body, req, res, json, fail })
+        if (out !== undefined) json(200, out)
+      } catch (err) {
+        json(err && err.status ? err.status : 500, { ok: false, error: String((err && err.message) || err) })
+      }
+    })
+  }
+
   // ── Sensitiv-Filter (16.07., Plattform-Roadmap #6): HR-/Personal-sensible Protokolle
   // leben in einem GETRENNTEN Store (protokolle_sensitiv.json), der NIE über den
   // Server ausgeliefert wird — weder als Datei noch im Vite-Bundle (kein Import im UI).
@@ -245,19 +271,12 @@ export function rubiconApi() {
 
       // GET /api/protokoll/sensitiv — Liste der sensitiven Protokolle, NUR Loopback
       // (DRS direkt am Gerät; Tailnet-/Netz-Clients erhalten 403).
-      server.middlewares.use('/api/protokoll/sensitiv', (req, res, next) => {
-        if (req.method !== 'GET') return next()
-        res.setHeader('Content-Type', 'application/json')
-        if (!isLoopback(req)) { res.statusCode = 403; return res.end(JSON.stringify({ ok: false, error: 'nur lokal einsehbar' })) }
-        return res.end(JSON.stringify({ ok: true, protokolle: readSens().protokolle }))
+      ep('/api/protokoll/sensitiv', { method: 'GET', guard: false }, ({ req, json }) => {
+        if (!isLoopback(req)) return json(403, { ok: false, error: 'nur lokal einsehbar' })
+        return json(200, { ok: true, protokolle: readSens().protokolle })
       })
       // POST /api/sitzung — eine erfasste Sitzung speichern + Milestones aktualisieren
-      server.middlewares.use('/api/sitzung', async (req, res, next) => {
-        if (req.method !== 'POST') return next()
-        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
-        if (!guard(req, res)) return
-        try {
-          const body = JSON.parse((await readBody(req)) || '{}')
+      ep('/api/sitzung', {}, async ({ body, json }) => {
           if (!body.meeting_id || !body.datum) return json(400, { ok: false, error: 'meeting_id und datum sind Pflicht' })
 
           // Rollen-Gate (Audit #3): nur CoS/Owner dürfen schreiben
@@ -368,21 +387,13 @@ export function rubiconApi() {
 
           return json(200, { ok: true, id, applied, skipped, mirrored, registered, sensitiv,
             ...(sensitiv ? { hint: 'Sensitiv: Protokoll nur lokal einsehbar; keine Task-/Register-Spiegel' } : {}) })
-        } catch (err) {
-          return json(500, { ok: false, error: String(err && err.message || err) })
-        }
       })
 
       // POST /api/ms/progress — Fortschritt/Verzug DIREKT melden (Modal-Speichern,
       // DRS 01.08.). Gleiche Gates wie /api/sitzung: CoS alles, Owner nur eigene
       // (MS-Owner oder WS-Owner); task-getriebene MS sind GESPERRT (Fortschritt
       // wird verdient). Journal = git-Historie (Δ-Woche zeigt die Änderung).
-      server.middlewares.use('/api/ms/progress', async (req, res, next) => {
-        if (req.method !== 'POST') return next()
-        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
-        if (!guard(req, res)) return
-        try {
-          const body = JSON.parse((await readBody(req)) || '{}')
+      ep('/api/ms/progress', {}, async ({ body, json }) => {
           const { role, me } = body
           if (role !== 'CoS' && role !== 'Owner') return json(403, { ok: false, error: `Rolle «${role || '?'}» darf nicht melden` })
           if (!body.ms_id) return json(400, { ok: false, error: 'ms_id fehlt' })
@@ -407,20 +418,12 @@ export function rubiconApi() {
           }
           if (changes.length) writeAtomic(yamlPath, dumpYaml(doc))
           return json(200, { ok: true, ms_id: body.ms_id, changed: changes, unveraendert: !changes.length })
-        } catch (err) {
-          return json(500, { ok: false, error: String(err && err.message || err) })
-        }
       })
 
       // POST /api/task/upsert — Handlungen (Tasks) anlegen/aktualisieren (nur CoS).
       // Optional body.activate_ms: schaltet den Milestone auf progress_source:'tasks'
       // («treibend») — bewusst expliziter Akt NACH menschlicher Freigabe der Zerlegung.
-      server.middlewares.use('/api/task/upsert', async (req, res, next) => {
-        if (req.method !== 'POST') return next()
-        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
-        if (!guard(req, res)) return
-        try {
-          const body = JSON.parse((await readBody(req)) || '{}')
+      ep('/api/task/upsert', {}, async ({ body, json }) => {
           if (body.role !== 'CoS') return json(403, { ok: false, error: 'nur CoS darf Handlungen anlegen/ändern' })
           const incoming = Array.isArray(body.tasks) ? body.tasks : []
           for (const t of incoming) {
@@ -443,19 +446,11 @@ export function rubiconApi() {
           const affected = [...new Set([...incoming.map(t => t.ms_id).filter(Boolean), ...(body.activate_ms ? [body.activate_ms] : [])])]
           for (const msId of affected) { const r = rollupMs(msId, store); if (r.rolled) roll = { ms_id: msId, ...r } }
           return json(200, { ok: true, upserted, activation, rollup: roll })
-        } catch (err) {
-          return json(500, { ok: false, error: String(err && err.message || err) })
-        }
       })
 
       // POST /api/task/status — Handlung abhaken/wiedereröffnen {id, status} → Roll-up.
       // CoS immer; Owner nur eigene Handlungen (analog Audit #3 in /api/sitzung).
-      server.middlewares.use('/api/task/status', async (req, res, next) => {
-        if (req.method !== 'POST') return next()
-        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
-        if (!guard(req, res)) return
-        try {
-          const body = JSON.parse((await readBody(req)) || '{}')
+      ep('/api/task/status', {}, async ({ body, json }) => {
           if (!body.id || !['offen', 'erledigt'].includes(body.status)) return json(400, { ok: false, error: 'id und status (offen|erledigt) sind Pflicht' })
           const role = body.role, me = body.me
           if (role !== 'CoS' && role !== 'Owner') return json(403, { ok: false, error: `Rolle «${role || '?'}» darf nicht abhaken` })
@@ -484,21 +479,13 @@ export function rubiconApi() {
           }
           if (changed2) writeAtomic(yamlPath, dumpYaml(doc2))
           return json(200, { ok: true, task: t, rollup: roll, input_sync: inputSync })
-        } catch (err) {
-          return json(500, { ok: false, error: String(err && err.message || err) })
-        }
       })
 
       // POST /api/reminder/draft — K2 Stufe 1 (01.08.): Reminder als Gmail-ENTWÜRFE
       // aus der Durchsetzungs-Queue (je Owner gebündelt, 7-Tage-Bremse, persistentes
       // Log in reminder_log.json). NIE Versand — DRS sendet. Nur CoS.
       // Eskalation/Kalender bleiben bewusst simuliert (Führungssignale, nie automatisch).
-      server.middlewares.use('/api/reminder/draft', async (req, res, next) => {
-        if (req.method !== 'POST') return next()
-        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
-        if (!guard(req, res)) return
-        try {
-          const body = JSON.parse((await readBody(req)) || '{}')
+      ep('/api/reminder/draft', {}, async ({ body, json }) => {
           if (body.role !== 'CoS') return json(403, { ok: false, error: 'nur CoS darf Reminder-Entwürfe erzeugen' })
           const args = [path.join(root, 'scripts', 'gen_reminder_mail.py')]
           if (body.scope === 'alle') args.push('--alle')
@@ -511,16 +498,11 @@ export function rubiconApi() {
             try { return json(200, JSON.parse(last)) }
             catch { return json(500, { ok: false, error: 'Parse: ' + (stderr || last || '').slice(-200) }) }
           })
-        } catch (err) {
-          return json(500, { ok: false, error: String(err && err.message || err) })
-        }
       })
 
       // GET /api/delta?days=7 — B2 (01.08.): deterministischer Wochen-Delta aus
       // git-Historie (projekt.yaml) + Stores. Read-only, keine Guards nötig.
-      server.middlewares.use('/api/delta', (req, res, next) => {
-        if (req.method !== 'GET') return next()
-        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
+      ep('/api/delta', { method: 'GET', guard: false }, ({ req, json }) => {
         const days = Math.max(1, Math.min(90, parseInt(new URL(req.url, 'http://x').searchParams.get('days') || '7', 10) || 7))
         execFile(PY_BIN, [path.join(root, 'scripts', 'gen_delta.py'), '--days', String(days)], { cwd: root, timeout: 60000 }, (err, stdout, stderr) => {
           if (err && !stdout) return json(500, { ok: false, error: String(stderr || err).slice(-300) })
@@ -534,12 +516,7 @@ export function rubiconApi() {
       // via import_gemini_doc.py --api. post:false = Dry-Run-VORSCHAU (nichts geschrieben);
       // post:true = Übernahme über den regulären /api/sitzung-Pfad. Menschliche Freigabe =
       // der Übernehmen-Klick NACH der Vorschau (gleiches Gate wie CLI --post). CoS/Owner.
-      server.middlewares.use('/api/gemini/import', async (req, res, next) => {
-        if (req.method !== 'POST') return next()
-        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
-        if (!guard(req, res)) return
-        try {
-          const body = JSON.parse((await readBody(req)) || '{}')
+      ep('/api/gemini/import', {}, async ({ body, json }) => {
           if (body.role !== 'CoS' && body.role !== 'Owner') return json(403, { ok: false, error: `Rolle «${body.role || '?'}» darf nicht importieren` })
           if (!body.meeting_id) return json(400, { ok: false, error: 'meeting_id fehlt' })
           const args = [path.join(root, 'scripts', 'import_gemini_doc.py')]
@@ -557,20 +534,12 @@ export function rubiconApi() {
             try { return json(200, JSON.parse(last)) }
             catch { return json(500, { ok: false, error: 'Parse: ' + (stderr || last || '').slice(-200) }) }
           })
-        } catch (err) {
-          return json(500, { ok: false, error: String(err && err.message || err) })
-        }
       })
 
       // POST /api/task/suggest — K4 (01.08.): KI-Zerlegungsvorschlag für einen Milestone.
       // Liefert NUR Entwürfe (nichts wird gespeichert) — Übernahme läuft über den
       // bestehenden /api/task/upsert nach menschlicher Prüfung im UI. Nur CoS.
-      server.middlewares.use('/api/task/suggest', async (req, res, next) => {
-        if (req.method !== 'POST') return next()
-        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
-        if (!guard(req, res)) return
-        try {
-          const body = JSON.parse((await readBody(req)) || '{}')
+      ep('/api/task/suggest', {}, async ({ body, json }) => {
           if (body.role !== 'CoS') return json(403, { ok: false, error: 'nur CoS darf Zerlegungen vorschlagen lassen' })
           if (!body.ms_id) return json(400, { ok: false, error: 'ms_id fehlt' })
           const doc = yaml.load(fs.readFileSync(yamlPath, 'utf8'))
@@ -600,20 +569,12 @@ export function rubiconApi() {
             }))
             return json(200, { ok: true, ms_id: body.ms_id, vorschlaege: clean })
           })
-        } catch (err) {
-          return json(500, { ok: false, error: String(err && err.message || err) })
-        }
       })
 
       // POST /api/ask — K7 (01.08.): «Frag die Daten» — read-only NL-Abfrage über die
       // Plattform-Stores mit harter Quellenbindung (IDs zitieren, nie raten). Alle Rollen
       // (rein lesend); Daten verlassen den Rechner nicht ausser an die Anthropic-API.
-      server.middlewares.use('/api/ask', async (req, res, next) => {
-        if (req.method !== 'POST') return next()
-        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
-        if (!guard(req, res)) return
-        try {
-          const body = JSON.parse((await readBody(req)) || '{}')
+      ep('/api/ask', {}, async ({ body, json }) => {
           const frage = (body.frage || '').trim()
           if (!frage) return json(400, { ok: false, error: 'frage fehlt' })
           if (frage.length > 500) return json(400, { ok: false, error: 'Frage zu lang (max 500 Zeichen)' })
@@ -632,20 +593,12 @@ export function rubiconApi() {
             if (err && !out) return json(500, { ok: false, error: String(err.message || err) })
             return json(200, { ok: true, antwort: (out || '').trim() })
           })
-        } catch (err) {
-          return json(500, { ok: false, error: String(err && err.message || err) })
-        }
       })
 
       // POST /api/entscheid/upsert — Entscheid im Register anlegen/aktualisieren.
       // CoS immer; Owner darf als Antragsteller eigene Entscheide erfassen (analog Audit #3).
       // Lifecycle (status/kommunikation) wird hier NICHT verändert — nur via /api/entscheid/status.
-      server.middlewares.use('/api/entscheid/upsert', async (req, res, next) => {
-        if (req.method !== 'POST') return next()
-        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
-        if (!guard(req, res)) return
-        try {
-          const body = JSON.parse((await readBody(req)) || '{}')
+      ep('/api/entscheid/upsert', {}, async ({ body, json }) => {
           const role = body.role, me = body.me
           if (role !== 'CoS' && role !== 'Owner') return json(403, { ok: false, error: `Rolle «${role || '?'}» darf keine Entscheide erfassen` })
           const incoming = Array.isArray(body.entscheide) ? body.entscheide : []
@@ -657,20 +610,12 @@ export function rubiconApi() {
           const upserted = mergeEntscheide(store, incoming, body.datum)
           writeAtomic(entsPath, JSON.stringify(store, null, 2))
           return json(200, { ok: true, upserted })
-        } catch (err) {
-          return json(500, { ok: false, error: String(err && err.message || err) })
-        }
       })
 
       // POST /api/entscheid/status — Status-Übergang im 5-Stufen-Modell {id, status, an?}.
       // CoS immer; Owner nur eigene (antragsteller === me). Übergang zu «kommuniziert»
       // setzt den Kommunikations-Stempel {an, am}; «entschieden» stempelt das Entscheid-Datum.
-      server.middlewares.use('/api/entscheid/status', async (req, res, next) => {
-        if (req.method !== 'POST') return next()
-        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
-        if (!guard(req, res)) return
-        try {
-          const body = JSON.parse((await readBody(req)) || '{}')
+      ep('/api/entscheid/status', {}, async ({ body, json }) => {
           if (!body.id || !ENT_FLOW.includes(body.status)) return json(400, { ok: false, error: `id und status (${ENT_FLOW.join('|')}) sind Pflicht` })
           const role = body.role, me = body.me
           if (role !== 'CoS' && role !== 'Owner') return json(403, { ok: false, error: `Rolle «${role || '?'}» darf den Status nicht ändern` })
@@ -702,18 +647,10 @@ export function rubiconApi() {
             return
           }
           return json(200, { ok: true, entscheid: e })
-        } catch (err) {
-          return json(500, { ok: false, error: String(err && err.message || err) })
-        }
       })
 
       // POST /api/protokoll/export — Protokoll als PDF + Google Doc rendern (shellt Python)
-      server.middlewares.use('/api/protokoll/export', async (req, res, next) => {
-        if (req.method !== 'POST') return next()
-        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
-        if (!guard(req, res)) return
-        try {
-          const body = JSON.parse((await readBody(req)) || '{}')
+      ep('/api/protokoll/export', {}, async ({ body, json }) => {
           if (!body.id) return json(400, { ok: false, error: 'id fehlt' })
           // Sensitiv (#6): kein Export — PDF läge im servierten public/, das Doc im
           // geteilten Drive. Sensitive Protokolle bleiben ausschliesslich im lokalen Store.
@@ -725,18 +662,10 @@ export function rubiconApi() {
             try { return json(200, JSON.parse(last)) }
             catch { return json(500, { ok: false, error: 'Parse: ' + (stderr || last || '').slice(-200) }) }
           })
-        } catch (err) {
-          return json(500, { ok: false, error: String(err && err.message || err) })
-        }
       })
 
       // POST /api/report/generate — verdichteten Report rendern (shellt gen_report.py)
-      server.middlewares.use('/api/report/generate', async (req, res, next) => {
-        if (req.method !== 'POST') return next()
-        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
-        if (!guard(req, res)) return
-        try {
-          const body = JSON.parse((await readBody(req)) || '{}')
+      ep('/api/report/generate', {}, async ({ body, json }) => {
           if (!body.level || !body.period) return json(400, { ok: false, error: 'level und period sind Pflicht' })
           const rargs = [path.join(root, 'scripts', 'gen_report.py'), body.level, body.period]
           if (body.ki) rargs.push('--ki')   // K5: KI-Entwurf (Narrativ + Ampel-Begründungen) — dauert länger
@@ -746,27 +675,16 @@ export function rubiconApi() {
             try { return json(200, JSON.parse(last)) }
             catch { return json(500, { ok: false, error: 'Parse: ' + (stderr || last || '').slice(-200) }) }
           })
-        } catch (err) {
-          return json(500, { ok: false, error: String(err && err.message || err) })
-        }
       })
 
       // POST /api/report/comment — optionalen Freitext-Kommentar speichern {key, text}
-      server.middlewares.use('/api/report/comment', async (req, res, next) => {
-        if (req.method !== 'POST') return next()
-        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
-        if (!guard(req, res)) return
-        try {
-          const body = JSON.parse((await readBody(req)) || '{}')
+      ep('/api/report/comment', {}, async ({ body, json }) => {
           if (!body.key) return json(400, { ok: false, error: 'key fehlt' })
           const p = path.join(root, 'src', 'data', 'report_comments.json')
           const store = JSON.parse(fs.readFileSync(p, 'utf8'))
           if (body.text) store[body.key] = body.text; else delete store[body.key]
           writeAtomic(p, JSON.stringify(store, null, 2))
           return json(200, { ok: true })
-        } catch (err) {
-          return json(500, { ok: false, error: String(err && err.message || err) })
-        }
       })
     },
   }
