@@ -2290,7 +2290,15 @@ function ReportsView({ canEdit, today }) {
 function TaskSection({ m, role, me }) {
   const ts = tasksFor(m.id)
   const [busy, setBusy] = useState(null)
-  if (!ts.length) return null
+  // Leerer Zustand statt Ausblenden (DRS 01.08.): sonst wirkt es, als gäbe es
+  // die Handlungs-Ebene bei neuen MS (WS7/FIN/Kickoff) gar nicht.
+  if (!ts.length) return (
+    <div className="mx-5 mt-3 rounded-xl border px-3 py-2 text-[11.5px] flex items-center gap-1.5"
+      style={{ borderColor: T.line, color: T.inkFaint }}>
+      <ListChecks size={13} style={{ color: T.brass }} />
+      Noch keine Handlungen hinterlegt — unten per «Zerlegung (KI-Entwurf)» vorschlagen lassen (CoS) oder über Sitzungs-Commitments koppeln.
+    </div>
+  )
   const done = ts.filter(t => t.status === 'erledigt').length
   const driving = m.progress_source === 'tasks'
   const mayToggle = (t) => role === 'CoS' || (role === 'Owner' && t.owner === me)

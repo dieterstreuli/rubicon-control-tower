@@ -2108,5 +2108,312 @@
   ],
   "erfolgsmessung": "Für beide Einheiten (BER, AAS Technics) liegt der dokumentierte drehen-oder-eliminieren-Grundsatzentscheid vor — Mess-Anker VR-Sitzung 26.08.2026 (Vorlage beschlussreif bis 24.08.).",
   "grounding": "projekt.yaml WS3-15; tasks.md #93 (BER Quo Vadis) + TRAK-2026-0003; AAS Technics Wirtschaftlichkeits-Gate 24.08.; DRS-Entscheid 15.07.2026 (strategischer Gate als eigener RUBICON-Milestone, Deutung 1)"
+ },
+ {
+  "id": "WS7-01",
+  "kontext": "Der Verlust der VIE-Lizenz an Joint Sky (Entscheid 24.07.2026) trifft das Profit-Rückgrat der AAS: ~CHF 4.6 Mio Stationsgewinn p.a. UND der von VIE getragene Konzern-Overhead (Schlüssel 9,8% AXS / 20,5% AAS) fallen weg. Da die aufschiebende Wirkung der Beschwerde praktisch ausgeschlossen ist, gilt als Planungsannahme das VIE-Ende per 25.10.2026 — der Weiterbetrieb bei Beschwerde-Erfolg wird als Szenario A parallel gerechnet, ohne die Restrukturierung zu verzögern.",
+  "leistung": [
+   "Doppelziel quantifiziert: Z1 Kompensation ~CHF 4.6 Mio EBITDA + Z2 Overhead-Elimination (EUR-Wert aus WS7-02)",
+   "Szenario-Rechnung A (Weiterbetrieb nach Beschwerde-Erfolg) vs. B (VIE-Ende 25.10.2026) mit P&L-/Cash-Wirkung",
+   "Massnahmen-Landkarte je Ziel (Hebel, Owner, Termine) als Basis für WS7-05/WS7-04",
+   "Grundlage für die VR-Vorlage WS7-07 (26.08.)"
+  ],
+  "vorgehen": [
+   "Zahlengrundlage aus WS7-02 übernehmen (per-Kopf-OPEX, VIE-Overhead-EUR) — keine eigene Zahlenbasis aufbauen",
+   "Beide Szenarien mit dem FC 4A+8F abgleichen (keine Doppelzählung mit bereits eingeplanten Elysium-Effekten)",
+   "Hebel je Ziel priorisieren (Wirkung × Umsetzbarkeit bis 30.04.27) und mit Gökcöl/Matthei plausibilisieren",
+   "Review-Runde Rohde/Gökcöl/Pajor, danach Freigabe DRS — beschlussreif zum 14.08."
+  ],
+  "beteiligte": "Owner: Stephanie Rohde (CFO); Mitwirkende: Gökcöl (Umsetzung), Pajor (Zahlen/Elysium-Abgleich), Matthei (Ops/VIE), DRS (Governance)",
+  "risiken": [
+   "Beschwerde-Ausgang offen — Szenario A darf die Umsetzung von Szenario B nicht bremsen (Zwei-Gleisigkeit ist Pflicht)",
+   "Abhängigkeit vom Pajor-Zahlenupdate (IN-17, ~04.08.) — verspätete Lieferung gefährdet den 14.08.",
+   "Doppelzählungs-Risiko mit Elysium: ~EUR 6.3 Mio CTC sind teilweise schon im FC realisiert — nur inkrementelle Effekte zählen"
+  ],
+  "erfolgsmessung": "Business Case liegt am 14.08.2026 beschlussreif vor, von Rohde/Gökcöl mitgetragen, DRS-freigegeben — als Input für VR-Vorlage (WS7-07) und Kompensationspaket (WS7-05).",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+ },
+ {
+  "id": "WS7-02",
+  "kontext": "Ohne finale Overhead-Zahlenbasis bleibt jedes Restrukturierungsziel Behauptung. Die Bausteine liegen vor: Pajor-Paket vom 28.07. (101 MA Gruppenfunktionen, ~EUR 7.84 Mio brutto; Wien-Overhead 24 MA / ~EUR 1.67 Mio, davon Finance-SSC ~20 Köpfe / ~EUR 1.30 Mio) und der Elysium-Letztstand vom 30.07. — sie müssen zu EINER verbindlichen Tabelle konsolidiert werden.",
+  "leistung": [
+   "Konsolidierte Overhead-Tabelle: Gruppenfunktionen, per-Kopf-OPEX, VIE-Anteil in EUR",
+   "Abgrenzung «bereits im FC realisiert» vs. «inkrementell durch VIE-Restrukturierung» (Doppelzählungs-Schutz)",
+   "Zielwert Z2 fixiert (Referenz: VIE-Residual ~EUR 1'058'251 nach Betriebsübergang)"
+  ],
+  "vorgehen": [
+   "Pajor-Paket 28.07. + Elysium Savings_OPEX 30.07. zusammenführen; Lücken direkt bei Pajor nachfassen (IN-17)",
+   "VIE-Schlüssel (9,8%/20,5%) auf die konsolidierte Basis anwenden und je Funktion ausweisen",
+   "Ergebnis mit Rohde verproben und als Zahlengrundlage an WS7-01/WS7-03 übergeben"
+  ],
+  "beteiligte": "Owner: Stephanie Rohde (CFO); Mitwirkende: Pajor (Datenlieferung/Elysium), Lesch (Finance-Detail)",
+  "risiken": [
+   "AAS- und AHS-Datenlogik unterschiedlich (Mitarbeiter-Ebene vs. Ø-Stundensatz) — Vergleichbarkeit explizit ausweisen",
+   "Frist 04.08. ist eng — Teilbild klar als Teilbild kennzeichnen statt schönen (Datenehrlichkeit)"
+  ],
+  "erfolgsmessung": "Finale Tabelle am 04.08.2026 abgenommen (Rohde) und als einzige Zahlenreferenz in WS7-01 übernommen.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+ },
+ {
+  "id": "WS7-03",
+  "kontext": "Der Group-Finance-Shared-Service (~17-20 Köpfe, v.a. Finance Group KST 8002) sitzt physisch in Wien — am Standort, der per 25.10.2026 wegfallen kann. Kündigungsfristen von 3+ Monaten erzwingen den Verlagerungs-/Abbau-Entscheid VOR dem möglichen VIE-Ende. Gleichzeitig darf die Kontinuität des Konzern-Finance (Abschlüsse, Konsolidierung, Payables) keinen einzigen Monat reissen — mitten in Finanzierungs-Closing (31.10.) und Programmstart.",
+  "leistung": [
+   "Entscheid je Funktion/Rolle: Verlagerung (Zielstandort) vs. Abbau, inkl. Namen-neutralem Mengengerüst",
+   "Übergabe-/Kontinuitätsplan (Abschlusskalender, kritische Prozesse, Vertretungen) für die Übergangsphase",
+   "Personalrechtlicher Fahrplan mit Charisius (Fristen, Angebote, ggf. Sozialplan-Bezug zu WS7-11/12)",
+   "Kopplung an die Finance-Zielorganisation (TOM) — der Entscheid zahlt auf die Ziel-Finance-Linie ein, kein Provisorium"
+  ],
+  "vorgehen": [
+   "Input übernehmen: WS7-02 (Zahlen) + WS7-14 (Personalbedarf/Minimalbesetzung)",
+   "Optionen je Funktion bewerten (Verlagerung HAM/Remote vs. Abbau vs. befristete Weiterführung VIE)",
+   "Schlüsselpersonen-Risiko bewerten und Halte-/Übergabemassnahmen definieren (BEVOR kommuniziert wird)",
+   "Entscheidvorlage an Rohde/DRS; Umsetzungsstart unmittelbar nach Beschluss (Fristenlogik)"
+  ],
+  "beteiligte": "Owner: Stephanie Rohde (CFO); Mitwirkende: Pajor (VIE/Zahlen), Charisius (Arbeitsrecht/HR), Lesch (Finance-Betrieb), DRS (Governance)",
+  "risiken": [
+   "Attrition ab Kommunikation: Schlüsselpersonen könnten vor der Übergabe gehen — Wissenssicherung zuerst",
+   "Kontinuitätsrisiko Konzernabschluss/Closing-Phase — Übergang kollidiert mit Finanzierungs-Closing 31.10.",
+   "Abhängigkeit von WS7-01/WS7-02: ohne beschlossenes Zielbild kein belastbarer Funktions-Entscheid"
+  ],
+  "erfolgsmessung": "Entscheid je Funktion dokumentiert bis 28.08.2026; kein Monatsabschluss der Übergangsphase verspätet.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+ },
+ {
+  "id": "WS7-04",
+  "kontext": "Ziel 2 der Restrukturierung: Die von VIE getragenen Overheads (Schlüssel 9,8% AXS / 20,5% AAS) werden vollständig ELIMINIERT — nicht auf die übrigen Stationen umverteilt. Umverteilung würde das Konzernproblem nur verschieben und die Wettbewerbsfähigkeit der verbleibenden Stationen belasten. Die Umsetzung ist an Projekt Elysium gekoppelt (gemeinsames Vehikel für den Overhead-Abbau), ohne Effekte doppelt zu zählen.",
+  "leistung": [
+   "Abbau-Massnahmen je Overhead-Block beschlossen und terminiert (Kopplung Elysium-Massnahmenliste)",
+   "Nachweis «eliminiert statt umverteilt»: keine neuen Umlagen auf übrige Stationen",
+   "FC27-Wirkung ausgewiesen (Referenz-Zielwert: VIE-Residual ~EUR 1'058'251 → 0)"
+  ],
+  "vorgehen": [
+   "Massnahmen aus WS7-03 (Finance-SSC) und Elysium-Pipeline zusammenführen — nur inkrementelle Effekte zählen",
+   "Je Block: Entscheid, Owner, Wirksamkeitstermin; arbeitsrechtlich gebundene Effekte sauber als Nachlauf kennzeichnen",
+   "Monatliches Tracking über den Tower (Handlungen je Massnahme), Abweichungen in den Wochen-Report"
+  ],
+  "beteiligte": "Owner: Stephanie Rohde (CFO); Mitwirkende: Pajor (Elysium/FC-Abgleich), Gökcöl (Umsetzung), Charisius (arbeitsrechtliche Umsetzung)",
+  "risiken": [
+   "Umverteilungs-Reflex: Ohne hartes «eliminiert»-Kriterium wandern Kosten still in Stations-P&Ls",
+   "Elysium-Doppelzählung (Teil der Effekte schon im FC) — nur Inkremente ausweisen",
+   "Arbeitsrechtliche Fristen können Wirksamkeit ins Q1/27 schieben — dann transparent als Nachlauf führen, nicht beschönigen"
+  ],
+  "erfolgsmessung": "Alle Abbau-Entscheide bis 31.10.2026 gefasst; FC27 zeigt die Elimination ohne Gegenbuchung auf anderen Stationen.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+ },
+ {
+  "id": "WS7-05",
+  "kontext": "Ziel 1: Das wegfallende VIE-Ergebnis (~CHF 4.6 Mio EBITDA p.a.) muss kompensiert werden — aus eigener Kraft, im laufenden Geschäft. Die Hebel: Produktivität der übrigen Stationen (stärkster Hebel gemäss Forecast-Analyse: Flights/FTE), Kostenblock, Pricing/Renewal (Vertragsbasis ~EUR 283 Mio) und Redeployment freiwerdender VIE-Ressourcen.",
+  "leistung": [
+   "Massnahmenpaket mit quantifizierter EBITDA-Wirkung je Hebel (Summe ≥ CHF 4.6 Mio, mit Puffer)",
+   "Priorisierung nach Wirkung × Geschwindigkeit; Quick Wins vor Strukturmassnahmen",
+   "Umsetzungs-Tracking im Tower (Handlungen je Massnahme, Monats-Review im MBR)"
+  ],
+  "vorgehen": [
+   "Hebel-Longlist aus WS7-01 übernehmen und mit Haeffner (Pricing/Renewal) und Matthei (Produktivität) verproben",
+   "Je Massnahme: EBITDA-Wirkung, Owner, Termin, Messpunkt — keine Massnahme ohne Zahl",
+   "Beschluss im GL-Rahmen; kritische Einzelmassnahmen nach Kompetenzordnung eskalieren",
+   "Redeployment-Chance nutzen: qualifizierte VIE-Mitarbeitende aktiv auf offene Rollen anderer Stationen vermitteln"
+  ],
+  "beteiligte": "Owner: Stephanie Rohde (CFO); Mitwirkende: Gökcöl (Umsetzung), Haeffner (Pricing/Renewal), Matthei (Ops-Produktivität), Pajor (Messung)",
+  "risiken": [
+   "Kompensation im Winterhalbjahr (Nov-Dez Winterloch) besonders schwer — Terminwirkung realistisch legen",
+   "Pricing-Hebel kollidieren ggf. mit laufenden Renewals — Abstimmung mit Commercial zwingend",
+   "Gefahr der Doppelzählung mit ohnehin geplanten FC-Massnahmen — nur Inkremente zählen"
+  ],
+  "erfolgsmessung": "Paket beschlossen bis 31.10.2026; ≥ CHF 4.6 Mio kumulierte Jahres-Wirkung nachweisbar in Umsetzung (Messpunkte definiert).",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+ },
+ {
+  "id": "WS7-06",
+  "kontext": "Szenario B (kein Beschwerde-Aufschub) bedeutet: Betriebsende VIE per 25.10.2026, Übernahme durch Joint Sky. Dafür muss ein vollständiger Abwicklungsplan STARTBEREIT liegen — Personal (Kündigungsfristen 3+ Monate!), Kunden-Übergabe, Assets und Verträge. Der Plan wird nur bei VIE-Ende ausgelöst; ihn NICHT zu haben, wäre grob fahrlässig, ihn früh auszulösen, wäre ein unnötiger Vertrauensbruch.",
+  "leistung": [
+   "Personal-Fahrplan: Fristenmatrix je Vertragstyp, Abfolge Kündigungen/Angebote, Verbindung BR (WS7-11) + AMS (WS7-12) + Betriebsübergangsfrage (WS7-10)",
+   "Kunden-/Betriebsübergabeplan an Joint Sky (SGHA-Beendigungen, saubere Doku, Haftungsschnitt)",
+   "Asset-/Vertragsliste mit Ausstiegskosten (Miete, GSE, IT) und Kündigungsterminen",
+   "Auslöse-Checkliste mit Verantwortlichen (Tag X bis Tag X+90)"
+  ],
+  "vorgehen": [
+   "Bausteine parallelisieren: Personal (Charisius), Kunden/Ops (Matthei), Verträge/Assets (Pajor)",
+   "Fristen rückwärts vom 25.10. terminieren — was 3+ Monate Vorlauf braucht, muss im Plan vorbereitet (nicht ausgelöst) sein",
+   "Rechtsabgleich mit den Kanzleien (WS7-09), insbesondere Betriebsübergangs-Frage (WS7-10) als Kostenweiche",
+   "Plan als Read&Sign-Dokument bei Rohde/Gökcöl/Charisius verankern"
+  ],
+  "beteiligte": "Owner: Stephanie Rohde (CFO); Mitwirkende: Matthei (Ops/Übergabe), Charisius (Arbeitsrecht), Pajor (Verträge/Kosten), Anwälte (WS7-09)",
+  "risiken": [
+   "Betriebsübergang ja/nein (WS7-10) ändert die Personal-Kostenrechnung fundamental — Plan muss beide Varianten tragen",
+   "Vorzeitiges Bekanntwerden löst Attrition und Kundenverunsicherung aus — Vertraulichkeit bis zur Auslösung",
+   "Kündigungsfristen + AMS-Sperrfristen: zu späte Vorbereitung macht den 25.10. teuer (Lohnfortzahlung ohne Betrieb)"
+  ],
+  "erfolgsmessung": "Abwicklungsplan bis 21.08.2026 vollständig und freigegeben (startbereit) — ohne dass eine einzige unumkehrbare Massnahme ausgelöst wurde.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+ },
+ {
+  "id": "WS7-07",
+  "kontext": "Die Aufgabe einer Station/eines Marktes steht unter VR-Vorbehalt (Kompetenzordnung: Stationen-Entscheide immer VR). Die VR-Sitzung vom 26.08.2026 braucht eine beschlussreife Vorlage zur VIE-Restrukturierung — inklusive Neubewertung der Finanzierungs-Kaskade, da VIE als Sicherheit/Ertragsträger im Finanzierungsprozess (#98, Closing 31.10.) eingeplant war (Clearwater/Märki).",
+  "leistung": [
+   "Beschlussvorlage nach INS-001-Standard (Antrag, Begründung, Datengrundlage, Alternativen, Risiken)",
+   "Finanzierungs-Kaskade aktualisiert: Wirkung des VIE-Wegfalls auf Sicherheiten/Covenants, abgestimmt mit Clearwater/Märki",
+   "Eintrag im Entscheids-Register (E-Nummer) inkl. Anhängen (Business Case WS7-01)"
+  ],
+  "vorgehen": [
+   "Inhalte aus WS7-01 (Zielbild/Szenarien) übernehmen — die Vorlage rechnet nichts Neues",
+   "Finanzierungsseite mit dem #98-Strang abstimmen (keine widersprüchlichen Zahlen an Banken vs. VR)",
+   "Vorlage ins VR-Paket 26.08. einstellen (Frist: final bis 21.08., T-5 Versand)"
+  ],
+  "beteiligte": "Owner: Stephanie Rohde (CFO); Mitwirkende: DRS (Chairman/VR), Fritthum (Vice Chairman), Pajor (Finanzierungszahlen)",
+  "risiken": [
+   "Terminkette hart: WS7-01 (14.08.) → Vorlage final (21.08.) → VR (26.08.) — kein Puffer",
+   "Inkonsistenz zwischen Banken-Kommunikation (#98) und VR-Vorlage wäre ein Glaubwürdigkeitsschaden — eine Zahlenbasis für beide"
+  ],
+  "erfolgsmessung": "Vorlage am 21.08.2026 final im VR-Paket; VR-Beschluss am 26.08. ohne Vertagung möglich (alle Pflichtfelder der Beschlussvorlage erfüllt).",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+ },
+ {
+  "id": "WS7-08",
+  "kontext": "Gegen den Lizenzentscheid vom 24.07.2026 läuft die Beschwerdefrist bis 20.08.2026. Die Beschwerde wahrt die Rechtsposition und hält Szenario A (Weiterbetrieb) offen — die Planungsannahme bleibt aber Szenario B, weil ein Aufschub des Vollzugs praktisch ausgeschlossen ist. Präzedenz: die BVwG-Entscheidung von 2019 (via Grassner identifiziert) stützt die Argumentationslinie.",
+  "leistung": [
+   "Fristgerecht eingereichte Beschwerde (federführend Kanzlei Zink) inkl. Antragspaket zur aufschiebenden Wirkung",
+   "Beweismittel-/Argumentationsdossier (inkl. 2019er-BVwG-Präzedenz)",
+   "Interne Sprachregelung: Beschwerde ändert die Restrukturierungs-Planung NICHT"
+  ],
+  "vorgehen": [
+   "Entwurf der Kanzlei reviewen (DRS/Rohde) — Fokus auf Vollständigkeit der Tatsachenbasis",
+   "Einreichung dokumentieren; Fristenkontrolle doppelt führen (Kanzlei + intern)",
+   "Hauptsache-Einschätzung der Kanzlei einholen und in die Szenario-Gewichtung von WS7-01 einspeisen"
+  ],
+  "beteiligte": "Owner: Stephanie Rohde; Federführung extern: Kanzlei Zink; Mitwirkende: DRS (Entscheid), Grassner (Fachinput), Koordination WS7-09",
+  "risiken": [
+   "Frist 20.08. ist absolut — jeder interne Verzug beim Review gefährdet die Rechtsposition irreversibel",
+   "Öffentlichkeitswirkung: Beschwerde kann mediale Aufmerksamkeit erzeugen (ZRH-Medien-Vorgeschichte) — Kommunikationslinie mit Gökcöl abstimmen",
+   "Falsche interne Signalwirkung («wir gewinnen das schon») würde die Restrukturierungs-Disziplin untergraben"
+  ],
+  "erfolgsmessung": "Beschwerde nachweislich vor dem 20.08.2026 eingereicht; Hauptsache-Einschätzung dokumentiert; Planungsannahme Szenario B unverändert in Kraft.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+ },
+ {
+  "id": "WS7-09",
+  "kontext": "Am VIE-Komplex arbeiten drei Kanzleien (Verwaltungsrecht/Beschwerde, Arbeitsrecht/Abwicklung, Corporate/Finanzierungsbezug). Ohne aktive Koordination entstehen Lücken («dachte, das macht die andere Kanzlei»), Doppelarbeit und widersprüchliche Linien — bei laufender Frist ein reales Risiko.",
+  "leistung": [
+   "Vernetzungs-Mail mit Zuständigkeitsmatrix (wer führt was, wer wird wobei konsultiert)",
+   "Gemeinsamer Fristenkalender (Beschwerde 20.08., arbeitsrechtliche Vorlaufzeiten, VR 26.08.)",
+   "Eskalationsweg bei Meinungsverschiedenheiten (Entscheid: DRS/Rohde)"
+  ],
+  "vorgehen": [
+   "Zuständigkeiten entwerfen (CoS-Entwurf), mit Rohde abstimmen, an alle drei Kanzleien versenden",
+   "Rückbestätigung jeder Kanzlei einholen (Schnittstellen akzeptiert)",
+   "Thread als einziger Koordinationskanal etablieren — bilaterale Nebenabsprachen zurückspiegeln"
+  ],
+  "beteiligte": "Owner: Stephanie Rohde; Mitwirkende: DRS (Mandats-Herr), drei Kanzleien (Zink/Verwaltungsrecht, Arbeitsrecht AT, Corporate)",
+  "risiken": [
+   "Honorar-Doppelspurigkeit ohne klare Matrix",
+   "Vertraulichkeits-Disziplin: Verteiler klein halten (Privilege)"
+  ],
+  "erfolgsmessung": "Alle drei Kanzleien haben die Zuständigkeitsmatrix bis 05.08.2026 schriftlich bestätigt.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+ },
+ {
+  "id": "WS7-10",
+  "kontext": "Ob die Übernahme des VIE-Geschäfts durch Joint Sky rechtlich als Betriebsübergang gilt, ist DIE Kostenweiche der Abwicklung: Bei Betriebsübergang gehen Arbeitsverhältnisse (AVRAG) auf den Erwerber über — ohne ihn trägt AAS Kündigungen/Sozialkosten selbst. Eine schriftliche Bestätigung der Behördensicht beim Ministerium (BMIMI) schafft Planungssicherheit für WS7-06 und WS7-11/12.",
+  "leistung": [
+   "Formelle, anwaltlich abgestimmte Anfrage beim BMIMI (eingereicht, Eingangsbestätigung dokumentiert)",
+   "Interne Zwei-Varianten-Rechnung (mit/ohne Betriebsübergang) als Anhang zum Abwicklungsplan"
+  ],
+  "vorgehen": [
+   "Anfrage mit Arbeitsrechts-Kanzlei formulieren (keine Präjudizierung der eigenen Position)",
+   "Einreichen bis 07.08.; Nachfass-Termin setzen (Antwort vor Auslösefenster Oktober nötig)",
+   "Ergebnis in WS7-06 (Plan) und WS7-11 (BR-Gespräch) einarbeiten"
+  ],
+  "beteiligte": "Owner: Stephanie Rohde; Mitwirkende: Arbeitsrechts-Kanzlei, Charisius (HR/Legal), Matthei (Sachverhalt Betrieb)",
+  "risiken": [
+   "Behörde antwortet unverbindlich oder spät — Zwei-Varianten-Planung bleibt dann Pflicht",
+   "Joint Sky könnte eine gegenteilige Position beziehen — rechtliche Auseinandersetzung einkalkulieren"
+  ],
+  "erfolgsmessung": "Anfrage bis 07.08.2026 nachweislich eingereicht; beide Kostenvarianten liegen quantifiziert im Abwicklungsplan.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+ },
+ {
+  "id": "WS7-11",
+  "kontext": "Der Betriebsrat VIE ist bei Kündigungen und erst recht bei einem Betriebsübergang zwingend einzubinden (BRG/ArbVG-Konsultationspflichten). Frühe, strukturierte Abstimmung reduziert Verfahrensrisiken, verhindert Eskalation über die Belegschaft/Öffentlichkeit und ist Voraussetzung für einen sauberen Sozialplan-Prozess, falls Szenario B eintritt.",
+  "leistung": [
+   "Konsultations-Fahrplan (Termine, Informationsumfang je Stufe, Protokollierung)",
+   "Abgestimmte Sprachregelung (keine Vorwegnahme der Auslösung, keine Falschinformation)",
+   "Verbindung zu AMS-Frühwarnung (WS7-12) und Betriebsübergangs-Frage (WS7-10)"
+  ],
+  "vorgehen": [
+   "Rechtsrahmen mit Arbeitsrechts-Kanzlei fixieren (was ist wann informationspflichtig)",
+   "Erstgespräch BR terminieren und führen (Charisius + Standortleitung), Ergebnis protokollieren",
+   "Folgekadenz vereinbaren; Eskalationen früh an Rohde/DRS spiegeln"
+  ],
+  "beteiligte": "Owner: Stephanie Rohde; Durchführung: Charisius (CHRO/Legal) + Standortleitung VIE; Mitwirkende: Arbeitsrechts-Kanzlei",
+  "risiken": [
+   "Informations-Timing: zu früh löst Unruhe aus, zu spät verletzt Konsultationspflichten — Fahrplan exakt an Fristen koppeln",
+   "Leak-Risiko in die Belegschaft/Medien — Verteiler und Wortlaut diszipliniert halten"
+  ],
+  "erfolgsmessung": "Erstkonsultation bis 14.08.2026 geführt und protokolliert; kein Verfahrensfehler-Einwand des BR im weiteren Prozess.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+ },
+ {
+  "id": "WS7-12",
+  "kontext": "Bei Beendigung einer grösseren Zahl von Arbeitsverhältnissen greift in Österreich das AMS-Frühwarnsystem (§ 45a AMFG): Anzeige an das Arbeitsmarktservice mit 30-tägiger Sperrfrist — Kündigungen, die davor ausgesprochen werden, sind rechtsunwirksam. Die Unterlagen müssen daher VORSORGLICH bereitliegen, damit im Szenario B die Fristenkette (Anzeige → 30 Tage → Kündigungen → 3+ Monate Fristen) zum 25.10. überhaupt aufgeht.",
+  "leistung": [
+   "Vollständiges Anzeige-Paket (Mengengerüst, Zeitplan, Begründung) anwaltlich geprüft",
+   "Fristenkette rückwärts vom 25.10. dokumentiert (spätester Einreichtermin markiert)",
+   "Ablage im Abwicklungsplan (WS7-06) mit Auslöse-Checkpunkt"
+  ],
+  "vorgehen": [
+   "Mengengerüst aus WS7-14/WS7-03 übernehmen (betroffene Rollen, Zahlen)",
+   "Entwurf durch Arbeitsrechts-Kanzlei prüfen lassen; Sperrfrist-Logik mit Kündigungsfristen synchronisieren",
+   "Bereitstellung dokumentieren — KEINE Einreichung ohne expliziten Auslöse-Entscheid"
+  ],
+  "beteiligte": "Owner: Stephanie Rohde; Durchführung: Charisius + Arbeitsrechts-Kanzlei; Input: Matthei (Betrieb), Pajor (Zahlen)",
+  "risiken": [
+   "Verpasster Einreichkorridor macht den 25.10. arbeitsrechtlich unhaltbar (Lohnfortzahlung ohne Betrieb)",
+   "Vorzeitige Einreichung wäre ein faktisches Auslösesignal — strikt am Auslöse-Entscheid halten"
+  ],
+  "erfolgsmessung": "Anzeige-Paket bis 14.08.2026 einreichfertig geprüft; Fristenkette zum 25.10. nachweislich haltbar.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+ },
+ {
+  "id": "WS7-13",
+  "kontext": "Der VIE-Schock legt das strukturelle Klumpenrisiko offen: Kerngeschäfte, die an behördliche Lizenzen mit Verlustrisiko hängen. Projekt Bridgehead beantwortet das auf Portfolio-Ebene: Reduktion der Lizenzabhängigkeit mit Doppelzielbild ≥ EUR 15 Mio EBITDA und ≥ 75% lizenzunabhängiger Ergebnisanteil bis Ende 2028 — als VR-Entscheidungsgrundlage, verzahnt mit der Gruppenstrategie (Top-3 EU 2030).",
+  "leistung": [
+   "Ist-Analyse: Ergebnisanteil nach Lizenz-Exponierung je Einheit/Station",
+   "Zielbild + Pfad (organisch/anorganisch) Richtung ≥75% lizenzunabhängig, konsistent zur Gruppenstrategie",
+   "VR-taugliche Entscheidungsgrundlage (Optionen, Implikationen, nächste Schritte) für den 26.08."
+  ],
+  "vorgehen": [
+   "Exponierungs-Analyse auf Basis der Stations-/Vertragsstruktur erstellen",
+   "Strategische Optionen bündeln (Geschäftsmix, M&A-Stossrichtung, Vertragsmodelle) — Abgleich mit Gruppenstrategie/M&A-Strang",
+   "Mit DRS/Fritthum vorbesprechen, dann als Entscheidungsgrundlage ins VR-Paket"
+  ],
+  "beteiligte": "Owner: Stephanie Rohde; Mitwirkende: DRS (Strategie/Chairman), Fritthum (Vice Chairman), Haeffner (Commercial-Sicht), Gökcöl (CEO)",
+  "risiken": [
+   "Verwechslungsgefahr mit der operativen VIE-Vorlage (WS7-07) — Bridgehead ist Portfolio-Strategie, nicht Krisenreaktion",
+   "Zielbild 2028 erfordert ggf. M&A-Kapazität, die erst nach Finanzierungs-Closing besteht — Sequenz ehrlich ausweisen"
+  ],
+  "erfolgsmessung": "Entscheidungsgrundlage am 26.08.2026 im VR behandelt; Doppelzielbild und Pfad vom VR zur Weiterverfolgung freigegeben.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+ },
+ {
+  "id": "WS7-14",
+  "kontext": "Bevor über den Finance-SSC (WS7-03) entschieden werden kann, braucht es das Mengengerüst: Welche Finance-Kapazität braucht der Konzern im Zielbild, und welche Minimalbesetzung braucht VIE für eine geordnete Betriebsfortführung bis zum Ende (Abschlüsse, Payroll, Abwicklungs-Support)? Das verbindet die VIE-Restrukturierung mit der Finance-Zielorganisation (TOM).",
+  "leistung": [
+   "Mengengerüst Ziel-Finance (Rollen/FTE) vs. Ist, inkl. Standortlogik",
+   "VIE-Minimalbesetzung je Phase (Betrieb bis 25.10. / Abwicklungsphase danach)",
+   "Restrukturierungsplanung (Übergänge, kritische Rollen, Zeitachse) als Input an WS7-03"
+  ],
+  "vorgehen": [
+   "Ist-Aufnahme aus WS7-02/Pajor-Daten (KST 8002 u.a.) übernehmen",
+   "Zielbild mit der Finance-TOM-Arbeit synchronisieren (eine Ziel-Finance-Linie, keine Parallelplanung)",
+   "Minimalbesetzung mit Lesch/Pajor validieren (wer hält den Betrieb, was ist verzichtbar)",
+   "Ergebnis an Rohde zur Entscheidung in WS7-03 übergeben"
+  ],
+  "beteiligte": "Owner: Stephanie Rohde; Mitwirkende: Pajor (VIE/Zahlen), Lesch (Finance-Betrieb), Charisius (HR-Rahmen)",
+  "risiken": [
+   "Minimalbesetzung zu knapp = Kontinuitätsrisiko; zu grosszügig = unnötige Kosten — bewusst je Phase differenzieren",
+   "Schlüsselpersonen der Minimalbesetzung brauchen Halte-Anreize (Stay-Logik), sonst kippt die Planung"
+  ],
+  "erfolgsmessung": "Mengengerüst + Minimalbesetzung bis 14.08.2026 dokumentiert und von Rohde als WS7-03-Input abgenommen.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
  }
 ]

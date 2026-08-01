@@ -79,19 +79,6 @@
       "created_at": "2026-07-13"
     },
     {
-      "id": "G-1G6xL7Uyypt3MNI-oIGhik4vddLr7lwZohvfL2RtRKS0-C1",
-      "nr": 7,
-      "ms_id": null,
-      "text": "Lizenzbesprechung terminieren: Kontaktieren Sie Bruno und Bisser Ende Juli bezüglich des Lizenzstatus. Klären Sie dabei die weiteren Schritte zur Sicherung der Lizenz.",
-      "owner": "Andreas Fritthum",
-      "due": null,
-      "status": "offen",
-      "erledigt_am": null,
-      "source": "gemini",
-      "origin": "P-2026-07-13-gl-weekly-1",
-      "created_at": "2026-07-13"
-    },
-    {
       "id": "G-1G6xL7Uyypt3MNI-oIGhik4vddLr7lwZohvfL2RtRKS0-C2",
       "nr": 8,
       "ms_id": "WS2-07",
@@ -109,32 +96,6 @@
       "nr": 9,
       "ms_id": "M05",
       "text": "Key Account Manager bestimmen: Bestimmen Sie einen Key Account Manager für Eurowings. Kommunizieren Sie diese Entscheidung erst nach einer finalen Zusage.",
-      "owner": "Andreas Fritthum",
-      "due": null,
-      "status": "offen",
-      "erledigt_am": null,
-      "source": "gemini",
-      "origin": "P-2026-07-13-gl-weekly-1",
-      "created_at": "2026-07-13"
-    },
-    {
-      "id": "G-1G6xL7Uyypt3MNI-oIGhik4vddLr7lwZohvfL2RtRKS0-C4",
-      "nr": 10,
-      "ms_id": null,
-      "text": "Commercial-Prozessbesprechung Zürich: Besprechen Sie den neuen Prozess während des Treffens in Zürich in der ersten Augustwoche. Bauen Sie die neuen Konzepte entsprechend ein.",
-      "owner": "Michael Haeffner · Cüneyt Gökcöl",
-      "due": null,
-      "status": "offen",
-      "erledigt_am": null,
-      "source": "gemini",
-      "origin": "P-2026-07-13-gl-weekly-1",
-      "created_at": "2026-07-13"
-    },
-    {
-      "id": "G-1G6xL7Uyypt3MNI-oIGhik4vddLr7lwZohvfL2RtRKS0-C5",
-      "nr": 11,
-      "ms_id": null,
-      "text": "Kontakt Aeropoint: Kontaktiere Aeropoint am Mittwoch bezüglich des aktuellen Status.",
       "owner": "Andreas Fritthum",
       "due": null,
       "status": "offen",
@@ -165,32 +126,6 @@
       "due": null,
       "status": "offen",
       "erledigt_am": null,
-      "source": "gemini",
-      "origin": "P-2026-07-13-gl-weekly-1",
-      "created_at": "2026-07-13"
-    },
-    {
-      "id": "G-1G6xL7Uyypt3MNI-oIGhik4vddLr7lwZohvfL2RtRKS0-C8",
-      "nr": 14,
-      "ms_id": null,
-      "text": "Tailscale Registrierung: Registriere dich heute Abend für den Dienst Tailscale.",
-      "owner": "Andreas Fritthum",
-      "due": null,
-      "status": "offen",
-      "erledigt_am": null,
-      "source": "gemini",
-      "origin": "P-2026-07-13-gl-weekly-1",
-      "created_at": "2026-07-13"
-    },
-    {
-      "id": "G-1G6xL7Uyypt3MNI-oIGhik4vddLr7lwZohvfL2RtRKS0-C9",
-      "nr": 15,
-      "ms_id": null,
-      "text": "Filterfunktion implementieren: Füge der Aufgabenplattform eine Filterfunktion hinzu, um Aufgabenlisten besser nach Personen verwalten zu können.",
-      "owner": "Dieter Streuli",
-      "due": null,
-      "status": "erledigt",
-      "erledigt_am": "2026-07-13",
       "source": "gemini",
       "origin": "P-2026-07-13-gl-weekly-1",
       "created_at": "2026-07-13"
@@ -1948,7 +1883,8 @@
       "erledigt_am": null,
       "source": "zerlegung",
       "origin": "KI-Zerlegung Phase 0, 13.07.2026 (DRS-Freigabe «alles aktivieren»)",
-      "created_at": "2026-07-13"
+      "created_at": "2026-07-13",
+      "erledigt_von": null
     },
     {
       "id": "M37-H02",
