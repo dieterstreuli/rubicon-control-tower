@@ -42,6 +42,9 @@ def parse_date(s):
         return None
 
 
+from _schema import pruefe_stores   # R4 (01.08.): Feld-SSOT src/data/schema.json
+
+
 def main():
     if not YAML_PATH.exists():
         print(f"FEHLER: {YAML_PATH} fehlt"); sys.exit(1)
@@ -160,6 +163,10 @@ def main():
         for m in ws.get("milestones") or []:
             if m.get("id"):
                 ms_progress_source[m["id"]] = m.get("progress_source")
+    # ── Schema-Prüfung der JSON-Stores (R4) ──
+    for lvl, where, msg in pruefe_stores(ROOT):
+        (err if lvl == 'FEHLER' else warn if lvl == 'WARNUNG' else gap)(where, msg)
+
     for t in tasks:
         n_tasks += 1
         tid = t.get("id") or "tasks/?"

@@ -1,0 +1,260 @@
+{
+  "_kommentar": "Feld-SSOT der JSON-Stores (R4, 01.08.2026). Bisher waren Feldnamen/-typen implizit über Plugin (mergeTasks/mergeEntscheide), UI und validate.py verteilt — ein neues Feld traf 4 Stellen ohne dokumentierten Vertrag. Hier steht der Vertrag EINMAL; validate.py prüft ihn bei jedem Lauf. Typen: str|int|bool|date|list|obj|any; 'null_ok' = darf null sein (Datenehrlichkeit: nie raten).",
+  "stores": {
+    "tasks.json": {
+      "wurzel": "tasks",
+      "art": "liste",
+      "schluessel": "id",
+      "felder": {
+        "id": {
+          "typ": "str",
+          "pflicht": true
+        },
+        "nr": {
+          "typ": "int",
+          "pflicht": true,
+          "eindeutig": true
+        },
+        "ms_id": {
+          "typ": "str",
+          "pflicht": true,
+          "null_ok": true
+        },
+        "text": {
+          "typ": "str",
+          "pflicht": true
+        },
+        "owner": {
+          "typ": "str",
+          "pflicht": true,
+          "null_ok": true
+        },
+        "due": {
+          "typ": "date",
+          "pflicht": true,
+          "null_ok": true
+        },
+        "status": {
+          "typ": "str",
+          "pflicht": true,
+          "werte": [
+            "offen",
+            "erledigt"
+          ]
+        },
+        "erledigt_am": {
+          "typ": "date",
+          "pflicht": true,
+          "null_ok": true
+        },
+        "erledigt_von": {
+          "typ": "str",
+          "pflicht": false,
+          "null_ok": true
+        },
+        "source": {
+          "typ": "str",
+          "pflicht": true,
+          "werte": [
+            "zerlegung",
+            "sitzung",
+            "gemini",
+            "nachlauf"
+          ]
+        },
+        "origin": {
+          "typ": "str",
+          "pflicht": false,
+          "null_ok": true
+        },
+        "created_at": {
+          "typ": "date",
+          "pflicht": true
+        }
+      }
+    },
+    "entscheide.json": {
+      "wurzel": "entscheide",
+      "art": "liste",
+      "schluessel": "id",
+      "felder": {
+        "id": {
+          "typ": "str",
+          "pflicht": true,
+          "muster": "^E-\\d{4}-\\d{3}$"
+        },
+        "key": {
+          "typ": "str",
+          "pflicht": true,
+          "eindeutig": true
+        },
+        "titel": {
+          "typ": "str",
+          "pflicht": true
+        },
+        "typ": {
+          "typ": "str",
+          "pflicht": false,
+          "null_ok": true
+        },
+        "gremium": {
+          "typ": "str",
+          "pflicht": false,
+          "null_ok": true
+        },
+        "antragsteller": {
+          "typ": "str",
+          "pflicht": false,
+          "null_ok": true
+        },
+        "entscheid": {
+          "typ": "str",
+          "pflicht": false,
+          "null_ok": true
+        },
+        "begruendung": {
+          "typ": "str",
+          "pflicht": false,
+          "null_ok": true
+        },
+        "datengrundlage": {
+          "typ": "str",
+          "pflicht": false,
+          "null_ok": true
+        },
+        "datum": {
+          "typ": "date",
+          "pflicht": false,
+          "null_ok": true
+        },
+        "frist": {
+          "typ": "date",
+          "pflicht": false,
+          "null_ok": true
+        },
+        "status": {
+          "typ": "str",
+          "pflicht": true,
+          "werte_aus": "domain.entscheide.flow"
+        },
+        "kommunikation": {
+          "typ": "obj",
+          "pflicht": false,
+          "null_ok": true
+        },
+        "tasks": {
+          "typ": "list",
+          "pflicht": false
+        },
+        "anhaenge": {
+          "typ": "list",
+          "pflicht": false
+        },
+        "programm": {
+          "typ": "str",
+          "pflicht": false,
+          "null_ok": true
+        },
+        "quelle": {
+          "typ": "str",
+          "pflicht": false,
+          "null_ok": true
+        },
+        "created_at": {
+          "typ": "date",
+          "pflicht": false,
+          "null_ok": true
+        },
+        "export": {
+          "typ": "obj",
+          "pflicht": false,
+          "null_ok": true
+        }
+      }
+    },
+    "protokolle.json": {
+      "wurzel": "protokolle",
+      "art": "liste",
+      "schluessel": "id",
+      "felder": {
+        "id": {
+          "typ": "str",
+          "pflicht": true
+        },
+        "meeting_id": {
+          "typ": "str",
+          "pflicht": true
+        },
+        "meeting_name": {
+          "typ": "str",
+          "pflicht": false
+        },
+        "datum": {
+          "typ": "date",
+          "pflicht": true
+        },
+        "vorsitz": {
+          "typ": "str",
+          "pflicht": false
+        },
+        "erfasst_von": {
+          "typ": "str",
+          "pflicht": false
+        },
+        "eintraege": {
+          "typ": "list",
+          "pflicht": true
+        },
+        "sensitiv": {
+          "typ": "bool",
+          "pflicht": false
+        },
+        "source": {
+          "typ": "str",
+          "pflicht": false
+        },
+        "export": {
+          "typ": "obj",
+          "pflicht": false,
+          "null_ok": true
+        }
+      }
+    },
+    "reminder_log.json": {
+      "wurzel": "reminders",
+      "art": "liste",
+      "felder": {
+        "created_at": {
+          "typ": "str",
+          "pflicht": true
+        },
+        "owner": {
+          "typ": "str",
+          "pflicht": true
+        },
+        "email": {
+          "typ": "str",
+          "pflicht": false,
+          "null_ok": true
+        },
+        "draft_id": {
+          "typ": "str",
+          "pflicht": false,
+          "null_ok": true
+        },
+        "mode": {
+          "typ": "str",
+          "pflicht": true,
+          "werte": [
+            "draft",
+            "sent"
+          ]
+        },
+        "items": {
+          "typ": "list",
+          "pflicht": true
+        }
+      }
+    }
+  }
+}
