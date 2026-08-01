@@ -657,9 +657,9 @@ workstreams:
     progress_source: tasks
   - id: WS3-16
     name: Einsparmassnahmen-Masterliste (Personal + Sachkosten) konsolidiert und in FC27 eingepflegt (bis Ende KW32)
-    owner: Thomas Pajor
+    owner: Dieter Streuli
     start: '2026-07-31'
-    due: '2026-08-07'
+    due: '2026-08-14'
     date_assumed: false
     phase: Phase 0
     gate:
@@ -669,10 +669,10 @@ workstreams:
     nachlauf: false
   - id: WS3-17
     name: Standort-Kostenvergleich Wien vs. Hamburg (Miet-/Betriebskosten) — Einsparpotenzial ermittelt
-    owner: Thomas Pajor
+    owner: Stephanie Rohde
     start: '2026-07-31'
     due: '2026-08-14'
-    date_assumed: true
+    date_assumed: false
     phase: Phase 0
     gate:
     critical: false
@@ -684,7 +684,7 @@ workstreams:
     owner: Stephanie Rohde
     start: '2026-07-31'
     due: '2026-08-31'
-    date_assumed: true
+    date_assumed: false
     phase: Phase 0
     gate:
     critical: false
@@ -696,7 +696,7 @@ workstreams:
     owner: Stephanie Rohde
     start: '2026-07-31'
     due: '2026-08-19'
-    date_assumed: true
+    date_assumed: false
     phase: Phase 0
     gate:
     critical: true
@@ -705,16 +705,17 @@ workstreams:
     nachlauf: false
   - id: WS3-20
     name: Führungskraft AAS Technics (Business Development / strategische Weiterentwicklung) — Suche gestartet
-    owner: Michael Haeffner
+    owner: Andreas Fritthum
     start: '2026-07-31'
     due: '2026-09-30'
-    date_assumed: true
+    date_assumed: false
     phase: Phase 0
     gate:
     critical: false
     progress: 0
     depends_on: []
     nachlauf: false
+    support: Amélie Charisius
   programm: transformation
 - code: OE
   name: Operational Excellence / Stabilisierung
@@ -1710,7 +1711,7 @@ workstreams:
     phase: Phase 0
     gate:
     critical: false
-    progress: 0
+    progress: 100
     depends_on: []
     nachlauf: false
   - id: WS4-14
@@ -1725,6 +1726,7 @@ workstreams:
     progress: 0
     depends_on: []
     nachlauf: false
+    support: Amélie Charisius
   programm: transformation
 - code: WS5
   name: Kultur & Execution-Disziplin
@@ -2053,8 +2055,8 @@ workstreams:
     name: Cloud-Code-Chief-of-Staff-Plattform fürs GL-Team eingerichtet (Rollout)
     owner: Tine Petric
     start: '2026-07-31'
-    due: '2026-09-30'
-    date_assumed: true
+    due: '2026-08-31'
+    date_assumed: false
     phase: Phase 0
     gate:
     critical: false
@@ -2065,13 +2067,14 @@ workstreams:
     name: GL-Team in der KI-Arbeitsplattform geschult
     owner: Tine Petric
     start: '2026-07-31'
-    due: '2026-10-15'
-    date_assumed: true
+    due: '2026-09-15'
+    date_assumed: false
     phase: Phase 0
     gate:
     critical: false
     progress: 0
-    depends_on: []
+    depends_on:
+    - WS6-13
     nachlauf: false
   programm: transformation
 - code: WS7
@@ -2181,54 +2184,59 @@ workstreams:
     progress: 0
     depends_on: []
     nachlauf: false
+    support: Dr. Grassner (führt operativ)
   - id: WS7-09
     name: 'Anwaltskoordination VIE: drei beteiligte Kanzleien per E-Mail vernetzt'
-    owner: Dieter Streuli
+    owner: Andreas Fritthum
     start: '2026-07-31'
     due: '2026-08-05'
-    date_assumed: true
+    date_assumed: false
     phase: Phase 0
     gate:
     critical: false
-    progress: 0
+    progress: 100
     depends_on: []
     nachlauf: false
+    support: Grassner/Saxinger + Mertinz (KWR)
   - id: WS7-10
     name: 'Betriebsübergang: schriftliche Bestätigung beim Ministerium (BMIMI) angefordert'
-    owner: Amélie Charisius
+    owner: Andreas Fritthum
     start: '2026-07-31'
     due: '2026-08-07'
-    date_assumed: true
+    date_assumed: false
     phase: Phase 0
     gate:
     critical: false
     progress: 0
     depends_on: []
     nachlauf: false
+    support: Mertinz (KWR)
   - id: WS7-11
     name: Betriebsrat VIE abgestimmt (Kündigungs-/Betriebsübergangsthematik)
-    owner: Amélie Charisius
+    owner: Andreas Fritthum
     start: '2026-07-31'
     due: '2026-08-14'
-    date_assumed: true
+    date_assumed: false
     phase: Phase 0
     gate:
     critical: false
     progress: 0
     depends_on: []
     nachlauf: false
+    support: Amélie Charisius
   - id: WS7-12
     name: 'AMS-Frühwarnsystem: Unterlagen zur Massenentlassung vorsorglich vorbereitet'
-    owner: Amélie Charisius
+    owner: Andreas Fritthum
     start: '2026-07-31'
     due: '2026-08-14'
-    date_assumed: true
+    date_assumed: false
     phase: Phase 0
     gate:
     critical: false
     progress: 0
     depends_on: []
     nachlauf: false
+    support: Mertinz (KWR)
   - id: WS7-13
     name: 'VR-Entscheidungsgrundlage Reduktion Lizenzgeschäft (Projekt Bridgehead: Doppelzielbild ≥ EUR 15 Mio EBITDA / ≥ 75% lizenzunabhängig bis Ende 2028)'
     owner: Dieter Streuli
@@ -2241,13 +2249,14 @@ workstreams:
     progress: 0
     depends_on: []
     nachlauf: false
+    support: Andreas Fritthum (AAS Technics) · Cüneyt Gökcöl (Aeropoint) · Stephanie Rohde (Zahlen)
   - id: WS7-14
     name: Finance-Personalbedarf + Restrukturierungsplanung definiert (inkl. VIE-Minimalbesetzung für Betriebsfortführung) — Input zu WS7-03
     owner: Jörg Ehlers
     support: Stephanie Rohde
     start: '2026-07-31'
     due: '2026-08-14'
-    date_assumed: true
+    date_assumed: false
     phase: Phase 0
     gate:
     critical: false
@@ -2362,30 +2371,19 @@ workstreams:
     - FIN-07
     - FIN-03
     nachlauf: false
-  - id: FIN-09
-    name: Verbindlichkeiten ZRH + VIE geprüft (ganzheitliche Analyse)
-    owner: Stephanie Rohde
-    start: '2026-07-31'
-    due: '2026-08-14'
-    date_assumed: true
-    phase: Phase 0
-    gate:
-    critical: false
-    progress: 0
-    depends_on: []
-    nachlauf: false
   - id: FIN-10
     name: Schuldenübernahme der VIE-Töchter durch Muttergesellschaft AAS geprüft
     owner: Dieter Streuli
     start: '2026-07-31'
     due: '2026-08-14'
-    date_assumed: true
+    date_assumed: false
     phase: Phase 0
     gate:
     critical: false
     progress: 0
     depends_on: []
     nachlauf: false
+    support: Legal
 inputs:
 - id: IN-01
   owner: Thomas Pajor
