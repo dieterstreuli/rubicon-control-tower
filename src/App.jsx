@@ -1546,8 +1546,10 @@ function ErfassungView({ ms, today, role, me }) {
                 <MsPicker ms={ms} value={e.ms_id} onChange={v => upd(i, { ms_id: v })} style={inp} />
               )}
               {e.typ === 'fortschritt' && (
-                <input type="number" min={0} max={100} value={e.wert} onChange={ev => upd(i, { wert: +ev.target.value })}
-                  className="w-20 rounded border px-2 py-1 text-[11px]" style={{ ...inp, fontFamily: T.mono }} title="Fortschritt %" />
+                <select value={e.wert} onChange={ev => upd(i, { wert: +ev.target.value })}
+                  className="rounded border px-2 py-1 text-[11px]" style={{ ...inp, fontFamily: T.mono }} title="Fortschritt in 25%-Stufen (DRS 01.08.)">
+                  {[0, 25, 50, 75, 100].map(p => <option key={p} value={p} style={{ color: '#111' }}>{p}%</option>)}
+                </select>
               )}
               {e.typ === 'blocker' && (
                 <input type="number" min={0} max={365} value={e.slip} onChange={ev => upd(i, { slip: +ev.target.value })}
@@ -2440,13 +2442,32 @@ function ZerlegungKI({ m, role }) {
   )
 }
 
-// What-if-Simulation (B0, 01.08. — die Wirkungsrechnung des entfernten Aktions-Log-
-// Tabs, jetzt im Milestone-Modal): rechnet deterministisch vor, was ein gemeldeter
-// Fortschritt/Verzug mit Ampel und Projektende täte. Reine Ansicht — NICHTS wird
-// gespeichert; echte Meldungen laufen über Tab «Sitzungen».
-function WhatIf({ m }) {
+// Fortschritt melden + Was-wäre-wenn (B0/DRS 01.08.): 25%-Stufen, Live-Vorschau
+// der Wirkung (Ampel/Projektende, deterministisch) und «Speichern» — schreibt via
+// /api/ms/progress in projekt.yaml (CoS alles, Owner nur eigene; task-getriebene
+// MS gesperrt: dort wird Fortschritt aus Handlungen VERDIENT). Git = Journal.
+function WhatIf({ m, role, me }) {
   const [kind, setKind] = useState('progress')
   const [val, setVal] = useState(typeof m.progress === 'number' ? m.progress : 50)
+  const [busy, setBusy] = useState(false)
+  const driving = m.progress_source === 'tasks'
+  const maySave = role === 'CoS' || (role === 'Owner' && m.owner === me)
+  const current = kind === 'progress' ? (typeof m.progress === 'number' ? m.progress : null) : (m.reported_slip_days || 0)
+  const dirty = val !== current
+  const save = async () => {
+    if (busy || !dirty || !maySave) return
+    setBusy(true)
+    sessionStorage.setItem('rubicon_selms', m.id)
+    try {
+      const r = await fetch('/api/ms/progress', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role, me, ms_id: m.id, ...(kind === 'progress' ? { progress: val } : { slip: val }) }),
+      })
+      const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
+      if (j.ok) reloadKeepScroll()
+      else { sessionStorage.removeItem('rubicon_selms'); alert('Speichern fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(false) }
+    } catch (err) { sessionStorage.removeItem('rubicon_selms'); alert('Speichern fehlgeschlagen: ' + err); setBusy(false) }
+  }
   const dataAfter = useMemo(() => ({
     ...BASE,
     workstreams: BASE.workstreams.map(ws => ({
@@ -2466,21 +2487,49 @@ function WhatIf({ m }) {
   return (
     <div className="mx-5 mt-3 rounded-xl border p-3" style={{ borderColor: T.line, background: T.panelSoft + '55' }}>
       <div className="flex flex-wrap items-center gap-2 text-[12px]">
-        <b className="text-[11px] tracking-wide" style={{ color: T.brass, fontFamily: T.mono }}>WAS-WÄRE-WENN</b>
-        <select value={kind} onChange={e => { setKind(e.target.value); setVal(e.target.value === 'progress' ? (typeof m.progress === 'number' ? m.progress : 50) : 7) }}
+        <b className="text-[11px] tracking-wide" style={{ color: T.brass, fontFamily: T.mono }}>FORTSCHRITT MELDEN</b>
+        <select value={kind} onChange={e => { setKind(e.target.value); setVal(e.target.value === 'progress' ? (typeof m.progress === 'number' ? m.progress : 50) : (m.reported_slip_days || 7)) }}
           className="rounded border px-2 py-1 text-[11px]" style={inp}>
-          <option value="progress" style={{ color: '#111' }}>Fortschritt gemeldet (%)</option>
-          <option value="blocker" style={{ color: '#111' }}>Blocker gemeldet (+Tage)</option>
+          <option value="progress" style={{ color: '#111' }}>Fortschritt (%)</option>
+          <option value="blocker" style={{ color: '#111' }}>Blocker (+Tage Verzug)</option>
         </select>
-        <input type="number" min={0} max={kind === 'progress' ? 100 : 365} value={val} onChange={e => setVal(+e.target.value)}
-          className="w-20 rounded border px-2 py-1 text-[11px]" style={{ ...inp, fontFamily: T.mono }} />
+        {kind === 'progress'
+          ? (
+            <span className="inline-flex rounded border overflow-hidden" style={{ borderColor: T.line }}>
+              {[0, 25, 50, 75, 100].map(p => (
+                <button key={p} onClick={() => setVal(p)}
+                  className="px-2.5 py-1 text-[11px] font-semibold"
+                  style={val === p
+                    ? { background: T.brass, color: '#0b1220', fontFamily: T.mono }
+                    : { color: current === p ? T.brass : T.inkDim, fontFamily: T.mono, background: 'transparent' }}
+                  title={current === p && val !== p ? 'aktueller Stand' : undefined}>
+                  {p}%
+                </button>
+              ))}
+            </span>
+          )
+          : (
+            <input type="number" min={0} max={365} step={7} value={val} onChange={e => setVal(+e.target.value)}
+              className="w-20 rounded border px-2 py-1 text-[11px]" style={{ ...inp, fontFamily: T.mono }} />
+          )}
         <span style={{ color: T.inkDim }}>Ampel</span> <Pill st={stNow} /> <span style={{ color: T.inkDim }}>→</span> <Pill st={stAfter} />
         <span style={{ fontFamily: T.mono, color: shift > 0 ? T.red : shift < 0 ? T.green : T.inkDim }}>
           · Projektende {shift !== 0 ? `${shift > 0 ? '+' : ''}${shift} T` : 'unverändert'}
         </span>
+        {maySave && !(driving && kind === 'progress') && (
+          <button onClick={save} disabled={busy || !dirty}
+            className="px-3 py-1 rounded font-semibold text-[11.5px]"
+            style={{ background: dirty ? T.brass : T.line, color: '#0b1220', opacity: busy ? .5 : 1 }}>
+            <Save size={12} className="inline mr-1" />{busy ? 'speichert…' : dirty ? 'Speichern' : 'gespeichert'}
+          </button>
+        )}
       </div>
       <div className="text-[10px] mt-1.5" style={{ color: T.inkFaint }}>
-        Simulation — nichts wird gespeichert. Echte Meldung: Tab «Sitzungen» (Fortschritt/Blocker) bzw. Handlungen abhaken.
+        {driving && kind === 'progress'
+          ? '⚙ Dieser Milestone ist task-getrieben — Fortschritt wird aus den Handlungen VERDIENT (oben abhaken statt Prozent tippen). Die %-Leiste dient hier nur der Was-wäre-wenn-Vorschau.'
+          : maySave
+            ? 'Vorschau ist deterministisch (Ampel/Projektende) · Speichern schreibt nach projekt.yaml — die Änderung erscheint in «Δ Woche».'
+            : 'Vorschau (Was-wäre-wenn) — Rolle «' + role + '» ist nur lesend; melden via CoS/Owner.'}
       </div>
     </div>
   )
@@ -2558,8 +2607,8 @@ function BriefingModal({ m, role, me, onClose, onNav }) {
         <TaskSection m={m} role={role} me={me} />
         {/* Zerlegungs-Vorschlag (K4, 01.08.): KI entwirft Handlungen — CoS prüft & übernimmt */}
         {role === 'CoS' && <ZerlegungKI m={m} role={role} />}
-        {/* What-if (B0, 01.08. — ersetzt den Aktions-Log-Tab): Wirkung vorrechnen, nichts speichern */}
-        <WhatIf m={m} />
+        {/* Fortschritt melden (25%-Stufen) + Was-wäre-wenn-Vorschau (DRS 01.08.) */}
+        <WhatIf m={m} role={role} me={me} />
         {/* Briefing-Sektionen */}
         <div className="px-5 pb-4">
           {Object.keys(b).length === 0 && (

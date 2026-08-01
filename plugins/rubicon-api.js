@@ -370,6 +370,45 @@ export function rubiconApi() {
         }
       })
 
+      // POST /api/ms/progress — Fortschritt/Verzug DIREKT melden (Modal-Speichern,
+      // DRS 01.08.). Gleiche Gates wie /api/sitzung: CoS alles, Owner nur eigene
+      // (MS-Owner oder WS-Owner); task-getriebene MS sind GESPERRT (Fortschritt
+      // wird verdient). Journal = git-Historie (Δ-Woche zeigt die Änderung).
+      server.middlewares.use('/api/ms/progress', async (req, res, next) => {
+        if (req.method !== 'POST') return next()
+        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
+        if (!guard(req, res)) return
+        try {
+          const body = JSON.parse((await readBody(req)) || '{}')
+          const { role, me } = body
+          if (role !== 'CoS' && role !== 'Owner') return json(403, { ok: false, error: `Rolle «${role || '?'}» darf nicht melden` })
+          if (!body.ms_id) return json(400, { ok: false, error: 'ms_id fehlt' })
+          const hasProg = typeof body.progress === 'number'
+          const hasSlip = typeof body.slip === 'number'
+          if (!hasProg && !hasSlip) return json(400, { ok: false, error: 'progress oder slip nötig' })
+          const doc = yaml.load(fs.readFileSync(yamlPath, 'utf8'))
+          let target = null, wsOwner = null
+          for (const ws of doc.workstreams || []) for (const m of ws.milestones || []) if (m.id === body.ms_id) { target = m; wsOwner = ws.owner }
+          if (!target) return json(404, { ok: false, error: `Milestone ${body.ms_id} unbekannt` })
+          if (role === 'Owner' && target.owner !== me && wsOwner !== me) return json(403, { ok: false, error: 'Owner darf nur eigene Meilensteine melden' })
+          if (hasProg && target.progress_source === 'tasks')
+            return json(409, { ok: false, error: 'Fortschritt wird bei diesem Milestone aus den Handlungen VERDIENT — bitte Handlungen abhaken statt Prozent tippen.' })
+          const changes = []
+          if (hasProg) {
+            const p = Math.max(0, Math.min(100, Math.round(body.progress)))
+            if (target.progress !== p) { target.progress = p; changes.push(`progress → ${p}%`) }
+          }
+          if (hasSlip) {
+            const s = Math.max(0, Math.min(365, Math.round(body.slip)))
+            if ((target.reported_slip_days || 0) !== s) { target.reported_slip_days = s; changes.push(`Verzug → +${s} T`) }
+          }
+          if (changes.length) writeAtomic(yamlPath, dumpYaml(doc))
+          return json(200, { ok: true, ms_id: body.ms_id, changed: changes, unveraendert: !changes.length })
+        } catch (err) {
+          return json(500, { ok: false, error: String(err && err.message || err) })
+        }
+      })
+
       // POST /api/task/upsert — Handlungen (Tasks) anlegen/aktualisieren (nur CoS).
       // Optional body.activate_ms: schaltet den Milestone auf progress_source:'tasks'
       // («treibend») — bewusst expliziter Akt NACH menschlicher Freigabe der Zerlegung.
