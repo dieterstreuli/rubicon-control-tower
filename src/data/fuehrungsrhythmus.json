@@ -48,7 +48,7 @@
         {
           "id": "elysium-tag",
           "typ": "sitzung",
-          "name": "Elysium-Tag (physisch, ganztags)",
+          "name": "Elysium Meeting",
           "wann": "monatlich · meist Monatsende · ganztags · physisch",
           "teilnehmer": "ExBoD + GL",
           "zweck": "Arbeitstag Restrukturierung/Transformation: Elysium-Massnahmen, ab Sep 26 verzahnt mit den RUBICON-Strömen (WS3/WS7-Massnahmen laufen hier)",
