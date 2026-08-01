@@ -10,7 +10,7 @@
           "id": "steuerungsrunde",
           "typ": "sitzung",
           "name": "Steering Committee (SC)",
-          "wann": "alle 2 Wochen · physisch · ~2h",
+          "wann": "alle 2 Wochen · Fr · 4-5h · physisch",
           "teilnehmer": "DRS + Fritthum + Gökcöl + Rohde (Format analog Kickoff 31.07.)",
           "zweck": "Programm-Steuerung über alle Ströme: Ampel-Lage & Δ, Eskalationen, Ressourcen-/Zielentscheide, Cash-Lage (13-Wo-Liquidität als fester Punkt), Gate-/VR-Vorbereitung — das strukturierte Steuerungsgremium (Brände laufen in der wöchentlichen 3er-Runde)",
           "output": "Sitzungserfassung im Tower (Meet-Notiz-Import = Primärweg) · Beschlüsse → Entscheids-Register · Commitments → Handlungen"
@@ -59,7 +59,7 @@
           "typ": "sitzung",
           "name": "Elysium Meeting",
           "wann": "monatlich · meist Monatsende · ganztags · physisch",
-          "teilnehmer": "ExBoD + GL",
+          "teilnehmer": "GL (ExBoD optional)",
           "zweck": "Arbeitstag Restrukturierung/Transformation: Elysium-Massnahmen, ab Sep 26 verzahnt mit den RUBICON-Strömen (WS3/WS7-Massnahmen laufen hier)",
           "output": "Sitzungserfassung im Tower (Meet-Notiz-Import bei Virtual-Anteilen) · Massnahmen-Fortschritt → Handlungen"
         },

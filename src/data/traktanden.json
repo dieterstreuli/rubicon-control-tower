@@ -2,7 +2,7 @@
   "agendas": [
     {
       "meeting_id": "steuerungsrunde",
-      "dauer": "~2h (physisch)",
+      "dauer": "4-5h (physisch)",
       "vorsitz": "Dieter Streuli",
       "teilnehmer": "DRS + Andreas Fritthum + Cüneyt Gökcöl + Stephanie Rohde",
       "standing_rule": "Physisch, alle 2 Wochen (Format analog Kickoff 31.07.) — ersetzt die wöchentliche 3er-Steuerung; Ad-hoc-Eskalationen zwischen den Terminen bilateral.",
@@ -540,7 +540,7 @@
       "meeting_id": "elysium-tag",
       "dauer": "ganztags (physisch)",
       "vorsitz": "Cüneyt Gökcöl",
-      "teilnehmer": "ExBoD + GL",
+      "teilnehmer": "GL (ExBoD optional)",
       "standing_rule": "Meist am Monatsende, Vortag = Monatsergebnisse (virtuell). Ab Programmstart 01.09. laufen die RUBICON-Massnahmen (WS3/WS7) in diesem Format.",
       "traktanden": [
         {
