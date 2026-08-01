@@ -16,14 +16,10 @@ from pathlib import Path
 import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, __file__.rsplit('/', 1)[0])                  # _lib (Q6)
+from _lib import atomic_write as _atomic_write  # noqa: E402
 
 
-def _atomic_write(path, text):
-    # Atomarer Schreibvorgang (Audit #4): temp + os.replace, nie truncated
-    tmp = f'{path}.tmp.{os.getpid()}'
-    with open(tmp, 'w') as f:
-        f.write(text)
-    os.replace(tmp, path)
 # Quellen sind self-contained im Repo (scripts/_sources/, rekonstruiert 13.07.2026 aus
 # projekt.yaml+briefings.json; Round-Trip-verifiziert). CUTOVER 07.07.: Tracking der CMP-MS
 # lebt in projekt.yaml; der Rebuild liest den EINGEFRORENEN Masterplan-Snapshot und erhält

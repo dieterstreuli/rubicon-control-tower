@@ -1,0 +1,14 @@
+{
+  "_kommentar": "SSOT der Personen-Zuordnungen (Q5, 01.08.2026). Vorher hart in gen_entscheid_mail.py (GL_VERTEILER) und gen_reminder_mail.py (OWNER_EMAILS) — der Matthei-Nachtrag am 01.08. musste an zwei Stellen erfolgen. Regel: NUR verifizierte Adressen eintragen, nie raten; fehlender Eintrag = Entwurf ohne Empfänger + Hinweis.",
+  "personen": {
+    "Andreas Fritthum":  { "email": "a.fritthum@axs.aero",        "gl_verteiler": true,  "sprache": "de" },
+    "Cüneyt Gökcöl":     { "email": "c.gokcol@axs.aero",          "gl_verteiler": true,  "sprache": "de" },
+    "Stephanie Rohde":   { "email": "stephanie.Rohde@ahs-aero.de", "gl_verteiler": true, "sprache": "de" },
+    "Thomas Pajor":      { "email": "t.pajor@group.aas.aero",     "gl_verteiler": true,  "sprache": "de" },
+    "Florian Matthei":   { "email": "f.matthei@axs.aero",         "gl_verteiler": true,  "sprache": "de" },
+    "Michael Haeffner":  { "email": "m.haeffner@axs.aero",        "gl_verteiler": true,  "sprache": "de" },
+    "Amélie Charisius":  { "email": "Amelie.Charisius@ahs-aero.de", "gl_verteiler": true, "sprache": "de" },
+    "Tine Petric":       { "email": null,                          "gl_verteiler": false, "sprache": "en" },
+    "Dieter Streuli":    { "email": "d.streuli@axs.aero",         "gl_verteiler": false, "sprache": "de", "absender": true }
+  }
+}

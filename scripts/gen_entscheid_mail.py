@@ -25,35 +25,20 @@ from email.mime.text import MIMEText
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, __file__.rsplit('/', 1)[0])          # _kontakte/_lib
 sys.path.insert(0, __file__.rsplit('/', 1)[0] + '/_tools')   # vendored Fallback (Portabilität)
 sys.path.insert(0, '/Users/dieterstreuli/Chief/Tools')       # Original gewinnt auf dem DRS-Mac
 from html_to_pdf import html_to_pdf  # noqa: E402
+from _lib import atomic_write as _atomic_write  # noqa: E402
 
 ENTS = ROOT / 'src' / 'data' / 'entscheide.json'
 
-# Fester Verteiler (DRS 16.07.: «der Versand geht immer an die GL») — identisch mit dem
-# etablierten GL-Verteiler in Tools/adv_newsletter_to_gl.py (ohne DRS selbst = Absender).
-# Gökcöl-Adresse mailbox-verifiziert 16.07. (c.gokcol@, nicht c.goelcoel@).
-# Matthei ergänzt 01.08. (DRS: «Florian fehlt») — Adresse aus echten Inbound-Mails verifiziert.
-GL_VERTEILER = [
-    'a.fritthum@axs.aero',
-    'c.gokcol@axs.aero',
-    'stephanie.Rohde@ahs-aero.de',
-    't.pajor@group.aas.aero',
-    'f.matthei@axs.aero',
-    'm.haeffner@axs.aero',
-    'Amelie.Charisius@ahs-aero.de',
-]
+# Verteiler aus der Personen-SSOT (Q5, 01.08.): src/data/kontakte.json
+from _kontakte import GL_VERTEILER  # noqa: E402
+
 OUT = ROOT / 'public' / 'entscheide'
 LOGO = (ROOT / 'scripts' / 'axs_logo.png.b64').read_text().strip()
 STAMP = datetime.datetime.now().strftime('%d.%m.%Y %H:%M')
-
-
-def _atomic_write(path, text):
-    tmp = f'{path}.tmp.{os.getpid()}'
-    with open(tmp, 'w') as f:
-        f.write(text)
-    os.replace(tmp, path)
 
 
 def e(s):

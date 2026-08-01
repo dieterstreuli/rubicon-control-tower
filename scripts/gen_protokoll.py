@@ -16,13 +16,9 @@ import sys
 import tempfile
 
 
-def _atomic_write(path, text):
-    # Atomarer Schreibvorgang (Audit #8): temp + os.replace
-    tmp = f'{path}.tmp.{os.getpid()}'
-    with open(tmp, 'w') as f:
-        f.write(text)
-    os.replace(tmp, path)
 from pathlib import Path
+sys.path.insert(0, __file__.rsplit('/', 1)[0])                  # _lib (Q6)
+from _lib import atomic_write as _atomic_write  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, __file__.rsplit('/', 1)[0] + '/_tools')   # vendored Fallback (Portabilität, s. MIGRATION.md)

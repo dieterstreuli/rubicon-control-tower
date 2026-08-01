@@ -37,6 +37,7 @@ from email.mime.text import MIMEText
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / 'scripts'))            # _kontakte/_lib
 sys.path.insert(0, str(ROOT / 'scripts' / '_tools'))          # vendored Fallback (Portabilität)
 sys.path.insert(0, '/Users/dieterstreuli/Chief/Tools')        # Original gewinnt auf dem DRS-Mac
 
@@ -46,20 +47,10 @@ YAML_PATH = ROOT / 'src' / 'data' / 'projekt.yaml'
 TASKS_PATH = ROOT / 'src' / 'data' / 'tasks.json'
 LOG_PATH = ROOT / 'src' / 'data' / 'reminder_log.json'
 
-# Owner → E-Mail. NUR verifizierte Adressen (Quelle: GL_VERTEILER in
-# gen_entscheid_mail.py, mailbox-verifiziert 16.07.). Fehlende Owner werden
-# NIE geraten — Entwurf entsteht ohne Empfänger, mit Hinweis.
-OWNER_EMAILS = {
-    'Andreas Fritthum': 'a.fritthum@axs.aero',
-    'Cüneyt Gökcöl': 'c.gokcol@axs.aero',
-    'Stephanie Rohde': 'stephanie.Rohde@ahs-aero.de',
-    'Thomas Pajor': 't.pajor@group.aas.aero',
-    'Florian Matthei': 'f.matthei@axs.aero',   # ergänzt 01.08. (DRS) — aus Inbound-Mails verifiziert
-    'Michael Haeffner': 'm.haeffner@axs.aero',
-    'Amélie Charisius': 'Amelie.Charisius@ahs-aero.de',
-}
-ENGLISH_OWNERS = {'Tine Petric'}          # feste DRS-Regel: an Tine immer Englisch
-SELF = 'Dieter Streuli'                   # kein Self-Reminder
+# Personen-SSOT (Q5, 01.08.2026): src/data/kontakte.json — eine Liste für
+# Reminder-Empfänger UND GL-Verteiler. Fehlender Eintrag ⇒ Entwurf ohne Empfänger.
+from _kontakte import OWNER_EMAILS, ENGLISH_OWNERS, SELF  # noqa: E402
+
 BREMSE_TAGE = 7
 
 e = lambda s: html.escape(str(s or ''))

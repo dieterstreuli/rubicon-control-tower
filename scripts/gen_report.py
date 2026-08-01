@@ -22,17 +22,11 @@ from pathlib import Path
 import yaml
 
 
-def _atomic_write(path, text):
-    # Atomarer Schreibvorgang (Audit #8): temp + os.replace → nie truncated bei Nebenläufigkeit
-    tmp = f'{path}.tmp.{os.getpid()}'
-    with open(tmp, 'w') as f:
-        f.write(text)
-    os.replace(tmp, path)
-
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, __file__.rsplit('/', 1)[0] + '/_tools')   # vendored Fallback (Portabilität, s. MIGRATION.md)
 sys.path.insert(0, '/Users/dieterstreuli/Chief/Tools')  # Original gewinnt auf dem DRS-Mac
 from html_to_pdf import html_to_pdf  # noqa: E402
+from _lib import atomic_write as _atomic_write  # noqa: E402
 
 MD2GDOC = '/Users/dieterstreuli/Chief/Tools/md_to_gdoc.py'
 import os as _os
