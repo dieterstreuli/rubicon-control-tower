@@ -396,6 +396,33 @@ export function rubiconApi() {
         }
       })
 
+      // POST /api/reminder/draft — K2 Stufe 1 (01.08.): Reminder als Gmail-ENTWÜRFE
+      // aus der Durchsetzungs-Queue (je Owner gebündelt, 7-Tage-Bremse, persistentes
+      // Log in reminder_log.json). NIE Versand — DRS sendet. Nur CoS.
+      // Eskalation/Kalender bleiben bewusst simuliert (Führungssignale, nie automatisch).
+      server.middlewares.use('/api/reminder/draft', async (req, res, next) => {
+        if (req.method !== 'POST') return next()
+        const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
+        if (!guard(req, res)) return
+        try {
+          const body = JSON.parse((await readBody(req)) || '{}')
+          if (body.role !== 'CoS') return json(403, { ok: false, error: 'nur CoS darf Reminder-Entwürfe erzeugen' })
+          const args = [path.join(root, 'scripts', 'gen_reminder_mail.py')]
+          if (body.scope === 'alle') args.push('--alle')
+          else if (body.scope && Array.isArray(body.scope.ids) && body.scope.ids.length) args.push('--ids', body.scope.ids.join(','))
+          else return json(400, { ok: false, error: 'scope fehlt («alle» oder {ids:[...]})' })
+          if (body.force) args.push('--force')
+          execFile(PY_BIN, args, { cwd: root, timeout: 120000 }, (err, stdout, stderr) => {
+            if (err && !stdout) return json(500, { ok: false, error: String(stderr || err).slice(-300) })
+            const last = (stdout || '').trim().split('\n').pop()
+            try { return json(200, JSON.parse(last)) }
+            catch { return json(500, { ok: false, error: 'Parse: ' + (stderr || last || '').slice(-200) }) }
+          })
+        } catch (err) {
+          return json(500, { ok: false, error: String(err && err.message || err) })
+        }
+      })
+
       // POST /api/entscheid/upsert — Entscheid im Register anlegen/aktualisieren.
       // CoS immer; Owner darf als Antragsteller eigene Entscheide erfassen (analog Audit #3).
       // Lifecycle (status/kommunikation) wird hier NICHT verändert — nur via /api/entscheid/status.

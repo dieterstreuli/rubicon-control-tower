@@ -18,6 +18,7 @@ import AGENDAS from './data/traktanden.json'
 import REPORTS from './data/reports_index.json'
 import TASKS from './data/tasks.json'
 import ENTS from './data/entscheide.json'
+import REMLOG from './data/reminder_log.json'
 import {
   statusOf, slipDays, projectedEnd, counts, overallStatus, allMilestones,
   parseDate, fmtDate, daysBetween, hardEdgeBreaches,
@@ -113,6 +114,7 @@ export default function App() {
   const [inputState, setInputState] = useState({}) // id -> {status?, last_reminder?}
   const [actions, setActions] = useState([])       // Aktions-Log
   const [autoLog, setAutoLog] = useState([])       // CoS-Automations-Log (simuliert)
+  const [remBusy, setRemBusy] = useState(false)    // K2: Gmail-Entwurf läuft
   const [selMs, setSelMs] = useState(null)         // Milestone-Detail-Modal
 
   useEffect(() => {
@@ -211,6 +213,30 @@ export default function App() {
       ts: new Date(),
       msg: `[SIMULIERT] ${kind} an ${input.owner} — «${input.item}» (fällig ${fmtDate(input.due)})`,
     }, ...l])
+  }
+
+  // K2 Stufe 1 (01.08.): echte Gmail-ENTWÜRFE aus der Durchsetzungs-Queue — je Owner
+  // gebündelt, 7-Tage-Bremse, persistentes Log. Versand bleibt IMMER bei DRS.
+  // Eskalation/Kalender bleiben simuliert (Führungssignale — nie automatisch).
+  async function reminderDrafts(scope) {
+    if (remBusy) return
+    setRemBusy(true)
+    try {
+      const r = await fetch('/api/reminder/draft', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ role, scope }) })
+      const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
+      if (j.ok) {
+        const n = (j.drafts || []).length
+        alert(n
+          ? `${n} Gmail-Entwurf/Entwürfe erstellt (je Owner gebündelt):\n`
+            + j.drafts.map(d => `· ${d.owner}${d.email ? '' : ' — OHNE Empfänger (E-Mail unbekannt)'} (${d.items.length} Item(s))`).join('\n')
+            + '\n\nDie Entwürfe liegen in Gmail — DRS sendet.'
+            + (j.hinweise?.length ? '\n\n' + j.hinweise.join('\n') : '')
+          : 'Keine Entwürfe erstellt'
+            + (j.uebersprungen?.length ? ` — ${j.uebersprungen.length} Item(s) übersprungen (7-Tage-Bremse / Owner fehlt / DRS selbst).` : ' — nichts fällig.'))
+        sessionStorage.setItem('rubicon_tab', 'cos')
+        window.location.reload()
+      } else { alert('Entwurf fehlgeschlagen: ' + (j.error || 'unbekannt')); setRemBusy(false) }
+    } catch (err) { alert('Entwurf fehlgeschlagen: ' + err); setRemBusy(false) }
   }
 
   const tabs = [
@@ -705,17 +731,18 @@ export default function App() {
           <div className="space-y-4">
             <div className="rounded-lg border px-4 py-2 text-[12px] flex items-center gap-2"
               style={{ borderColor: T.amber + '88', background: T.amber + '14', color: T.amber }}>
-              <Siren size={14} /> Durchsetzungs-Aktionen sind im Prototyp <b>SIMULIERT</b>. Reale Reminder-/Kalender-/Eskalations-Writes
-              laufen ausschliesslich über die MCP-Bridge mit einmaligem Freigabe-Token (mcp/calendar_bridge.md).
+              <Siren size={14} /> <b>Reminder = echte Gmail-ENTWÜRFE</b> (je Owner gebündelt · 7-Tage-Bremse · Versand bleibt bei DRS — K2 Stufe 1, 01.08.).
+              Kalender &amp; Eskalation bleiben <b>SIMULIERT</b> — Führungssignale gehen nie automatisch raus (Spez mcp/calendar_bridge.md).
             </div>
             <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
               <div className="flex items-center justify-between mb-2">
                 <div className="text-[13px] font-semibold">Durchsetzungs-Queue — überfällige Inputs ({overdueInputs.length})</div>
-                <button onClick={() => overdueInputs.forEach(i => remind(i, 'Reminder'))}
-                  disabled={!overdueInputs.length}
+                <button onClick={() => reminderDrafts('alle')}
+                  disabled={remBusy}
+                  title="Alle überfälligen Datenlieferungen + Handlungen — ein Gmail-Entwurf je Owner; DRS sendet"
                   className="text-[12px] px-3 py-1 rounded border flex items-center gap-1.5"
-                  style={{ borderColor: T.brass, color: T.brass, opacity: overdueInputs.length ? 1 : .4 }}>
-                  <Send size={13} /> Alle Reminder senden
+                  style={{ borderColor: T.brass, color: T.brass, opacity: remBusy ? .4 : 1 }}>
+                  <Send size={13} /> {remBusy ? 'erzeugt…' : 'Alle Reminder als Gmail-Entwürfe'}
                 </button>
               </div>
               {overdueInputs.length === 0 && <div className="text-[12px]" style={{ color: T.green }}>Keine überfälligen Inputs. ✓</div>}
@@ -726,12 +753,27 @@ export default function App() {
                     <b style={{ fontFamily: T.mono }}>{i.owner}</b>
                     <span className="flex-1 min-w-[220px]">{i.item}</span>
                     <span style={{ fontFamily: T.mono, color: T.red }}>{fmtDate(i.due)} (+{daysBetween(parseDate(i.due), NOW)} T)</span>
-                    <button onClick={() => remind(i, 'Reminder')} className="px-2 py-0.5 rounded border text-[11px]"
-                      style={{ borderColor: T.line, color: T.ink }}><Send size={11} className="inline mr-1" />Reminder</button>
+                    <button onClick={() => reminderDrafts({ ids: [i.id] })} disabled={remBusy} className="px-2 py-0.5 rounded border text-[11px]"
+                      title="Gmail-Entwurf für diesen Owner erzeugen — DRS sendet"
+                      style={{ borderColor: T.brass + '88', color: T.brass }}><Send size={11} className="inline mr-1" />Gmail-Entwurf</button>
                     <button onClick={() => remind(i, 'Kalender-Koordination')} className="px-2 py-0.5 rounded border text-[11px]"
                       style={{ borderColor: T.line, color: T.ink }}><CalendarClock size={11} className="inline mr-1" />Kalender</button>
                     <button onClick={() => remind(i, 'ESKALATION (Stufe +1)')} className="px-2 py-0.5 rounded border text-[11px]"
                       style={{ borderColor: T.red + '88', color: T.red }}><Siren size={11} className="inline mr-1" />Eskalieren</button>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
+              <div className="text-[13px] font-semibold mb-2">Reminder-Protokoll <span className="text-[10px]" style={{ color: T.inkFaint }}>(persistent — reminder_log.json)</span></div>
+              {!(REMLOG.reminders || []).length && <div className="text-[12px]" style={{ color: T.inkFaint }}>Noch keine Reminder-Entwürfe erzeugt.</div>}
+              <div className="space-y-1 text-[12px]">
+                {(REMLOG.reminders || []).slice(0, 15).map((r, k) => (
+                  <div key={k} style={{ color: T.inkDim }}>
+                    <span style={{ fontFamily: T.mono, color: T.inkFaint }}>{(r.created_at || '').slice(0, 16).replace('T', ' ')}</span>
+                    {' · '}<b style={{ color: T.ink }}>{r.owner}</b>{r.email ? '' : ' (ohne Empfänger)'}
+                    {' · '}<span style={{ fontFamily: T.mono }}>{(r.items || []).join(', ')}</span>
+                    {' · '}<span style={{ color: T.brass, fontFamily: T.mono }}>{r.mode}</span>
                   </div>
                 ))}
               </div>
@@ -755,7 +797,7 @@ export default function App() {
 
       <footer className="px-6 py-3 text-[10px] border-t" style={{ borderColor: T.line, color: T.inkFaint, fontFamily: T.mono }}>
         RUBICON Control Tower · Wahrheitsquelle: src/data/projekt.yaml · Statuslogik deterministisch (status.js) ·
-        Erfasste Sitzungen/Reports werden persistiert · Reminder/Kalender/Eskalation simuliert · Vertraulich ExBoD/VR
+        Erfasste Sitzungen/Reports werden persistiert · Reminder = Gmail-Entwürfe (DRS sendet) · Kalender/Eskalation simuliert · Vertraulich ExBoD/VR
       </footer>
     </div>
   )
