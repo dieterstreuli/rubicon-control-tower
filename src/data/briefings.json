@@ -3174,7 +3174,7 @@
    "Doppelzählungs-Risiko mit Elysium: ~EUR 6.3 Mio CTC sind teilweise schon im FC realisiert — nur inkrementelle Effekte zählen"
   ],
   "erfolgsmessung": "Business Case liegt am 14.08.2026 beschlussreif vor, von Rohde/Gökcöl mitgetragen, DRS-freigegeben — als Input für VR-Vorlage (WS7-07) und Kompensationspaket (WS7-05).",
-  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · DRS-Review 01.08.2026 erfolgt · Rohde-Read&Sign folgt 19.08."
  },
  "WS7-02": {
   "kontext": "Ohne finale Overhead-Zahlenbasis bleibt jedes Restrukturierungsziel Behauptung. Die Bausteine liegen vor: Pajor-Paket vom 28.07. (101 MA Gruppenfunktionen, ~EUR 7.84 Mio brutto; Wien-Overhead 24 MA / ~EUR 1.67 Mio, davon Finance-SSC ~20 Köpfe / ~EUR 1.30 Mio) und der Elysium-Letztstand vom 30.07. — sie müssen zu EINER verbindlichen Tabelle konsolidiert werden.",
@@ -3195,7 +3195,7 @@
    "Frist 04.08. ist eng — Teilbild klar als Teilbild kennzeichnen statt schönen (Datenehrlichkeit)"
   ],
   "erfolgsmessung": "Finale Tabelle am 04.08.2026 abgenommen (Rohde) und als einzige Zahlenreferenz in WS7-01 übernommen.",
-  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · DRS-Review 01.08.2026 erfolgt · Rohde-Read&Sign folgt 19.08."
  },
  "WS7-03": {
   "kontext": "Der Group-Finance-Shared-Service (~17-20 Köpfe, v.a. Finance Group KST 8002) sitzt physisch in Wien — am Standort, der per 25.10.2026 wegfallen kann. Kündigungsfristen von 3+ Monaten erzwingen den Verlagerungs-/Abbau-Entscheid VOR dem möglichen VIE-Ende. Gleichzeitig darf die Kontinuität des Konzern-Finance (Abschlüsse, Konsolidierung, Payables) keinen einzigen Monat reissen — mitten in Finanzierungs-Closing (31.10.) und Programmstart.",
@@ -3219,7 +3219,7 @@
    "Abhängigkeit von WS7-01/WS7-02: ohne beschlossenes Zielbild kein belastbarer Funktions-Entscheid"
   ],
   "erfolgsmessung": "Entscheid je Funktion dokumentiert bis 28.08.2026; kein Monatsabschluss der Übergangsphase verspätet.",
-  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · DRS-Review 01.08.2026 erfolgt · Rohde-Read&Sign folgt 19.08."
  },
  "WS7-04": {
   "kontext": "Ziel 2 der Restrukturierung: Die von VIE getragenen Overheads (Schlüssel 9,8% AXS / 20,5% AAS) werden vollständig ELIMINIERT — nicht auf die übrigen Stationen umverteilt. Umverteilung würde das Konzernproblem nur verschieben und die Wettbewerbsfähigkeit der verbleibenden Stationen belasten. Die Umsetzung ist an Projekt Elysium gekoppelt (gemeinsames Vehikel für den Overhead-Abbau), ohne Effekte doppelt zu zählen.",
@@ -3241,7 +3241,7 @@
    "Arbeitsrechtliche Fristen können Wirksamkeit ins Q1/27 schieben — dann transparent als Nachlauf führen, nicht beschönigen"
   ],
   "erfolgsmessung": "Alle Abbau-Entscheide bis 31.10.2026 gefasst; FC27 zeigt die Elimination ohne Gegenbuchung auf anderen Stationen.",
-  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · DRS-Review 01.08.2026 erfolgt · Rohde-Read&Sign folgt 19.08."
  },
  "WS7-05": {
   "kontext": "Ziel 1: Das wegfallende VIE-Ergebnis (~CHF 4.6 Mio EBITDA p.a.) muss kompensiert werden — aus eigener Kraft, im laufenden Geschäft. Die Hebel: Produktivität der übrigen Stationen (stärkster Hebel gemäss Forecast-Analyse: Flights/FTE), Kostenblock, Pricing/Renewal (Vertragsbasis ~EUR 283 Mio) und Redeployment freiwerdender VIE-Ressourcen.",
@@ -3264,7 +3264,7 @@
    "Gefahr der Doppelzählung mit ohnehin geplanten FC-Massnahmen — nur Inkremente zählen"
   ],
   "erfolgsmessung": "Paket beschlossen bis 31.10.2026; ≥ CHF 4.6 Mio kumulierte Jahres-Wirkung nachweisbar in Umsetzung (Messpunkte definiert).",
-  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · DRS-Review 01.08.2026 erfolgt · Rohde-Read&Sign folgt 19.08."
  },
  "WS7-06": {
   "kontext": "Szenario B (kein Beschwerde-Aufschub) bedeutet: Betriebsende VIE per 25.10.2026, Übernahme durch Joint Sky. Dafür muss ein vollständiger Abwicklungsplan STARTBEREIT liegen — Personal (Kündigungsfristen 3+ Monate!), Kunden-Übergabe, Assets und Verträge. Der Plan wird nur bei VIE-Ende ausgelöst; ihn NICHT zu haben, wäre grob fahrlässig, ihn früh auszulösen, wäre ein unnötiger Vertrauensbruch.",
@@ -3288,7 +3288,7 @@
    "Kündigungsfristen + AMS-Sperrfristen: zu späte Vorbereitung macht den 25.10. teuer (Lohnfortzahlung ohne Betrieb)"
   ],
   "erfolgsmessung": "Abwicklungsplan bis 21.08.2026 vollständig und freigegeben (startbereit) — ohne dass eine einzige unumkehrbare Massnahme ausgelöst wurde.",
-  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · DRS-Review 01.08.2026 erfolgt · Rohde-Read&Sign folgt 19.08."
  },
  "WS7-07": {
   "kontext": "Die Aufgabe einer Station/eines Marktes steht unter VR-Vorbehalt (Kompetenzordnung: Stationen-Entscheide immer VR). Die VR-Sitzung vom 26.08.2026 braucht eine beschlussreife Vorlage zur VIE-Restrukturierung — inklusive Neubewertung der Finanzierungs-Kaskade, da VIE als Sicherheit/Ertragsträger im Finanzierungsprozess (#98, Closing 31.10.) eingeplant war (Clearwater/Märki).",
@@ -3309,7 +3309,7 @@
    "Inkonsistenz zwischen Banken-Kommunikation (#98) und VR-Vorlage wäre ein Glaubwürdigkeitsschaden — eine Zahlenbasis für beide"
   ],
   "erfolgsmessung": "Vorlage am 21.08.2026 final im VR-Paket; VR-Beschluss am 26.08. ohne Vertagung möglich (alle Pflichtfelder der Beschlussvorlage erfüllt).",
-  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · DRS-Review 01.08.2026 erfolgt · Rohde-Read&Sign folgt 19.08."
  },
  "WS7-08": {
   "kontext": "Gegen den Lizenzentscheid vom 24.07.2026 läuft die Beschwerdefrist bis 20.08.2026. Die Beschwerde wahrt die Rechtsposition und hält Szenario A (Weiterbetrieb) offen — die Planungsannahme bleibt aber Szenario B, weil ein Aufschub des Vollzugs praktisch ausgeschlossen ist. Präzedenz: die BVwG-Entscheidung von 2019 (via Grassner identifiziert) stützt die Argumentationslinie.",
@@ -3331,7 +3331,7 @@
    "Falsche interne Signalwirkung («wir gewinnen das schon») würde die Restrukturierungs-Disziplin untergraben"
   ],
   "erfolgsmessung": "Beschwerde nachweislich vor dem 20.08.2026 eingereicht; Hauptsache-Einschätzung dokumentiert; Planungsannahme Szenario B unverändert in Kraft.",
-  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · DRS-Review 01.08.2026 erfolgt · Rohde-Read&Sign folgt 19.08."
  },
  "WS7-09": {
   "kontext": "Am VIE-Komplex arbeiten drei Kanzleien (Verwaltungsrecht/Beschwerde, Arbeitsrecht/Abwicklung, Corporate/Finanzierungsbezug). Ohne aktive Koordination entstehen Lücken («dachte, das macht die andere Kanzlei»), Doppelarbeit und widersprüchliche Linien — bei laufender Frist ein reales Risiko.",
@@ -3352,7 +3352,7 @@
    "Vertraulichkeits-Disziplin: Verteiler klein halten (Privilege)"
   ],
   "erfolgsmessung": "Alle drei Kanzleien haben die Zuständigkeitsmatrix bis 05.08.2026 schriftlich bestätigt.",
-  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · DRS-Review 01.08.2026 erfolgt · Rohde-Read&Sign folgt 19.08."
  },
  "WS7-10": {
   "kontext": "Ob die Übernahme des VIE-Geschäfts durch Joint Sky rechtlich als Betriebsübergang gilt, ist DIE Kostenweiche der Abwicklung: Bei Betriebsübergang gehen Arbeitsverhältnisse (AVRAG) auf den Erwerber über — ohne ihn trägt AAS Kündigungen/Sozialkosten selbst. Eine schriftliche Bestätigung der Behördensicht beim Ministerium (BMIMI) schafft Planungssicherheit für WS7-06 und WS7-11/12.",
@@ -3372,7 +3372,7 @@
    "Joint Sky könnte eine gegenteilige Position beziehen — rechtliche Auseinandersetzung einkalkulieren"
   ],
   "erfolgsmessung": "Anfrage bis 07.08.2026 nachweislich eingereicht; beide Kostenvarianten liegen quantifiziert im Abwicklungsplan.",
-  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · DRS-Review 01.08.2026 erfolgt · Rohde-Read&Sign folgt 19.08."
  },
  "WS7-11": {
   "kontext": "Der Betriebsrat VIE ist bei Kündigungen und erst recht bei einem Betriebsübergang zwingend einzubinden (BRG/ArbVG-Konsultationspflichten). Frühe, strukturierte Abstimmung reduziert Verfahrensrisiken, verhindert Eskalation über die Belegschaft/Öffentlichkeit und ist Voraussetzung für einen sauberen Sozialplan-Prozess, falls Szenario B eintritt.",
@@ -3393,7 +3393,7 @@
    "Leak-Risiko in die Belegschaft/Medien — Verteiler und Wortlaut diszipliniert halten"
   ],
   "erfolgsmessung": "Erstkonsultation bis 14.08.2026 geführt und protokolliert; kein Verfahrensfehler-Einwand des BR im weiteren Prozess.",
-  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · DRS-Review 01.08.2026 erfolgt · Rohde-Read&Sign folgt 19.08."
  },
  "WS7-12": {
   "kontext": "Bei Beendigung einer grösseren Zahl von Arbeitsverhältnissen greift in Österreich das AMS-Frühwarnsystem (§ 45a AMFG): Anzeige an das Arbeitsmarktservice mit 30-tägiger Sperrfrist — Kündigungen, die davor ausgesprochen werden, sind rechtsunwirksam. Die Unterlagen müssen daher VORSORGLICH bereitliegen, damit im Szenario B die Fristenkette (Anzeige → 30 Tage → Kündigungen → 3+ Monate Fristen) zum 25.10. überhaupt aufgeht.",
@@ -3414,7 +3414,7 @@
    "Vorzeitige Einreichung wäre ein faktisches Auslösesignal — strikt am Auslöse-Entscheid halten"
   ],
   "erfolgsmessung": "Anzeige-Paket bis 14.08.2026 einreichfertig geprüft; Fristenkette zum 25.10. nachweislich haltbar.",
-  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · DRS-Review 01.08.2026 erfolgt · Rohde-Read&Sign folgt 19.08."
  },
  "WS7-13": {
   "kontext": "Der VIE-Schock legt das strukturelle Klumpenrisiko offen: Kerngeschäfte, die an behördliche Lizenzen mit Verlustrisiko hängen. Projekt Bridgehead beantwortet das auf Portfolio-Ebene: Reduktion der Lizenzabhängigkeit mit Doppelzielbild ≥ EUR 15 Mio EBITDA und ≥ 75% lizenzunabhängiger Ergebnisanteil bis Ende 2028 — als VR-Entscheidungsgrundlage, verzahnt mit der Gruppenstrategie (Top-3 EU 2030).",
@@ -3435,7 +3435,7 @@
    "Zielbild 2028 erfordert ggf. M&A-Kapazität, die erst nach Finanzierungs-Closing besteht — Sequenz ehrlich ausweisen"
   ],
   "erfolgsmessung": "Entscheidungsgrundlage am 26.08.2026 im VR behandelt; Doppelzielbild und Pfad vom VR zur Weiterverfolgung freigegeben.",
-  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · DRS-Review 01.08.2026 erfolgt · Rohde-Read&Sign folgt 19.08."
  },
  "WS7-14": {
   "kontext": "Bevor über den Finance-SSC (WS7-03) entschieden werden kann, braucht es das Mengengerüst: Welche Finance-Kapazität braucht der Konzern im Zielbild, und welche Minimalbesetzung braucht VIE für eine geordnete Betriebsfortführung bis zum Ende (Abschlüsse, Payroll, Abwicklungs-Support)? Das verbindet die VIE-Restrukturierung mit der Finance-Zielorganisation (TOM).",
@@ -3457,6 +3457,383 @@
    "Schlüsselpersonen der Minimalbesetzung brauchen Halte-Anreize (Stay-Logik), sonst kippt die Planung"
   ],
   "erfolgsmessung": "Mengengerüst + Minimalbesetzung bis 14.08.2026 dokumentiert und von Rohde als WS7-03-Input abgenommen.",
-  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · Review DRS/Rohde AUSSTEHEND"
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS7, VIE-Dossier (Lizenzentscheid 24.07., Beschwerdefrist 20.08., Joint-Sky-Start 25.10.), Pajor-Overheadpaket 28.07., Elysium Savings_OPEX 30.07., Kickoff-Protokoll 31.07. · DRS-Review 01.08.2026 erfolgt · Rohde-Read&Sign folgt 19.08."
+ },
+ "FIN-01": {
+  "kontext": "Der 13-Wochen-Liquiditätsplan ist das Fundament des gesamten Finanzierungsprozesses: Der Cash-Tiefpunkt bestimmt rückwärts jeden Termin (Ansprache, Term Sheets, Closing 31.10.). Kontext: Sommer-Monate (Aug-Okt) bringen Cash-Zufluss, das Winterloch Nov-Dez ist ohne Closing existenzbedrohend. Das Datenpaket entsteht gemeinsam mit Clearwater (DE).",
+  "ziel_klartext": "Ein belastbarer 13-Wochen-Liquiditätsplan liegt vor; der Cash-Tiefpunkt ist identifiziert und der Finanzierungs-Zeitplan daraus rückwärts terminiert.",
+  "leistung": [
+   "13-Wochen-Rolling-Liquiditätsplan (Gruppe, wöchentlich, mit Annahmen-Dokumentation)",
+   "Cash-Tiefpunkt + Puffer-Analyse als harte Termin-Referenz für FIN-04/07/08",
+   "Abgabe an Clearwater als Kern des Investoren-Datenpakets (FIN-02)"
+  ],
+  "vorgehen": [
+   "Wochen-Cashflows aus Ist + Forecast aufbauen (Rohde/Lesch); Sondereffekte (VIE, Severance) separat ausweisen",
+   "Tiefpunkt-Szenarien rechnen (mit/ohne Closing 31.10.; mit/ohne VIE-Ende)",
+   "Plan wöchentlich fortschreiben — der Plan ist ein Prozess, kein Einmal-Dokument"
+  ],
+  "beteiligte": "Owner: Stephanie Rohde (CFO); Mitwirkende: Lesch (Finance), Pajor (Datenbasis), Clearwater/Märki (extern), DRS (Programm-Owner)",
+  "risiken": [
+   "VIE-Restrukturierung verändert die Cash-Kurve laufend — Versionen sauber datieren",
+   "Zu optimistische Zufluss-Annahmen verschieben den Tiefpunkt künstlich — konservativ planen (Datenehrlichkeit)"
+  ],
+  "erfolgsmessung": "Plan liegt vor (31.07.) und wird wöchentlich fortgeschrieben; alle Finanzierungs-Termine sind nachweislich vom Tiefpunkt rückwärts abgeleitet.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml FIN-01, Kickoff-Protokoll 31.07., Finanzierungs-Dossier #98 (Clearwater/Märki, 13-Wo-Liqui, Winterloch Nov-Dez), Programm-Memory · Review DRS AUSSTEHEND"
+ },
+ "FIN-02": {
+  "kontext": "Investoren entscheiden auf Basis des ersten Pakets: Financing Teaser, Bilanz-Talking-Points und eine Cashflow-Story, die den Kern trifft — es ist ein Timing-Mismatch (Sommer-Cash vs. Winterloch), kein Rettungs-Case. Die Konsolidierung läuft mit Clearwater; Qualität vor Tempo, aber die Welle-1-Ansprache (21.08.) wartet darauf.",
+  "ziel_klartext": "Das Investoren-Datenpaket ist mit Clearwater konsolidiert und versandfertig — Teaser, Talking-Points und Cashflow-Story erzählen konsistent den Timing-Mismatch-Case.",
+  "leistung": [
+   "Financing Teaser (anonymisiert/teaser-tauglich) + vollständiges Datenpaket für NDA-Phase",
+   "Bilanz-Talking-Points (inkl. proaktiver Behandlung der bekannten Schwachstellen)",
+   "Cashflow-Story auf Basis FIN-01 (Timing-Mismatch, Saisonalität, Kompensationspfad VIE)"
+  ],
+  "vorgehen": [
+   "Bausteine mit Clearwater abstimmen (ein Dokumentensatz, keine Parallel-Versionen)",
+   "VIE-Wirkung konsistent zur VR-Vorlage (WS7-07) einarbeiten — eine Zahlenbasis für Banken UND VR",
+   "Q&A-Vorbereitung: die fünf härtesten Investorenfragen schriftlich beantworten"
+  ],
+  "beteiligte": "Owner: DRS; Mitwirkende: Clearwater/Märki (Lead-Erstellung), Rohde (Zahlen), Pajor (Detail)",
+  "risiken": [
+   "Inkonsistenz zwischen Investor-Story und VR-/Banken-Kommunikation wäre ein Vertrauensbruch — Single Source",
+   "VIE-Unsicherheit (Beschwerde offen) muss transparent, aber nicht dramatisiert dargestellt sein"
+  ],
+  "erfolgsmessung": "Paket am 14.08.2026 versandfertig; Welle-1-Ansprache (FIN-04) kann ohne Nacharbeit starten.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml FIN-02, Kickoff-Protokoll 31.07., Finanzierungs-Dossier #98 (Clearwater/Märki, 13-Wo-Liqui, Winterloch Nov-Dez), Programm-Memory · Review DRS AUSSTEHEND"
+ },
+ "FIN-03": {
+  "kontext": "Der Swissport-Loan (CHF 3.5 Mio, mit Covenant) steht jeder grösseren Cash Injection im Weg: Szenario A = Waiver für Injections > CHF 1 Mio verhandeln, Szenario B = Rückzahlung des SPI-Loans — was den Gesamtbedarf auf ~13-15 Mio hebt. Dieser Entscheid gestaltet die gesamte Finanzierungsstruktur und muss vor den Term-Sheet-Verhandlungen stehen.",
+  "ziel_klartext": "Die Swissport-Waiver-Frage ist entschieden: Waiver (Szenario A) oder Rückzahlung (Szenario B) — mit klarer Konsequenz für Volumen und Struktur der Finanzierung.",
+  "leistung": [
+   "Entscheidungsvorlage A vs. B (Kosten, Machbarkeit, Zeitrisiko, Signalwirkung an Swissport)",
+   "Bei A: Waiver-Anfrage-Strategie und Gesprächsfahrplan; bei B: Rückzahlungs-Mechanik im Closing-Volumen",
+   "Registrierter Entscheid (Entscheids-Register, Gremium gemäss Kompetenzordnung: FK > CHF 1 Mio)"
+  ],
+  "vorgehen": [
+   "Covenant-Lage juristisch präzisieren (was genau löst den Waiver-Bedarf aus)",
+   "Beide Szenarien mit Clearwater durchrechnen (Volumen, Konditionen-Wirkung)",
+   "Sondierungsgespräch Swissport terminieren, dann Entscheid DRS/VR-Ebene"
+  ],
+  "beteiligte": "Owner: DRS; Mitwirkende: Rohde (Zahlen), Clearwater (Struktur), Legal (Covenant-Auslegung)",
+  "risiken": [
+   "Waiver-Anfrage legt die Finanzierungssituation gegenüber Swissport offen — Verhandlungsposition (Earn-Out, pers. Haftung) mitdenken",
+   "Szenario B erhöht den Bedarf um ~CHF 3.5 Mio — Markt-Machbarkeit im Fenster bis 31.10. prüfen"
+  ],
+  "erfolgsmessung": "Entscheid bis 21.08.2026 gefällt und im Register dokumentiert; Finanzierungsstruktur (FIN-07) baut ohne offene Swissport-Flanke auf.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml FIN-03, Kickoff-Protokoll 31.07., Finanzierungs-Dossier #98 (Clearwater/Märki, 13-Wo-Liqui, Winterloch Nov-Dez), Programm-Memory · Review DRS AUSSTEHEND"
+ },
+ "FIN-04": {
+  "kontext": "Welle 1 der Investorenansprache läuft über die Private-Debt-Spur (Rantum, Patrimonium, Swiss Life AM, CIC, HF) mit Family Offices parallel. Der Start hängt am fertigen Datenpaket (FIN-02). Ziel ist ein kompetitiver Prozess — genug Interessenten für Verhandlungsmacht bei den Term Sheets, ohne den Markt zu verbrennen.",
+  "ziel_klartext": "Die Erstansprache der Welle-1-Adressen ist gestartet: Teaser versandt, Erstgespräche terminiert, NDA-Prozess läuft.",
+  "leistung": [
+   "Ansprache-Liste mit Status je Adresse (kontaktiert / NDA / Datenraum / abgesagt)",
+   "Einheitliches Ansprache-Skript + Teaser-Versand dokumentiert",
+   "Erstgespräche mit mindestens 3 Adressen terminiert"
+  ],
+  "vorgehen": [
+   "Reihenfolge und Ansprache-Verantwortung mit Clearwater festlegen (wer ruft wen an)",
+   "Versand + Follow-up-Kadenz (T+3/T+7) diszipliniert tracken",
+   "Feedback aus Erstgesprächen strukturiert sammeln — fliesst in FIN-07-Verhandlungslinie"
+  ],
+  "beteiligte": "Owner: DRS; Durchführung: Clearwater/Märki (Prozess-Lead); Mitwirkende: Rohde (Q&A/Zahlen)",
+  "risiken": [
+   "Markt-Gerüchte bei breiter Ansprache — Verteiler kontrolliert halten, NDA vor Detailzahlen",
+   "Abhängigkeit FIN-02: unfertiges Paket bei Erstkontakt ruiniert den ersten Eindruck irreversibel"
+  ],
+  "erfolgsmessung": "Bis 21.08.2026 alle Welle-1-Adressen angesprochen und ≥3 Erstgespräche terminiert.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml FIN-04, Kickoff-Protokoll 31.07., Finanzierungs-Dossier #98 (Clearwater/Märki, 13-Wo-Liqui, Winterloch Nov-Dez), Programm-Memory · Review DRS AUSSTEHEND"
+ },
+ "FIN-05": {
+  "kontext": "Die Bridge-Option Joeinig (Wandeldarlehen-Mechanik, Sicherheit Station VIE) könnte schnelle Liquidität liefern — konkurrenziert aber die Hauptspur und ist durch den VIE-Lizenzverlust neu zu bewerten (die angedachte Sicherheit «Station VIE» hat sich fundamental verändert). Der Entscheid: schnelle Brücke ziehen oder bewusst auf die Hauptspur setzen.",
+  "ziel_klartext": "Die Bridge-Option Joeinig ist entschieden — nutzen (mit angepasster Sicherheiten-Struktur) oder verwerfen — und die Hauptspur bleibt davon unbeschädigt.",
+  "leistung": [
+   "Neubewertung der Option nach VIE-Entscheid (Sicherheit, Konditionen, Signalwirkung)",
+   "Entscheidungsvorlage Brücke vs. Hauptspur (inkl. Wirkung auf FIN-04-Verhandlungen)",
+   "Registrierter Entscheid + ggf. angepasstes Term Sheet Joeinig"
+  ],
+  "vorgehen": [
+   "Joeinig-Konditionen aktualisieren lassen (was gilt nach VIE noch?)",
+   "Brücken-Nutzen gegen Fallback-Plan (FIN-06) spiegeln — Brücke nur, wenn sie echten Zeitwert bringt",
+   "Entscheid mit Rohde/Fritthum vorbesprechen, dann DRS-Entscheid im Register"
+  ],
+  "beteiligte": "Owner: DRS; Mitwirkende: Rohde (Liquiditätswirkung), Clearwater (Prozess-Sicht), Legal (Wandel-Mechanik)",
+  "risiken": [
+   "VIE-Sicherheit ist faktisch entwertet — Option nicht aus Gewohnheit weiterverfolgen",
+   "Parallelität zur Hauptspur kann Investoren irritieren («warum brauchen die eine Brücke?»)"
+  ],
+  "erfolgsmessung": "Entscheid bis 28.08.2026 dokumentiert; keine offene Joeinig-Flanke in den Term-Sheet-Verhandlungen.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml FIN-05, Kickoff-Protokoll 31.07., Finanzierungs-Dossier #98 (Clearwater/Märki, 13-Wo-Liqui, Winterloch Nov-Dez), Programm-Memory · Review DRS AUSSTEHEND"
+ },
+ "FIN-06": {
+  "kontext": "Der Fallback-Plan beantwortet die eine existenzielle Frage: Wie überlebt die Gruppe den Winter 2026/27, wenn das Closing per 31.10. verrutscht? Er ist Pflicht-Bestandteil verantwortungsvoller Führung (und jeder VR-Diskussion) — kein Misstrauensvotum gegen die Hauptspur.",
+  "ziel_klartext": "Ein belastbarer Fallback-Plan sichert die Winter-Liquidität 2026/27 auch ohne Closing per 31.10. — mit konkreten, terminierten Massnahmen.",
+  "leistung": [
+   "Massnahmen-Katalog mit Cash-Wirkung und Vorlaufzeit (Zahlungssteuerung, Standstill-Gespräche, Asset-Hebel, Gesellschafter-Instrumente)",
+   "Trigger-Logik: ab wann wird welcher Baustein aktiviert (gekoppelt an FIN-01-Tiefpunkt)",
+   "Abstimmung mit dem 13-Wochen-Plan (wöchentliche Ampel Winter-Deckung)"
+  ],
+  "vorgehen": [
+   "Massnahmen sammeln und nach Cash-Wirkung × Vorlauf sortieren (Rohde-Lead)",
+   "Rechtliche/vertragliche Grenzen je Massnahme prüfen (Covenants, Lieferantenbeziehungen)",
+   "Plan im GL-Rahmen verproben; VR-Information über WS7-07/Finanzierungs-Kaskade"
+  ],
+  "beteiligte": "Owner: Stephanie Rohde (CFO); Mitwirkende: DRS (Gesellschafter-Instrumente), Pajor (Cash-Detail), Clearwater (Markt-Sicht)",
+  "risiken": [
+   "Fallback-Massnahmen (z.B. Zahlungssteuerung) können Lieferantenbeziehungen belasten — dosiert und reversibel planen",
+   "Ein bekannt gewordener Fallback kann die Hauptspur-Verhandlungsposition schwächen — Vertraulichkeit"
+  ],
+  "erfolgsmessung": "Plan bis 15.09.2026 beschlossen; Winter-Deckung in jedem 13-Wochen-Szenario nachweisbar ≥ 0.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml FIN-06, Kickoff-Protokoll 31.07., Finanzierungs-Dossier #98 (Clearwater/Märki, 13-Wo-Liqui, Winterloch Nov-Dez), Programm-Memory · Review DRS AUSSTEHEND"
+ },
+ "FIN-07": {
+  "kontext": "Die Term Sheets entscheiden über Jahre: Konditionen-Benchmark all-in 10.5-14%, Cash+PIK-Strukturen, Laufzeit 4-5 Jahre. Verhandelt wird aus dem kompetitiven Feld der Welle 1 — mit dem Swissport-Entscheid (FIN-03) als geklärter Struktur-Voraussetzung.",
+  "ziel_klartext": "Verhandelte Term Sheets liegen vor — innerhalb des Konditionen-Benchmarks, mit mindestens zwei belastbaren Optionen für den Closing-Entscheid.",
+  "leistung": [
+   "≥2 verhandelte Term Sheets (Vergleichsmatrix: Pricing, Covenants, Sicherheiten, Flexibilität)",
+   "Verhandlungsprotokoll je Adresse (was wurde bewegt, was ist hart)",
+   "Empfehlung an VR-Ebene für den Zuschlag (Kompetenzordnung: FK > 1 Mio = VR)"
+  ],
+  "vorgehen": [
+   "Erste Drafts kommen lassen, dann parallel verhandeln (nie sequenziell — Wettbewerbsdruck erhalten)",
+   "Covenant-Paket besonders prüfen (Lehre Swissport: Covenants binden länger als Pricing schmerzt)",
+   "DRS führt die Schlussverhandlung; Clearwater strukturiert; Legal reviewt vor Unterschrift"
+  ],
+  "beteiligte": "Owner: DRS; Mitwirkende: Clearwater (Prozess/Struktur), Rohde (Zahlen/Covenants), Legal (Review), Fritthum (Sparring)",
+  "risiken": [
+   "Zeitdruck Richtung 31.10. schwächt die Verhandlungsposition — deshalb Fallback (FIN-06) als BATNA aktiv halten",
+   "PIK-Anteile erleichtern den Winter, verteuern aber die Gesamtlaufzeit — bewusst abwägen"
+  ],
+  "erfolgsmessung": "Bis 30.09.2026 liegen ≥2 verhandelte Term Sheets im Benchmark-Korridor vor; Zuschlags-Empfehlung steht.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml FIN-07, Kickoff-Protokoll 31.07., Finanzierungs-Dossier #98 (Clearwater/Märki, 13-Wo-Liqui, Winterloch Nov-Dez), Programm-Memory · Review DRS AUSSTEHEND"
+ },
+ "FIN-08": {
+  "kontext": "Das Closing über EUR 15 Mio per 31.10.2026 (FIX) refinanziert die Lieferanten-Ausstände: unstrukturiertes kurzfristiges Fremdkapital wird in eine strukturierte mittel-/langfristige Finanzierung überführt. Es ist die Voraussetzung fürs Winter-Überleben und der Schlussstein des Programms Finanzierung.",
+  "ziel_klartext": "Das Closing über EUR 15 Mio ist per 31.10.2026 vollzogen; die Lieferanten-Ausstände sind refinanziert und die Winter-Liquidität steht.",
+  "leistung": [
+   "Vollzogenes Closing (Verträge unterschrieben, Auszahlung erfolgt)",
+   "Refinanzierungs-Wasserfall dokumentiert (welche Ausstände wann bedient werden)",
+   "Kommunikationspaket (Lieferanten, VR, GL) für den Tag nach dem Closing"
+  ],
+  "vorgehen": [
+   "Closing-Checkliste rückwärts vom 31.10. führen (CPs, Gremienbeschlüsse, Signing-Logistik)",
+   "Swissport-Strang (FIN-03) und Term-Sheet-Zuschlag (FIN-07) als harte Vorbedingungen abhaken",
+   "Auszahlungs-/Wasserfall-Mechanik mit Rohde vorbereiten — Tag-1-fähig"
+  ],
+  "beteiligte": "Owner: DRS; Mitwirkende: Clearwater (Execution), Rohde (Wasserfall/Buchung), Legal (Dokumentation), VR (Beschluss)",
+  "risiken": [
+   "Conditions Precedent unterschätzt — jede offene CP kann den fixen Termin reissen",
+   "Verzug aktiviert automatisch den Fallback (FIN-06) — Übergabe-Punkt klar definieren"
+  ],
+  "erfolgsmessung": "Closing am 31.10.2026 vollzogen; kurzfristige Lieferanten-Ausstände gemäss Wasserfall refinanziert.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml FIN-08, Kickoff-Protokoll 31.07., Finanzierungs-Dossier #98 (Clearwater/Märki, 13-Wo-Liqui, Winterloch Nov-Dez), Programm-Memory · Review DRS AUSSTEHEND"
+ },
+ "FIN-10": {
+  "kontext": "Die VIE-Töchter tragen Verbindlichkeiten, die bei einem Betriebsende zum Problem werden (Insolvenzrisiko einzelner Gesellschaften, Durchgriffs- und Reputationsfragen mitten im Finanzierungsprozess). Zu prüfen ist, ob und in welchem Umfang die Muttergesellschaft AAS Schulden übernimmt — als bewusster Entscheid, nicht als Automatismus.",
+  "ziel_klartext": "Die Schuldenübernahme der VIE-Töchter durch die AAS ist geprüft: rechtliche Machbarkeit, Kostenrahmen, Wirkung auf Finanzierung und Empfehlung liegen vor.",
+  "leistung": [
+   "Verbindlichkeiten-Inventar der VIE-Töchter (Gläubiger, Volumen, Fälligkeit, Besicherung)",
+   "Rechtliche Bewertung (Übernahme vs. geordnete Abwicklung je Gesellschaft; Organhaftungs-Aspekte)",
+   "Empfehlung mit Wirkung auf Finanzierungs-Story (FIN-02) und VR-Vorlage (WS7-07)"
+  ],
+  "vorgehen": [
+   "Inventar mit Pajor/Lesch erstellen; Legal-Bewertung durch die Corporate-Kanzlei (Koordination WS7-09)",
+   "Szenarien rechnen (Übernahme voll/teilweise/keine) inkl. Signalwirkung an Investoren",
+   "Empfehlung an DRS; Entscheid nach Kompetenzordnung registrieren"
+  ],
+  "beteiligte": "Owner: DRS; Mitwirkende: Pajor (Zahlen VIE), Legal/Corporate-Kanzlei, Rohde (Finanzierungs-Wirkung), Charisius (Governance)",
+  "risiken": [
+   "Insolvenz einer Tochter während des Finanzierungsprozesses wäre ein Story-Risiko — Timing der Prüfung ist Teil der Antwort",
+   "Übernahme ohne Gegenwert belastet die AAS-Bilanz — Investoren-Sicht (FIN-02) mitdenken"
+  ],
+  "erfolgsmessung": "Prüfergebnis + Empfehlung bis 14.08.2026 dokumentiert; keine ungeplante Insolvenz-Überraschung im Finanzierungsfenster.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml FIN-10, Kickoff-Protokoll 31.07., Finanzierungs-Dossier #98 (Clearwater/Märki, 13-Wo-Liqui, Winterloch Nov-Dez), Programm-Memory · Review DRS AUSSTEHEND"
+ },
+ "WS3-16": {
+  "kontext": "Die Einsparmassnahmen liegen verstreut (Elysium, VIE-Restrukturierung, Stations-Initiativen, Sachkosten-Ideen) — ohne Masterliste gibt es keine Steuerung, keine Priorisierung und Doppelzählungen im Forecast. Die konsolidierte Liste wird direkt in den FC27 eingepflegt (Frist Ende KW32 = 14.08.).",
+  "ziel_klartext": "Eine konsolidierte Einsparmassnahmen-Masterliste (Personal + Sachkosten) liegt vor und ist im FC27 eingepflegt — jede Massnahme mit Wirkung, Owner und Termin.",
+  "leistung": [
+   "Masterliste: alle Massnahmen dedupliziert, mit EUR-Wirkung p.a., Owner, Wirksamkeitstermin, Status",
+   "Kennzeichnung «bereits im FC» vs. «inkrementell» (Doppelzählungs-Schutz zu Elysium/WS7)",
+   "FC27-Einarbeitung mit Pajor abgestimmt"
+  ],
+  "vorgehen": [
+   "Quellen zusammenziehen (Elysium-Liste, WS7-Massnahmen, Stations-Inputs, Sachkosten)",
+   "Dedup + Bewertung je Massnahme; unklare Effekte als offen markieren, nie schätzen und einbuchen",
+   "Review Rohde/Pajor, dann FC27-Einpflege und monatliches Tracking im Tower"
+  ],
+  "beteiligte": "Owner: Dieter Streuli (per Kickoff); Mitwirkende: Rohde (WS3-Owner), Pajor (FC-Einpflege), Gökcöl (Stations-Massnahmen)",
+  "risiken": [
+   "Doppelzählung Elysium/WS7/FC ist das Hauptrisiko — deshalb harte Quell-Kennzeichnung je Massnahme",
+   "Masterliste ohne Owner-Disziplin degeneriert zur Ideensammlung — jede Zeile braucht Owner+Termin"
+  ],
+  "erfolgsmessung": "Masterliste bis 14.08.2026 konsolidiert und im FC27 nachvollziehbar eingepflegt (Pajor-Bestätigung).",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS3-16, Kickoff-Protokoll 31.07., Programm-Memory · Review DRS AUSSTEHEND"
+ },
+ "WS3-17": {
+  "kontext": "Mit dem möglichen VIE-Ende stellt sich die Standortfrage der Zentralfunktionen neu: Wien vs. Hamburg im direkten Miet-/Betriebskostenvergleich. Das Ergebnis speist den Finance-SSC-Entscheid (WS7-03) und die Flächen-Entscheide (WS3-18).",
+  "ziel_klartext": "Der Standort-Kostenvergleich Wien vs. Hamburg liegt vor — Miet- und Betriebskosten transparent, Einsparpotenzial beziffert.",
+  "leistung": [
+   "Kostenvergleich je Standort (Miete, Nebenkosten, Betriebskosten, per-Kopf-Arbeitsplatz)",
+   "Einsparpotenzial-Szenarien (Konsolidierung auf einen Standort vs. Mischmodell)",
+   "Input-Übergabe an WS7-03 (SSC-Standort) und WS3-18 (Flächenabbau)"
+  ],
+  "vorgehen": [
+   "Vertrags- und Kostendaten je Standort erheben (Pajor/Verwaltung)",
+   "Vergleich normalisieren (per Kopf/per m²) und Szenarien rechnen",
+   "Ergebnis mit Rohde verproben und in die Standort-Entscheide einspeisen"
+  ],
+  "beteiligte": "Owner: Stephanie Rohde; Mitwirkende: Pajor (Kostendaten), Matthei (Flächenbedarf Ops)",
+  "risiken": [
+   "Umzugs-/Doppelkosten der Übergangsphase nicht unterschlagen — Netto-Betrachtung über 24 Monate",
+   "Standortfrage ist auch Personalfrage (Wechselbereitschaft) — Zahlen allein entscheiden nicht"
+  ],
+  "erfolgsmessung": "Vergleich bis 14.08.2026 dokumentiert; Einsparpotenzial quantifiziert und in WS7-03/WS3-18 referenziert.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS3-17, Kickoff-Protokoll 31.07., Programm-Memory · Review DRS AUSSTEHEND"
+ },
+ "WS3-18": {
+  "kontext": "Nicht benötigte Büroflächen in Wien und Frankfurt kosten laufend Geld — jeder Monat Verzug bei kündbaren Verträgen ist verlorenes Einsparpotenzial. Kündigungsfristen bestimmen das Tempo; die Flächenentscheide hängen am Standortvergleich (WS3-17) und der VIE-Entwicklung.",
+  "ziel_klartext": "Nicht benötigte Büroflächen/Mietverträge (Wien, Frankfurt) sind gekündigt; alle Kündigungsfristen sind geprüft und Termine gewahrt.",
+  "leistung": [
+   "Flächen-/Vertragsinventar mit Kündigungsfristen und nächstmöglichen Ausstiegsterminen",
+   "Ausgesprochene Kündigungen (dokumentiert) für alle als entbehrlich bestätigten Flächen",
+   "Einsparwirkung p.a. in die Masterliste (WS3-16) übergeben"
+  ],
+  "vorgehen": [
+   "Inventar erstellen, Bedarf mit Matthei/Standortleitungen bestätigen (was ist wirklich entbehrlich)",
+   "Fristen prüfen (keine verpassten Termine — Kalender-Reminder je Vertrag)",
+   "Kündigungen formgerecht aussprechen; Bestätigungen ablegen"
+  ],
+  "beteiligte": "Owner: Stephanie Rohde; Mitwirkende: Pajor (Verträge), Matthei (Flächenbedarf), Standortleitungen",
+  "risiken": [
+   "Zu früh gekündigt bei unklarem VIE-Ausgang (Szenario A bräuchte Flächen) — VIE-Flächen an Szenario-Entscheid koppeln",
+   "Verpasste Kündigungsfrist = 12+ Monate Zusatzkosten — Fristen doppelt kontrollieren"
+  ],
+  "erfolgsmessung": "Alle entbehrlichen Flächen bis 31.08.2026 gekündigt; keine Frist verpasst; Einsparwirkung in WS3-16 ausgewiesen.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS3-18, Kickoff-Protokoll 31.07., Programm-Memory · Review DRS AUSSTEHEND"
+ },
+ "WS3-19": {
+  "kontext": "BER ist eine strukturelle Verlustquelle; der VR braucht am 26.08. eine belastbare Entscheidungsgrundlage mit vollständiger P&L und den drei ehrlichen Szenarien: Insolvenz, Stilllegung, Sanierung. Der Entscheid selbst ist VR-Vorbehalt — die Grundlage muss jede Option mit Kosten, Risiken und Folgewirkungen (inkl. arbeitsrechtlichem Nachlauf) zeigen.",
+  "ziel_klartext": "Die BER-Entscheidungsgrundlage für den VR 26.08. liegt vor: vollständige P&L plus durchgerechnete Szenarien Insolvenz / Stilllegung / Sanierung mit Empfehlung.",
+  "leistung": [
+   "BER-P&L transparent (inkl. ehrlicher Vollkosten-Zurechnung)",
+   "Drei Szenarien mit Einmalkosten, laufender Wirkung, Zeitachse und Risiken (inkl. Insolvenz-Folgewirkungen auf Gruppe/Kunden)",
+   "VR-taugliche Vorlage (INS-001-Standard) mit Management-Empfehlung — Beilage im VR-Paket"
+  ],
+  "vorgehen": [
+   "P&L-Basis mit Pajor/Lesch festziehen (keine Proxy-Zahlen in einer Schliessungs-Vorlage)",
+   "Szenarien mit Legal (Insolvenzrecht DE) und Charisius (Arbeitsrecht/BR) plausibilisieren",
+   "Empfehlung im GL-Rahmen vorabstimmen; Vorlage bis 19.08. final (T-5 fürs VR-Paket)"
+  ],
+  "beteiligte": "Owner: Stephanie Rohde; Mitwirkende: Pajor (Zahlen), Charisius (Arbeitsrecht), Gökcöl (Ops-Folgen), DRS (VR-Vorlage)",
+  "risiken": [
+   "Cottbus-Insolvenz-Erfahrung zeigt: Verfahren entwickeln Eigendynamik — Szenario-Annahmen konservativ setzen",
+   "Kunden-/Marktsignal einer BER-Entscheidung auf andere Stationen — Kommunikationsplan gehört zur Vorlage"
+  ],
+  "erfolgsmessung": "Vorlage am 19.08.2026 final; VR kann am 26.08. ohne Nachforderungen entscheiden.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS3-19, Kickoff-Protokoll 31.07., Programm-Memory · Review DRS AUSSTEHEND"
+ },
+ "WS3-20": {
+  "kontext": "AAS Technics braucht eine Führungskraft für Business Development / strategische Weiterentwicklung — die Wirtschaftlichkeitslage (deutlich negatives EBITDA, VR-Entscheid zur Zukunft am 26.08.) macht die Rolle zum Hebel: Ohne kommerziellen Treiber bleibt jede Sanierungsoption Theorie.",
+  "ziel_klartext": "Die Suche nach der Technics-Führungskraft (Business Development / strategische Weiterentwicklung) ist gestartet — Profil geschärft, Suchweg definiert, erste Kandidaten im Trichter.",
+  "leistung": [
+   "Rollenprofil (Auftrag, Messgrössen, Berichtslinie) abgestimmt mit dem VR-Zielbild vom 26.08.",
+   "Suchweg entschieden (Direktansprache/Berater/Netzwerk) und gestartet",
+   "Kandidaten-Pipeline mit Status"
+  ],
+  "vorgehen": [
+   "Profil aus dem Technics-Zielbild ableiten (erst Zielbild, dann Profil — nicht umgekehrt)",
+   "Suchkanäle aktivieren (Netzwerk Fritthum/DRS zuerst, dann extern)",
+   "Longlist bis Ende September; Interviews im Oktober"
+  ],
+  "beteiligte": "Owner: Andreas Fritthum; Mitwirkende: DRS (Netzwerk/Profil), Charisius (HR-Prozess), Technics-Leitung",
+  "risiken": [
+   "Suche vor dem VR-Entscheid 26.08. läuft Gefahr, ein Profil für eine Struktur zu suchen, die der VR ändert — Profil nach VR ggf. nachschärfen",
+   "Technics-Lage macht die Rolle schwer verkäuflich — ehrliche Story plus klarer Gestaltungsauftrag nötig"
+  ],
+  "erfolgsmessung": "Suche bis 30.09.2026 nachweislich gestartet (Profil + aktiver Suchweg + erste Kandidaten).",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS3-20, Kickoff-Protokoll 31.07., Programm-Memory · Review DRS AUSSTEHEND"
+ },
+ "WS4-13": {
+  "kontext": "Das Aerologic-Angebot ist gemäss den besprochenen Preisvorgaben zu finalisieren und zu versenden — ein konkreter Commercial-Abschluss aus dem Kickoff (Frist 31.07., damit der früheste Meilenstein des Stroms). Disziplin-Punkt: Angebot exakt in den vereinbarten Leitplanken, keine Ad-hoc-Rabatte.",
+  "ziel_klartext": "Das Aerologic-Angebot ist gemäss den besprochenen Preisvorgaben finalisiert und versendet.",
+  "leistung": [
+   "Finalisiertes Angebot (Preise gemäss Vorgabe, Leistungsumfang eindeutig)",
+   "Versand dokumentiert + Follow-up-Termin gesetzt",
+   "CRM-Eintrag aktualisiert (Datenehrlichkeit: Status, Volumen, Wahrscheinlichkeit)"
+  ],
+  "vorgehen": [
+   "Angebot gegen die Preisvorgaben prüfen (Vier-Augen: Haeffner + Commercial-Team)",
+   "Versand + aktives Nachfassen (T+5); Ergebnis in den Wochen-Report"
+  ],
+  "beteiligte": "Owner: Michael Haeffner (CCO); Mitwirkende: Commercial-Team, DRS (Preisvorgaben)",
+  "risiken": [
+   "Abweichung von den Preisvorgaben ohne Rücksprache würde die neue Entscheidungsdisziplin (Kompetenzordnung) direkt am ersten Fall verletzen"
+  ],
+  "erfolgsmessung": "Angebot versendet (Frist 31.07.2026); Follow-up terminiert; CRM aktuell.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS4-13, Kickoff-Protokoll 31.07., Programm-Memory · Review DRS AUSSTEHEND"
+ },
+ "WS4-14": {
+  "kontext": "Beim Master-Vendor-Verhältnis läuft eine Nachverhandlung mit hartem Stichtag: Einigung bis 12.08. — sonst Kündigung. Das Kündigungsschreiben muss versandbereit vorliegen, damit der Stichtag glaubwürdig ist; eine leere Drohung wäre schlechter als keine.",
+  "ziel_klartext": "Das Kündigungsschreiben Master Vendor ist juristisch geprüft versandbereit; bei Nicht-Einigung bis zum Stichtag 12.08. wird es ohne weitere Schleife versendet.",
+  "leistung": [
+   "Versandfertiges, juristisch geprüftes Kündigungsschreiben (Fristen/Form gewahrt)",
+   "Entscheidungsregel dokumentiert: Was gilt als «Einigung» bis 12.08., wer löst den Versand aus",
+   "Folgeplan bei Kündigung (Alternativ-Abdeckung, Übergangsbetrieb)"
+  ],
+  "vorgehen": [
+   "Vertragslage prüfen (Kündigungsfrist, Form, Zugangsnachweis) — Legal-Review",
+   "Verhandlungslinie bis 12.08. mit Haeffner synchron halten (eine Stimme)",
+   "Bei Nicht-Einigung: Versand am Stichtag, dokumentiert; bei Einigung: Ergebnis registrieren (Kompetenzordnung beachten)"
+  ],
+  "beteiligte": "Owner: Dieter Streuli (per Kickoff); Mitwirkende: Haeffner (Verhandlung), Legal (Schreiben), Matthei (operative Folgen)",
+  "risiken": [
+   "Stichtag ohne Konsequenz beschädigt jede künftige Verhandlungsposition — Auslöseregel vorher fixieren",
+   "Operative Lücke nach Kündigung — Übergangsplan muss vor dem 12.08. stehen"
+  ],
+  "erfolgsmessung": "Schreiben bis 12.08.2026 versandbereit; Stichtag-Regel schriftlich; keine ungeplante Abdeckungslücke.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS4-14, Kickoff-Protokoll 31.07., Programm-Memory · Review DRS AUSSTEHEND"
+ },
+ "WS6-13": {
+  "kontext": "Die Cloud-basierte Chief-of-Staff-Plattform (Claude-basiert) wird fürs GL-Team ausgerollt — jedes GL-Mitglied erhält seine Arbeitsumgebung (Phase-1-Architektur: Claude Code + Drive-Memory je Person). Das ist der erste breite KI-Rollout der Gruppe und Vorbild für die AI-First-Ambition; Compliance-Rahmen (INS-009, Mac-Hardening, Datenklassen) gilt ab Tag 1.",
+  "ziel_klartext": "Die Cloud-CoS-Plattform ist für alle GL-Mitglieder eingerichtet und einsatzbereit — je Person eine lauffähige Umgebung mit Speicher, Zugriffen und Grundkonfiguration.",
+  "leistung": [
+   "Eingerichtete Umgebung je GL-Mitglied (Zugang, Drive-Memory, Grundkonfiguration, Endgeräte-Check Mac/PC)",
+   "Onboarding-Unterlagen bereit (GL-Onboarding-Manual als Basis)",
+   "Support-/Eskalationsweg definiert (wer hilft bei Problemen)"
+  ],
+  "vorgehen": [
+   "Rollout-Reihenfolge festlegen (Pilot Fritthum zuerst, dann übrige GL)",
+   "Je Mitglied: Einrichtung + kurzer Funktionstest mit realem Anwendungsfall",
+   "Compliance-Checkliste je Setup (Datenklassen, Zugriffe) abhaken"
+  ],
+  "beteiligte": "Owner: Tine Petric; Mitwirkende: Gordon/Didit (Infrastruktur), DRS (Vorbild-Setup/CoS-Blaupause), Charisius (Compliance-Rahmen)",
+  "risiken": [
+   "Tine startet erst am 10.08. — enge Kette bis 31.08.; Vorarbeiten (Zugänge, Geräte) parallel erledigen",
+   "Gemischte Endgeräte-Landschaft (Mac/PC, Intune) kann einzelne Rollouts verzögern",
+   "Rollout ohne echten Anwendungsfall je Person erzeugt tote Accounts — Einrichtung mit erstem Use Case verbinden"
+  ],
+  "erfolgsmessung": "Alle GL-Mitglieder haben bis 31.08.2026 eine getestete, einsatzbereite Umgebung.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS6-13, Kickoff-Protokoll 31.07., Programm-Memory · Review DRS AUSSTEHEND"
+ },
+ "WS6-14": {
+  "kontext": "Eine eingerichtete Plattform ohne Befähigung bleibt Deko: Die GL wird strukturiert geschult (aufbauend auf WS6-13 und dem GL-Onboarding-Manual mit vorbereiteten Prompts/Use Cases). Ziel ist Arbeitsfähigkeit im Alltag — nicht Theorie: Jedes GL-Mitglied verlässt die Schulung mit laufenden eigenen Anwendungsfällen.",
+  "ziel_klartext": "Das GL-Team ist in der KI-Arbeitsplattform geschult — jedes Mitglied arbeitet mit mindestens zwei eigenen, realen Anwendungsfällen produktiv.",
+  "leistung": [
+   "Durchgeführte Schulung(en) mit Praxis-Anteil (eigene Use Cases statt Demo)",
+   "Je GL-Mitglied ≥2 dokumentierte eigene Anwendungsfälle in Betrieb",
+   "Feedback-/Vertiefungsplan (Folgesessions, Office Hours)"
+  ],
+  "vorgehen": [
+   "Format festlegen (Kleingruppen/1:1, je 90 Min Praxis) und terminieren",
+   "Onboarding-Manual + Prompt-Bibliothek als Kursmaterial nutzen; Fälle je Ressort vorbereiten",
+   "4 Wochen nach Schulung: Nutzungs-Check und Nachfassen bei Nicht-Nutzern"
+  ],
+  "beteiligte": "Owner: Tine Petric; Mitwirkende: DRS (Sponsor/Vorbild), GL-Mitglieder, Gordon (technischer Support)",
+  "risiken": [
+   "Adoption ist das eigentliche Risiko, nicht Technik — Chef-Nutzung (DRS/Gökcöl sichtbar) ist der stärkste Treiber",
+   "Schulung vor stabiler Plattform (WS6-13) frustriert nachhaltig — Reihenfolge hart einhalten"
+  ],
+  "erfolgsmessung": "Bis 15.09.2026 alle GL-Mitglieder geschult; ≥2 aktive Use Cases pro Person im 4-Wochen-Check.",
+  "grounding": "KI-ENTWURF 01.08.2026 (CoS) — Quellen: projekt.yaml WS6-14, Kickoff-Protokoll 31.07., Programm-Memory · Review DRS AUSSTEHEND"
  }
 }
