@@ -20,6 +20,7 @@ const OK_ORIGINS = [
   'http://localhost:8621', 'http://127.0.0.1:8621',
   'https://macbook-air-von-dieter.tail018620.ts.net:8621', // Tailnet-Zugang (Andreas etc.)
   'https://macbook-air-von-dieter.tail018620.ts.net',      // portlose URL (serve 443, 14.07.)
+  'https://rubicon.axs.aero',                              // Gateway-Deployment hinter Google IAP (01.08.)
 ]
 
 function readBody(req) {
