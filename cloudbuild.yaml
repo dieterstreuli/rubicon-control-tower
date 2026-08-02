@@ -1,0 +1,51 @@
+# Cloud Build — Auto-Deploy des RUBICON Control Tower nach Cloud Run (02.08.2026).
+#
+# ZWECK: Heute wird rubicon.axs.aero NICHT automatisch aktualisiert — ein Push
+# landet nur im Repo, das Deployment macht Didit/Gordon von Hand. Mit dieser
+# Datei genügt EIN Trigger in Gordons GCP-Projekt (Push auf main → Build → Deploy).
+#
+# EINMALIG durch Didit/Gordon einzurichten:
+#   gcloud builds triggers create github \
+#     --name=rubicon-tower-main \
+#     --repo-owner=diditgmbh --repo-name=<Deploy-Repo> --branch-pattern=^main$ \
+#     --build-config=cloudbuild.yaml
+#
+# ⚠️ VORHER KLÄREN (Persistenz): Der Tower SCHREIBT in src/data (projekt.yaml,
+# tasks.json, entscheide.json, protokolle.json). Ein Cloud-Run-Container hat ein
+# flüchtiges Dateisystem — ohne Volume gehen alle Schreibvorgänge beim nächsten
+# Deploy/Neustart verloren und mehrere Instanzen divergieren. Optionen:
+#   (a) Instanz READ-ONLY betreiben (Anzeige für GL/VR; Schreiben bleibt beim CoS)
+#   (b) GCS-Bucket via gcsfuse mounten + max-instances=1
+#   (c) Datenhaltung nach Firestore/DB migrieren (grösserer Umbau)
+# Empfehlung bis zur Klärung: (a) — plus max-instances=1.
+substitutions:
+  _SERVICE: rubicon-tower
+  _REGION: europe-west6          # Zürich
+  _ORIGINS: https://rubicon.axs.aero
+
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ['build', '-t', '${_REGION}-docker.pkg.dev/$PROJECT_ID/rubicon/${_SERVICE}:$SHORT_SHA',
+           '-t', '${_REGION}-docker.pkg.dev/$PROJECT_ID/rubicon/${_SERVICE}:latest', '.']
+
+  - name: gcr.io/cloud-builders/docker
+    args: ['push', '--all-tags', '${_REGION}-docker.pkg.dev/$PROJECT_ID/rubicon/${_SERVICE}']
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE}
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/rubicon/${_SERVICE}:$SHORT_SHA
+      - --region=${_REGION}
+      - --platform=managed
+      - --port=8080
+      - --max-instances=1            # Schreib-Divergenz vermeiden (s. Hinweis oben)
+      - --no-allow-unauthenticated   # Zugang ausschliesslich über IAP (#99)
+      - --set-env-vars=RUBICON_ORIGINS=${_ORIGINS}
+
+images:
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/rubicon/${_SERVICE}:$SHORT_SHA'
+options:
+  logging: CLOUD_LOGGING_ONLY

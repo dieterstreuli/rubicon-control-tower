@@ -1,0 +1,7 @@
+node_modules
+dist
+.git
+*.log
+scripts/_briefing_html
+# Sensitiv-Store gehört NIE ins Image (bleibt auf dem DRS-Gerät)
+src/data/protokolle_sensitiv.json
