@@ -6,2507 +6,2521 @@ meta:
   nachlauf_end: '2027-06-30'
   hard_edge: '2027-06-30'
   owners:
-    - Amélie Charisius
-    - Andreas Fritthum
-    - Cüneyt Gökcöl
-    - Dieter Streuli
-    - Florian Matthei
-    - Michael Haeffner
-    - Stephanie Rohde
-    - Thomas Pajor
-    - Tine Petric
-    - Jörg Ehlers
+  - Amélie Charisius
+  - Andreas Fritthum
+  - Cüneyt Gökcöl
+  - Dieter Streuli
+  - Florian Matthei
+  - Michael Haeffner
+  - Stephanie Rohde
+  - Thomas Pajor
+  - Tine Petric
+  - Jörg Ehlers
   programme:
-    - id: transformation
-      name: Transformation 2026/27 (Programm RUBICON)
-      status: aktiv
-      start: '2026-09-01'
-      ende: '2027-04-30'
-    - id: finanzierung-2026
-      name: Finanzierung AXS 2026 (EUR 15 Mio)
-      status: aktiv
-      start: '2026-07-02'
-      ende: '2026-10-31'
+  - id: transformation
+    name: Transformation 2026/27 (Programm RUBICON)
+    status: aktiv
+    start: '2026-09-01'
+    ende: '2027-04-30'
+  - id: finanzierung-2026
+    name: Finanzierung AXS 2026 (EUR 15 Mio)
+    status: aktiv
+    start: '2026-07-02'
+    ende: '2026-10-31'
   default_programm: transformation
   datenlieferungen_url: https://drive.google.com/drive/folders/1Ayrl95zUeO25skpvhMF6qlNOTHTG4DKC
 workstreams:
-  - code: WS1
-    name: Accountability & Target Operating Model (TOM)
+- code: WS1
+  name: Accountability & Target Operating Model (TOM)
+  owner: Andreas Fritthum
+  support: Charisius, Rohde, Pajor, DRS (Design-/Governance-Rahmen)
+  milestones:
+  - id: WS1-01
+    name: Systemlandkarte + Zielsystem-Entscheid je Ops-Bereich (konsolidieren vs. KI-Ersatz)
+    owner: Florian Matthei
+    start: '2026-08-14'
+    due: '2026-09-07'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS1-02
+    name: Baseline-Datenpaket WS1 inkl. Finance-Kompetenz-Assessment (VIE↔HAM kartiert)
+    owner: Stephanie Rohde
+    start: '2026-09-30'
+    due: '2026-10-15'
+    date_assumed: false
+    phase: Phase 0
+    gate: G2
+    critical: true
+    progress: 0
+    depends_on:
+    - OE-01
+    nachlauf: false
+    progress_source: tasks
+  - id: WS1-03
+    name: Organigramm v2 publiziert (GL=6, Charisius→CEO, Fritthum=Vice Chairman)
     owner: Andreas Fritthum
-    support: Charisius, Rohde, Pajor, DRS (Design-/Governance-Rahmen)
-    milestones:
-      - id: WS1-01
-        name: Systemlandkarte + Zielsystem-Entscheid je Ops-Bereich (konsolidieren vs. KI-Ersatz)
-        owner: Florian Matthei
-        start: '2026-08-14'
-        due: '2026-09-07'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS1-02
-        name: Baseline-Datenpaket WS1 inkl. Finance-Kompetenz-Assessment (VIE↔HAM kartiert)
-        owner: Stephanie Rohde
-        start: '2026-09-30'
-        due: '2026-10-15'
-        date_assumed: false
-        phase: Phase 0
-        gate: G2
-        critical: true
-        progress: 0
-        depends_on:
-          - OE-01
-        nachlauf: false
-        progress_source: tasks
-      - id: WS1-03
-        name: Organigramm v2 publiziert (GL=6, Charisius→CEO, Fritthum=Vice Chairman)
-        owner: Andreas Fritthum
-        start: '2026-09-25'
-        due: '2026-10-31'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS1-04
-        name: Org-Entscheid Verwaltung/Finance + §613a-Vorbereitung; eine CFO-Mailbox; GL auf @axs.aero
-        owner: Andreas Fritthum
-        start: '2026-09-18'
-        due: '2026-10-31'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS1-05
-        name: 'Job-Descriptions-Kaskade final: 6 GL-Rollen + Vice-Chairman-Abgrenzung (aus Chairman-2-Pager)'
-        owner: Andreas Fritthum
-        start: '2026-09-04'
-        due: '2026-10-31'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS1-06
-        name: RACI-Charta als INS-001-Anlage (10 Entscheidungstypen) in Kraft; INS-001-Punkte geschlossen
-        owner: Amélie Charisius
-        start: '2026-10-09'
-        due: '2026-11-30'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS1-07
-        name: P&L-Owner-Matrix 100% mit unterschriebener Zielvereinbarung je Einheit (43 LE / ~15 Stationen)
-        owner: Andreas Fritthum
-        start: '2026-10-09'
-        due: '2026-12-31'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS1-08
-        name: TOM-Blueprint VR-genehmigt (≡ Elysium 2.0, Q4-VR, Pre-Read T−14)
-        owner: Andreas Fritthum
-        start: '2026-11-06'
-        due: '2026-12-31'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: true
-        progress: 0
-        depends_on:
-          - WS3-05
-        nachlauf: false
-        progress_source: tasks
-      - id: WS1-09
-        name: Eine Finance-Linie operativ (cross-border AT↔DE; §613a-Widerspruchsfrist abgelaufen)
-        owner: Stephanie Rohde
-        start: '2026-10-30'
-        due: '2027-01-31'
-        date_assumed: true
-        phase: Phase 2
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS1-10
-        name: DE-GF-Entflechtung Welle 1 im Handelsregister (DRS 18→≤5; Interim Prokuren)
-        owner: Amélie Charisius
-        start: '2026-11-30'
-        due: '2027-02-28'
-        date_assumed: true
-        phase: Phase 2
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS1-11
-        name: HR-Zielorganisation streamlined + ShAir/HR-Schnittstelle geklärt (nur Struktur-Ebene)
-        owner: Amélie Charisius
-        start: '2026-10-30'
-        due: '2027-02-28'
-        date_assumed: true
-        phase: Phase 2
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS1-12
-        name: IT-/Didit-Zielorganisation bereinigt (Governance, Sourcing-Entscheid, Bus-Faktor entschärft)
-        owner: Andreas Fritthum
-        start: '2026-10-30'
-        due: '2027-02-28'
-        date_assumed: true
-        phase: Phase 2
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS1-13
-        name: 'Zielnachweis WS1: Org vollzogen, Doppelspurigkeiten ≥5/6, DRS ≤5 Mandate, Übergabe in die Linie'
-        owner: Andreas Fritthum
-        start: '2027-03-15'
-        due: '2027-04-30'
-        date_assumed: true
-        phase: Phase 3
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS1-14
-        name: 'Nachlauf: Entity-Portfolio-Bereinigung inkl. ZRH-Vollzug (Art. 335f–k OR)'
-        owner: Amélie Charisius
-        start: '2027-03-31'
-        due: '2027-06-30'
-        date_assumed: true
-        phase: Nachlauf Q2/27
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: true
-        progress_source: tasks
-    programm: transformation
-  - code: WS2
-    name: Führungsprozesse & Management Operating System (MOS)
-    owner: Andreas Fritthum
-    support: CEO-Office (Tracker-Betrieb), Rohde, Matthei, Charisius, Petric; Umsetzungsmotor CGO
-    milestones:
-      - id: WS2-01
-        name: GL bereinigt = 6 publiziert; Ebenen-Trennung GL / Vice Chairman / Chairman («5 vs. 7» aufgelöst)
-        owner: Andreas Fritthum
-        start: '2026-08-14'
-        due: '2026-09-18'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS2-02
-        name: 'Führungsrhythmus scharf: Standing-Traktandum, Entscheids-Queue + GL-Norm, 13-Wo-Liquidität wöchentlich'
-        owner: Andreas Fritthum
-        start: '2026-08-14'
-        due: '2026-10-07'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS2-03
-        name: 'Baseline WS2 erhoben: Execution-Rate, Durchlaufzeit, Ist-Meetingzeit, Reporting-Pünktlichkeit'
-        owner: Andreas Fritthum
-        start: '2026-08-21'
-        due: '2026-10-15'
-        date_assumed: false
-        phase: Phase 0
-        gate: G2
-        critical: true
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS2-04
-        name: Gruppen-Commitment-Tracker live (Backbone aller 7 Ströme; Konsequenz-Mechanik scharf)
-        owner: Andreas Fritthum
-        start: '2026-09-11'
-        due: '2026-10-31'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS2-05
-        name: 'Cutover Chairman-Aufträge-Tracker: read-only-Filter A–D; Do-18:00-Serie aufgegangen, kein Parallelbetrieb'
-        owner: Andreas Fritthum
-        start: '2026-10-09'
-        due: '2026-10-31'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS2-06
-        name: Entscheids-Queue live (Liegedauer, Erzwingung ab Schwelle) + VR-Pre-Read T−14 + Beschluss-Tracking
-        owner: Andreas Fritthum
-        start: '2026-10-30'
-        due: '2026-11-30'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS2-07
-        name: Entscheids-Kaskade als INS-001 Anhang B in Kraft; Eskalationsmatrix v1.0 publiziert
-        owner: Amélie Charisius
-        start: '2026-10-30'
-        due: '2026-11-30'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS2-08
-        name: Ops-Performance-Review-Format Top-6 + Commitment-Board GL/Directors live; Konsequenz-Regelwerk geprüft
-        owner: Florian Matthei
-        start: '2026-10-16'
-        due: '2026-11-30'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS2-09
-        name: MOS-Handbuch v1.0 als Konzernrichtlinie; Monthly Report erstmals ≤20. inkl. 13-Wo-Liquidität
-        owner: Andreas Fritthum
-        start: '2026-11-20'
-        due: '2026-12-31'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS2-10
-        name: Shift-Huddle-Pilot 2 Stationen (1 CH + 1 DE; VIE erst nach BVD-Entscheid)
-        owner: Florian Matthei
-        start: '2026-10-30'
-        due: '2027-01-31'
-        date_assumed: true
-        phase: Phase 2
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS2-11
-        name: Execution-Rate ≥80% + Kadenz-Compliance ≥95% erreicht
-        owner: Andreas Fritthum
-        start: '2026-12-18'
-        due: '2027-02-28'
-        date_assumed: true
-        phase: Phase 2
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS2-12
-        name: Chairman-Automationen in GL-Betrieb (Vertex-Stack) überführt — SPoF DRS-Mac beseitigt
-        owner: Tine Petric
-        start: '2026-09-30'
-        due: '2027-02-28'
-        date_assumed: true
-        phase: Phase 2
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS2-13
-        name: Execution ≥90% über 2 Monate; Reporting-Vollausbau Art. 963 OR; Shift-Huddle-Rollout alle Stationen
-        owner: Andreas Fritthum
-        start: '2027-02-12'
-        due: '2027-04-30'
-        date_assumed: true
-        phase: Phase 3
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS2-14
-        name: MOS-Audit bestanden (Chairman-Unabhängigkeit) → Übergabe in die Linie; Schlussbericht GL/VR
-        owner: Andreas Fritthum
-        start: '2027-02-26'
-        due: '2027-04-30'
-        date_assumed: true
-        phase: Phase 3
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS2-15
-        name: 'Programm-Freigabe Steuerungs-Trio: DRS/AFR/CGO analysieren alle WS + Handlungen, geben frei bzw. passen an'
-        owner: Dieter Streuli
-        start: '2026-08-19'
-        due: '2026-08-19'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: true
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS2-16
-        name: 'WS-Freigabe aller Verantwortlichen: jede/r analysiert eigenen Strom + Handlungen, gibt frei bzw. passt an'
-        owner: Andreas Fritthum
-        start: '2026-08-03'
-        due: '2026-08-14'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: true
-        progress: 0
-        depends_on:
-          - WS2-15
-        nachlauf: false
-        progress_source: tasks
-      - id: WS2-17
-        name: 'Commitment RUBICON-Plan: Read & Sign aller Verantwortlichen (Plan verbindlich einhalten)'
-        owner: Dieter Streuli
-        start: '2026-08-28'
-        due: '2026-08-28'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: true
-        progress: 0
-        depends_on:
-          - WS2-15
-          - WS2-16
-        nachlauf: false
-        progress_source: tasks
-    programm: transformation
-  - code: WS3
-    name: Overhead, Kosten & Kostenführerschaft
-    owner: Stephanie Rohde
-    support: Pajor, AFR (Finanz-Challenge + AAS-Technics-Turnaround), Wüst, Charisius
-    milestones:
-      - id: WS3-01
-        name: 'Sofortpaket cash-neutral: Interims-Zentralkostendeckel, Berater-Freeze >EUR 25k, P&L-Interimsliste 100%'
-        owner: Stephanie Rohde
-        start: '2026-09-11'
-        due: '2026-09-30'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS3-15
-        name: 'BER + AAS Technics: strategischer Go/No-Go «drehen oder raus» (VR 26.08.) — beschlussreife Vorlage mit Zahlengrundlage'
-        owner: Dieter Streuli
-        start: '2026-08-14'
-        due: '2026-08-24'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-      - id: WS3-02
-        name: 'Umsetzungs-Kickoff Gates AAS Technics + BER + MUC: §17/§18-Schwellenprüfung, §613a-Check, MUC geklärt'
-        owner: Andreas Fritthum
-        start: '2026-09-11'
-        due: '2026-09-30'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on:
-          - WS3-15
-        nachlauf: false
-        progress_source: tasks
-      - id: WS3-03
-        name: 'Baseline-Datenpaket komplett + Diagnose-Review GL: Zielwerte validiert (−30%/−5%/−50%/−20%)'
-        owner: Stephanie Rohde
-        start: '2026-09-12'
-        due: '2026-10-15'
-        date_assumed: false
-        phase: Phase 0
-        gate: G2
-        critical: true
-        progress: 0
-        depends_on:
-          - OE-01
-        nachlauf: false
-        progress_source: tasks
-      - id: WS3-04
-        name: Overhead-Baseline-Report final (echte Holding-Kostenbasis ersetzt Recharge-Proxy)
-        owner: Stephanie Rohde
-        start: '2026-10-20'
-        due: '2026-10-31'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS3-05
-        name: 'Finanzierungs-Closing (G6): cash-wirksame Schritte ab jetzt zulässig; BER-Disclosure in Closing-Doku'
-        owner: Stephanie Rohde
-        start: '2026-08-14'
-        due: '2026-10-31'
-        date_assumed: false
-        phase: Phase 1
-        gate: G6
-        critical: true
-        progress: 0
-        depends_on:
-          - WS3-03
-        nachlauf: false
-        progress_source: tasks
-      - id: WS3-06
-        name: 'Externe-Kosten-Programm: Spend-Baseline (6 Kanzleien/3 WP) + Einkaufsbündelung 14 Stationen gestartet'
-        owner: Amélie Charisius
-        start: '2026-09-18'
-        due: '2026-10-31'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS3-07
-        name: Finaler Zentralkosten-Deckel (nach Baseline) + Zero-based-Zielorganisation GL-beschlossen
-        owner: Stephanie Rohde
-        start: '2026-11-13'
-        due: '2026-12-31'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS3-08
-        name: Verlustbringer-Beschlussvorlagen AAS Technics + BER beschlussreif «drehen vs. eliminieren»; MUC-Fahrplan
-        owner: Stephanie Rohde
-        start: '2026-11-13'
-        due: '2026-12-31'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS3-09
-        name: 'Staff-Cost-Quick-Wins flächig: Krankenstand-Transparenz + Arbeitszeitkonten/Überstunden-Monitoring'
-        owner: Amélie Charisius
-        start: '2026-11-30'
-        due: '2027-02-28'
-        date_assumed: true
-        phase: Phase 2
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS3-10
-        name: Station-P&L + Cost-per-Turn alle Stationen monatlich live; Reporting 3. Monat pünktlich
-        owner: Stephanie Rohde
-        start: '2026-11-13'
-        due: '2027-02-28'
-        date_assumed: true
-        phase: Phase 2
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS3-11
-        name: 'ZRH-Residual: fixer Endtermin fixiert (Art. 335f–k OR nach Headcount-Baseline; PR-Vorlauf)'
-        owner: Cüneyt Gökcöl
-        start: '2026-11-16'
-        due: '2027-02-28'
-        date_assumed: true
-        phase: Phase 2
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: WS3-12
-        name: 'AAS Technics + BER: Restrukturierung eingeleitet (§111/§17-Anzeige, Kündigungsausspruch gestartet)'
-        owner: Andreas Fritthum
-        start: '2027-01-29'
-        due: '2027-03-31'
-        date_assumed: true
-        phase: Phase 2
-        gate: G4
-        critical: true
-        progress: 0
-        depends_on:
-          - WS1-08
-        nachlauf: false
-        progress_source: tasks
-      - id: WS3-13
-        name: 'Zielbild-Nachweis Kosten: Zentralkosten −30%, externe Kosten −20%; Einsparungs-Brücke CFO-testiert'
-        owner: Stephanie Rohde
-        start: '2027-04-09'
-        due: '2027-04-30'
-        date_assumed: true
-        phase: Phase 3
-        gate: null
-        critical: true
-        progress: 0
-        depends_on:
-          - WS3-12
-        nachlauf: false
-        progress_source: tasks
-      - id: WS3-14
-        name: 'Nachlauf: BER + AAS Technics wirksam; Verlustquellen-Run-Rate −50%; EBITDA-Run-Rate ≥12''372 (Gate 2 AI)'
-        owner: Stephanie Rohde
-        start: '2027-04-30'
-        due: '2027-06-30'
-        date_assumed: true
-        phase: Nachlauf Q2/27
-        gate: null
-        critical: true
-        progress: 0
-        depends_on:
-          - WS3-12
-        nachlauf: true
-        progress_source: tasks
-      - id: WS3-16
-        name: Einsparmassnahmen-Masterliste (Personal + Sachkosten) konsolidiert und in FC27 eingepflegt (bis Ende KW32)
-        owner: Dieter Streuli
-        start: '2026-07-31'
-        due: '2026-08-14'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: true
-        progress: 0
-        depends_on: []
-        nachlauf: false
-      - id: WS3-17
-        name: Standort-Kostenvergleich Wien vs. Hamburg (Miet-/Betriebskosten) — Einsparpotenzial ermittelt
-        owner: Stephanie Rohde
-        start: '2026-07-31'
-        due: '2026-08-14'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-      - id: WS3-18
-        name: Nicht benötigte Büroflächen/Mietverträge gekündigt (Wien, Frankfurt); Kündigungsfristen geprüft
-        owner: Stephanie Rohde
-        start: '2026-07-31'
-        due: '2026-08-31'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-      - id: WS3-19
-        name: BER-Entscheidungsgrundlage für VR 26.08. erstellt (P&L + Szenarien Insolvenz / Stilllegung / Sanierung)
-        owner: Stephanie Rohde
-        start: '2026-07-31'
-        due: '2026-08-19'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: true
-        progress: 0
-        depends_on: []
-        nachlauf: false
-      - id: WS3-20
-        name: Führungskraft AAS Technics (Business Development / strategische Weiterentwicklung) — Suche gestartet
-        owner: Andreas Fritthum
-        start: '2026-07-31'
-        due: '2026-09-30'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        support: Amélie Charisius
-    programm: transformation
-  - code: OE
-    name: Operational Excellence / Stabilisierung
-    owner: Cüneyt Gökcöl
-    support: Matthei (Delivery/Ops-Lead), Pajor, Charisius, Petric
-    milestones:
-      - id: OE-01
-        name: 'Datenzugangs-Gate G1: EPG-GHS + Looker/FTE erteilt oder Eskalation Stufe 3 (Interim AHM-730-Rohdaten)'
-        owner: Thomas Pajor
-        start: '2026-08-14'
-        due: '2026-09-12'
-        date_assumed: false
-        phase: Phase 0
-        gate: G1
-        critical: true
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: OE-02
-        name: 'OE-Kickoff: Scorecard-Design 5–6 KPIs/Station gerahmt; «Top-3 ungeregelte Prozesse» von CGO benannt'
-        owner: Cüneyt Gökcöl
-        start: '2026-08-31'
-        due: '2026-09-30'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: OE-03
-        name: Ops-KPI-Extrakt 3 Pilotstationen (DUS Ramp, VIE, MUC)
-        owner: Florian Matthei
-        start: '2026-09-15'
-        due: '2026-10-31'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: false
-        progress: 0
-        depends_on:
-          - OE-01
-        nachlauf: false
-        progress_source: tasks
-      - id: OE-04
-        name: 'Ops-Excellence-Scorecard v1.0 definiert: Zielwerte je Station, aggregiert (mitbestimmungskonform)'
-        owner: Florian Matthei
-        start: '2026-11-06'
-        due: '2026-11-30'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: OE-05
-        name: Scorecard monatlich produktiv Top-6 Verluststationen im Ops-Performance-Review
-        owner: Florian Matthei
-        start: '2026-11-16'
-        due: '2026-11-30'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: OE-06
-        name: 'Scorecard-Baseline alle ~15 Stationen erhoben und eingefroren (G7-Referenz: SLA ≥ Baseline)'
-        owner: Florian Matthei
-        start: '2026-11-30'
-        due: '2026-12-31'
-        date_assumed: true
-        phase: Phase 1
-        gate: G7
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: OE-07
-        name: 'SLA-Schutzschirm live: Frühwarn-Trigger + Auto-Eskalation je Station (SGHA Annex B §9, VIE priorisiert)'
-        owner: Florian Matthei
-        start: '2026-12-15'
-        due: '2026-12-31'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: OE-08
-        name: Ops-Analytics als AI@AXS-Use-Case an WS6 übergeben (Scorecard-Daten als früher Anwendungsfall)
-        owner: Florian Matthei
-        start: '2027-01-15'
-        due: '2027-02-28'
-        date_assumed: true
-        phase: Phase 2
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: OE-09
-        name: 'Scorecard flächendeckend: alle ~15 Stationen monatlich produktiv'
-        owner: Florian Matthei
-        start: '2027-01-15'
-        due: '2027-03-31'
-        date_assumed: true
-        phase: Phase 2
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: OE-10
-        name: 'Zielnachweis Betriebs-Exzellenz: SLA ≥ M1-Baseline, 0 SLA-Strafen-/Kündigungsereignisse, Safety 0 kritisch'
-        owner: Cüneyt Gökcöl
-        start: '2027-04-16'
-        due: '2027-04-30'
-        date_assumed: true
-        phase: Phase 3
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        progress_source: tasks
-      - id: OE-11
-        name: 'Nachlauf: personenbezogene Ops-KPIs/Shift-Fill-Massnahmen nach BV (DE §87 / AT §96) umgesetzt'
-        owner: Amélie Charisius
-        start: '2027-01-29'
-        due: '2027-06-30'
-        date_assumed: true
-        phase: Nachlauf Q2/27
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: true
-        progress_source: tasks
-    programm: transformation
-  - code: WS4
-    name: Commercial & Kundennähe (inkl. Commercial-Masterplan 1:1)
-    owner: Michael Haeffner
-    support: >-
-      AFR (harte Verhandlungen Eurowings/LH) · Matthei (Ops-KPI-Munition, Deputy) · Petric (CRM-/AI-Anbindung E10) · DRS (Tier-A-Touchpoints, Steuerung/Kontrolle) · Masterplan-Quelle:
-      crm/cockpit/masterplan.json (43 MS, nie von Hand editieren)
-    milestones:
-      - id: WS4-01
-        name: 'Kunden-Schutzschirm live (CRM :8600): Renewal-Status validiert, <120-Tage-Alert, Datenehrlichkeit'
-        owner: Michael Haeffner
-        start: '2026-09-01'
-        due: '2026-09-30'
-        critical: false
-        date_assumed: false
-        nachlauf: false
-        phase: Phase 0
-        gate: null
-        progress: 0
-        depends_on:
-          - M03
-        progress_source: tasks
-      - id: WS4-02
-        name: CRM-Datenqualitäts-Stand im Baseline-Datenpaket geliefert (Diagnose-Review GL)
-        owner: Michael Haeffner
-        start: '2026-09-25'
-        due: '2026-10-15'
-        critical: true
-        date_assumed: false
-        nachlauf: false
-        phase: Phase 0
-        gate: G2
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS4-04
-        name: 'D2: Eurowings-Dossier DUS Ramp (EUR 26.26 Mio, Frist 31.01.27) + ExBoD/GL-Mandat, Lead AFR'
-        owner: Andreas Fritthum
-        start: '2026-08-31'
-        due: '2026-10-31'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 1
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS4-05
-        name: 'D3: Beziehungspflege-Matrix Top-Accounts × Owner (3-Tier) final; «Dieters Liste» operativ'
-        owner: Michael Haeffner
-        start: '2026-08-31'
-        due: '2026-10-31'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 1
-        gate: null
-        progress: 0
-        depends_on:
-          - M06
-        progress_source: tasks
-      - id: WS4-06
-        name: 'D4: Commercial Cafés als Monatsrhythmus etabliert (Haeffner × Stationsleiter)'
-        owner: Michael Haeffner
-        start: '2026-09-30'
-        due: '2026-11-30'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 1
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS4-07
-        name: 'D5: Inquiry-Manager-SLA live, Erstantwort ≤24h (Annahme, M1 validiert)'
-        owner: Michael Haeffner
-        start: '2026-08-31'
-        due: '2026-11-30'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 1
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS4-08
-        name: 2026-OPEN-Renewals ≥90% gesichert; TUIFLY-Entscheid (~EUR 5.2M, Nov); Eurowings-Mandat GL-beschlossen
-        owner: Michael Haeffner
-        start: '2026-09-30'
-        due: '2026-12-31'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 1
-        gate: null
-        progress: 0
-        depends_on:
-          - M10
-        progress_source: tasks
-      - id: WS4-09
-        name: Eurowings DUS Ramp (EUR 26.26 Mio) verlängert — grösster Einzel-Cliff, Verhandlungs-Lead AFR
-        owner: Michael Haeffner
-        start: '2026-11-13'
-        due: '2027-01-31'
-        critical: true
-        date_assumed: false
-        nachlauf: false
-        phase: Phase 2
-        gate: null
-        progress: 0
-        depends_on:
-          - WS4-04
-        progress_source: tasks
-      - id: WS4-10
-        name: 'D6: Kundenfeedback-Schleife Top-20 + Claims-Log, Zyklus 1 an GL → speist Renewal-Dossiers'
-        owner: Michael Haeffner
-        start: '2026-11-30'
-        due: '2027-02-28'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 2
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS4-11
-        name: 'D7/Zielnachweis: Cliff-2027-Coverage ≥40%; E1–E10 selbsttragend; VR-Report TRAK-2026-0007'
-        owner: Michael Haeffner
-        start: '2026-11-30'
-        due: '2027-04-30'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 3
-        gate: null
-        progress: 0
-        depends_on:
-          - M21
-        progress_source: tasks
-      - id: WS4-12
-        name: 'Nachlauf: Cliff-2027-Coverage-Pfad ≥70% bestätigt; Übergabe Commercial-Steuerung in die Linie'
-        owner: Michael Haeffner
-        start: '2027-05-14'
-        due: '2027-06-30'
-        critical: false
-        date_assumed: false
-        nachlauf: true
-        phase: Nachlauf Q2/27
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: M01
-        name: Key-Harmonisierung physisch in Odoo geschrieben
-        owner: Tine Petric
-        start: '2026-08-14'
-        due: '2026-09-04'
-        progress: 0
-        critical: false
-        phase: Phase 0
-        gate: null
-        nachlauf: false
-        quarter: Q3/26
-        prio: P1
-        kpi: 100% der 338 Verträge und 129 Kunden tragen eine kanonische ID in Odoo; 0 unaufgelöste Duplikate im Reconciliation-Report
-        depends_on: []
-        progress_source: tasks
-      - id: M02
-        name: €-Wert-Lücken bei 72 Kunden schliessen
-        owner: Michael Haeffner
-        start: '2026-08-14'
-        due: '2026-10-14'
-        progress: 0
-        critical: false
-        phase: Phase 0
-        gate: null
-        nachlauf: false
-        quarter: Q3/26
-        prio: P1
-        kpi: 72 → 0 Kunden mit €-losen Verträgen; ≥95% des Forecast-Volumens vertraglich beziffert
-        depends_on:
-          - M01
-        progress_source: tasks
-      - id: M03
-        name: OPEN-Register aufbauen & Datenlücken schliessen
-        owner: Michael Haeffner
-        start: '2026-08-14'
-        due: '2026-09-04'
-        progress: 0
-        critical: false
-        phase: Phase 0
-        gate: null
-        nachlauf: false
-        quarter: Q3/26
-        prio: P1
-        kpi: 148/148 OPEN-Verträge mit €-Wert und Index-Flag im Register; 0 Verträge ohne €-Wert innerhalb des OPEN-Sets
-        depends_on:
-          - M01
-        progress_source: tasks
-      - id: M04
-        name: Cliff-2027-Wertliste & Sponsor-Zuordnung fixieren
-        owner: Michael Haeffner
-        start: '2026-08-14'
-        due: '2026-09-04'
-        progress: 0
-        critical: false
-        phase: Phase 0
-        gate: null
-        nachlauf: false
-        quarter: Q3/26
-        prio: P1
-        kpi: 94/94 Verträge nach Wert gerankt; Top-30 (>ca. 80% des €107M) mit Owner+Sponsor belegt
-        depends_on:
-          - M03
-        progress_source: tasks
-      - id: M05
-        name: LH-Group Sponsor-Governance & Account-Plan aktivieren
-        owner: Andreas Fritthum
-        start: '2026-08-14'
-        due: '2026-09-30'
-        progress: 0
-        critical: false
-        phase: Phase 0
-        gate: null
-        nachlauf: false
-        quarter: Q3/26
-        prio: P1
-        kpi: LH-Account-Plan fertig + 100% der LH-Verträge mit €-Wert und Renewal-Datum erfasst; mind. 1 dokumentierter strategischer Touchpoint mit LH-Procurement
-        depends_on:
-          - M04
-        progress_source: tasks
-      - id: M06
-        name: 'Top-30-Accounts nach Wert: Sponsor zugewiesen'
-        owner: Dieter Streuli
-        start: '2026-08-14'
-        due: '2026-09-07'
-        progress: 0
-        critical: false
-        phase: Phase 0
-        gate: null
-        nachlauf: false
-        quarter: Q3/26
-        prio: P1
-        kpi: 30 von 30 Top-Accounts mit namentlichem Sponsor im CRM hinterlegt
-        depends_on:
-          - M04
-        progress_source: tasks
-      - id: M07
-        name: Pipeline-€-Ziel & Prospect-Trichter aufsetzen
-        owner: Michael Haeffner
-        start: '2026-08-14'
-        due: '2026-09-21'
-        progress: 0
-        critical: false
-        phase: Phase 0
-        gate: null
-        nachlauf: false
-        quarter: Q3/26
-        prio: P1
-        kpi: Pipeline-€-Ziel schriftlich fixiert; alle 21 Prospects mit €-Wert + Trichterstufe in Odoo erfasst; gewichteter Pipeline-Wert ausgewiesen
-        depends_on: []
-        progress_source: tasks
-      - id: M08
-        name: Bidirektionaler Odoo-Cockpit-Sync scharf geschaltet
-        owner: Tine Petric
-        start: '2026-08-16'
-        due: '2026-09-30'
-        progress: 0
-        critical: false
-        phase: Phase 0
-        gate: null
-        nachlauf: false
-        quarter: Q3/26
-        prio: P1
-        kpi: Sync-Latenz < 24h; 337 offene Follow-ups und 32 Churn-Fälle im Cockpit tagesaktuell; 0 Fehl-Sync-Tage über 2 Wochen
-        depends_on:
-          - M01
-        progress_source: tasks
-      - id: M09
-        name: Datenlücken der Cliff-2027-Verträge schließen (Verhandlungsfähigkeit)
-        owner: Michael Haeffner
-        start: '2026-07-01'
-        due: '2026-10-07'
-        progress: 0
-        critical: false
-        phase: Phase 0
-        gate: null
-        nachlauf: false
-        quarter: Q3/26
-        prio: P1
-        kpi: 0 Cliff-2027-Verträge ohne €-Wert; Indexierungsklausel bei jedem Cliff-2027-Renewal Pflicht-Traktandum
-        depends_on:
-          - M04
-        progress_source: tasks
-      - id: M10
-        name: OPEN → 0 offene Klassifizierungen (Renewal-Status je Vertrag)
-        owner: Michael Haeffner
-        start: '2026-08-16'
-        due: '2026-09-28'
-        progress: 0
-        critical: false
-        phase: Phase 0
-        gate: null
-        nachlauf: false
-        quarter: Q3/26
-        prio: P1
-        kpi: 0 offene Klassifizierungen; 148/148 Verträge kategorisiert und mit Account-Owner versehen binnen 90 Tagen ab heute
-        depends_on:
-          - M03
-        progress_source: tasks
-      - id: M11
-        name: LH-Datenlücken & Indexierung schließen (Verhandlungsfähigkeit herstellen)
-        owner: Michael Haeffner
-        start: '2026-08-01'
-        due: '2026-11-30'
-        progress: 0
-        critical: false
-        phase: Phase 1
-        gate: null
-        nachlauf: false
-        quarter: Q3/26
-        prio: P1
-        kpi: 0 LH-Verträge ohne €-Wert; 100% der LH-Verträge mit dokumentiertem Indexierungsstatus (mit/ohne CPI-CBA-Klausel)
-        depends_on:
-          - M05
-        progress_source: tasks
-      - id: M12
-        name: 66 stille Accounts reaktivieren — Touchpoint-Welle
-        owner: Michael Haeffner
-        start: '2026-08-01'
-        due: '2026-10-31'
-        progress: 0
-        critical: false
-        phase: Phase 1
-        gate: null
-        nachlauf: false
-        quarter: Q4/26
-        prio: P1
-        kpi: ≥55 der 66 stillen Accounts mit frischem, im CRM erfasstem Touchpoint (<10 Rest-Stille)
-        depends_on:
-          - M08
-        progress_source: tasks
-      - id: M13
-        name: LH-Group-Frühverlängerung als Anker starten
-        owner: Andreas Fritthum
-        start: '2026-08-01'
-        due: '2026-10-31'
-        progress: 0
-        critical: false
-        phase: Phase 1
-        gate: null
-        nachlauf: false
-        quarter: Q4/26
-        prio: P1
-        kpi: LH-Cliff-2027-Verträge mit unterzeichnetem Term-Sheet oder Verlängerungs-LOI
-        depends_on:
-          - M04
-        progress_source: tasks
-      - id: M14
-        name: Sponsor-Zuordnung für unbetreute OPEN-Kunden
-        owner: Andreas Fritthum
-        start: '2026-09-01'
-        due: '2026-10-31'
-        progress: 0
-        critical: false
-        phase: Phase 1
-        gate: null
-        nachlauf: false
-        quarter: Q4/26
-        prio: P2
-        kpi: Top-20 OPEN-Kunden nach €-Wert (Abdeckung ≥70% des €91M) mit benanntem C-Level-Sponsor
-        depends_on:
-          - M10
-        progress_source: tasks
-      - id: M15
-        name: Datenqualitäts-Gate für €-Werte und Indexklauseln aktiv
-        owner: Michael Haeffner
-        start: '2026-09-01'
-        due: '2026-11-30'
-        progress: 0
-        critical: false
-        phase: Phase 1
-        gate: null
-        nachlauf: false
-        quarter: Q4/26
-        prio: P2
-        kpi: €-Wert-Lücke von 72 Kunden auf < 15 gesenkt; Indexklausel-Status je Vertrag im Cockpit sichtbar
-        depends_on:
-          - M08
-        progress_source: tasks
-      - id: M16
-        name: 337 offene Follow-ups abarbeiten & Follow-up-Disziplin etablieren
-        owner: Michael Haeffner
-        start: '2026-09-01'
-        due: '2026-12-31'
-        progress: 0
-        critical: false
-        phase: Phase 1
-        gate: null
-        nachlauf: false
-        quarter: Q4/26
-        prio: P2
-        kpi: Offene Follow-ups von 337 auf <100 reduziert; 0 Prospects in Aktivitäts-Stille >30 Tage; Weekly Pipeline-Review etabliert
-        depends_on:
-          - M07
-        progress_source: tasks
-      - id: M17
-        name: Basisdokumente-Vollständigkeit bei OPEN-Verträgen herstellen
-        owner: Michael Haeffner
-        start: '2026-08-01'
-        due: '2026-12-31'
-        progress: 0
-        critical: false
-        phase: Phase 1
-        gate: null
-        nachlauf: false
-        quarter: Q4/26
-        prio: P1
-        kpi: Dokumenten-Vollständigkeitsquote der 148 OPEN-Verträge ≥90%; €91M vertraglich dokumentiert
-        depends_on:
-          - M02
-        progress_source: tasks
-      - id: M18
-        name: Sponsor + Cadence auf alle 112 sponsorlosen Accounts ausrollen
-        owner: Michael Haeffner
-        start: '2026-09-01'
-        due: '2026-12-15'
-        progress: 0
-        critical: false
-        phase: Phase 1
-        gate: null
-        nachlauf: false
-        quarter: Q4/26
-        prio: P2
-        kpi: 112 von 112 Accounts mit Sponsor + hinterlegter Cadence; €105M vollständig abgedeckt
-        depends_on:
-          - M06
-        progress_source: tasks
-      - id: M19
-        name: Cockpit als Steuerinstrument im 3-Ebenen-Modell verankert
-        owner: Tine Petric
-        start: '2026-10-01'
-        due: '2026-12-15'
-        progress: 0
-        critical: false
-        phase: Phase 1
-        gate: null
-        nachlauf: false
-        quarter: Q4/26
-        prio: P2
-        kpi: Sponsor-Feld für 129/129 Kunden befüllt; 112 sponsorlose Kunden auf < 40 reduziert; Aktivitäts-Stille-Liste im Cockpit live
-        depends_on:
-          - M08
-        progress_source: tasks
-      - id: M20
-        name: Neugeschäft-Pipeline auffüllen (Klumpen strukturell verdünnen)
-        owner: Michael Haeffner
-        start: '2026-09-01'
-        due: '2027-06-30'
-        progress: 0
-        critical: false
-        phase: Nachlauf Q2/27
-        gate: null
-        nachlauf: true
-        quarter: Q4/26
-        prio: P2
-        kpi: Akquise-Pipeline von 21 auf ≥50 qualifizierte Prospects; offene Follow-ups von 337 auf <150 reduziert
-        depends_on:
-          - M07
-        progress_source: tasks
-      - id: M21
-        name: 30%-Sicherungsziel des €107M-Volumens bis Q4/2026
-        owner: Michael Haeffner
-        start: '2026-08-01'
-        due: '2026-12-31'
-        progress: 0
-        critical: false
-        phase: Phase 1
-        gate: null
-        nachlauf: false
-        quarter: Q4/26
-        prio: P1
-        kpi: ≥ €32M (30% von €107M) gesichert; Fortschritts-Balken im Cockpit
-        depends_on:
-          - M13
-        progress_source: tasks
-      - id: M22
-        name: Verbindliche Indexierungsklausel (CPI/CBA) als Renewal-Standard
-        owner: Stephanie Rohde
-        start: '2026-09-01'
-        due: '2027-01-31'
-        progress: 0
-        critical: false
-        phase: Phase 2
-        gate: null
-        nachlauf: false
-        quarter: Q1/27
-        prio: P1
-        kpi: Standardklausel freigegeben + in Vorlage; 100% neuer Renewal-Drafts ab Q1/2027 mit Indexierung oder dokumentierter Ausnahme
-        depends_on:
-          - M17
-        progress_source: tasks
-      - id: M23
-        name: Prospect-Trichter von 21 auf mind. 60 Leads verbreitern
-        owner: Michael Haeffner
-        start: '2026-09-01'
-        due: '2027-03-31'
-        progress: 0
-        critical: false
-        phase: Phase 2
-        gate: null
-        nachlauf: false
-        quarter: Q1/27
-        prio: P1
-        kpi: Prospect-Zahl in Odoo von 21 auf ≥60 verdreifacht; ≥10 der 32 Churn-Kunden als Reaktivierungs-Lead requalifiziert
-        depends_on:
-          - M07
-        progress_source: tasks
-      - id: M24
-        name: LH-Multi-Year-Term-Gespräch führen
-        owner: Andreas Fritthum
-        start: '2026-11-01'
-        due: '2027-03-31'
-        progress: 0
-        critical: false
-        phase: Phase 2
-        gate: null
-        nachlauf: false
-        quarter: Q1/27
-        prio: P1
-        kpi: Multi-Year-Term-Gespräch geführt + Absichtserklärung/Term-Sheet-Grundzüge dokumentiert für ≥€40M LH-Volumen mit Ziel-Laufzeit ≥2029
-        depends_on:
-          - M11
-        progress_source: tasks
-      - id: M25
-        name: Cadence-Kopplung an CLIFF-2027-Renewal-Wand
-        owner: Andreas Fritthum
-        start: '2026-10-01'
-        due: '2027-06-30'
-        progress: 0
-        critical: false
-        phase: Nachlauf Q2/27
-        gate: null
-        nachlauf: true
-        quarter: Q2/27
-        prio: P2
-        kpi: 100% der 94 CLIFF-2027-Verträge mit dokumentiertem Sponsor-Touchpoint vor Renewal-Start
-        depends_on:
-          - M18
-        progress_source: tasks
-      - id: M26
-        name: 'Nicht-Anker-Wachstum: Top-10-Non-LH-Kunden mit Sponsoren belegen & ausbauen'
-        owner: Dieter Streuli
-        start: '2026-10-01'
-        due: '2027-06-30'
-        progress: 0
-        critical: false
-        phase: Nachlauf Q2/27
-        gate: null
-        nachlauf: true
-        quarter: Q2/27
-        prio: P2
-        kpi: Top-10-Non-LH-Kunden jeweils mit benanntem Sponsor + Ausbau-Ziel; LH-Anteil am Gesamt-Forecast von 34% auf ≤30% gesenkt
-        depends_on:
-          - M05
-        progress_source: tasks
-      - id: M27
-        name: Re-Pricing & Indexierung in Verhandlung bringen
-        owner: Michael Haeffner
-        start: '2026-10-01'
-        due: '2027-06-30'
-        progress: 0
-        critical: false
-        phase: Nachlauf Q2/27
-        gate: null
-        nachlauf: true
-        quarter: Q2/27
-        prio: P2
-        kpi: ≥80% der RE-PRICE-Verträge mit unterzeichneter Index-Klausel; alle 66 stillen Kunden mit dokumentiertem Touchpoint
-        depends_on:
-          - M14
-        progress_source: tasks
-      - id: M28
-        name: Preis-/Daten-Qualitäts-Cockpit als Dauer-Monitor
-        owner: Michael Haeffner
-        start: '2027-01-01'
-        due: '2027-06-30'
-        progress: 0
-        critical: false
-        phase: Nachlauf Q2/27
-        gate: null
-        nachlauf: true
-        quarter: Q2/27
-        prio: P3
-        kpi: Monatlicher DQ-Report live; €-Wert-Abdeckung ≥95% und Indexierungsquote als laufende Kennzahl über alle 338 Verträge
-        depends_on:
-          - M02
-        progress_source: tasks
-      - id: M29
-        name: Cliff-2027 auf ≥60% gesichert bringen (Rest-Volumen & Long-Tail)
-        owner: Michael Haeffner
-        start: '2027-01-01'
-        due: '2027-06-30'
-        progress: 0
-        critical: false
-        phase: Nachlauf Q2/27
-        gate: null
-        nachlauf: true
-        quarter: Q2/27
-        prio: P2
-        kpi: ≥ €64M (60% von €107M) gesichert; verbleibende at-risk-Cliff-Verträge mit Eskalations-Owner
-        depends_on:
-          - M21
-        progress_source: tasks
-      - id: M30
-        name: Win-Back-Kampagne für Cliff-2027-Renewals als Pipeline-Kanal
-        owner: Michael Haeffner
-        start: '2027-01-01'
-        due: '2027-06-30'
-        progress: 0
-        critical: false
-        phase: Nachlauf Q2/27
-        gate: null
-        nachlauf: true
-        quarter: Q2/27
-        prio: P2
-        kpi: ≥80% der €107M Cliff-2027 mit definiertem Renewal-Angebot + Sponsor; Renewal-Winrate ausgewiesen; €-Wert der OPEN-148 in Trichter überführt
-        depends_on:
-          - M23
-        progress_source: tasks
-      - id: M31
-        name: OPEN in gesicherte Langfrist-Verträge überführen
-        owner: Michael Haeffner
-        start: '2027-01-01'
-        due: '2027-06-30'
-        progress: 0
-        critical: false
-        phase: Nachlauf Q2/27
-        gate: null
-        nachlauf: true
-        quarter: Q2/27
-        prio: P3
-        kpi: Langfrist gesichertes Volumen (FIXED ≥2029) von €21M / 7% auf ≥€45M / ≥15% angehoben durch überführte OPEN-Verträge
-        depends_on:
-          - M27
-        progress_source: tasks
-      - id: M32
-        name: Indexierungs-Durchsetzung an der CLIFF-2027-Wand
-        owner: Michael Haeffner
-        start: '2027-02-01'
-        due: '2027-06-30'
-        progress: 0
-        critical: false
-        phase: Nachlauf Q2/27
-        gate: null
-        nachlauf: true
-        quarter: Q2/27
-        prio: P2
-        kpi: Indexierungsquote ≥70% der bis EOY 2027 verlängerten CLIFF-2027-Verträge; €-gewichtete Quote ≥75% von €107M
-        depends_on:
-          - M22
-        progress_source: tasks
-      - id: M33
-        name: Beziehungs-Cockpit als laufendes Steuerungsinstrument etablieren
-        owner: Michael Haeffner
-        start: '2027-01-01'
-        due: '2027-06-30'
-        progress: 0
-        critical: false
-        phase: Nachlauf Q2/27
-        gate: null
-        nachlauf: true
-        quarter: Q2/27
-        prio: P3
-        kpi: ≤10 Accounts ohne Sponsor + ≤10 stille Accounts dauerhaft gehalten; offene Maßnahmen von 243 auf <120 halbiert
-        depends_on:
-          - M25
-        progress_source: tasks
-      - id: M34
-        name: Masterplan-Review-Cadence gegen die Cliff-Wand etabliert
-        owner: Dieter Streuli
-        start: '2027-01-01'
-        due: '2027-06-30'
-        progress: 0
-        critical: false
-        phase: Nachlauf Q2/27
-        gate: null
-        nachlauf: true
-        quarter: Q2/27
-        prio: P1
-        kpi: 12 dokumentierte Monats-Reviews in 2027; OPEN-Volumen €91M von 148 Verträgen bis EOY 2027 auf < €30M geklärt; CLIFF-2027-Renewal-Quote getrackt
-        depends_on:
-          - M19
-        progress_source: tasks
-      - id: M35
-        name: Cliff-2028 früh angehen (Pull-Forward)
-        owner: Michael Haeffner
-        start: '2027-06-01'
-        due: '2027-06-30'
-        progress: 0
-        critical: false
-        phase: Nachlauf Q2/27
-        gate: null
-        nachlauf: true
-        quarter: Q2/27
-        prio: P2
-        kpi: €52M/47 Verträge 2028 gerankt; Top-20 mit Renewal-Start ≥12 Mt vor Ablauf
-        depends_on:
-          - M04
-        progress_source: tasks
-      - id: M36
-        name: Standard-Indexierungsklausel Legal-freigeben
-        owner: Amélie Charisius
-        start: '2026-08-14'
-        due: '2026-10-21'
-        progress: 0
-        critical: false
-        phase: Phase 0
-        gate: null
-        nachlauf: false
-        quarter: Q3/26
-        prio: P1
-        kpi: Rechtlich freigegebene, länderkonforme Standard-Indexierungsklausel liegt vor
-        depends_on: []
-        progress_source: tasks
-      - id: M37
-        name: Commercial-Daten-Kapazität sichern (Haeffner-Entlastung)
-        owner: Dieter Streuli
-        start: '2026-08-14'
-        due: '2026-09-08'
-        progress: 0
-        critical: false
-        phase: Phase 0
-        gate: null
-        nachlauf: false
-        quarter: Q3/26
-        prio: P1
-        kpi: Kein Owner trägt >6 P1-Milestones parallel; Reallokation dokumentiert
-        depends_on: []
-        progress_source: tasks
-      - id: M38
-        name: Frühwarn-/Churn-Trigger aufsetzen
-        owner: Tine Petric
-        start: '2026-11-01'
-        due: '2027-03-31'
-        progress: 0
-        critical: false
-        phase: Phase 2
-        gate: null
-        nachlauf: false
-        quarter: Q1/27
-        prio: P2
-        kpi: Frühwarn-Alert für alle 85 at-risk-Verträge aktiv; Signal im Schnitt ≥60 T vor Kündigung
-        depends_on:
-          - M08
-        progress_source: tasks
-      - id: M39
-        name: Net-Retention-Zielgrösse festlegen
-        owner: Stephanie Rohde
-        start: '2026-08-14'
-        due: '2026-09-18'
-        progress: 0
-        critical: false
-        phase: Phase 0
-        gate: null
-        nachlauf: false
-        quarter: Q3/26
-        prio: P1
-        kpi: Net-Retention-Ziel schriftlich fixiert + monatlicher Track etabliert
-        depends_on: []
-        progress_source: tasks
-      - id: M40
-        name: Marge/Cost-to-Serve je Vertrag tracken
-        owner: Thomas Pajor
-        start: '2026-11-01'
-        due: '2027-03-31'
-        progress: 0
-        critical: false
-        phase: Phase 2
-        gate: null
-        nachlauf: false
-        quarter: Q1/27
-        prio: P2
-        kpi: Marge/Cost-to-Serve je Top-Vertrag im Cockpit; Volumen-vs-Marge-Sicht
-        depends_on:
-          - M02
-        progress_source: tasks
-      - id: M41
-        name: Marktpreis-Benchmark vor Re-Pricing
-        owner: Michael Haeffner
-        start: '2026-09-01'
-        due: '2026-12-31'
-        progress: 0
-        critical: false
-        phase: Phase 1
-        gate: null
-        nachlauf: false
-        quarter: Q4/26
-        prio: P2
-        kpi: Preisbenchmark je Leistungsart vorliegend; in Renewal-Battlecards integriert
-        depends_on: []
-        progress_source: tasks
-      - id: M42
-        name: Daten-Rückfall-Monitor (kontinuierlich)
-        owner: Tine Petric
-        start: '2026-10-01'
-        due: '2026-12-31'
-        progress: 0
-        critical: false
-        phase: Phase 1
-        gate: null
-        nachlauf: false
-        quarter: Q4/26
-        prio: P2
-        kpi: Automatischer Regressions-Alert aktiv; 0 unbemerkte Re-Öffnungen
-        depends_on:
-          - M02
-        progress_source: tasks
-      - id: M43
-        name: Kontingenzpfad LH-Anker-Verlust
-        owner: Dieter Streuli
-        start: '2026-09-01'
-        due: '2026-12-31'
-        progress: 0
-        critical: false
-        phase: Phase 1
-        gate: null
-        nachlauf: false
-        quarter: Q4/26
-        prio: P2
-        kpi: Kontingenzplan LH-Verlust im VR dokumentiert; Diversifikations-Szenario beziffert
-        depends_on:
-          - M05
-        progress_source: tasks
-      - id: WS4-13
-        name: Aerologic-Angebot finalisiert und versendet (gemäss besprochenen Preisvorgaben)
-        owner: Michael Haeffner
-        start: '2026-07-31'
-        due: '2026-07-31'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 100
-        depends_on: []
-        nachlauf: false
-      - id: WS4-14
-        name: Kündigungsschreiben Master Vendor versandbereit — Stichtag 12.08. bei Nicht-Einigung
-        owner: Dieter Streuli
-        start: '2026-07-31'
-        due: '2026-08-12'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        support: Amélie Charisius
-    programm: transformation
-  - code: WS5
-    name: Kultur & Execution-Disziplin
-    owner: Amélie Charisius
-    support: CGO (Vorbild/Rollenmodell GL-Ebene) · Wüst (Richtlinien) · DRS (Steuerung/Kontrolle, Vorbild Gremienebene)
-    milestones:
-      - id: WS5-01
-        name: 'Mitbestimmungs-Fundament: BR-Landkarte DE/AT/ES beauftragt + ES-Assessment (Zaforesa) gestartet'
-        owner: Amélie Charisius
-        start: '2026-09-01'
-        due: '2026-09-30'
-        critical: false
-        date_assumed: false
-        nachlauf: false
-        phase: Phase 0
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS5-02
-        name: 'Plattform: günstige Beekeeper-Alternative TCO-evaluiert + Beekeeper-Vertragslaufzeit/Kündigungsfrist geprüft'
-        owner: Amélie Charisius
-        start: '2026-08-31'
-        due: '2026-09-30'
-        critical: false
-        date_assumed: false
-        nachlauf: false
-        phase: Phase 0
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS5-03
-        name: GL-Selbst-Commitments publiziert (Vorbild vor Kaskade) + Kickoff-Kommunikation Führungskräfte
-        owner: Amélie Charisius
-        start: '2026-09-18'
-        due: '2026-09-30'
-        critical: false
-        date_assumed: false
-        nachlauf: false
-        phase: Phase 0
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS5-04
-        name: 'D1+D4: AXS-Identitäts-Charter (1 Seite DE/EN) + Change-Story je Land (CH/DE/AT/ES inkl. BR-Fassung)'
-        owner: Amélie Charisius
-        start: '2026-08-28'
-        due: '2026-10-31'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 1
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS5-05
-        name: 'D2: Commitment-Board live — GL=6 + Directors je 3 Quartals-Commitments (Station-Manager DE/AT erst nach BV)'
-        owner: Amélie Charisius
-        start: '2026-09-30'
-        due: '2026-11-30'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 1
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS5-06
-        name: 'D3: Konsequenz-Regelwerk (3 Stufen, Trigger 2× Nichtlieferung) je Land geprüft; Change-Barometer Puls #1'
-        owner: Amélie Charisius
-        start: '2026-09-25'
-        due: '2026-11-30'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 1
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS5-07
-        name: 'D5: BR-Partner-Roadmap — Quartals-Regeltermine 100% DE/AT/ES; Richtlinie Informationsverfahren in Kraft'
-        owner: Amélie Charisius
-        start: '2026-10-30'
-        due: '2026-12-31'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 1
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS5-08
-        name: 'D7: Talent-Pipeline — stiller Dauer-Search live (Commercial-Lead + Stationsleiter); Aufbauprogramm konzipiert'
-        owner: Amélie Charisius
-        start: '2026-09-25'
-        due: '2026-12-31'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 1
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS5-09
-        name: Plattform-Entscheid GL-beschlossen (gewählte Lösung vs. Beekeeper); KBR-Genehmigungsprozess eingeleitet
-        owner: Amélie Charisius
-        start: '2026-11-13'
-        due: '2026-12-31'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 1
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS5-10
-        name: KBR-Vereinbarung Kommunikationsplattform (sonst Einigungsstellen-Pfad, Fallback D5)
-        owner: Amélie Charisius
-        start: '2027-01-15'
-        due: '2027-02-28'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 2
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS5-11
-        name: 'D6/Zielnachweis: Plattform-Rollout 100%; Execution ≥90% über 2 Monate; Puls #3; Time-to-Fill ≤90 Tage'
-        owner: Amélie Charisius
-        start: '2027-02-26'
-        due: '2027-04-30'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 3
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS5-12
-        name: 'Nachlauf: BR-/Kommunikations-Begleitung eingeleiteter Restrukturierungen (BER, KEL) bis Wirksamkeit'
-        owner: Amélie Charisius
-        start: '2027-04-02'
-        due: '2027-06-30'
-        critical: false
-        date_assumed: false
-        nachlauf: true
-        phase: Nachlauf Q2/27
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-    programm: transformation
-  - code: WS6
-    name: AI-Enablement (AI@AXS ≡ Elysium 3.0)
-    owner: Tine Petric
-    support: >-
-      DRS (Chairman of AI, steuert/kontrolliert) · CGO (operativer Sponsor) · Rohde (Finance-Automation) · Charisius (HR-/Legal-Bot) · Wüst (Procurement) · Matthei/Pajor (Systemlandkarte) · AFR
-      (Aufsicht Board-Ebene)
-    milestones:
-      - id: WS6-01
-        name: Delivery-Lead-Vertragsstatus Petric geklärt (bilateral CEO/CHRO) + AI-Budget-Währung CHF/EUR bereinigt
-        owner: Cüneyt Gökcöl
-        start: '2026-09-01'
-        due: '2026-09-04'
-        critical: false
-        date_assumed: false
-        nachlauf: false
-        phase: Phase 0
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS6-02
-        name: 'D1: AI-Transformations-Mapping ExBoD-beschlossen — Prio A/B/C, Nicht-verfolgen-Liste, Bottom-up EUR 5''000k'
-        owner: Tine Petric
-        start: '2026-09-11'
-        due: '2026-09-30'
-        critical: false
-        date_assumed: false
-        nachlauf: false
-        phase: Phase 0
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS6-03
-        name: 'D8: No-/High-AI-Zones definiert + ExBoD-beschlossen, verankert in TRAK-2026-0010'
-        owner: Tine Petric
-        start: '2026-09-30'
-        due: '2026-10-31'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 0
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS6-04
-        name: 'D2: Data-Foundation-Gate — kanonische Identifier + SSOT Finance/HR live; GL-CoS-Agenten 8/8; Bus-Faktor Didit entschärft'
-        owner: Tine Petric
-        start: '2026-09-14'
-        due: '2026-11-30'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 1
-        gate: G3
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS6-05
-        name: 'D7: Zielsystem-Entscheid mit KI-Ersatz-Brille je Ops-Bereich 100% (Systemlandkarte, geteilt mit WS1)'
-        owner: Florian Matthei
-        start: '2026-10-01'
-        due: '2026-12-31'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 1
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS6-06
-        name: 'D3: Action-Item-Tracking MVP live (Document-Intelligence, nur Gremienebene) → speist WS2-Commitment-Tracker'
-        owner: Tine Petric
-        start: '2026-08-31'
-        due: '2026-11-30'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 1
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS6-07
-        name: 'D6a: AI-Ramp-Gate 1 — Q4/26-Run-Rate ≥ EUR 1''000k CFO-testiert; Stop-or-Go; Knowledge-Mgmt + Procurement-Bot gestartet'
-        owner: Stephanie Rohde
-        start: '2026-09-30'
-        due: '2026-12-31'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 1
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS6-08
-        name: Knowledge-Mgmt Welle 1 live
-        owner: Tine Petric
-        start: '2027-01-08'
-        due: '2027-01-31'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 2
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS6-09
-        name: Chairman-Automationen in GL-Betrieb (Vertex) überführt — SPoF DRS-Mac beseitigt
-        owner: Tine Petric
-        start: '2027-01-08'
-        due: '2027-02-28'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 2
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS6-10
-        name: 'D4: Reporting-Automatisierung — P&L + Liquidität ≤20., 3 Monate in Folge; Initiativen 6/8 entblockt'
-        owner: Stephanie Rohde
-        start: '2026-11-30'
-        due: '2027-02-28'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 2
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS6-11
-        name: 'D5/Zielnachweis: HR-Bot Welle 1 ≥2 DE-Standorte (BetrVG); Legal-/Procurement-Bot produktiv; Data Foundation 8/8'
-        owner: Tine Petric
-        start: '2027-02-26'
-        due: '2027-04-30'
-        critical: false
-        date_assumed: true
-        nachlauf: false
-        phase: Phase 3
-        gate: G4
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS6-12
-        name: 'Nachlauf: AI-Ramp-Gate 2 ≥ EUR 3''500k CFO-testiert + bestätigter Pfad ≥ EUR 5''000k Q4/27'
-        owner: Stephanie Rohde
-        start: '2027-05-31'
-        due: '2027-06-30'
-        critical: false
-        date_assumed: false
-        nachlauf: true
-        phase: Nachlauf Q2/27
-        gate: null
-        progress: 0
-        depends_on: []
-        progress_source: tasks
-      - id: WS6-13
-        name: Cloud-Code-Chief-of-Staff-Plattform fürs GL-Team eingerichtet (Rollout)
-        owner: Tine Petric
-        start: '2026-07-31'
-        due: '2026-08-31'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-      - id: WS6-14
-        name: GL-Team in der KI-Arbeitsplattform geschult
-        owner: Tine Petric
-        start: '2026-07-31'
-        due: '2026-09-15'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on:
-          - WS6-13
-        nachlauf: false
-    programm: transformation
-  - code: WS7
-    name: VIE-Wegfall & Restrukturierung (Kompensation & Overhead-Abbau)
-    owner: Stephanie Rohde
-    support: Gökcöl (Umsetzung), Matthei (VIE-Abwicklung/Ops), Pajor (Zahlen/Elysium), DRS (Governance)
-    programm: transformation
-    milestones:
-      - id: WS7-01
-        name: >-
-          Restrukturierungs-Zielbild & Business Case beschlussreif — Ziel 1 Kompensation ~CHF 4.6 Mio EBITDA (VIE-Stationsgewinn) + Ziel 2 Overhead-Abbau (EUR aus Pajor/Elysium-Update); zwei Szenarien
-          (Weiterbetrieb bei Beschwerde-Erfolg vs. VIE-Ende 25.10.2026)
-        owner: Stephanie Rohde
-        start: '2026-07-28'
-        due: '2026-08-14'
-        date_assumed: true
-        phase: Phase 0
-        gate: null
-        critical: true
-        progress: 0
-        depends_on: []
-        nachlauf: false
-      - id: WS7-02
-        name: 'Overhead-Zahlengrundlage final: per-Kopf-OPEX + aktualisierte Gruppenfunktionsliste + Elysium-Letztstand; von VIE getragener Overhead in EUR beziffert (Schlüssel 9,8% AXS / 20,5% AAS)'
-        owner: Thomas Pajor
-        start: '2026-07-28'
-        due: '2026-08-04'
-        date_assumed: true
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-      - id: WS7-03
-        name: >-
-          Group-Finance-Shared-Service aus VIE lösen — Verlagerungs-/Abbau-Entscheid für die in Wien gehosteten Konzern-Funktionen (~17 Köpfe, v.a. Finance Group KST 8002); Kontinuität des
-          Konzern-Finance sichern
-        owner: Cüneyt Gökcöl
-        start: '2026-08-04'
-        due: '2026-08-28'
-        date_assumed: true
-        phase: Phase 0
-        gate: null
-        critical: true
-        progress: 0
-        depends_on:
-          - WS7-01
-          - WS7-02
-        nachlauf: false
-      - id: WS7-04
-        name: Ziel 2 — von VIE getragene Overheads vollständig eliminiert (NICHT auf die übrigen Stationen umverteilt); Umsetzung gekoppelt an Projekt Elysium
-        owner: Stephanie Rohde
-        start: '2026-08-28'
-        due: '2026-10-31'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: true
-        progress: 0
-        depends_on:
-          - WS7-03
-        nachlauf: false
-      - id: WS7-05
-        name: 'Ziel 1 — Kompensationspaket ~CHF 4.6 Mio EBITDA beschlossen und in Umsetzung (Hebel: übrige Stationen, Kostenblock, Pricing/Renewal, Ressourcen-Redeployment)'
-        owner: Cüneyt Gökcöl
-        start: '2026-08-14'
-        due: '2026-10-31'
-        date_assumed: true
-        phase: Phase 1
-        gate: null
-        critical: true
-        progress: 0
-        depends_on:
-          - WS7-01
-        nachlauf: false
-      - id: WS7-06
-        name: >-
-          VIE-Abwicklungsplan startbereit (Contingency Szenario B: kein Beschwerde-Aufschub) — Personal (Kündigungsfristen 3+ Monate), Kunden-Übergabe, Assets/Verträge; Auslösung nur bei VIE-Ende
-          25.10.2026
-        owner: Florian Matthei
-        start: '2026-07-28'
-        due: '2026-08-21'
-        date_assumed: true
-        phase: Phase 0
-        gate: null
-        critical: true
-        progress: 0
-        depends_on: []
-        nachlauf: false
-      - id: WS7-07
-        name: VR-Vorlage VIE-Restrukturierung (Stations-/Marktaufgabe = VR-Vorbehalt) beschlussreif — inkl. Finanzierungs-Kaskade (VIE-Sicherheit neu bewertet mit Clearwater/Märki)
-        owner: Dieter Streuli
-        start: '2026-08-14'
-        due: '2026-08-26'
-        date_assumed: true
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on:
-          - WS7-01
-        nachlauf: false
-      - id: WS7-08
-        name: Beschwerde gegen VIE-Lizenzentzug eingereicht (Frist 20.08.) inkl. Antrag auf Versagung der aufschiebenden Wirkung
-        owner: Dieter Streuli
-        start: '2026-07-31'
-        due: '2026-08-20'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: true
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        support: Dr. Grassner (führt operativ)
-      - id: WS7-09
-        name: 'Anwaltskoordination VIE: drei beteiligte Kanzleien per E-Mail vernetzt'
-        owner: Andreas Fritthum
-        start: '2026-07-31'
-        due: '2026-08-05'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 100
-        depends_on: []
-        nachlauf: false
-        support: Grassner/Saxinger + Mertinz (KWR)
-      - id: WS7-10
-        name: 'Betriebsübergang: schriftliche Bestätigung beim Ministerium (BMIMI) angefordert'
-        owner: Andreas Fritthum
-        start: '2026-07-31'
-        due: '2026-08-07'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        support: Mertinz (KWR)
-      - id: WS7-11
-        name: Betriebsrat VIE abgestimmt (Kündigungs-/Betriebsübergangsthematik)
-        owner: Andreas Fritthum
-        start: '2026-07-31'
-        due: '2026-08-14'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        support: Amélie Charisius
-      - id: WS7-12
-        name: 'AMS-Frühwarnsystem: Unterlagen zur Massenentlassung vorsorglich vorbereitet'
-        owner: Andreas Fritthum
-        start: '2026-07-31'
-        due: '2026-08-14'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        support: Mertinz (KWR)
-      - id: WS7-13
-        name: 'VR-Entscheidungsgrundlage Reduktion Lizenzgeschäft (Projekt Bridgehead: Doppelzielbild ≥ EUR 15 Mio EBITDA / ≥ 75% lizenzunabhängig bis Ende 2028)'
-        owner: Dieter Streuli
-        start: '2026-07-31'
-        due: '2026-08-26'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: true
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        support: Andreas Fritthum (AAS Technics) · Cüneyt Gökcöl (Aeropoint) · Stephanie Rohde (Zahlen)
-      - id: WS7-14
-        name: Finance-Personalbedarf + Restrukturierungsplanung definiert (inkl. VIE-Minimalbesetzung für Betriebsfortführung) — Input zu WS7-03
-        owner: Jörg Ehlers
-        support: Stephanie Rohde
-        start: '2026-07-31'
-        due: '2026-08-14'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-  - code: FIN
-    name: Refinanzierung Lieferanten-Ausstände (EUR 15 Mio, Closing 31.10.2026)
-    owner: Dieter Streuli
-    support: Stephanie Rohde, Andreas Fritthum; Advisor Clearwater (Michael Märki)
-    programm: finanzierung-2026
-    milestones:
-      - id: FIN-01
-        name: 13-Wochen-Liquiditätsplan liegt vor — der Cash-Tiefpunkt bestimmt den Zeitplan rückwärts (Prio 1; Datenpaket gemeinsam mit Clearwater-DE)
-        owner: Stephanie Rohde
-        start: '2026-07-02'
-        due: '2026-07-31'
-        date_assumed: true
-        phase: Vorbereitung
-        gate: null
-        critical: true
-        progress: null
-        depends_on: []
-        nachlauf: false
-      - id: FIN-02
-        name: 'Investoren-Datenpaket mit Clearwater konsolidiert (Financing Teaser, Bilanz-Talking-Points, Cashflow-Story: Timing-Mismatch statt Rettungs-Case)'
-        owner: Dieter Streuli
-        start: '2026-07-13'
-        due: '2026-08-14'
-        date_assumed: true
-        phase: Vorbereitung
-        gate: null
-        critical: false
-        progress: null
-        depends_on:
-          - FIN-01
-        nachlauf: false
-      - id: FIN-03
-        name: Swissport-Waiver-Frage entschieden — Szenario A (Waiver für Cash Injection > CHF 1 Mio) oder Szenario B (Rückzahlung SPI-Loan CHF 3.5 Mio → Gesamtbedarf ~13–15 Mio)
-        owner: Dieter Streuli
-        start: '2026-08-01'
-        due: '2026-08-21'
-        date_assumed: true
-        phase: Vorbereitung
-        gate: null
-        critical: true
-        progress: null
-        depends_on: []
-        nachlauf: false
-      - id: FIN-04
-        name: 'Erstansprache Welle 1 gestartet (Private-Debt-Spur: Rantum, Patrimonium, Swiss Life AM, CIC, HF; Family Offices parallel)'
-        owner: Dieter Streuli
-        start: '2026-08-14'
-        due: '2026-08-21'
-        date_assumed: true
-        phase: Ansprache
-        gate: null
-        critical: false
-        progress: null
-        depends_on:
-          - FIN-02
-        nachlauf: false
-      - id: FIN-05
-        name: Bridge-Option Joeinig entschieden (schnelle Brücke vs. Hauptspur; Wandeldarlehen-Mechanik, Sicherheit Station VIE)
-        owner: Dieter Streuli
-        start: '2026-07-13'
-        due: '2026-08-28'
-        date_assumed: true
-        phase: Ansprache
-        gate: null
-        critical: false
-        progress: null
-        depends_on: []
-        nachlauf: false
-      - id: FIN-06
-        name: Fallback-Plan Closing-Verzug steht — Winter-Liquidität 2026/27 auch ohne Closing per 31.10. gesichert
-        owner: Stephanie Rohde
-        start: '2026-08-14'
-        due: '2026-09-15'
-        date_assumed: true
-        phase: Ansprache
-        gate: null
-        critical: true
-        progress: null
-        depends_on:
-          - FIN-01
-        nachlauf: false
-      - id: FIN-07
-        name: 'Term Sheets liegen vor und sind verhandelt (Konditionen-Benchmark: all-in 10.5–14%, Cash+PIK, 4–5 Jahre)'
-        owner: Dieter Streuli
-        start: '2026-08-21'
-        due: '2026-09-30'
-        date_assumed: true
-        phase: Abschluss
-        gate: null
-        critical: true
-        progress: null
-        depends_on:
-          - FIN-04
-        nachlauf: false
-      - id: FIN-08
-        name: Closing EUR 15 Mio — Lieferanten-Ausstände refinanziert (unstrukturiertes kurzfristiges FK → strukturiert mittel-/langfristig)
-        owner: Dieter Streuli
-        start: '2026-10-01'
-        due: '2026-10-31'
-        date_assumed: false
-        phase: Abschluss
-        gate: null
-        critical: true
-        progress: null
-        depends_on:
-          - FIN-07
-          - FIN-03
-        nachlauf: false
-      - id: FIN-10
-        name: Schuldenübernahme der VIE-Töchter durch Muttergesellschaft AAS geprüft
-        owner: Dieter Streuli
-        start: '2026-07-31'
-        due: '2026-08-14'
-        date_assumed: false
-        phase: Phase 0
-        gate: null
-        critical: false
-        progress: 0
-        depends_on: []
-        nachlauf: false
-        support: Legal
-inputs:
-  - id: IN-01
-    owner: Thomas Pajor
-    item: 'Datenzugang G1: EPG-GHS + Looker/FTE erteilt (beantragt 03.07., nicht erteilt) — sonst Eskalation Stufe 3 an DRS'
-    due: '2026-09-12'
-    status: offen
-    liefer_tasks:
-      - OE-01-H08
-  - id: IN-02
-    owner: Stephanie Rohde
-    item: 'Status-Validierung Woche 1 (A7): Finanzierungsbetrag EUR 15 Mio fix vs. ~10 Mio, CRM-/Renewal-Baseline, Owner-Bestätigungen, konsolidierter Bestand (mit Haeffner, CEO-Office)'
-    due: '2026-09-04'
-    status: offen
-  - id: IN-03
-    owner: Stephanie Rohde
-    item: Echte Holding-Kostenbasis + FTE-Baseline (ersetzt Recharge-Proxy ≈ 3'984 TEUR); AHS-FC27-Recharge
-    due: '2026-10-15'
-    status: offen
-    liefer_tasks:
-      - WS1-02-H05
-  - id: IN-04
-    owner: Amélie Charisius
-    item: Berater-/Externe-Kosten-Spend 12 Monate (min. 6 Kanzleien, 3 WP, Agenturen-Inventar — Beträge offen)
-    due: '2026-10-15'
-    status: offen
-    liefer_tasks:
-      - WS3-03-H03
-  - id: IN-05
-    owner: Amélie Charisius
-    item: Beekeeper-Vertragslaufzeit/Kündigungsfrist (Sunk-Cost) + Laufzeiten übrige Kernsysteme — vor TCO-/Plattform-Entscheid
-    due: '2026-09-30'
-    status: offen
-    liefer_tasks:
-      - WS1-01-H02
-  - id: IN-06
-    owner: Amélie Charisius
-    item: BR-/KBR-Landkarte DE/AT/ES beauftragt (Mitbestimmungs-Fundament)
-    due: '2026-09-30'
-    status: offen
-    liefer_tasks:
-      - WS5-01-H02
-  - id: IN-07
-    owner: Amélie Charisius
-    item: ES-Assessment Zaforesa geliefert (harter Liefertermin) — Basis für ES-Scope-Entscheid Dez 26
-    due: '2026-11-15'
-    status: offen
-    liefer_tasks:
-      - WS5-06-H04
-  - id: IN-08
-    owner: Amélie Charisius
-    item: Rücknahme-Nachweis AG Cottbus aktenkundig (mit Maizar) — ins Phase-0-Baseline-Paket
-    due: '2026-10-15'
-    status: offen
-  - id: IN-09
-    owner: Cüneyt Gökcöl
-    item: 'MUC-Integrationssanierung: Personalwirksamkeit binär geklärt (falls ja §111/§17-Fahrplan; falls nein Quelle der −50%-Annahme)'
-    due: '2026-09-30'
-    status: offen
-    liefer_tasks:
-      - WS3-02-H06
-  - id: IN-10
-    owner: Michael Haeffner
-    item: 'CRM-Lücke Haeffner nachgefasst: 9 Verträge / EUR 2.6 Mio (SWP, Scoot, Air Uniqon, Thai, ASL, DAT, NetJets Europe, BAE, Star East)'
+    start: '2026-09-25'
     due: '2026-10-31'
-    status: offen
-    liefer_tasks:
-      - WS4-02-H02
-  - id: IN-11
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS1-04
+    name: Org-Entscheid Verwaltung/Finance + §613a-Vorbereitung; eine CFO-Mailbox; GL auf @axs.aero
     owner: Andreas Fritthum
-    item: 'Finance-Assessment: Kompetenz-/Besetzungs-Check Rohde/Lesch/Pajor + Kartierung Cross-Border-Spaltung AAS-Finance VIE ↔ AHS-Finance HAM'
-    due: '2026-09-30'
-    status: offen
-    liefer_tasks:
-      - WS1-02-H04
-  - id: IN-12
-    owner: Cüneyt Gökcöl
-    item: Ist-Messung Meetingzeit je Führungsrolle (beauftragt KW36; Deckel-Fixierung im Diagnose-Review G2)
-    due: '2026-10-15'
-    status: offen
-    liefer_tasks:
-      - WS2-03-H04
-  - id: IN-13
+    start: '2026-09-18'
+    due: '2026-10-31'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS1-05
+    name: 'Job-Descriptions-Kaskade final: 6 GL-Rollen + Vice-Chairman-Abgrenzung (aus Chairman-2-Pager)'
     owner: Andreas Fritthum
-    item: Execution-Rate- + Entscheidungs-Durchlaufzeit-Baseline erhoben und eingefroren (heute «höchstens ~50%»)
-    due: '2026-10-15'
-    status: offen
-    liefer_tasks:
-      - WS2-03-H02
-      - WS2-03-H03
-  - id: IN-14
+    start: '2026-09-04'
+    due: '2026-10-31'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS1-06
+    name: RACI-Charta als INS-001-Anlage (10 Entscheidungstypen) in Kraft; INS-001-Punkte geschlossen
     owner: Amélie Charisius
-    item: §17/§18-KSchG-Schwellenprüfung je DE-Betrieb (BER, KEL) + §613a-Check + Sozialplan-Kostenschätzung KEL
-    due: '2026-09-30'
-    status: offen
-    liefer_tasks:
-      - WS3-02-H03
-  - id: IN-15
+    start: '2026-10-09'
+    due: '2026-11-30'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS1-07
+    name: P&L-Owner-Matrix 100% mit unterschriebener Zielvereinbarung je Einheit (43 LE / ~15 Stationen)
+    owner: Andreas Fritthum
+    start: '2026-10-09'
+    due: '2026-12-31'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS1-08
+    name: TOM-Blueprint VR-genehmigt (≡ Elysium 2.0, Q4-VR, Pre-Read T−14)
+    owner: Andreas Fritthum
+    start: '2026-11-06'
+    due: '2026-12-31'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: true
+    progress: 0
+    depends_on:
+    - WS3-05
+    nachlauf: false
+    progress_source: tasks
+  - id: WS1-09
+    name: Eine Finance-Linie operativ (cross-border AT↔DE; §613a-Widerspruchsfrist abgelaufen)
     owner: Stephanie Rohde
-    item: ZRH-Residual-Headcount (Art.-335d-OR-Schwellen-Check) im Baseline-Datenpaket
+    start: '2026-10-30'
+    due: '2027-01-31'
+    date_assumed: true
+    phase: Phase 2
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS1-10
+    name: DE-GF-Entflechtung Welle 1 im Handelsregister (DRS 18→≤5; Interim Prokuren)
+    owner: Amélie Charisius
+    start: '2026-11-30'
+    due: '2027-02-28'
+    date_assumed: true
+    phase: Phase 2
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS1-11
+    name: HR-Zielorganisation streamlined + ShAir/HR-Schnittstelle geklärt (nur Struktur-Ebene)
+    owner: Amélie Charisius
+    start: '2026-10-30'
+    due: '2027-02-28'
+    date_assumed: true
+    phase: Phase 2
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS1-12
+    name: IT-/Didit-Zielorganisation bereinigt (Governance, Sourcing-Entscheid, Bus-Faktor entschärft)
+    owner: Andreas Fritthum
+    start: '2026-10-30'
+    due: '2027-02-28'
+    date_assumed: true
+    phase: Phase 2
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS1-13
+    name: 'Zielnachweis WS1: Org vollzogen, Doppelspurigkeiten ≥5/6, DRS ≤5 Mandate, Übergabe in die Linie'
+    owner: Andreas Fritthum
+    start: '2027-03-15'
+    due: '2027-04-30'
+    date_assumed: true
+    phase: Phase 3
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS1-14
+    name: 'Nachlauf: Entity-Portfolio-Bereinigung inkl. ZRH-Vollzug (Art. 335f–k OR)'
+    owner: Amélie Charisius
+    start: '2027-03-31'
+    due: '2027-06-30'
+    date_assumed: true
+    phase: Nachlauf Q2/27
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: true
+    progress_source: tasks
+  programm: transformation
+- code: WS2
+  name: Führungsprozesse & Management Operating System (MOS)
+  owner: Andreas Fritthum
+  support: CEO-Office (Tracker-Betrieb), Rohde, Matthei, Charisius, Petric; Umsetzungsmotor CGO
+  milestones:
+  - id: WS2-01
+    name: GL bereinigt = 6 publiziert; Ebenen-Trennung GL / Vice Chairman / Chairman («5 vs. 7» aufgelöst)
+    owner: Andreas Fritthum
+    start: '2026-08-14'
+    due: '2026-09-18'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS2-02
+    name: 'Führungsrhythmus scharf: Standing-Traktandum, Entscheids-Queue + GL-Norm, 13-Wo-Liquidität wöchentlich'
+    owner: Andreas Fritthum
+    start: '2026-08-14'
+    due: '2026-10-07'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS2-03
+    name: 'Baseline WS2 erhoben: Execution-Rate, Durchlaufzeit, Ist-Meetingzeit, Reporting-Pünktlichkeit'
+    owner: Andreas Fritthum
+    start: '2026-08-21'
     due: '2026-10-15'
-    status: offen
-    liefer_tasks:
-      - WS3-03-H04
-  - id: IN-16
+    date_assumed: false
+    phase: Phase 0
+    gate: G2
+    critical: true
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS2-04
+    name: Gruppen-Commitment-Tracker live (Backbone aller 7 Ströme; Konsequenz-Mechanik scharf)
+    owner: Andreas Fritthum
+    start: '2026-09-11'
+    due: '2026-10-31'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS2-05
+    name: 'Cutover Chairman-Aufträge-Tracker: read-only-Filter A–D; Do-18:00-Serie aufgegangen, kein Parallelbetrieb'
+    owner: Andreas Fritthum
+    start: '2026-10-09'
+    due: '2026-10-31'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS2-06
+    name: Entscheids-Queue live (Liegedauer, Erzwingung ab Schwelle) + VR-Pre-Read T−14 + Beschluss-Tracking
+    owner: Andreas Fritthum
+    start: '2026-10-30'
+    due: '2026-11-30'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS2-07
+    name: Entscheids-Kaskade als INS-001 Anhang B in Kraft; Eskalationsmatrix v1.0 publiziert
+    owner: Amélie Charisius
+    start: '2026-10-30'
+    due: '2026-11-30'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS2-08
+    name: Ops-Performance-Review-Format Top-6 + Commitment-Board GL/Directors live; Konsequenz-Regelwerk geprüft
+    owner: Florian Matthei
+    start: '2026-10-16'
+    due: '2026-11-30'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS2-09
+    name: MOS-Handbuch v1.0 als Konzernrichtlinie; Monthly Report erstmals ≤20. inkl. 13-Wo-Liquidität
+    owner: Andreas Fritthum
+    start: '2026-11-20'
+    due: '2026-12-31'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS2-10
+    name: Shift-Huddle-Pilot 2 Stationen (1 CH + 1 DE; VIE erst nach BVD-Entscheid)
+    owner: Florian Matthei
+    start: '2026-10-30'
+    due: '2027-01-31'
+    date_assumed: true
+    phase: Phase 2
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS2-11
+    name: Execution-Rate ≥80% + Kadenz-Compliance ≥95% erreicht
+    owner: Andreas Fritthum
+    start: '2026-12-18'
+    due: '2027-02-28'
+    date_assumed: true
+    phase: Phase 2
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS2-12
+    name: Chairman-Automationen in GL-Betrieb (Vertex-Stack) überführt — SPoF DRS-Mac beseitigt
     owner: Tine Petric
-    item: AI-Budget-Währung CHF/EUR bereinigt + Bottom-up-Validierung der EUR-5'000k-Targets (bisher nur Top-Down 25.05.)
+    start: '2026-09-30'
+    due: '2027-02-28'
+    date_assumed: true
+    phase: Phase 2
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS2-13
+    name: Execution ≥90% über 2 Monate; Reporting-Vollausbau Art. 963 OR; Shift-Huddle-Rollout alle Stationen
+    owner: Andreas Fritthum
+    start: '2027-02-12'
+    due: '2027-04-30'
+    date_assumed: true
+    phase: Phase 3
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS2-14
+    name: MOS-Audit bestanden (Chairman-Unabhängigkeit) → Übergabe in die Linie; Schlussbericht GL/VR
+    owner: Andreas Fritthum
+    start: '2027-02-26'
+    due: '2027-04-30'
+    date_assumed: true
+    phase: Phase 3
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS2-15
+    name: 'Programm-Freigabe Steuerungs-Trio: DRS/AFR/CGO analysieren alle WS + Handlungen, geben frei bzw. passen an'
+    owner: Dieter Streuli
+    start: '2026-08-19'
+    due: '2026-08-19'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: true
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS2-16
+    name: 'WS-Freigabe aller Verantwortlichen: jede/r analysiert eigenen Strom + Handlungen, gibt frei bzw. passt an'
+    owner: Andreas Fritthum
+    start: '2026-08-03'
+    due: '2026-08-14'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: true
+    progress: 0
+    depends_on:
+    - WS2-15
+    nachlauf: false
+    progress_source: tasks
+  - id: WS2-17
+    name: 'Commitment RUBICON-Plan: Read & Sign aller Verantwortlichen (Plan verbindlich einhalten)'
+    owner: Dieter Streuli
+    start: '2026-08-28'
+    due: '2026-08-28'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: true
+    progress: 0
+    depends_on:
+    - WS2-15
+    - WS2-16
+    nachlauf: false
+    progress_source: tasks
+  programm: transformation
+- code: WS3
+  name: Overhead, Kosten & Kostenführerschaft
+  owner: Stephanie Rohde
+  support: Pajor, AFR (Finanz-Challenge + AAS-Technics-Turnaround), Wüst, Charisius
+  milestones:
+  - id: WS3-01
+    name: 'Sofortpaket cash-neutral: Interims-Zentralkostendeckel, Berater-Freeze >EUR 25k, P&L-Interimsliste 100%'
+    owner: Stephanie Rohde
+    start: '2026-09-11'
+    due: '2026-09-05'
+    date_assumed: true
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS3-15
+    name: 'BER + AAS Technics: strategischer Go/No-Go «drehen oder raus» (VR 26.08.) — beschlussreife Vorlage mit Zahlengrundlage'
+    owner: Dieter Streuli
+    start: '2026-08-14'
+    due: '2026-08-24'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+  - id: WS3-02
+    name: 'Umsetzungs-Kickoff Gates AAS Technics + BER + MUC: §17/§18-Schwellenprüfung, §613a-Check, MUC geklärt'
+    owner: Andreas Fritthum
+    start: '2026-09-11'
     due: '2026-09-30'
-    status: offen
-    liefer_tasks:
-      - WS6-01-H04
-      - WS6-02-H02
-  - id: IN-17
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on:
+    - WS3-15
+    nachlauf: false
+    progress_source: tasks
+  - id: WS3-03
+    name: 'Baseline-Datenpaket komplett + Diagnose-Review GL: Zielwerte validiert (−30%/−5%/−50%/−20%)'
+    owner: Stephanie Rohde
+    start: '2026-09-12'
+    due: '2026-10-15'
+    date_assumed: false
+    phase: Phase 0
+    gate: G2
+    critical: true
+    progress: 0
+    depends_on:
+    - OE-01
+    nachlauf: false
+    progress_source: tasks
+  - id: WS3-04
+    name: Overhead-Baseline-Report final (echte Holding-Kostenbasis ersetzt Recharge-Proxy)
+    owner: Stephanie Rohde
+    start: '2026-10-20'
+    due: '2026-10-31'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS3-05
+    name: 'Finanzierungs-Closing (G6): cash-wirksame Schritte ab jetzt zulässig; BER-Disclosure in Closing-Doku'
+    owner: Stephanie Rohde
+    start: '2026-08-14'
+    due: '2026-10-31'
+    date_assumed: false
+    phase: Phase 1
+    gate: G6
+    critical: true
+    progress: 0
+    depends_on:
+    - WS3-03
+    nachlauf: false
+    progress_source: tasks
+  - id: WS3-06
+    name: 'Externe-Kosten-Programm: Spend-Baseline (6 Kanzleien/3 WP) + Einkaufsbündelung 14 Stationen gestartet'
+    owner: Amélie Charisius
+    start: '2026-09-18'
+    due: '2026-09-30'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS3-07
+    name: Finaler Zentralkosten-Deckel (nach Baseline) + Zero-based-Zielorganisation GL-beschlossen
+    owner: Stephanie Rohde
+    start: '2026-11-13'
+    due: '2026-11-30'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS3-08
+    name: Verlustbringer-Beschlussvorlagen AAS Technics + BER beschlussreif «drehen vs. eliminieren»; MUC-Fahrplan
+    owner: Stephanie Rohde
+    start: '2026-11-13'
+    due: '2026-11-30'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS3-09
+    name: 'Staff-Cost-Quick-Wins flächig: Krankenstand-Transparenz + Arbeitszeitkonten/Überstunden-Monitoring'
+    owner: Amélie Charisius
+    start: '2026-11-30'
+    due: '2026-12-31'
+    date_assumed: true
+    phase: Phase 2
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS3-10
+    name: Station-P&L + Cost-per-Turn alle Stationen monatlich live; Reporting 3. Monat pünktlich
+    owner: Stephanie Rohde
+    start: '2026-11-13'
+    due: '2027-01-31'
+    date_assumed: true
+    phase: Phase 2
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS3-11
+    name: 'ZRH-Residual: fixer Endtermin fixiert (Art. 335f–k OR nach Headcount-Baseline; PR-Vorlauf)'
+    owner: Cüneyt Gökcöl
+    start: '2026-11-16'
+    due: '2027-02-28'
+    date_assumed: true
+    phase: Phase 2
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: WS3-12
+    name: 'AAS Technics + BER: Restrukturierung eingeleitet (§111/§17-Anzeige, Kündigungsausspruch gestartet)'
+    owner: Andreas Fritthum
+    start: '2027-01-29'
+    due: '2027-02-28'
+    date_assumed: true
+    phase: Phase 2
+    gate: G4
+    critical: true
+    progress: 0
+    depends_on:
+    - WS3-08
+    nachlauf: false
+    progress_source: tasks
+  - id: WS3-13
+    name: 'Zielbild-Nachweis Kosten: Zentralkosten −30%, externe Kosten −20%; Einsparungs-Brücke CFO-testiert'
+    owner: Stephanie Rohde
+    start: '2027-04-09'
+    due: '2027-03-31'
+    date_assumed: true
+    phase: Phase 3
+    gate:
+    critical: true
+    progress: 0
+    depends_on:
+    - WS3-12
+    nachlauf: false
+    progress_source: tasks
+  - id: WS3-14
+    name: 'Nachlauf: BER + AAS Technics wirksam; Verlustquellen-Run-Rate −50%; EBITDA-Run-Rate ≥12''372 (Gate 2 AI)'
+    owner: Stephanie Rohde
+    start: '2027-04-30'
+    due: '2027-06-30'
+    date_assumed: true
+    phase: Nachlauf Q2/27
+    gate:
+    critical: true
+    progress: 0
+    depends_on:
+    - WS3-12
+    nachlauf: true
+    progress_source: tasks
+  - id: WS3-16
+    name: Einsparmassnahmen-Masterliste (Personal + Sachkosten) konsolidiert und in FC27 eingepflegt (bis Ende KW32)
+    owner: Dieter Streuli
+    start: '2026-07-31'
+    due: '2026-08-14'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: true
+    progress: 0
+    depends_on: []
+    nachlauf: false
+  - id: WS3-17
+    name: Standort-Kostenvergleich Wien vs. Hamburg (Miet-/Betriebskosten) — Einsparpotenzial ermittelt
+    owner: Stephanie Rohde
+    start: '2026-07-31'
+    due: '2026-08-14'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+  - id: WS3-18
+    name: Nicht benötigte Büroflächen/Mietverträge gekündigt (Wien, Frankfurt); Kündigungsfristen geprüft
+    owner: Stephanie Rohde
+    start: '2026-07-31'
+    due: '2026-08-31'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+  - id: WS3-19
+    name: BER-Entscheidungsgrundlage für VR 26.08. erstellt (P&L + Szenarien Insolvenz / Stilllegung / Sanierung)
+    owner: Stephanie Rohde
+    start: '2026-07-31'
+    due: '2026-08-19'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: true
+    progress: 0
+    depends_on: []
+    nachlauf: false
+  - id: WS3-20
+    name: Führungskraft AAS Technics (Business Development / strategische Weiterentwicklung) — Suche gestartet
+    owner: Andreas Fritthum
+    start: '2026-07-31'
+    due: '2026-09-30'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    support: Amélie Charisius
+  - id: WS3-21
+    name: 'Zwischen-Run-Rate-Checkpoint: CFO-testierte Kosten-Run-Rate YTD (wieviel bis Jahresende schon eingefangen — Winter-Wirkung gemessen, nicht erst Zielnachweis 04/27)'
+    owner: Stephanie Rohde
+    support: Thomas Pajor
+    start: '2026-11-01'
+    due: '2026-12-15'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: true
+    progress: 0
+    depends_on:
+    - WS3-04
+    nachlauf: false
+  programm: transformation
+- code: OE
+  name: Operational Excellence / Stabilisierung
+  owner: Cüneyt Gökcöl
+  support: Matthei (Delivery/Ops-Lead), Pajor, Charisius, Petric
+  milestones:
+  - id: OE-01
+    name: 'Datenzugangs-Gate G1: EPG-GHS + Looker/FTE erteilt oder Eskalation Stufe 3 (Interim AHM-730-Rohdaten)'
     owner: Thomas Pajor
-    item: VIE-Overhead in EUR + aktualisierte Gruppenfunktionsliste + Elysium-Letztstand (Basis für den Restrukturierungs-Business-Case; per-Kopf-OPEX)
+    start: '2026-08-14'
+    due: '2026-09-12'
+    date_assumed: false
+    phase: Phase 0
+    gate: G1
+    critical: true
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: OE-02
+    name: 'OE-Kickoff: Scorecard-Design 5–6 KPIs/Station gerahmt; «Top-3 ungeregelte Prozesse» von CGO benannt'
+    owner: Cüneyt Gökcöl
+    start: '2026-08-31'
+    due: '2026-09-30'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: OE-03
+    name: Ops-KPI-Extrakt 3 Pilotstationen (DUS Ramp, VIE, MUC)
+    owner: Florian Matthei
+    start: '2026-09-15'
+    due: '2026-10-31'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: false
+    progress: 0
+    depends_on:
+    - OE-01
+    nachlauf: false
+    progress_source: tasks
+  - id: OE-04
+    name: 'Ops-Excellence-Scorecard v1.0 definiert: Zielwerte je Station, aggregiert (mitbestimmungskonform)'
+    owner: Florian Matthei
+    start: '2026-11-06'
+    due: '2026-11-30'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: OE-05
+    name: Scorecard monatlich produktiv Top-6 Verluststationen im Ops-Performance-Review
+    owner: Florian Matthei
+    start: '2026-11-16'
+    due: '2026-11-30'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: OE-06
+    name: 'Scorecard-Baseline alle ~15 Stationen erhoben und eingefroren (G7-Referenz: SLA ≥ Baseline)'
+    owner: Florian Matthei
+    start: '2026-11-30'
+    due: '2026-12-31'
+    date_assumed: true
+    phase: Phase 1
+    gate: G7
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: OE-07
+    name: 'SLA-Schutzschirm live: Frühwarn-Trigger + Auto-Eskalation je Station (SGHA Annex B §9, VIE priorisiert)'
+    owner: Florian Matthei
+    start: '2026-12-15'
+    due: '2026-12-31'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: OE-08
+    name: Ops-Analytics als AI@AXS-Use-Case an WS6 übergeben (Scorecard-Daten als früher Anwendungsfall)
+    owner: Florian Matthei
+    start: '2027-01-15'
+    due: '2027-02-28'
+    date_assumed: true
+    phase: Phase 2
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: OE-09
+    name: 'Scorecard flächendeckend: alle ~15 Stationen monatlich produktiv'
+    owner: Florian Matthei
+    start: '2027-01-15'
+    due: '2027-03-31'
+    date_assumed: true
+    phase: Phase 2
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: OE-10
+    name: 'Zielnachweis Betriebs-Exzellenz: SLA ≥ M1-Baseline, 0 SLA-Strafen-/Kündigungsereignisse, Safety 0 kritisch'
+    owner: Cüneyt Gökcöl
+    start: '2027-04-16'
+    due: '2027-04-30'
+    date_assumed: true
+    phase: Phase 3
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    progress_source: tasks
+  - id: OE-11
+    name: 'Nachlauf: personenbezogene Ops-KPIs/Shift-Fill-Massnahmen nach BV (DE §87 / AT §96) umgesetzt'
+    owner: Amélie Charisius
+    start: '2027-01-29'
+    due: '2027-06-30'
+    date_assumed: true
+    phase: Nachlauf Q2/27
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: true
+    progress_source: tasks
+  programm: transformation
+- code: WS4
+  name: Commercial & Kundennähe (inkl. Commercial-Masterplan 1:1)
+  owner: Michael Haeffner
+  support: >-
+    AFR (harte Verhandlungen Eurowings/LH) · Matthei (Ops-KPI-Munition, Deputy) · Petric (CRM-/AI-Anbindung E10) · DRS (Tier-A-Touchpoints, Steuerung/Kontrolle) · Masterplan-Quelle:
+    crm/cockpit/masterplan.json (43 MS, nie von Hand editieren)
+  milestones:
+  - id: WS4-01
+    name: 'Kunden-Schutzschirm live (CRM :8600): Renewal-Status validiert, <120-Tage-Alert, Datenehrlichkeit'
+    owner: Michael Haeffner
+    start: '2026-09-01'
+    due: '2026-09-30'
+    critical: false
+    date_assumed: false
+    nachlauf: false
+    phase: Phase 0
+    gate:
+    progress: 0
+    depends_on:
+    - M03
+    progress_source: tasks
+  - id: WS4-02
+    name: CRM-Datenqualitäts-Stand im Baseline-Datenpaket geliefert (Diagnose-Review GL)
+    owner: Michael Haeffner
+    start: '2026-09-25'
+    due: '2026-10-15'
+    critical: true
+    date_assumed: false
+    nachlauf: false
+    phase: Phase 0
+    gate: G2
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS4-04
+    name: 'D2: Eurowings-Dossier DUS Ramp (EUR 26.26 Mio, Frist 31.01.27) + ExBoD/GL-Mandat, Lead AFR'
+    owner: Andreas Fritthum
+    start: '2026-08-31'
+    due: '2026-10-31'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 1
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS4-05
+    name: 'D3: Beziehungspflege-Matrix Top-Accounts × Owner (3-Tier) final; «Dieters Liste» operativ'
+    owner: Michael Haeffner
+    start: '2026-08-31'
+    due: '2026-10-31'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 1
+    gate:
+    progress: 0
+    depends_on:
+    - M06
+    progress_source: tasks
+  - id: WS4-06
+    name: 'D4: Commercial Cafés als Monatsrhythmus etabliert (Haeffner × Stationsleiter)'
+    owner: Michael Haeffner
+    start: '2026-09-30'
+    due: '2026-11-30'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 1
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS4-07
+    name: 'D5: Inquiry-Manager-SLA live, Erstantwort ≤24h (Annahme, M1 validiert)'
+    owner: Michael Haeffner
+    start: '2026-08-31'
+    due: '2026-11-30'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 1
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS4-08
+    name: 2026-OPEN-Renewals ≥90% gesichert; TUIFLY-Entscheid (~EUR 5.2M, Nov); Eurowings-Mandat GL-beschlossen
+    owner: Michael Haeffner
+    start: '2026-09-30'
+    due: '2026-12-31'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 1
+    gate:
+    progress: 0
+    depends_on:
+    - M10
+    progress_source: tasks
+  - id: WS4-09
+    name: Eurowings DUS Ramp (EUR 26.26 Mio) verlängert — grösster Einzel-Cliff, Verhandlungs-Lead AFR
+    owner: Michael Haeffner
+    start: '2026-11-13'
+    due: '2027-01-31'
+    critical: true
+    date_assumed: false
+    nachlauf: false
+    phase: Phase 2
+    gate:
+    progress: 0
+    depends_on:
+    - WS4-04
+    progress_source: tasks
+  - id: WS4-10
+    name: 'D6: Kundenfeedback-Schleife Top-20 + Claims-Log, Zyklus 1 an GL → speist Renewal-Dossiers'
+    owner: Michael Haeffner
+    start: '2026-11-30'
+    due: '2027-02-28'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 2
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS4-11
+    name: 'D7/Zielnachweis: Cliff-2027-Coverage ≥40%; E1–E10 selbsttragend; VR-Report TRAK-2026-0007'
+    owner: Michael Haeffner
+    start: '2026-11-30'
+    due: '2027-04-30'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 3
+    gate:
+    progress: 0
+    depends_on:
+    - M21
+    progress_source: tasks
+  - id: WS4-12
+    name: 'Nachlauf: Cliff-2027-Coverage-Pfad ≥70% bestätigt; Übergabe Commercial-Steuerung in die Linie'
+    owner: Michael Haeffner
+    start: '2027-05-14'
+    due: '2027-06-30'
+    critical: false
+    date_assumed: false
+    nachlauf: true
+    phase: Nachlauf Q2/27
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: M01
+    name: Key-Harmonisierung physisch in Odoo geschrieben
+    owner: Tine Petric
+    start: '2026-08-14'
+    due: '2026-09-04'
+    progress: 0
+    critical: false
+    phase: Phase 0
+    gate:
+    nachlauf: false
+    quarter: Q3/26
+    prio: P1
+    kpi: 100% der 338 Verträge und 129 Kunden tragen eine kanonische ID in Odoo; 0 unaufgelöste Duplikate im Reconciliation-Report
+    depends_on: []
+    progress_source: tasks
+  - id: M02
+    name: €-Wert-Lücken bei 72 Kunden schliessen
+    owner: Michael Haeffner
+    start: '2026-08-14'
+    due: '2026-10-14'
+    progress: 0
+    critical: false
+    phase: Phase 0
+    gate:
+    nachlauf: false
+    quarter: Q3/26
+    prio: P1
+    kpi: 72 → 0 Kunden mit €-losen Verträgen; ≥95% des Forecast-Volumens vertraglich beziffert
+    depends_on:
+    - M01
+    progress_source: tasks
+  - id: M03
+    name: OPEN-Register aufbauen & Datenlücken schliessen
+    owner: Michael Haeffner
+    start: '2026-08-14'
+    due: '2026-09-04'
+    progress: 0
+    critical: false
+    phase: Phase 0
+    gate:
+    nachlauf: false
+    quarter: Q3/26
+    prio: P1
+    kpi: 148/148 OPEN-Verträge mit €-Wert und Index-Flag im Register; 0 Verträge ohne €-Wert innerhalb des OPEN-Sets
+    depends_on:
+    - M01
+    progress_source: tasks
+  - id: M04
+    name: Cliff-2027-Wertliste & Sponsor-Zuordnung fixieren
+    owner: Michael Haeffner
+    start: '2026-08-14'
+    due: '2026-09-04'
+    progress: 0
+    critical: false
+    phase: Phase 0
+    gate:
+    nachlauf: false
+    quarter: Q3/26
+    prio: P1
+    kpi: 94/94 Verträge nach Wert gerankt; Top-30 (>ca. 80% des €107M) mit Owner+Sponsor belegt
+    depends_on:
+    - M03
+    progress_source: tasks
+  - id: M05
+    name: LH-Group Sponsor-Governance & Account-Plan aktivieren
+    owner: Andreas Fritthum
+    start: '2026-08-14'
+    due: '2026-09-30'
+    progress: 0
+    critical: false
+    phase: Phase 0
+    gate:
+    nachlauf: false
+    quarter: Q3/26
+    prio: P1
+    kpi: LH-Account-Plan fertig + 100% der LH-Verträge mit €-Wert und Renewal-Datum erfasst; mind. 1 dokumentierter strategischer Touchpoint mit LH-Procurement
+    depends_on:
+    - M04
+    progress_source: tasks
+  - id: M06
+    name: 'Top-30-Accounts nach Wert: Sponsor zugewiesen'
+    owner: Dieter Streuli
+    start: '2026-08-14'
+    due: '2026-09-07'
+    progress: 0
+    critical: false
+    phase: Phase 0
+    gate:
+    nachlauf: false
+    quarter: Q3/26
+    prio: P1
+    kpi: 30 von 30 Top-Accounts mit namentlichem Sponsor im CRM hinterlegt
+    depends_on:
+    - M04
+    progress_source: tasks
+  - id: M07
+    name: Pipeline-€-Ziel & Prospect-Trichter aufsetzen
+    owner: Michael Haeffner
+    start: '2026-08-14'
+    due: '2026-09-21'
+    progress: 0
+    critical: false
+    phase: Phase 0
+    gate:
+    nachlauf: false
+    quarter: Q3/26
+    prio: P1
+    kpi: Pipeline-€-Ziel schriftlich fixiert; alle 21 Prospects mit €-Wert + Trichterstufe in Odoo erfasst; gewichteter Pipeline-Wert ausgewiesen
+    depends_on: []
+    progress_source: tasks
+  - id: M08
+    name: Bidirektionaler Odoo-Cockpit-Sync scharf geschaltet
+    owner: Tine Petric
+    start: '2026-08-16'
+    due: '2026-09-30'
+    progress: 0
+    critical: false
+    phase: Phase 0
+    gate:
+    nachlauf: false
+    quarter: Q3/26
+    prio: P1
+    kpi: Sync-Latenz < 24h; 337 offene Follow-ups und 32 Churn-Fälle im Cockpit tagesaktuell; 0 Fehl-Sync-Tage über 2 Wochen
+    depends_on:
+    - M01
+    progress_source: tasks
+  - id: M09
+    name: Datenlücken der Cliff-2027-Verträge schließen (Verhandlungsfähigkeit)
+    owner: Michael Haeffner
+    start: '2026-07-01'
+    due: '2026-10-07'
+    progress: 0
+    critical: false
+    phase: Phase 0
+    gate:
+    nachlauf: false
+    quarter: Q3/26
+    prio: P1
+    kpi: 0 Cliff-2027-Verträge ohne €-Wert; Indexierungsklausel bei jedem Cliff-2027-Renewal Pflicht-Traktandum
+    depends_on:
+    - M04
+    progress_source: tasks
+  - id: M10
+    name: OPEN → 0 offene Klassifizierungen (Renewal-Status je Vertrag)
+    owner: Michael Haeffner
+    start: '2026-08-16'
+    due: '2026-09-28'
+    progress: 0
+    critical: false
+    phase: Phase 0
+    gate:
+    nachlauf: false
+    quarter: Q3/26
+    prio: P1
+    kpi: 0 offene Klassifizierungen; 148/148 Verträge kategorisiert und mit Account-Owner versehen binnen 90 Tagen ab heute
+    depends_on:
+    - M03
+    progress_source: tasks
+  - id: M11
+    name: LH-Datenlücken & Indexierung schließen (Verhandlungsfähigkeit herstellen)
+    owner: Michael Haeffner
+    start: '2026-08-01'
+    due: '2026-11-30'
+    progress: 0
+    critical: false
+    phase: Phase 1
+    gate:
+    nachlauf: false
+    quarter: Q3/26
+    prio: P1
+    kpi: 0 LH-Verträge ohne €-Wert; 100% der LH-Verträge mit dokumentiertem Indexierungsstatus (mit/ohne CPI-CBA-Klausel)
+    depends_on:
+    - M05
+    progress_source: tasks
+  - id: M12
+    name: 66 stille Accounts reaktivieren — Touchpoint-Welle
+    owner: Michael Haeffner
+    start: '2026-08-01'
+    due: '2026-10-31'
+    progress: 0
+    critical: false
+    phase: Phase 1
+    gate:
+    nachlauf: false
+    quarter: Q4/26
+    prio: P1
+    kpi: ≥55 der 66 stillen Accounts mit frischem, im CRM erfasstem Touchpoint (<10 Rest-Stille)
+    depends_on:
+    - M08
+    progress_source: tasks
+  - id: M13
+    name: LH-Group-Frühverlängerung als Anker starten
+    owner: Andreas Fritthum
+    start: '2026-08-01'
+    due: '2026-10-31'
+    progress: 0
+    critical: false
+    phase: Phase 1
+    gate:
+    nachlauf: false
+    quarter: Q4/26
+    prio: P1
+    kpi: LH-Cliff-2027-Verträge mit unterzeichnetem Term-Sheet oder Verlängerungs-LOI
+    depends_on:
+    - M04
+    progress_source: tasks
+  - id: M14
+    name: Sponsor-Zuordnung für unbetreute OPEN-Kunden
+    owner: Andreas Fritthum
+    start: '2026-09-01'
+    due: '2026-10-31'
+    progress: 0
+    critical: false
+    phase: Phase 1
+    gate:
+    nachlauf: false
+    quarter: Q4/26
+    prio: P2
+    kpi: Top-20 OPEN-Kunden nach €-Wert (Abdeckung ≥70% des €91M) mit benanntem C-Level-Sponsor
+    depends_on:
+    - M10
+    progress_source: tasks
+  - id: M15
+    name: Datenqualitäts-Gate für €-Werte und Indexklauseln aktiv
+    owner: Michael Haeffner
+    start: '2026-09-01'
+    due: '2026-11-30'
+    progress: 0
+    critical: false
+    phase: Phase 1
+    gate:
+    nachlauf: false
+    quarter: Q4/26
+    prio: P2
+    kpi: €-Wert-Lücke von 72 Kunden auf < 15 gesenkt; Indexklausel-Status je Vertrag im Cockpit sichtbar
+    depends_on:
+    - M08
+    progress_source: tasks
+  - id: M16
+    name: 337 offene Follow-ups abarbeiten & Follow-up-Disziplin etablieren
+    owner: Michael Haeffner
+    start: '2026-09-01'
+    due: '2026-12-31'
+    progress: 0
+    critical: false
+    phase: Phase 1
+    gate:
+    nachlauf: false
+    quarter: Q4/26
+    prio: P2
+    kpi: Offene Follow-ups von 337 auf <100 reduziert; 0 Prospects in Aktivitäts-Stille >30 Tage; Weekly Pipeline-Review etabliert
+    depends_on:
+    - M07
+    progress_source: tasks
+  - id: M17
+    name: Basisdokumente-Vollständigkeit bei OPEN-Verträgen herstellen
+    owner: Michael Haeffner
+    start: '2026-08-01'
+    due: '2026-12-31'
+    progress: 0
+    critical: false
+    phase: Phase 1
+    gate:
+    nachlauf: false
+    quarter: Q4/26
+    prio: P1
+    kpi: Dokumenten-Vollständigkeitsquote der 148 OPEN-Verträge ≥90%; €91M vertraglich dokumentiert
+    depends_on:
+    - M02
+    progress_source: tasks
+  - id: M18
+    name: Sponsor + Cadence auf alle 112 sponsorlosen Accounts ausrollen
+    owner: Michael Haeffner
+    start: '2026-09-01'
+    due: '2026-12-15'
+    progress: 0
+    critical: false
+    phase: Phase 1
+    gate:
+    nachlauf: false
+    quarter: Q4/26
+    prio: P2
+    kpi: 112 von 112 Accounts mit Sponsor + hinterlegter Cadence; €105M vollständig abgedeckt
+    depends_on:
+    - M06
+    progress_source: tasks
+  - id: M19
+    name: Cockpit als Steuerinstrument im 3-Ebenen-Modell verankert
+    owner: Tine Petric
+    start: '2026-10-01'
+    due: '2026-12-15'
+    progress: 0
+    critical: false
+    phase: Phase 1
+    gate:
+    nachlauf: false
+    quarter: Q4/26
+    prio: P2
+    kpi: Sponsor-Feld für 129/129 Kunden befüllt; 112 sponsorlose Kunden auf < 40 reduziert; Aktivitäts-Stille-Liste im Cockpit live
+    depends_on:
+    - M08
+    progress_source: tasks
+  - id: M20
+    name: Neugeschäft-Pipeline auffüllen (Klumpen strukturell verdünnen)
+    owner: Michael Haeffner
+    start: '2026-09-01'
+    due: '2027-06-30'
+    progress: 0
+    critical: false
+    phase: Nachlauf Q2/27
+    gate:
+    nachlauf: true
+    quarter: Q4/26
+    prio: P2
+    kpi: Akquise-Pipeline von 21 auf ≥50 qualifizierte Prospects; offene Follow-ups von 337 auf <150 reduziert
+    depends_on:
+    - M07
+    progress_source: tasks
+  - id: M21
+    name: 30%-Sicherungsziel des €107M-Volumens bis Q4/2026
+    owner: Michael Haeffner
+    start: '2026-08-01'
+    due: '2026-12-31'
+    progress: 0
+    critical: false
+    phase: Phase 1
+    gate:
+    nachlauf: false
+    quarter: Q4/26
+    prio: P1
+    kpi: ≥ €32M (30% von €107M) gesichert; Fortschritts-Balken im Cockpit
+    depends_on:
+    - M13
+    progress_source: tasks
+  - id: M22
+    name: Verbindliche Indexierungsklausel (CPI/CBA) als Renewal-Standard
+    owner: Stephanie Rohde
+    start: '2026-09-01'
+    due: '2027-01-31'
+    progress: 0
+    critical: false
+    phase: Phase 2
+    gate:
+    nachlauf: false
+    quarter: Q1/27
+    prio: P1
+    kpi: Standardklausel freigegeben + in Vorlage; 100% neuer Renewal-Drafts ab Q1/2027 mit Indexierung oder dokumentierter Ausnahme
+    depends_on:
+    - M17
+    progress_source: tasks
+  - id: M23
+    name: Prospect-Trichter von 21 auf mind. 60 Leads verbreitern
+    owner: Michael Haeffner
+    start: '2026-09-01'
+    due: '2027-03-31'
+    progress: 0
+    critical: false
+    phase: Phase 2
+    gate:
+    nachlauf: false
+    quarter: Q1/27
+    prio: P1
+    kpi: Prospect-Zahl in Odoo von 21 auf ≥60 verdreifacht; ≥10 der 32 Churn-Kunden als Reaktivierungs-Lead requalifiziert
+    depends_on:
+    - M07
+    progress_source: tasks
+  - id: M24
+    name: LH-Multi-Year-Term-Gespräch führen
+    owner: Andreas Fritthum
+    start: '2026-11-01'
+    due: '2027-03-31'
+    progress: 0
+    critical: false
+    phase: Phase 2
+    gate:
+    nachlauf: false
+    quarter: Q1/27
+    prio: P1
+    kpi: Multi-Year-Term-Gespräch geführt + Absichtserklärung/Term-Sheet-Grundzüge dokumentiert für ≥€40M LH-Volumen mit Ziel-Laufzeit ≥2029
+    depends_on:
+    - M11
+    progress_source: tasks
+  - id: M25
+    name: Cadence-Kopplung an CLIFF-2027-Renewal-Wand
+    owner: Andreas Fritthum
+    start: '2026-10-01'
+    due: '2027-06-30'
+    progress: 0
+    critical: false
+    phase: Nachlauf Q2/27
+    gate:
+    nachlauf: true
+    quarter: Q2/27
+    prio: P2
+    kpi: 100% der 94 CLIFF-2027-Verträge mit dokumentiertem Sponsor-Touchpoint vor Renewal-Start
+    depends_on:
+    - M18
+    progress_source: tasks
+  - id: M26
+    name: 'Nicht-Anker-Wachstum: Top-10-Non-LH-Kunden mit Sponsoren belegen & ausbauen'
+    owner: Dieter Streuli
+    start: '2026-10-01'
+    due: '2027-06-30'
+    progress: 0
+    critical: false
+    phase: Nachlauf Q2/27
+    gate:
+    nachlauf: true
+    quarter: Q2/27
+    prio: P2
+    kpi: Top-10-Non-LH-Kunden jeweils mit benanntem Sponsor + Ausbau-Ziel; LH-Anteil am Gesamt-Forecast von 34% auf ≤30% gesenkt
+    depends_on:
+    - M05
+    progress_source: tasks
+  - id: M27
+    name: Re-Pricing & Indexierung in Verhandlung bringen
+    owner: Michael Haeffner
+    start: '2026-10-01'
+    due: '2027-06-30'
+    progress: 0
+    critical: false
+    phase: Nachlauf Q2/27
+    gate:
+    nachlauf: true
+    quarter: Q2/27
+    prio: P2
+    kpi: ≥80% der RE-PRICE-Verträge mit unterzeichneter Index-Klausel; alle 66 stillen Kunden mit dokumentiertem Touchpoint
+    depends_on:
+    - M14
+    progress_source: tasks
+  - id: M28
+    name: Preis-/Daten-Qualitäts-Cockpit als Dauer-Monitor
+    owner: Michael Haeffner
+    start: '2027-01-01'
+    due: '2027-06-30'
+    progress: 0
+    critical: false
+    phase: Nachlauf Q2/27
+    gate:
+    nachlauf: true
+    quarter: Q2/27
+    prio: P3
+    kpi: Monatlicher DQ-Report live; €-Wert-Abdeckung ≥95% und Indexierungsquote als laufende Kennzahl über alle 338 Verträge
+    depends_on:
+    - M02
+    progress_source: tasks
+  - id: M29
+    name: Cliff-2027 auf ≥60% gesichert bringen (Rest-Volumen & Long-Tail)
+    owner: Michael Haeffner
+    start: '2027-01-01'
+    due: '2027-06-30'
+    progress: 0
+    critical: false
+    phase: Nachlauf Q2/27
+    gate:
+    nachlauf: true
+    quarter: Q2/27
+    prio: P2
+    kpi: ≥ €64M (60% von €107M) gesichert; verbleibende at-risk-Cliff-Verträge mit Eskalations-Owner
+    depends_on:
+    - M21
+    progress_source: tasks
+  - id: M30
+    name: Win-Back-Kampagne für Cliff-2027-Renewals als Pipeline-Kanal
+    owner: Michael Haeffner
+    start: '2027-01-01'
+    due: '2027-06-30'
+    progress: 0
+    critical: false
+    phase: Nachlauf Q2/27
+    gate:
+    nachlauf: true
+    quarter: Q2/27
+    prio: P2
+    kpi: ≥80% der €107M Cliff-2027 mit definiertem Renewal-Angebot + Sponsor; Renewal-Winrate ausgewiesen; €-Wert der OPEN-148 in Trichter überführt
+    depends_on:
+    - M23
+    progress_source: tasks
+  - id: M31
+    name: OPEN in gesicherte Langfrist-Verträge überführen
+    owner: Michael Haeffner
+    start: '2027-01-01'
+    due: '2027-06-30'
+    progress: 0
+    critical: false
+    phase: Nachlauf Q2/27
+    gate:
+    nachlauf: true
+    quarter: Q2/27
+    prio: P3
+    kpi: Langfrist gesichertes Volumen (FIXED ≥2029) von €21M / 7% auf ≥€45M / ≥15% angehoben durch überführte OPEN-Verträge
+    depends_on:
+    - M27
+    progress_source: tasks
+  - id: M32
+    name: Indexierungs-Durchsetzung an der CLIFF-2027-Wand
+    owner: Michael Haeffner
+    start: '2027-02-01'
+    due: '2027-06-30'
+    progress: 0
+    critical: false
+    phase: Nachlauf Q2/27
+    gate:
+    nachlauf: true
+    quarter: Q2/27
+    prio: P2
+    kpi: Indexierungsquote ≥70% der bis EOY 2027 verlängerten CLIFF-2027-Verträge; €-gewichtete Quote ≥75% von €107M
+    depends_on:
+    - M22
+    progress_source: tasks
+  - id: M33
+    name: Beziehungs-Cockpit als laufendes Steuerungsinstrument etablieren
+    owner: Michael Haeffner
+    start: '2027-01-01'
+    due: '2027-06-30'
+    progress: 0
+    critical: false
+    phase: Nachlauf Q2/27
+    gate:
+    nachlauf: true
+    quarter: Q2/27
+    prio: P3
+    kpi: ≤10 Accounts ohne Sponsor + ≤10 stille Accounts dauerhaft gehalten; offene Maßnahmen von 243 auf <120 halbiert
+    depends_on:
+    - M25
+    progress_source: tasks
+  - id: M34
+    name: Masterplan-Review-Cadence gegen die Cliff-Wand etabliert
+    owner: Dieter Streuli
+    start: '2027-01-01'
+    due: '2027-06-30'
+    progress: 0
+    critical: false
+    phase: Nachlauf Q2/27
+    gate:
+    nachlauf: true
+    quarter: Q2/27
+    prio: P1
+    kpi: 12 dokumentierte Monats-Reviews in 2027; OPEN-Volumen €91M von 148 Verträgen bis EOY 2027 auf < €30M geklärt; CLIFF-2027-Renewal-Quote getrackt
+    depends_on:
+    - M19
+    progress_source: tasks
+  - id: M35
+    name: Cliff-2028 früh angehen (Pull-Forward)
+    owner: Michael Haeffner
+    start: '2027-06-01'
+    due: '2027-06-30'
+    progress: 0
+    critical: false
+    phase: Nachlauf Q2/27
+    gate:
+    nachlauf: true
+    quarter: Q2/27
+    prio: P2
+    kpi: €52M/47 Verträge 2028 gerankt; Top-20 mit Renewal-Start ≥12 Mt vor Ablauf
+    depends_on:
+    - M04
+    progress_source: tasks
+  - id: M36
+    name: Standard-Indexierungsklausel Legal-freigeben
+    owner: Amélie Charisius
+    start: '2026-08-14'
+    due: '2026-10-21'
+    progress: 0
+    critical: false
+    phase: Phase 0
+    gate:
+    nachlauf: false
+    quarter: Q3/26
+    prio: P1
+    kpi: Rechtlich freigegebene, länderkonforme Standard-Indexierungsklausel liegt vor
+    depends_on: []
+    progress_source: tasks
+  - id: M37
+    name: Commercial-Daten-Kapazität sichern (Haeffner-Entlastung)
+    owner: Dieter Streuli
+    start: '2026-08-14'
+    due: '2026-09-08'
+    progress: 0
+    critical: false
+    phase: Phase 0
+    gate:
+    nachlauf: false
+    quarter: Q3/26
+    prio: P1
+    kpi: Kein Owner trägt >6 P1-Milestones parallel; Reallokation dokumentiert
+    depends_on: []
+    progress_source: tasks
+  - id: M38
+    name: Frühwarn-/Churn-Trigger aufsetzen
+    owner: Tine Petric
+    start: '2026-11-01'
+    due: '2027-03-31'
+    progress: 0
+    critical: false
+    phase: Phase 2
+    gate:
+    nachlauf: false
+    quarter: Q1/27
+    prio: P2
+    kpi: Frühwarn-Alert für alle 85 at-risk-Verträge aktiv; Signal im Schnitt ≥60 T vor Kündigung
+    depends_on:
+    - M08
+    progress_source: tasks
+  - id: M39
+    name: Net-Retention-Zielgrösse festlegen
+    owner: Stephanie Rohde
+    start: '2026-08-14'
+    due: '2026-09-18'
+    progress: 0
+    critical: false
+    phase: Phase 0
+    gate:
+    nachlauf: false
+    quarter: Q3/26
+    prio: P1
+    kpi: Net-Retention-Ziel schriftlich fixiert + monatlicher Track etabliert
+    depends_on: []
+    progress_source: tasks
+  - id: M40
+    name: Marge/Cost-to-Serve je Vertrag tracken
+    owner: Thomas Pajor
+    start: '2026-11-01'
+    due: '2027-03-31'
+    progress: 0
+    critical: false
+    phase: Phase 2
+    gate:
+    nachlauf: false
+    quarter: Q1/27
+    prio: P2
+    kpi: Marge/Cost-to-Serve je Top-Vertrag im Cockpit; Volumen-vs-Marge-Sicht
+    depends_on:
+    - M02
+    progress_source: tasks
+  - id: M41
+    name: Marktpreis-Benchmark vor Re-Pricing
+    owner: Michael Haeffner
+    start: '2026-09-01'
+    due: '2026-12-31'
+    progress: 0
+    critical: false
+    phase: Phase 1
+    gate:
+    nachlauf: false
+    quarter: Q4/26
+    prio: P2
+    kpi: Preisbenchmark je Leistungsart vorliegend; in Renewal-Battlecards integriert
+    depends_on: []
+    progress_source: tasks
+  - id: M42
+    name: Daten-Rückfall-Monitor (kontinuierlich)
+    owner: Tine Petric
+    start: '2026-10-01'
+    due: '2026-12-31'
+    progress: 0
+    critical: false
+    phase: Phase 1
+    gate:
+    nachlauf: false
+    quarter: Q4/26
+    prio: P2
+    kpi: Automatischer Regressions-Alert aktiv; 0 unbemerkte Re-Öffnungen
+    depends_on:
+    - M02
+    progress_source: tasks
+  - id: M43
+    name: Kontingenzpfad LH-Anker-Verlust
+    owner: Dieter Streuli
+    start: '2026-09-01'
+    due: '2026-12-31'
+    progress: 0
+    critical: false
+    phase: Phase 1
+    gate:
+    nachlauf: false
+    quarter: Q4/26
+    prio: P2
+    kpi: Kontingenzplan LH-Verlust im VR dokumentiert; Diversifikations-Szenario beziffert
+    depends_on:
+    - M05
+    progress_source: tasks
+  - id: WS4-13
+    name: Aerologic-Angebot finalisiert und versendet (gemäss besprochenen Preisvorgaben)
+    owner: Michael Haeffner
+    start: '2026-07-31'
+    due: '2026-07-31'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 100
+    depends_on: []
+    nachlauf: false
+  - id: WS4-14
+    name: Kündigungsschreiben Master Vendor versandbereit — Stichtag 12.08. bei Nicht-Einigung
+    owner: Dieter Streuli
+    start: '2026-07-31'
+    due: '2026-08-12'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    support: Amélie Charisius
+  programm: transformation
+- code: WS5
+  name: Kultur & Execution-Disziplin
+  owner: Amélie Charisius
+  support: CGO (Vorbild/Rollenmodell GL-Ebene) · Wüst (Richtlinien) · DRS (Steuerung/Kontrolle, Vorbild Gremienebene)
+  milestones:
+  - id: WS5-01
+    name: 'Mitbestimmungs-Fundament: BR-Landkarte DE/AT/ES beauftragt + ES-Assessment (Zaforesa) gestartet'
+    owner: Amélie Charisius
+    start: '2026-09-01'
+    due: '2026-09-30'
+    critical: false
+    date_assumed: false
+    nachlauf: false
+    phase: Phase 0
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS5-02
+    name: 'Plattform: günstige Beekeeper-Alternative TCO-evaluiert + Beekeeper-Vertragslaufzeit/Kündigungsfrist geprüft'
+    owner: Amélie Charisius
+    start: '2026-08-31'
+    due: '2026-09-30'
+    critical: false
+    date_assumed: false
+    nachlauf: false
+    phase: Phase 0
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS5-03
+    name: GL-Selbst-Commitments publiziert (Vorbild vor Kaskade) + Kickoff-Kommunikation Führungskräfte
+    owner: Amélie Charisius
+    start: '2026-09-18'
+    due: '2026-09-30'
+    critical: false
+    date_assumed: false
+    nachlauf: false
+    phase: Phase 0
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS5-04
+    name: 'D1+D4: AXS-Identitäts-Charter (1 Seite DE/EN) + Change-Story je Land (CH/DE/AT/ES inkl. BR-Fassung)'
+    owner: Amélie Charisius
+    start: '2026-08-28'
+    due: '2026-10-31'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 1
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS5-05
+    name: 'D2: Commitment-Board live — GL=6 + Directors je 3 Quartals-Commitments (Station-Manager DE/AT erst nach BV)'
+    owner: Amélie Charisius
+    start: '2026-09-30'
+    due: '2026-11-30'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 1
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS5-06
+    name: 'D3: Konsequenz-Regelwerk (3 Stufen, Trigger 2× Nichtlieferung) je Land geprüft; Change-Barometer Puls #1'
+    owner: Amélie Charisius
+    start: '2026-09-25'
+    due: '2026-11-30'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 1
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS5-07
+    name: 'D5: BR-Partner-Roadmap — Quartals-Regeltermine 100% DE/AT/ES; Richtlinie Informationsverfahren in Kraft'
+    owner: Amélie Charisius
+    start: '2026-10-30'
+    due: '2026-12-31'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 1
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS5-08
+    name: 'D7: Talent-Pipeline — stiller Dauer-Search live (Commercial-Lead + Stationsleiter); Aufbauprogramm konzipiert'
+    owner: Amélie Charisius
+    start: '2026-09-25'
+    due: '2026-12-31'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 1
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS5-09
+    name: Plattform-Entscheid GL-beschlossen (gewählte Lösung vs. Beekeeper); KBR-Genehmigungsprozess eingeleitet
+    owner: Amélie Charisius
+    start: '2026-11-13'
+    due: '2026-12-31'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 1
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS5-10
+    name: KBR-Vereinbarung Kommunikationsplattform (sonst Einigungsstellen-Pfad, Fallback D5)
+    owner: Amélie Charisius
+    start: '2027-01-15'
+    due: '2027-02-28'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 2
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS5-11
+    name: 'D6/Zielnachweis: Plattform-Rollout 100%; Execution ≥90% über 2 Monate; Puls #3; Time-to-Fill ≤90 Tage'
+    owner: Amélie Charisius
+    start: '2027-02-26'
+    due: '2027-04-30'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 3
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS5-12
+    name: 'Nachlauf: BR-/Kommunikations-Begleitung eingeleiteter Restrukturierungen (BER, KEL) bis Wirksamkeit'
+    owner: Amélie Charisius
+    start: '2027-04-02'
+    due: '2027-06-30'
+    critical: false
+    date_assumed: false
+    nachlauf: true
+    phase: Nachlauf Q2/27
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  programm: transformation
+- code: WS6
+  name: AI-Enablement (AI@AXS ≡ Elysium 3.0)
+  owner: Tine Petric
+  support: >-
+    DRS (Chairman of AI, steuert/kontrolliert) · CGO (operativer Sponsor) · Rohde (Finance-Automation) · Charisius (HR-/Legal-Bot) · Wüst (Procurement) · Matthei/Pajor (Systemlandkarte) · AFR
+    (Aufsicht Board-Ebene)
+  milestones:
+  - id: WS6-01
+    name: Delivery-Lead-Vertragsstatus Petric geklärt (bilateral CEO/CHRO) + AI-Budget-Währung CHF/EUR bereinigt
+    owner: Cüneyt Gökcöl
+    start: '2026-09-01'
+    due: '2026-09-04'
+    critical: false
+    date_assumed: false
+    nachlauf: false
+    phase: Phase 0
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS6-02
+    name: 'D1: AI-Transformations-Mapping ExBoD-beschlossen — Prio A/B/C, Nicht-verfolgen-Liste, Bottom-up EUR 5''000k'
+    owner: Tine Petric
+    start: '2026-09-11'
+    due: '2026-09-30'
+    critical: false
+    date_assumed: false
+    nachlauf: false
+    phase: Phase 0
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS6-03
+    name: 'D8: No-/High-AI-Zones definiert + ExBoD-beschlossen, verankert in TRAK-2026-0010'
+    owner: Tine Petric
+    start: '2026-09-30'
+    due: '2026-10-31'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 0
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS6-04
+    name: 'D2: Data-Foundation-Gate — kanonische Identifier + SSOT Finance/HR live; GL-CoS-Agenten 8/8; Bus-Faktor Didit entschärft'
+    owner: Tine Petric
+    start: '2026-09-14'
+    due: '2026-11-30'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 1
+    gate: G3
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS6-05
+    name: 'D7: Zielsystem-Entscheid mit KI-Ersatz-Brille je Ops-Bereich 100% (Systemlandkarte, geteilt mit WS1)'
+    owner: Florian Matthei
+    start: '2026-10-01'
+    due: '2026-12-31'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 1
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS6-06
+    name: 'D3: Action-Item-Tracking MVP live (Document-Intelligence, nur Gremienebene) → speist WS2-Commitment-Tracker'
+    owner: Tine Petric
+    start: '2026-08-31'
+    due: '2026-11-30'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 1
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS6-07
+    name: 'D6a: AI-Ramp-Gate 1 — Q4/26-Run-Rate ≥ EUR 1''000k CFO-testiert; Stop-or-Go; Knowledge-Mgmt + Procurement-Bot gestartet'
+    owner: Stephanie Rohde
+    start: '2026-09-30'
+    due: '2026-12-31'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 1
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS6-08
+    name: Knowledge-Mgmt Welle 1 live
+    owner: Tine Petric
+    start: '2027-01-08'
+    due: '2027-01-31'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 2
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS6-09
+    name: Chairman-Automationen in GL-Betrieb (Vertex) überführt — SPoF DRS-Mac beseitigt
+    owner: Tine Petric
+    start: '2027-01-08'
+    due: '2027-02-28'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 2
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS6-10
+    name: 'D4: Reporting-Automatisierung — P&L + Liquidität ≤20., 3 Monate in Folge; Initiativen 6/8 entblockt'
+    owner: Stephanie Rohde
+    start: '2026-11-30'
+    due: '2027-02-28'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 2
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS6-11
+    name: 'D5/Zielnachweis: HR-Bot Welle 1 ≥2 DE-Standorte (BetrVG); Legal-/Procurement-Bot produktiv; Data Foundation 8/8'
+    owner: Tine Petric
+    start: '2027-02-26'
+    due: '2027-04-30'
+    critical: false
+    date_assumed: true
+    nachlauf: false
+    phase: Phase 3
+    gate: G4
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS6-12
+    name: 'Nachlauf: AI-Ramp-Gate 2 ≥ EUR 3''500k CFO-testiert + bestätigter Pfad ≥ EUR 5''000k Q4/27'
+    owner: Stephanie Rohde
+    start: '2027-05-31'
+    due: '2027-06-30'
+    critical: false
+    date_assumed: false
+    nachlauf: true
+    phase: Nachlauf Q2/27
+    gate:
+    progress: 0
+    depends_on: []
+    progress_source: tasks
+  - id: WS6-13
+    name: Cloud-Code-Chief-of-Staff-Plattform fürs GL-Team eingerichtet (Rollout)
+    owner: Tine Petric
+    start: '2026-07-31'
+    due: '2026-08-31'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+  - id: WS6-14
+    name: GL-Team in der KI-Arbeitsplattform geschult
+    owner: Tine Petric
+    start: '2026-07-31'
+    due: '2026-09-15'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on:
+    - WS6-13
+    nachlauf: false
+  programm: transformation
+- code: WS7
+  name: VIE-Wegfall & Restrukturierung (Kompensation & Overhead-Abbau)
+  owner: Stephanie Rohde
+  support: Gökcöl (Umsetzung), Matthei (VIE-Abwicklung/Ops), Pajor (Zahlen/Elysium), DRS (Governance)
+  programm: transformation
+  milestones:
+  - id: WS7-01
+    name: >-
+      Restrukturierungs-Zielbild & Business Case beschlussreif — Ziel 1 Kompensation ~CHF 4.6 Mio EBITDA (VIE-Stationsgewinn) + Ziel 2 Overhead-Abbau (EUR aus Pajor/Elysium-Update); zwei Szenarien
+      (Weiterbetrieb bei Beschwerde-Erfolg vs. VIE-Ende 25.10.2026)
+    owner: Stephanie Rohde
+    start: '2026-07-28'
+    due: '2026-08-14'
+    date_assumed: true
+    phase: Phase 0
+    gate:
+    critical: true
+    progress: 0
+    depends_on: []
+    nachlauf: false
+  - id: WS7-02
+    name: 'Overhead-Zahlengrundlage final: per-Kopf-OPEX + aktualisierte Gruppenfunktionsliste + Elysium-Letztstand; von VIE getragener Overhead in EUR beziffert (Schlüssel 9,8% AXS / 20,5% AAS)'
+    owner: Thomas Pajor
+    start: '2026-07-28'
     due: '2026-08-04'
-    status: offen
+    date_assumed: true
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+  - id: WS7-03
+    name: >-
+      Group-Finance-Shared-Service aus VIE lösen — Verlagerungs-/Abbau-Entscheid für die in Wien gehosteten Konzern-Funktionen (~17 Köpfe, v.a. Finance Group KST 8002); Kontinuität des
+      Konzern-Finance sichern
+    owner: Cüneyt Gökcöl
+    start: '2026-08-04'
+    due: '2026-08-28'
+    date_assumed: true
+    phase: Phase 0
+    gate:
+    critical: true
+    progress: 0
+    depends_on:
+    - WS7-01
+    - WS7-02
+    nachlauf: false
+  - id: WS7-04
+    name: Ziel 2 — von VIE getragene Overheads vollständig eliminiert (NICHT auf die übrigen Stationen umverteilt); Umsetzung gekoppelt an Projekt Elysium
+    owner: Stephanie Rohde
+    start: '2026-08-28'
+    due: '2026-10-31'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: true
+    progress: 0
+    depends_on:
+    - WS7-03
+    nachlauf: false
+  - id: WS7-05
+    name: 'Ziel 1 — Kompensationspaket ~CHF 4.6 Mio EBITDA beschlossen und in Umsetzung (Hebel: übrige Stationen, Kostenblock, Pricing/Renewal, Ressourcen-Redeployment)'
+    owner: Cüneyt Gökcöl
+    start: '2026-08-14'
+    due: '2026-10-31'
+    date_assumed: true
+    phase: Phase 1
+    gate:
+    critical: true
+    progress: 0
+    depends_on:
+    - WS7-01
+    nachlauf: false
+  - id: WS7-06
+    name: >-
+      VIE-Abwicklungsplan startbereit (Contingency Szenario B: kein Beschwerde-Aufschub) — Personal (Kündigungsfristen 3+ Monate), Kunden-Übergabe, Assets/Verträge; Auslösung nur bei VIE-Ende
+      25.10.2026
+    owner: Florian Matthei
+    start: '2026-07-28'
+    due: '2026-08-21'
+    date_assumed: true
+    phase: Phase 0
+    gate:
+    critical: true
+    progress: 0
+    depends_on: []
+    nachlauf: false
+  - id: WS7-07
+    name: VR-Vorlage VIE-Restrukturierung (Stations-/Marktaufgabe = VR-Vorbehalt) beschlussreif — inkl. Finanzierungs-Kaskade (VIE-Sicherheit neu bewertet mit Clearwater/Märki)
+    owner: Dieter Streuli
+    start: '2026-08-14'
+    due: '2026-08-26'
+    date_assumed: true
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on:
+    - WS7-01
+    nachlauf: false
+  - id: WS7-08
+    name: Beschwerde gegen VIE-Lizenzentzug eingereicht (Frist 20.08.) inkl. Antrag auf Versagung der aufschiebenden Wirkung
+    owner: Dieter Streuli
+    start: '2026-07-31'
+    due: '2026-08-20'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: true
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    support: Dr. Grassner (führt operativ)
+  - id: WS7-09
+    name: 'Anwaltskoordination VIE: drei beteiligte Kanzleien per E-Mail vernetzt'
+    owner: Andreas Fritthum
+    start: '2026-07-31'
+    due: '2026-08-05'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 100
+    depends_on: []
+    nachlauf: false
+    support: Grassner/Saxinger + Mertinz (KWR)
+  - id: WS7-10
+    name: 'Betriebsübergang: schriftliche Bestätigung beim Ministerium (BMIMI) angefordert'
+    owner: Andreas Fritthum
+    start: '2026-07-31'
+    due: '2026-08-07'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    support: Mertinz (KWR)
+  - id: WS7-11
+    name: Betriebsrat VIE abgestimmt (Kündigungs-/Betriebsübergangsthematik)
+    owner: Andreas Fritthum
+    start: '2026-07-31'
+    due: '2026-08-14'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    support: Amélie Charisius
+  - id: WS7-12
+    name: 'AMS-Frühwarnsystem: Unterlagen zur Massenentlassung vorsorglich vorbereitet'
+    owner: Andreas Fritthum
+    start: '2026-07-31'
+    due: '2026-08-14'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    support: Mertinz (KWR)
+  - id: WS7-13
+    name: 'VR-Entscheidungsgrundlage Reduktion Lizenzgeschäft (Projekt Bridgehead: Doppelzielbild ≥ EUR 15 Mio EBITDA / ≥ 75% lizenzunabhängig bis Ende 2028)'
+    owner: Dieter Streuli
+    start: '2026-07-31'
+    due: '2026-08-26'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: true
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    support: Andreas Fritthum (AAS Technics) · Cüneyt Gökcöl (Aeropoint) · Stephanie Rohde (Zahlen)
+  - id: WS7-14
+    name: Finance-Personalbedarf + Restrukturierungsplanung definiert (inkl. VIE-Minimalbesetzung für Betriebsfortführung) — Input zu WS7-03
+    owner: Jörg Ehlers
+    support: Stephanie Rohde
+    start: '2026-07-31'
+    due: '2026-08-14'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+- code: FIN
+  name: Refinanzierung Lieferanten-Ausstände (EUR 15 Mio, Closing 31.10.2026)
+  owner: Dieter Streuli
+  support: Stephanie Rohde, Andreas Fritthum; Advisor Clearwater (Michael Märki)
+  programm: finanzierung-2026
+  milestones:
+  - id: FIN-01
+    name: 13-Wochen-Liquiditätsplan liegt vor — der Cash-Tiefpunkt bestimmt den Zeitplan rückwärts (Prio 1; Datenpaket gemeinsam mit Clearwater-DE)
+    owner: Stephanie Rohde
+    start: '2026-07-02'
+    due: '2026-07-31'
+    date_assumed: true
+    phase: Vorbereitung
+    gate:
+    critical: true
+    progress:
+    depends_on: []
+    nachlauf: false
+  - id: FIN-02
+    name: 'Investoren-Datenpaket mit Clearwater konsolidiert (Financing Teaser, Bilanz-Talking-Points, Cashflow-Story: Timing-Mismatch statt Rettungs-Case)'
+    owner: Dieter Streuli
+    start: '2026-07-13'
+    due: '2026-08-14'
+    date_assumed: true
+    phase: Vorbereitung
+    gate:
+    critical: false
+    progress:
+    depends_on:
+    - FIN-01
+    nachlauf: false
+  - id: FIN-03
+    name: Swissport-Waiver-Frage entschieden — Szenario A (Waiver für Cash Injection > CHF 1 Mio) oder Szenario B (Rückzahlung SPI-Loan CHF 3.5 Mio → Gesamtbedarf ~13–15 Mio)
+    owner: Dieter Streuli
+    start: '2026-08-01'
+    due: '2026-08-21'
+    date_assumed: true
+    phase: Vorbereitung
+    gate:
+    critical: true
+    progress:
+    depends_on: []
+    nachlauf: false
+  - id: FIN-04
+    name: 'Erstansprache Welle 1 gestartet (Private-Debt-Spur: Rantum, Patrimonium, Swiss Life AM, CIC, HF; Family Offices parallel)'
+    owner: Dieter Streuli
+    start: '2026-08-14'
+    due: '2026-08-21'
+    date_assumed: true
+    phase: Ansprache
+    gate:
+    critical: false
+    progress:
+    depends_on:
+    - FIN-02
+    nachlauf: false
+  - id: FIN-05
+    name: Bridge-Option Joeinig entschieden (schnelle Brücke vs. Hauptspur; Wandeldarlehen-Mechanik, Sicherheit Station VIE)
+    owner: Dieter Streuli
+    start: '2026-07-13'
+    due: '2026-08-28'
+    date_assumed: true
+    phase: Ansprache
+    gate:
+    critical: false
+    progress:
+    depends_on: []
+    nachlauf: false
+  - id: FIN-06
+    name: Fallback-Plan Closing-Verzug steht — Winter-Liquidität 2026/27 auch ohne Closing per 31.10. gesichert
+    owner: Stephanie Rohde
+    start: '2026-08-14'
+    due: '2026-09-15'
+    date_assumed: true
+    phase: Ansprache
+    gate:
+    critical: true
+    progress:
+    depends_on:
+    - FIN-01
+    nachlauf: false
+  - id: FIN-07
+    name: 'Term Sheets liegen vor und sind verhandelt (Konditionen-Benchmark: all-in 10.5–14%, Cash+PIK, 4–5 Jahre)'
+    owner: Dieter Streuli
+    start: '2026-08-21'
+    due: '2026-09-30'
+    date_assumed: true
+    phase: Abschluss
+    gate:
+    critical: true
+    progress:
+    depends_on:
+    - FIN-04
+    nachlauf: false
+  - id: FIN-08
+    name: Closing EUR 15 Mio — Lieferanten-Ausstände refinanziert (unstrukturiertes kurzfristiges FK → strukturiert mittel-/langfristig)
+    owner: Dieter Streuli
+    start: '2026-10-01'
+    due: '2026-10-31'
+    date_assumed: false
+    phase: Abschluss
+    gate:
+    critical: true
+    progress:
+    depends_on:
+    - FIN-07
+    - FIN-03
+    nachlauf: false
+  - id: FIN-10
+    name: Schuldenübernahme der VIE-Töchter durch Muttergesellschaft AAS geprüft
+    owner: Dieter Streuli
+    start: '2026-07-31'
+    due: '2026-08-14'
+    date_assumed: false
+    phase: Phase 0
+    gate:
+    critical: false
+    progress: 0
+    depends_on: []
+    nachlauf: false
+    support: Legal
+inputs:
+- id: IN-01
+  owner: Thomas Pajor
+  item: 'Datenzugang G1: EPG-GHS + Looker/FTE erteilt (beantragt 03.07., nicht erteilt) — sonst Eskalation Stufe 3 an DRS'
+  due: '2026-09-12'
+  status: offen
+  liefer_tasks:
+  - OE-01-H08
+- id: IN-02
+  owner: Stephanie Rohde
+  item: 'Status-Validierung Woche 1 (A7): Finanzierungsbetrag EUR 15 Mio fix vs. ~10 Mio, CRM-/Renewal-Baseline, Owner-Bestätigungen, konsolidierter Bestand (mit Haeffner, CEO-Office)'
+  due: '2026-09-04'
+  status: offen
+- id: IN-03
+  owner: Stephanie Rohde
+  item: Echte Holding-Kostenbasis + FTE-Baseline (ersetzt Recharge-Proxy ≈ 3'984 TEUR); AHS-FC27-Recharge
+  due: '2026-10-15'
+  status: offen
+  liefer_tasks:
+  - WS1-02-H05
+- id: IN-04
+  owner: Amélie Charisius
+  item: Berater-/Externe-Kosten-Spend 12 Monate (min. 6 Kanzleien, 3 WP, Agenturen-Inventar — Beträge offen)
+  due: '2026-10-15'
+  status: offen
+  liefer_tasks:
+  - WS3-03-H03
+- id: IN-05
+  owner: Amélie Charisius
+  item: Beekeeper-Vertragslaufzeit/Kündigungsfrist (Sunk-Cost) + Laufzeiten übrige Kernsysteme — vor TCO-/Plattform-Entscheid
+  due: '2026-09-30'
+  status: offen
+  liefer_tasks:
+  - WS1-01-H02
+- id: IN-06
+  owner: Amélie Charisius
+  item: BR-/KBR-Landkarte DE/AT/ES beauftragt (Mitbestimmungs-Fundament)
+  due: '2026-09-30'
+  status: offen
+  liefer_tasks:
+  - WS5-01-H02
+- id: IN-07
+  owner: Amélie Charisius
+  item: ES-Assessment Zaforesa geliefert (harter Liefertermin) — Basis für ES-Scope-Entscheid Dez 26
+  due: '2026-11-15'
+  status: offen
+  liefer_tasks:
+  - WS5-06-H04
+- id: IN-08
+  owner: Amélie Charisius
+  item: Rücknahme-Nachweis AG Cottbus aktenkundig (mit Maizar) — ins Phase-0-Baseline-Paket
+  due: '2026-10-15'
+  status: offen
+- id: IN-09
+  owner: Cüneyt Gökcöl
+  item: 'MUC-Integrationssanierung: Personalwirksamkeit binär geklärt (falls ja §111/§17-Fahrplan; falls nein Quelle der −50%-Annahme)'
+  due: '2026-09-30'
+  status: offen
+  liefer_tasks:
+  - WS3-02-H06
+- id: IN-10
+  owner: Michael Haeffner
+  item: 'CRM-Lücke Haeffner nachgefasst: 9 Verträge / EUR 2.6 Mio (SWP, Scoot, Air Uniqon, Thai, ASL, DAT, NetJets Europe, BAE, Star East)'
+  due: '2026-10-31'
+  status: offen
+  liefer_tasks:
+  - WS4-02-H02
+- id: IN-11
+  owner: Andreas Fritthum
+  item: 'Finance-Assessment: Kompetenz-/Besetzungs-Check Rohde/Lesch/Pajor + Kartierung Cross-Border-Spaltung AAS-Finance VIE ↔ AHS-Finance HAM'
+  due: '2026-09-30'
+  status: offen
+  liefer_tasks:
+  - WS1-02-H04
+- id: IN-12
+  owner: Cüneyt Gökcöl
+  item: Ist-Messung Meetingzeit je Führungsrolle (beauftragt KW36; Deckel-Fixierung im Diagnose-Review G2)
+  due: '2026-10-15'
+  status: offen
+  liefer_tasks:
+  - WS2-03-H04
+- id: IN-13
+  owner: Andreas Fritthum
+  item: Execution-Rate- + Entscheidungs-Durchlaufzeit-Baseline erhoben und eingefroren (heute «höchstens ~50%»)
+  due: '2026-10-15'
+  status: offen
+  liefer_tasks:
+  - WS2-03-H02
+  - WS2-03-H03
+- id: IN-14
+  owner: Amélie Charisius
+  item: §17/§18-KSchG-Schwellenprüfung je DE-Betrieb (BER, KEL) + §613a-Check + Sozialplan-Kostenschätzung KEL
+  due: '2026-09-30'
+  status: offen
+  liefer_tasks:
+  - WS3-02-H03
+- id: IN-15
+  owner: Stephanie Rohde
+  item: ZRH-Residual-Headcount (Art.-335d-OR-Schwellen-Check) im Baseline-Datenpaket
+  due: '2026-10-15'
+  status: offen
+  liefer_tasks:
+  - WS3-03-H04
+- id: IN-16
+  owner: Tine Petric
+  item: AI-Budget-Währung CHF/EUR bereinigt + Bottom-up-Validierung der EUR-5'000k-Targets (bisher nur Top-Down 25.05.)
+  due: '2026-09-30'
+  status: offen
+  liefer_tasks:
+  - WS6-01-H04
+  - WS6-02-H02
+- id: IN-17
+  owner: Thomas Pajor
+  item: VIE-Overhead in EUR + aktualisierte Gruppenfunktionsliste + Elysium-Letztstand (Basis für den Restrukturierungs-Business-Case; per-Kopf-OPEX)
+  due: '2026-08-04'
+  status: offen
