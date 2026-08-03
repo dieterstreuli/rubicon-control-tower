@@ -2187,7 +2187,7 @@ workstreams:
     name: VR-Vorlage VIE-Restrukturierung (Stations-/Marktaufgabe = VR-Vorbehalt) beschlussreif — inkl. Finanzierungs-Kaskade (VIE-Sicherheit neu bewertet mit Clearwater/Märki)
     owner: Dieter Streuli
     start: '2026-08-14'
-    due: '2026-08-26'
+    due: '2026-08-18'
     date_assumed: true
     phase: Phase 0
     gate:
@@ -2265,8 +2265,8 @@ workstreams:
     name: 'VR-Entscheidungsgrundlage Reduktion Lizenzgeschäft (Projekt Bridgehead: Doppelzielbild ≥ EUR 15 Mio EBITDA / ≥ 75% lizenzunabhängig bis Ende 2028)'
     owner: Dieter Streuli
     start: '2026-07-31'
-    due: '2026-08-26'
-    date_assumed: false
+    due: '2026-08-18'
+    date_assumed: true
     phase: Phase 0
     gate:
     critical: true
