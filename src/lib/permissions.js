@@ -40,6 +40,7 @@ export const MATRIX = {
     'reminder.entwerfen': true,
     'report.erzeugen': true,
     'ki.nutzen': true,
+    'zielbild.fortschreiben': true,
   },
   Owner: {
     'sitzung.erfassen': true,          // Owner-Scope wird pro Milestone beim Anwenden geprüft
@@ -64,6 +65,7 @@ export const DENY_TEXT = {
   'reminder.entwerfen': () => 'nur CoS darf Reminder-Entwürfe erzeugen',
   'ki.nutzen': () => 'nur CoS darf Zerlegungen vorschlagen lassen',
   'report.erzeugen': (r) => `Rolle «${r || '?'}» darf keine Reports erzeugen`,
+  'zielbild.fortschreiben': () => 'nur CoS darf den Zielbild-Reifegrad fortschreiben',
 }
 
 /** Owner-Zuordnung eines Objekts (Handlung, Milestone, Entscheid). */

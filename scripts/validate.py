@@ -288,8 +288,45 @@ def main():
                 if ref not in task_ids:
                     err(eid, f"tasks verweist auf unbekannte Handlung «{ref}»")
 
+    # ── Zielbild-Register (04.08., «AXS-Datengehirn»): zielbild.json — ms_refs müssen
+    # existieren; «vorhanden»/«gelebt» ohne Evidenz = Datenlücke (Datenehrlichkeit);
+    # Erfüllungsgrad wird deterministisch aus domain.json-Scores gerechnet.
+    zb_path = ROOT / "src" / "data" / "zielbild.json"
+    zb_line = ""
+    if zb_path.exists():
+        try:
+            zstore = json.loads(zb_path.read_text())
+        except Exception as ex:
+            zstore = {"zielbild": []}
+            err("zielbild.json", f"kein gültiges JSON: {ex}")
+        zs = zstore.get("zielbild") or []
+        try:
+            zmeta = (json.loads((ROOT / "src" / "data" / "domain.json").read_text()).get("zielbild") or {}).get("meta") or {}
+        except Exception:
+            zmeta = {}
+        all_ms_ids = {m.get("id") for w in (doc.get("workstreams") or []) for m in (w.get("milestones") or [])}
+        score_sum = 0
+        for z in zs:
+            zid = z.get("id") or "?"
+            for ref in z.get("ms_refs") or []:
+                if ref not in all_ms_ids:
+                    err(zid, f"ms_refs verweist auf unbekannten Milestone «{ref}»")
+            if z.get("status") in ("vorhanden", "gelebt") and not (z.get("evidenz") or "").strip():
+                gap(zid, f"Status «{z.get('status')}» ohne Evidenz (Datenehrlichkeit)")
+            score_sum += (zmeta.get(z.get("status")) or {}).get("score") or 0
+        if zs:
+            zb_line = f"   Zielbild: {len(zs)} Kriterien · {round(score_sum / len(zs))}% erfüllt"
+
+    # Artefakt-Pflicht (04.08., Baustein 2 «Datengehirn»): ab Stichtag erledigte
+    # Handlungen sollen ihr Arbeitsprodukt verlinken (Drive «Datenlieferungen»/Doc/
+    # Register) — sonst Datenlücke. Alt-Bestand (vor Stichtag) bleibt unbeanstandet.
+    ARTEFAKT_STICHTAG = "2026-08-04"
+    for t in tasks:
+        if t.get("status") == "erledigt" and (t.get("erledigt_am") or "") >= ARTEFAKT_STICHTAG and not (t.get("artefakt") or "").strip():
+            gap(t.get("id") or "?", "erledigt ohne Artefakt-Link (Ablage-Pflicht ab 04.08.)")
+
     print("── RUBICON Control Tower · Datenintegrität " + "─" * 30)
-    print(f"  Meilensteine: {n_ms}   Ströme: {len(doc.get('workstreams') or [])}   Inputs: {n_in}   Handlungen: {n_tasks}   Entscheide: {n_ents}")
+    print(f"  Meilensteine: {n_ms}   Ströme: {len(doc.get('workstreams') or [])}   Inputs: {n_in}   Handlungen: {n_tasks}   Entscheide: {n_ents}{zb_line}")
     for line in errors + warnings + gaps:
         print(line)
     print(f"  Summe: {len(errors)} Fehler · {len(warnings)} Warnungen · {len(gaps)} Datenlücken")

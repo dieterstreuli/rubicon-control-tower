@@ -67,6 +67,11 @@
           "pflicht": false,
           "null_ok": true
         },
+        "artefakt": {
+          "typ": "str",
+          "pflicht": false,
+          "null_ok": true
+        },
         "created_at": {
           "typ": "date",
           "pflicht": true
@@ -217,6 +222,60 @@
           "typ": "obj",
           "pflicht": false,
           "null_ok": true
+        }
+      }
+    },
+    "zielbild.json": {
+      "wurzel": "zielbild",
+      "art": "liste",
+      "schluessel": "id",
+      "felder": {
+        "id": {
+          "typ": "str",
+          "pflicht": true,
+          "eindeutig": true,
+          "muster": "^Z-(GOV|FIN|COM|OPS|HR|LEG|DAT)-\\d{2}$"
+        },
+        "domaene": {
+          "typ": "str",
+          "pflicht": true,
+          "werte": ["GOV", "FIN", "COM", "OPS", "HR", "LEG", "DAT"]
+        },
+        "kriterium": {
+          "typ": "str",
+          "pflicht": true
+        },
+        "messbar_an": {
+          "typ": "str",
+          "pflicht": true
+        },
+        "status": {
+          "typ": "str",
+          "pflicht": true,
+          "werte": ["fehlt", "unbekannt", "im_aufbau", "vorhanden", "gelebt"]
+        },
+        "evidenz": {
+          "typ": "str",
+          "pflicht": true,
+          "null_ok": true
+        },
+        "naechster_schritt": {
+          "typ": "str",
+          "pflicht": false,
+          "null_ok": true
+        },
+        "owner": {
+          "typ": "str",
+          "pflicht": true,
+          "null_ok": true
+        },
+        "ms_refs": {
+          "typ": "list",
+          "pflicht": true
+        },
+        "status_historie": {
+          "typ": "list",
+          "pflicht": true
         }
       }
     },

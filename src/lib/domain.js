@@ -49,3 +49,12 @@ export const LVL_COLOR = (lvl) => T[D.report_ebenen[lvl]?.token || 'grey']
 
 // ── Fortschritts-Stufen (25%-Raster, DRS 01.08.) ──
 export const PROGRESS_STEPS = D.fortschritt_stufen
+
+// ── Zielbild-Register (04.08., «AXS-Datengehirn») ──
+export const ZB_FLOW = D.zielbild.reihenfolge
+export const ZB_META = D.zielbild.meta
+export const ZB_DOMAENEN = D.zielbild.domaenen
+export const ZB_COLOR = (st) => T[(D.zielbild.meta[st] || { token: 'grey' }).token]
+export const ZB_SCORE = (st) => (D.zielbild.meta[st] || { score: 0 }).score
+/** Ab diesem Status ist Evidenz Pflicht (Server erzwingt es zusätzlich). */
+export const ZB_EVIDENZ_AB = D.zielbild.evidenz_pflicht_ab

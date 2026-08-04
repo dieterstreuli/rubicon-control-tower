@@ -1,0 +1,1355 @@
+{
+  "_kommentar": "AXS-Zielbild-Register (04.08.2026) — SOLL-Katalog prüfbarer Kriterien je Domäne; Reifegrad-Upgrade NUR mit Evidenz (Datenehrlichkeit). Seed = Katalog V1 (7-Domänen-Workflow, Memory-basiert; DRS-Review offen). Write nur via /api/zielbild/status.",
+  "zielbild": [
+    {
+      "id": "Z-GOV-01",
+      "domaene": "GOV",
+      "kriterium": "VR-genehmigte konzernweite Entscheidungsordnung mit Schwellenwerten (Kompetenzmatrix) über alle Entscheidungstypen, Stufenleiter, genau EIN Accountable je Stufe",
+      "messbar_an": "VR-Beschluss INS-001 Anhang B liegt vor; Schwellen-Tabelle Ressort-GL→CEO→ExBoD→VR publiziert; jeder Register-Entscheid referenziert die Stufe",
+      "status": "im_aufbau",
+      "evidenz": "Kompetenzmatrix V1.0 gesetzt 16.07., validiert Rohde+Charisius 01.08., ExBoD-Ebene eingezogen; Beschlussvorlage + VR-Genehmigung 26.08. offen",
+      "naechster_schritt": "Beschlussvorlage «INS-001 Anhang B» fertigstellen, VR 26.08. genehmigen lassen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-GOV-02",
+      "domaene": "GOV",
+      "kriterium": "Zeichnungsregelung operativ verankert: Matrix deckungsgleich mit Handelsregister, EINE E-Signatur-Plattform mit Audit-Trail; periodischer Stichproben-Test Freigaben vs. Matrix",
+      "messbar_an": "Anlage 1 ohne offene Punkte; Plattform-Entscheid in INS-001 verankert; dokumentierter Compliance-Test",
+      "status": "vorhanden",
+      "evidenz": "Anlage 1 aktiv (v1.0, 01.02.26), 3 offene Punkte; E-Signatur-Grundsatz 19.07. beschlossen, Plattform-Entscheid offen; kein Einhaltungs-Test dokumentiert",
+      "naechster_schritt": "Plattform-Entscheid Yousign vs. DocuSign treffen; Stichproben-Test (10 Freigaben/3 Monate) bei Wüst beauftragen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-GOV-03",
+      "domaene": "GOV",
+      "kriterium": "Gremien-Jahreskalender: VR/GV/ExBoD/SC + gesetzliche Fristen 12 Monate im Voraus, abgestimmt auf Reporting-Zyklus",
+      "messbar_an": "Kalender-Dokument mit allen Terminen des Folgejahres (Caroline); keine Gate-Termine nach der zugehörigen VR-Sitzung",
+      "status": "vorhanden",
+      "evidenz": "4 VR/Jahr via Sherpany etabliert; aber Sequenz-Konflikt (Technics/BER-Gate 28.08. nach VR 26.08.), GVs/Transparenzregister/Steuerfristen offen",
+      "naechster_schritt": "Gremien- und Fristenkalender 2027 (inkl. GVs, Fristen je Entity) via Caroline fixieren",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-GOV-04",
+      "domaene": "GOV",
+      "kriterium": "Führungsrhythmus unterhalb des VR: dokumentierte Meeting-Architektur (Gremium × Kadenz × Teilnehmer × Agenda × Output), von DRS+AFR+CGO freigegeben, als Serientermine gesetzt",
+      "messbar_an": "One-Pager freigegeben (AFR+CGO), Serientermine im Kalender, erste 3 Zyklen durchgeführt und protokolliert",
+      "status": "im_aufbau",
+      "evidenz": "Umbau 01.08. (SC 2-wöchentlich, Monatsformate, GL-Weekly ohne DRS); One-Pager mit 12 Formaten existiert; Chairman Cockpit + ExBoD-Weekly laufen bereits; Freigabe AFR+CGO OFFEN",
+      "naechster_schritt": "Freigabe bei Fritthum + Gökcöl einholen, Caroline Serientermine setzen lassen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-GOV-05",
+      "domaene": "GOV",
+      "kriterium": "Lückenlose Protokollierung ALLER Gremien und Gesellschaften mit Beschlüssen, Ownern, Fristen; Commitments fliessen automatisch ins Task-Tracking",
+      "messbar_an": "Protokoll-Inventar je Gesellschaft ohne Lücken; jede Sitzung erzeugt Commitments im Tracking (RUBICON/Sherpany)",
+      "status": "im_aufbau",
+      "evidenz": "Sitzungserfassung + Gemini-Import + Protokoll-Export live, Commitment-Spiegel automatisch; ExBoD-Traktanden/Erledigt-Log gelebt; TRAK-Modell settled (23 TRAK); aber Lücken: VR 2023 fehlt komplett, Protokolle Treasury/ShAir/Goldair/SI/AHS liegen nicht vor",
+      "naechster_schritt": "Protokoll-Inventar über alle Gesellschaften erstellen, Lücken benennen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-GOV-06",
+      "domaene": "GOV",
+      "kriterium": "Revisionssicheres zentrales Entscheids-Register als Pflichtweg: dauerhafte Nummer, Status-Lifecycle, Begründung, Datengrundlage, Kommunikations-Stempel",
+      "messbar_an": "Register in Betrieb als Pflichtweg; Sherpany-VR-Beschlüsse gespiegelt; Stichprobe zeigt vollständige Pflichtfelder",
+      "status": "im_aufbau",
+      "evidenz": "Register LIVE seit 16.07. (E-2026-###, 5-Stufen-Status, revisionssicher); Pflichtweg erst ab 01.09. (Rollout W3)",
+      "naechster_schritt": "Register per 01.09. formell als Pflichtweg in Kraft setzen, GL kommunizieren",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-GOV-07",
+      "domaene": "GOV",
+      "kriterium": "Vollständige, versionierte Policy-Landschaft mit Owner, Gültigkeitsbereich, jährlichem Review-Zyklus — keine Policy «outdated» ohne terminierten Review",
+      "messbar_an": "Register mit Version/Owner/letztes/nächstes Review je Policy; kein überfälliger Eintrag; neue Richtlinien (INS-009) formell in Kraft gesetzt",
+      "status": "vorhanden",
+      "evidenz": "9 Policies registriert, Owner Wüst, Sign-off CHRO & Legal; GCG-INS-001 «Outdated, Review offen», kein Review-Zyklus, 1 Draft leer, INS-009 nicht im Register",
+      "naechster_schritt": "Wüst: Register um Review-Daten ergänzen, GCG-INS-001 terminieren",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-GOV-08",
+      "domaene": "GOV",
+      "kriterium": "Beteiligungs-Governance: zentrales Organ-Inventar (VR/GF/Prokura/Zeichnungsart) aller Gesellschaften CH/DE/AT/ES als Single Source of Truth, quartalsweise gegen öffentliche Register abgeglichen, mit Soll-Besetzungslogik",
+      "messbar_an": "Autoritatives Inventar mit Abgleich-Vermerk je Entity inkl. ES; Δ-Report pro Quartal; Stichprobe: 5 Entities stimmen mit Register überein",
+      "status": "vorhanden",
+      "evidenz": "Legal-Entities-Sheet autoritativ; VR CH-AGs + DE/AT via Northdata (Stand 04/2026); ES nirgends dokumentiert; kein fester Abgleich-Rhythmus; Auto-Sync erst Phase 2 Governance-Agent",
+      "naechster_schritt": "ES-Beteiligungen aufnehmen; quartalsweisen Register-Abgleich mit Owner (Wüst) als festen Rhythmus definieren",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-GOV-09",
+      "domaene": "GOV",
+      "kriterium": "Schlüsselpersonen-Risiko in Organbesetzung begrenzt: keine Einzelperson als Allein-GF vieler Gesellschaften; je Entity Stellvertretungs-/Zweitzeichnungs-Lösung",
+      "messbar_an": "Je DE/AT-Gesellschaft mind. ein zweiter GF oder geregelte Prokura; Anzahl DRS-Allein-GF-Mandate messbar gesunken",
+      "status": "fehlt",
+      "evidenz": "DRS ist GF fast aller DE/AT-Gesellschaften («Haftungsrisiko bei 18 Gesellschaften gleichzeitig»); DRS = alleiniger GF DE",
+      "naechster_schritt": "Zweit-GF-Konzept (Gökcöl/Matthei/Rohde je Strang) als ExBoD-Vorlage erarbeiten",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-GOV-10",
+      "domaene": "GOV",
+      "kriterium": "Interessenkonflikt- und Ausstandsregelung institutionalisiert: COI-Policy, Konflikt-Prüfung als Traktanden-Schritt, Ausstand im Protokoll",
+      "messbar_an": "COI-Policy im Policy-Register; Ausstands-Vermerk je konflikt-behaftetem Traktandum",
+      "status": "vorhanden",
+      "evidenz": "Konflikte kartiert (In-Albon, Fritthum Cross-Board, Fourlas/Goldair); Praxis fallweise, keine formale Policy; Fritthum-Ausstand ShAir offen (VR-Prep)",
+      "naechster_schritt": "Fritthum-Ausstand beim ShAir-Traktandum VR 26.08. formell regeln (Präzedenz für die Policy)",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-GOV-11",
+      "domaene": "GOV",
+      "kriterium": "Chairman-/CEO-Rollenschnitt schriftlich fixiert und beidseitig verabschiedet; jährlicher Review",
+      "messbar_an": "V1.0 als Konsens-Dokument mit Einverständnis Fritthum + Gökcöl; Review-Termin im Gremienkalender",
+      "status": "vorhanden",
+      "evidenz": "2-Seiter V19 FINAL seit 04.07. bei Fritthum im Review; Review-Slot + V1.0-Konsens offen",
+      "naechster_schritt": "Review-Slot mit Fritthum und Gökcöl vereinbaren, V19 → V1.0-Konsens abschliessen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-GOV-12",
+      "domaene": "GOV",
+      "kriterium": "Beschluss-Umsetzungs-Disziplin: jeder VR-/GV-Beschluss mit Owner, Frist, Status; offene Beschlüsse jeder Folgesitzung wieder vorgelegt",
+      "messbar_an": "Tracker mit 100% der offenen Beschlüsse; kein Eintrag >2 Sitzungen ohne Update; Alt-Themen (FLD, Patronatserklärung) sichtbar geführt",
+      "status": "im_aufbau",
+      "evidenz": "Dokumentierte Lücken (FLD seit 2024, Patronatserklärung AAS DE verschwunden, Technics-Frist überfällig); Commitment-Tracking live für GL-Ebene; Beschluss-Status-Tracker = Phase-1-MVP Governance-Agent (Sep–Nov 26)",
+      "naechster_schritt": "Offene Alt-Beschlüsse (FLD, Patronatserklärung) ins Entscheids-Register nachtragen mit Owner + Frist",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-FIN-01",
+      "domaene": "FIN",
+      "kriterium": "Monatliches Management-Reporting im festen Rhythmus mit Stations-/Entity-Tiefe, Ist-vs-Plan/FC und Controlling-Kommentierung",
+      "messbar_an": "Lückenlose 12-Monats-Reihe mit Konzern-P&L, Stationsebene, MTD+YTD+FC, Abweichungskommentar",
+      "status": "gelebt",
+      "evidenz": "Monthly Report Lesch (AAS+AHS, Stationsebene, Kommentare, fester Rhythmus)",
+      "naechster_schritt": "Report-Lücken adressieren: AAS-GROUP-Konsolidierungsspalten + At-equity-Ausweis (ShAir/Goldair/Aeropoint)",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "gelebt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-FIN-02",
+      "domaene": "FIN",
+      "kriterium": "Fast Close: Abschluss + Reporting-Versand bis Arbeitstag 10",
+      "messbar_an": "Eingangsdatum über 6 Monate durchgehend ≤ AT 10",
+      "status": "fehlt",
+      "evidenz": "Typisch ~20. des Folgemonats; JAN-Report 11.03., FEB-Report 24.03.",
+      "naechster_schritt": "Fast-Close-Ziel AT 10 mit Rohde/Lesch als verbindliches SLA (inkl. Close-Kalender)",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-FIN-03",
+      "domaene": "FIN",
+      "kriterium": "Vollständiges Monats-Paket: konsolidierte Bilanz, Cashflow (indirekt), verfügbare Liquidität, NWC-/DSO-/DPO-Kennzahlen",
+      "messbar_an": "Monatsreport enthält jeden Monat Bilanz, CF, Liquiditätsausweis, DSO/DPO je Entity + Konzern",
+      "status": "fehlt",
+      "evidenz": "«Kein Cashflow / keine Bilanz» im Monthly; EY-Scope «no free cash flow»; DSO/DPO fehlen",
+      "naechster_schritt": "Monatliches CF-Statement (indirekt aus Trial Balances) als Pflichtbestandteil bei Rohde/Lesch beauftragen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-FIN-04",
+      "domaene": "FIN",
+      "kriterium": "Rollierender 13-Wochen-Liquiditätsplan, wöchentlich mit Ist-Abgleich, konsolidiert inkl. Cash-Pool",
+      "messbar_an": "Wöchentlich datiertes File mit Plan-Ist-Abgleich; Nutzung in Lender-Gesprächen",
+      "status": "im_aufbau",
+      "evidenz": "DRS 02.07.: Prio 1; Cashflow-Skeleton an Rohde übergeben; als fehlend/Prio HOCH gelistet",
+      "naechster_schritt": "Liefertermin für erste operative 13-Wochen-Version bei Rohde fixieren",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-FIN-05",
+      "domaene": "FIN",
+      "kriterium": "Rollierender Forecast: mind. quartalsweise Vintages mit Monatsprofil, Gesamtjahr + Folgejahr, zu fixen Terminen",
+      "messbar_an": "FC-Kalender mit fixen Lieferterminen, jede Vintage mit Monatsprofil + Brücke zur Vorversion",
+      "status": "vorhanden",
+      "evidenz": "Vintages 3A+9F und 4A+8F mit Monatsprofil als Forward-Baseline; Lieferung ad hoc, kein fixer Zyklus",
+      "naechster_schritt": "FC-Kalender mit fixen Vintage-Terminen (6A+6F, 9A+3F) bei Lesch vereinbaren",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-FIN-06",
+      "domaene": "FIN",
+      "kriterium": "Budget-Prozess mit dokumentierter Treiber-Logik (Volumen × Preis × FTE × Kosten je Station) und monatlicher Abweichungs-Dekomposition",
+      "messbar_an": "Annahmen-Buch pro Station + Monats-Delta zerlegt in Volumen-/Preis-/Personal-/Kosten-Effekt",
+      "status": "fehlt",
+      "evidenz": "Annahmen-Brücke 23.04. via Rohde angefragt, keine Lieferung; nur EY-Top-Level-Annahmen",
+      "naechster_schritt": "Annahmen-Brücke bei Rohde re-eskalieren, Ziel: verfügbar vor Budget-Prozess 2027",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-FIN-07",
+      "domaene": "FIN",
+      "kriterium": "Finanzierungs-Headroom: committed Linien decken 12-Monats-Bedarf inkl. Saisonalität; keine strukturelle Abhängigkeit von gestreckten Kreditoren",
+      "messbar_an": "Unterzeichnete committed Fazilität deckt Winterloch + Kreditoren-Normalisierung; Kreditorenziel im vertraglichen Rahmen",
+      "status": "im_aufbau",
+      "evidenz": "EUR-15M-Fazilität in Arbeit, Advisor Märki mandatiert, JB-Term-Sheet, Closing 31.10. zwingend; heute Kreditoren-Streckung (~€10M überfällig) als Finanzierungsersatz",
+      "naechster_schritt": "Sicherheiten-Reframe (post-VIE) mit Märki finalisieren, Ansprache-Welle 1 starten",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-FIN-08",
+      "domaene": "FIN",
+      "kriterium": "Konzernkonsolidierung in-house: monatlich mit vollständiger IC-Eliminierung, ein Konsol-Tool, Standard-Kontenplan",
+      "messbar_an": "Monatlicher Konzernabschluss aus eigenem Tool mit IC-Eliminierung; EY nur noch Prüfer",
+      "status": "fehlt",
+      "evidenz": "EY: «no consolidated financials exist for AAS»; GROUP-Spalte ohne IC-Bereinigung; Intercompany manuell 50/50",
+      "naechster_schritt": "Konsol-Tool- und Standard-CoA-Entscheid als terminiertes Arbeitspaket in Finance-TOM Phase 1 verankern",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-FIN-09",
+      "domaene": "FIN",
+      "kriterium": "Debt-Map + Covenant-Monitoring: vollständige, quartalsweise Verschuldungsübersicht (inkl. debt-like, Fälligkeiten, Off-Balance) mit Covenant-Tests und Headroom",
+      "messbar_an": "Quartalsweise datierte Map inkl. Covenant-Berechnung mit Headroom je Test",
+      "status": "vorhanden",
+      "evidenz": "Vollständige Map (Perimeter + SI-II) mit Quartals-Spiegel-Logik, aber Stand Dec25A; Covenant-Floor einmalig gerechnet 28.07., kein laufender Rhythmus",
+      "naechster_schritt": "Debt-Map-Refresh per 30.06.2026 bei Rohde anfordern (inkl. Cash-Pool-Salden, Hallauer-Raten)",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-FIN-10",
+      "domaene": "FIN",
+      "kriterium": "Abschluss-/Audit-Disziplin: testierte Jahresabschlüsse aller Gesellschaften fristgerecht (6–8 Monate), keine pausierten Prüfungen",
+      "messbar_an": "Audit-Status-Liste aller ~30 Entities: 100% testiert innert Frist, null pausiert",
+      "status": "fehlt",
+      "evidenz": "AHS-2025-Prüfung pausiert (Going-Concern-Gutachten Cash-Pool); AAS FY24 erst März/April 2026 final; Grossteil 2025er im Entwurf, Ziel 31.08.26",
+      "naechster_schritt": "Status Going-Concern-Gutachten + Einhaltung 31.08.-Ziel bei Rohde abfragen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-FIN-11",
+      "domaene": "FIN",
+      "kriterium": "Treasury-/Cash-Pool-Governance: dokumentierte Pool-Verträge, monatliche Saldo-Matrix Perimeter/Non-Perimeter, IC-Netting, saubere Trennung zu Nicht-Konzern-Entities",
+      "messbar_an": "Monatliche Saldo-Matrix + abgeschlossenes IC-Netting + Going-Concern-Doku für den Pool",
+      "status": "fehlt",
+      "evidenz": "Cash-Pool mit Non-Perimeter nicht eliminiert; AAS-Treasury-IC-Netting offen; Saldo-Matrix fehlt",
+      "naechster_schritt": "Abschluss des Treasury-IC-Nettings (AAS Treasury AG) bei Rohde terminieren",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-FIN-12",
+      "domaene": "FIN",
+      "kriterium": "Finance-Zielorganisation (TOM): eine Group Finance mit zentraler Steuerung + low-cost Nearshore-SSC; Kosten ~0.6–0.7% Umsatz",
+      "messbar_an": "Org-Chart mit einer Group Finance, SSC am Zielstandort, Finance-Kosten ≤0.7% Umsatz im Ist",
+      "status": "im_aufbau",
+      "evidenz": "Soll-Bild + Gap-Analyse 24.07., 3 Phasen, gekoppelt an WS7/Elysium, VR-Vorlage 26.08.; harter Gap wartet auf Pajor-Daten (fällig 04.08.)",
+      "naechster_schritt": "Pajor-Zulieferung einfordern, harten FTE/EUR-Gap rechnen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-COM-01",
+      "domaene": "COM",
+      "kriterium": "Vollständige Kundenvertrags-Map / zentrales Vertragsarchiv: 100% der aktiven Verträge digital mit €-Wert, Laufzeit, Entität, Station, Service-Kategorie, Kündigungs-/Penalty-/SLA-Metadaten",
+      "messbar_an": "0 Pflichtfeld-Lücken je aktivem Vertrag; Abdeckung ≥99% des FC-Volumens; Digitalisierungsquote ~100%",
+      "status": "im_aufbau",
+      "evidenz": "2'299 Verträge in master_index.sqlite; Lücken 1'796→176 (−90%); 98% von €283M digitalisiert; Rest ~106 = fehlende Basisdokumente; Commercial-Agent-PDF-Basis 4'402/63%",
+      "naechster_schritt": "~106 Rest-Lücken (Parent-/Rates-Waisen) per Dokumenten-Anforderung bei Haeffner schliessen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-COM-02",
+      "domaene": "COM",
+      "kriterium": "Kündigungsfristen und Act-by-Dates lückenlos: letzte Handlungsfrist je Vertrag systemisch berechnet und sichtbar",
+      "messbar_an": "Act-by-Datum je Vertrag im Cockpit befüllt oder explizit «unbewertbar»; keine stillschweigenden Lücken",
+      "status": "im_aufbau",
+      "evidenz": "Ausgangslage 10% erfasst; OCR-Nachlese: 37 Fristen geborgen, 47 SGHAs evergreen bestätigt; 18 ohne Zahl",
+      "naechster_schritt": "Act-by-Datum als berechnetes Feld für alle Verträge mit bekannter notice_period ausrollen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-COM-03",
+      "domaene": "COM",
+      "kriterium": "CRM als produktive, gruppenweit genutzte Single Source of Truth (Hosting, SSO/RBAC, Team-Adoption, kein Laptop-Silo)",
+      "messbar_an": "Produktives Hosting mit SSO + Audit-Log; nachweisbare Nutzung durch Commercial-Team und GL",
+      "status": "im_aufbau",
+      "evidenz": "E6 Hosting/SSO offen, E8 Adoption offen, E1 Odoo-Sync offen; 1 von 10 Endstate-Milestones erreicht; GL-Gateway #99 in Arbeit",
+      "naechster_schritt": "CRM-Cockpit hinter das Internal-Apps-Gateway (#99) bringen, sobald Auth geliefert",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-COM-04",
+      "domaene": "COM",
+      "kriterium": "Aktivitäten- und Kontakt-Log gepflegt: jeder relevante Kundenkontakt zeitnah erfasst; Aktivitäts-Stille bei Top-Accounts sichtbar",
+      "messbar_an": "Laufende Einträge (>0/Woche); Aktivitäts-Spalte nicht mehr grau; Stille-Alert bei Strategic Accounts",
+      "status": "im_aufbau",
+      "evidenz": "Schemas, /crm-Skill, new_activity.py gebaut; Datenordner leer; Telegram-Trigger + EB-Auto-Tag nicht verdrahtet",
+      "naechster_schritt": "Telegram-«Aktivität:»-Trigger und EB-Auto-Tagging verdrahten",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-COM-05",
+      "domaene": "COM",
+      "kriterium": "Rollierende Renewal-Pipeline 24–36 Monate mit €-Bewertung, mind. quartalsweise aktualisiert, im Gremienzyklus verankert",
+      "messbar_an": "Pipeline mit Stand <90 Tage; Renewal-Slide als Standard-Traktandum je VR-Quartalssitzung",
+      "status": "vorhanden",
+      "evidenz": "369 Verträge/€283.4M klassifiziert (OPEN €95.6M, CLIFF-2027 €109.3M, CLIFF-2028 €56.3M); Stand 22.05., kein Refresh-Rhythmus; E7 Cadence offen",
+      "naechster_schritt": "Quartals-Refresh gegen aktuelles Haeffner-FC terminieren, Standard-Slide in VR-Zyklus (26.08.) einhängen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-COM-06",
+      "domaene": "COM",
+      "kriterium": "Regelbasiertes Frühwarnsystem (Alert-Heatmap) über Renewal, Konzentration, SLA-Last, Aktivitäts-Stille — mit Handlungsanweisung je Alert",
+      "messbar_an": "Alle 4 Dimensionen datengestützt; Heatmap-Review als fester Punkt im Monats-Rhythmus",
+      "status": "vorhanden",
+      "evidenz": "Heatmap operativ seit 11.06. (150 Zeilen, 110 rote Renewal-Zellen mit Empfehlung); SLA- und Aktivitäts-Spalte grau; kein Review-Rhythmus",
+      "naechster_schritt": "Heatmap-Review als festen monatlichen Punkt im Commercial-/ExBoD-Rhythmus verankern",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-COM-07",
+      "domaene": "COM",
+      "kriterium": "Kunden-Forecast je Vertrag mit regelmässigem Plan-Ist-Abgleich; Varianz je Kunde erklärbar; Refresh quartalsweise",
+      "messbar_an": "Forecast-Stand <90 Tage; Varianz-Report Plan vs. Ist je Kunde liegt vor und wird besprochen",
+      "status": "vorhanden",
+      "evidenz": "Haeffner-FC 369 Verträge/€283.36M (29.04.) voll ausgewertet; Varianzanalyse von Rohde vorgeschlagen, nicht umgesetzt; kein Refresh-Rhythmus",
+      "naechster_schritt": "Varianzanalyse-Angebot annehmen: Philipp-Daten anfordern, ersten Plan-Ist-Report je Kunde bauen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-COM-08",
+      "domaene": "COM",
+      "kriterium": "Pricing-Systematik auf Cost-to-Serve-Basis: Marge je Kunde/Station/Service, unterpreiste Kunden identifiziert, Rate-Empfehlung für Renewals",
+      "messbar_an": "Pricing-View je Kunde (Ist-Rate, Cost-to-Serve, Marge, Benchmark, empfohlene Rate) für alle 369 Verträge",
+      "status": "im_aufbau",
+      "evidenz": "Modul konzipiert (4 Funktionen, 17'965 Rate-Records); Status 01.07.: PENDENT geparkt, Cost-to-Serve aus Forecasting-Schicht 2 fehlt",
+      "naechster_schritt": "Cost-to-Serve-Granularität mit Pajor/Lesch festlegen (Wiedereinstieg ins Pricing-Modul)",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-COM-09",
+      "domaene": "COM",
+      "kriterium": "Preisanpassungs-/Indexklauseln als Vertragsstandard; Verträge ohne Klausel als Preiserosionsrisiko ausgewiesen",
+      "messbar_an": "100% der Renewals ab 2026 mit Klausel; Verhandlungsvorgabe an CCO schriftlich",
+      "status": "fehlt",
+      "evidenz": "Indexklausel in nur ~1% (22 von 2'299 Verträgen); Matrix-Entscheid: Fehlen = Preiserosionssignal",
+      "naechster_schritt": "Indexklausel-Pflicht als schriftliche Vorgabe für alle 2026/27-Renewals an Haeffner (Gremien-Beschluss erwägen)",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-COM-10",
+      "domaene": "COM",
+      "kriterium": "Account-Ownership institutionalisiert: 3-Tier-Patenschaft je Top-Account mit Touchpoint-Kadenz und gepflegtem Log",
+      "messbar_an": "Tier-A UND Tier-B vollständig allokiert; Touchpoint-Log mit laufenden Einträgen; Halbjahres-Plan je Pate",
+      "status": "vorhanden",
+      "evidenz": "3-Tier-Modell definiert, Tier-A 10/10 allokiert, Log-Sheet angelegt; Tier-B offen, Touchpoint-Plan H2 offen, keine gelebte Kadenz",
+      "naechster_schritt": "Tier-B-Allokation im nächsten ExBoD beschliessen, Touchpoint-Plan H2 je Pate einfordern",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-COM-11",
+      "domaene": "COM",
+      "kriterium": "Konzentrationsrisiko quantifiziert UND gesteuert: Anteile laufend gemessen, VR-beschlossene Ziel-Limiten, Diversifikationspfad",
+      "messbar_an": "Quartals-Report je Kunde/Cluster/Station + dokumentierte VR-Limite mit Massnahmenpfad",
+      "status": "vorhanden",
+      "evidenz": "LH 34% (€96M), Türkei-Cluster ~20% quantifiziert; Heatmap-Dimension je Station; Ziel-Limiten/Beschluss: keine Evidenz",
+      "naechster_schritt": "Ziel-Limite Einzelkunde/Cluster als VR-Vorgabe formulieren (Kandidat Strategie-Traktandum 26.08.)",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-OPS-01",
+      "domaene": "OPS",
+      "kriterium": "Monatliche Ops-Scorecard je Station: Turns/Flights, PAX konsolidiert auf Konzernebene, verknüpft mit Finanz-KPIs (Revenue per Turn/PAX)",
+      "messbar_an": "Monatlich befülltes Konzern-Artefakt Turns/PAX/Revenue-per-Turn je Station × Monat, in der Monatsanalyse referenziert",
+      "status": "fehlt",
+      "evidenz": "Skelett (Q3/2026+); Datenquellen fragmentiert, Verknüpfung mit Financials fehlt komplett",
+      "naechster_schritt": "Zugang zum Looker-Studio-Ops-Reporting erschliessen (Sheet-/BigQuery-Export oder Scheduled Delivery)",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-OPS-02",
+      "domaene": "OPS",
+      "kriterium": "Monatliche Station-P&L mit vollem Kostenbreakdown (bis EAT) in ACT/PLAN/PY × MTD/YTD inkl. Treiberkommentaren",
+      "messbar_an": "Vollständige GuV-Seite pro Station (~24), pünktlich, mit Treiberanalyse",
+      "status": "gelebt",
+      "evidenz": "Monthly-Report-PDFs (Pajor/Lesch, S. 8–26) mit kompletter Stations-GuV + Kommentaren; verbindlicher 7-Schritte-Monatsworkflow (DRS-bestätigt 25.05.)",
+      "naechster_schritt": "Excel-/Sheet-Quelle bei Pajor/Lesch nachfassen (angefragt 23.04.), PDF-Abhängigkeit ablösen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "gelebt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-OPS-03",
+      "domaene": "OPS",
+      "kriterium": "Maschinenlesbare SSOT für Stations-Daten (strukturierte Zeitreihe je Station × GuV-Position × Monat statt PDF)",
+      "messbar_an": "Master-Sheet/DB mit vollständigen Stations-Zeitreihen (alle GuV-Positionen), automatisch befüllt",
+      "status": "im_aufbau",
+      "evidenz": "Master-Sheet «AXS Monthly KPIs 2026» mit Heat-Map gepflegt (EBITDA-Ebene); PL-Detail-Tabs + PDF-Extractor geplant",
+      "naechster_schritt": "PDF-Extractor (pdfplumber) über Monthly-PDFs laufen lassen, PL-Detail-Tabs rückwirkend ab Januar befüllen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-OPS-04",
+      "domaene": "OPS",
+      "kriterium": "Delay-Code-Tracking der Handler-Verantwortung (AHM-730 G31–39): Anzahl, Minuten, Rate pro 1'000 Flights, je Station × Kunde, monatlich",
+      "messbar_an": "Monatliche G-Code-Auswertung je Station × Kunde (Risiko-Heatmap), integriert in Monatsanalyse/VR-Reporting",
+      "status": "fehlt",
+      "evidenz": "Systematik vollständig dokumentiert; Datenquelle nicht identifiziert, kein Tracking etabliert",
+      "naechster_schritt": "AHM-730-Datenquelle identifizieren, Pilot BER+VIE: 1 Monat G-Code-Rohdaten ziehen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-OPS-05",
+      "domaene": "OPS",
+      "kriterium": "Ground-Damage-Tracking (DG 52) als Risk-Indicator: Frequenz pro 1'000 Turns je Station, Kostenfolge, Trendlinie mit Eskalationsschwelle",
+      "messbar_an": "DG-52-Zeitreihe je Station mit Incident-Kosten im Monats-/VR-Reporting, definierte Schwelle",
+      "status": "vorhanden",
+      "evidenz": "DG/52 im Finance Monthly separat geführt; keine Stations-Zeitreihe, Monetarisierung oder Schwellen-Logik belegt",
+      "naechster_schritt": "DG-52-Werte aus Monthly Reports als Zeitreihe je Station ins Master-Sheet spiegeln",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-OPS-06",
+      "domaene": "OPS",
+      "kriterium": "SLA-Performance-Messung je Kunde gegen konkrete SGHA-/Annex-B-Vereinbarung mit Ampelstatus und beziffertem Penalty-Exposure in der Heatmap",
+      "messbar_an": "SLA-Erfüllungs-Report je Top-Kunde (Ist vs. Vertrags-Grenzwert) im Monats-/Quartalsrhythmus; Heatmap-SLA-Spalte datengestützt",
+      "status": "fehlt",
+      "evidenz": "SLA-Spalte bewusst GRAU (DRS 11.06.: Proxy unzureichend); SLA-Klauseln nur 25% extrahiert (deep-Nachlese 210); Annex-B-Kündigungsrecht dokumentiert, keine AXS-Messung",
+      "naechster_schritt": "SLA-/Penalty-Klauseln der Top-5-Kunden aus Annex B extrahieren; AHM-730 als Datenquelle anbinden (EPG/GHS klären)",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-OPS-07",
+      "domaene": "OPS",
+      "kriterium": "Monetarisiertes Penalty-/Haftungs-Exposure je Station × Kunde, gespiegelt gegen Rückstellungen/Versicherung, quartalsweise",
+      "messbar_an": "Exposure-Übersicht (Betrag je Station × Kunde) mit Abgleich Rückstellungen/Versicherung",
+      "status": "fehlt",
+      "evidenz": "Nur als offene Spiegel-Logik/Skelett-Zielbild",
+      "naechster_schritt": "Penalty-Exposure-Rechnung für Pilotstation BER: Klauseln × Ist-Delay-Quote × Volumen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-OPS-08",
+      "domaene": "OPS",
+      "kriterium": "FTE-/Headcount-Datenbasis + Produktivitätssteuerung je Station: monatliche Tabelle FTE × Station (Headcount, Ein-/Austritte) verknüpft mit Personalkosten; Turns/FTE und Revenue/FTE mit Cross-Station-Benchmark",
+      "messbar_an": "Monatliche FTE-Tabelle + Produktivitäts-Ranking (Flights/FTE, Revenue/FTE) über alle Stationen",
+      "status": "fehlt",
+      "evidenz": "FTE-Projekt Skelett, Looker-Quelle seit 23.04. bei Rohde angefragt, kein Fortschritt; Rohdaten (Flights, FTE, Revenue) liegen aber in den Monthly-PDFs",
+      "naechster_schritt": "Scheduled-CSV-Export aus Looker bei Rohde mit Zieldatum bestellen; parallel Flights/FTE + Revenue/FTE einmalig aus vorhandenen PDFs rechnen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-OPS-09",
+      "domaene": "OPS",
+      "kriterium": "Cost-per-FTE-Monitoring je Station mit Trennung Mengen-Effekt (FTE-Drift) vs. Preis-Effekt (Lohn-/Mix-Drift)",
+      "messbar_an": "Cost-per-FTE-Zeitreihe je Station im Master-Sheet mit monatlicher Drift-Zerlegung",
+      "status": "vorhanden",
+      "evidenz": "Cost per FTE je Station in jeder Monthly-Page ablesbar, Spiegel-Logik definiert (VIE-Salary-Pattern als Präzedenz); nicht als Zeitreihe institutionalisiert",
+      "naechster_schritt": "Cost-per-FTE als feste Master-Sheet-Spalte + wiederkehrende Sektion der Monatsanalyse",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-OPS-10",
+      "domaene": "OPS",
+      "kriterium": "Integriertes monatliches Performance-Review (Finanz + Ops) mit Muster-Tracking und verbindlichem Massnahmen-Follow-up (Owner/Termin)",
+      "messbar_an": "Monatlicher Review mit Standard-Agenda, Muster-Spiegel, gepflegtem Auftrags-Tracker",
+      "status": "vorhanden",
+      "evidenz": "Chairman Cockpit (DRS+AFR+CGO+SRO, 90 Min) + Muster-Spiegel + Aufträge-Tracker etabliert — aber rein finanzgetrieben, Ops-KPIs fehlen",
+      "naechster_schritt": "Erste Ops-Sektion in die Monatsanalyse aufnehmen, sobald Looker-/AHM-730-Daten erschlossen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-OPS-11",
+      "domaene": "OPS",
+      "kriterium": "Proaktive Kunden-Performance-Reviews: mind. quartalsweise Service-Reviews mit Top-Airlines je Station mit eigener Performance-Sicht",
+      "messbar_an": "Review-Kalender + dokumentierte QBR-Protokolle mit Top-Kunden",
+      "status": "unbekannt",
+      "evidenz": "Keine Information in Memory; Beziehungspflege-Matrix deckt Ownership, nicht Service-Reviews",
+      "naechster_schritt": "Cüneyt fragen, welche Stationen strukturierte Service-Reviews mit ihren Top-3-Kunden führen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "unbekannt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-OPS-12",
+      "domaene": "OPS",
+      "kriterium": "Safety-/Compliance-Nachweis auf Branchenstandard: SMS nach ICAO Annex 19 / AHM 610, ISAGO-Audit-Readiness je Station, Safety-KPIs im Reporting",
+      "messbar_an": "ISAGO-/SMS-Status je Station dokumentiert; Safety-KPIs im Monats-/Quartalsreporting",
+      "status": "unbekannt",
+      "evidenz": "SGHA-Pflicht dokumentiert; kein AXS-Status zu ISAGO/SMS in Memory",
+      "naechster_schritt": "ISAGO-/SMS-Status je Station bei Cüneyt/QM abfragen und als Referenz ablegen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "unbekannt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-HR-01",
+      "domaene": "HR",
+      "kriterium": "Aktuelles Organigramm publiziert (Funktions-Org, intern + extern, eine Quelle der Wahrheit)",
+      "messbar_an": "Publizierte Version mit Stand-Datum <6 Monate, interne + externe Variante, keine N.N.-Felder ohne Besetzungsplan",
+      "status": "vorhanden",
+      "evidenz": "Funktions-Org publiziert durch Wüst 03.06.26 (intern + extern, SoT-Regel); nur eine Publikation, kein Update-Rhythmus, mehrere N.N.-Vakanzen",
+      "naechster_schritt": "Wüst fixen Quartals-Refresh beauftragen (nächste Version mit bereinigten N.N.-Feldern inkl. Besetzungsplan)",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-HR-02",
+      "domaene": "HR",
+      "kriterium": "HR-Kern-KPIs fest im Monatsreporting (Fluktuation, Cost/FTE, Produktivität, Krankenquote, Time-to-Hire)",
+      "messbar_an": "Wiederkehrende HR-KPI-Sektion im Monthly mit Stations-Vergleich und Trend, im Chairman Cockpit diskutiert",
+      "status": "fehlt",
+      "evidenz": "Ohne FTE-Basis nicht berechenbar; kein Beleg für HR-KPI-Sektion im Monthly (Lesch ~20.)",
+      "naechster_schritt": "HR-KPI-Set als Pflichtsektion des Monthly bei Rohde/Lesch bestellen (startklar, sobald FTE-Quelle steht)",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-HR-03",
+      "domaene": "HR",
+      "kriterium": "Nachfolge- und Talent-Pipeline für Schlüsselrollen (GL, Directors, Station Manager)",
+      "messbar_an": "Nachfolge-Map: je Schlüsselrolle mind. ein Notfall-Nachfolger + ein Entwicklungskandidat, jährlich reviewt; Vakanzenliste mit Zieldatum",
+      "status": "fehlt",
+      "evidenz": "Mehrere N.N.-Vakanzen; CCO-Frage Haeffner seit Mai ungelöst; Abgänge (Griesch/Meinicke/Eslava) einzelfallweise gemanagt; kein Succession-Artefakt",
+      "naechster_schritt": "Bei Charisius 1-seitige Nachfolge-Map GL + Directors (inkl. Vakanzen mit Zieldatum) anfordern",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-HR-04",
+      "domaene": "HR",
+      "kriterium": "Schriftliche GL-Zielvereinbarungen, abgeleitet aus Strategie und Budget, mit unterjährigem Review",
+      "messbar_an": "Unterschriebene Zielvereinbarung je GL-Mitglied (max. 5 messbare Ziele) + Halbjahres-Review",
+      "status": "unbekannt",
+      "evidenz": "Keine Hinweise in Memory",
+      "naechster_schritt": "Gökcöl/Charisius fragen, ob für 2026 schriftliche GL-Zielvereinbarungen existieren — und zeigen lassen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "unbekannt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-HR-05",
+      "domaene": "HR",
+      "kriterium": "Standardisiertes Onboarding für neue Mitarbeitende und Führungskräfte",
+      "messbar_an": "Verbindliche Checkliste je Rolle (Tag 1 / Woche 1 / 90 Tage) mit Owner, bei jedem Eintritt angewendet",
+      "status": "unbekannt",
+      "evidenz": "Onboarding nur als künftiger HR-Bot-Use-Case (PLANNED Q3/26–Q2/27); heutiger Standard unbelegt",
+      "naechster_schritt": "Charisius fragen, ob ein gruppenweiter Onboarding-Standard existiert (Ist-Aufnahme vor HR-Bot-Start)",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "unbekannt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-HR-06",
+      "domaene": "HR",
+      "kriterium": "GL-Enablement-Programm für neue Arbeitsweisen (AI-Tooling-Onboarding mit Pilot-Gate vor Rollout)",
+      "messbar_an": "Manual V1.0, validierter Pilot, dokumentierter Rollout an alle GL-Mitglieder mit Erfolgskriterien",
+      "status": "im_aufbau",
+      "evidenz": "Manual V0.1 mit 4 Drive-Docs seit 26.05., Tier-1-Workflows definiert, Pilot Fritthum geplant, Rollout Aug–Okt; gated durch Foundation-Gates 1+2",
+      "naechster_schritt": "Pilot-Review mit Fritthum terminieren (Gate-Entscheid für die Welle an die übrigen 6 GL-Mitglieder)",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-HR-07",
+      "domaene": "HR",
+      "kriterium": "Funktionierender, publizierter HR-Servicekanal mit Self-Service für Standardanliegen",
+      "messbar_an": "Publizierte, getestete HR-Adresse/Portal je Gesellschaft mit Antwort-SLA; Standardanliegen als Self-Service",
+      "status": "fehlt",
+      "evidenz": "Alle drei bekannten HR-Adressen bounced 21.04. mit 550, Fallback über Caroline; Self-Service nur als geplanter HR-Bot-Use-Case",
+      "naechster_schritt": "Via Caroline gültige HR-Kontaktadresse klären, testen, publizieren lassen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-HR-08",
+      "domaene": "HR",
+      "kriterium": "Arbeitnehmervertretung und Mitbestimmung proaktiv gemanagt (BR-Beziehungen, AR-Strukturen, Restrukturierungen sauber verhandelt)",
+      "messbar_an": "Geklärte Gremienstruktur, verhandelte Interessenausgleiche/Sozialpläne, fester Dialog-Rhythmus mit BR",
+      "status": "im_aufbau",
+      "evidenz": "AR-Gründung AXS + AHS DUS rechtlich geprüft (Charisius 20.07.), BER-Interessenausgleich mit Namensliste ~90 verhandelt 27./28.07., Matthei bei Vertrauensleuten 29.07.",
+      "naechster_schritt": "Status-Update von Charisius zu AR-Gründung und BER-Abschluss einholen (Termine liegen in der Vergangenheit)",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-LEG-01",
+      "domaene": "LEG",
+      "kriterium": "Automatisches Handelsregister-/Publikations-Monitoring aller Entities: Register-Änderungen werden systemisch erkannt und gemeldet",
+      "messbar_an": "Laufender automatisierter Scan aller Jurisdiktionen mit Delta-Alert; Abdeckungsquote dokumentiert; Lauf-Log vorhanden",
+      "status": "gelebt",
+      "evidenz": "42/43 Entities automatisiert (CH via SHAB, DE/AT/ES via Checker), monatlicher launchd-Run seit 01.05., Delta-Mail; nur AAS Istanbul manuell",
+      "naechster_schritt": "Für AAS Istanbul (TK) fixen halbjährlichen manuellen Prüftermin (Vollauszug via Evelin) im Kalender verankern",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "gelebt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-LEG-02",
+      "domaene": "LEG",
+      "kriterium": "Konzernweites Verfahrens-Register: ALLE laufenden Rechts-, Verwaltungs- und Steuerverfahren mit Status, Exposure, Lead und nächster Aktion",
+      "messbar_an": "Register mit einheitlichem Datenmodell, Vollständigkeits-Check gegen Kanzlei-Mandatslisten, mind. monatliche Aktualisierung",
+      "status": "vorhanden",
+      "evidenz": "Inventar mit 7 Verfahren als strukturierte Records live (C0-Datenmodell); Scope aber nur DRS-Verfahren — operatives Legal ausgeklammert; konzernweiter Tracker erst Legal-Agent Phase 2",
+      "naechster_schritt": "Mit Charisius das Inventar per Kanzlei-Mandatslisten-Abgleich (Maizar/Martens/FGvW/Grassner/Kellerhals) auf alle Konzern-Verfahren erweitern",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-LEG-03",
+      "domaene": "LEG",
+      "kriterium": "Fristen-Radar mit Eskalationslogik: alle Verfahrens-/Verwaltungsfristen zentral, in den Kalender gespiegelt, harte Eskalation bei Frist <7 Tage",
+      "messbar_an": "Jede Frist im Kalender-Sync; dokumentierte Eskalationsregeln; wöchentlicher Digest läuft automatisiert",
+      "status": "gelebt",
+      "evidenz": "legal_radar.py mit escalate() (HARD bei ≤7T), idempotentem Kalender-Sync, Telegram-Ping, Weekly-Digest via launchd Mo 06:45",
+      "naechster_schritt": "Abdeckungstest: jedes inventarisierte Verfahren hat mind. eine synchronisierte Frist oder expliziten «keine Frist offen»-Vermerk",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "gelebt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-LEG-04",
+      "domaene": "LEG",
+      "kriterium": "Vertrags-Template-Library und standardisierte Vertragsprüfung: Konzern-Templates (NDA/DPA/Service/SGHA-Abweichungen) mit systematischem Klausel-Diff",
+      "messbar_an": "Freigegebene Library; jeder Neuvertrag dokumentiert gegen Template abgeglichen; Trefferquote stichprobengeprüft",
+      "status": "im_aufbau",
+      "evidenz": "Phase P2 Template-Library (Juli 26) + Klausel-Diff-Bot (Aug–Okt 26) geplant, Owner Charisius + Tine, Foundation-Gates offen",
+      "naechster_schritt": "P2 abschliessen: bestehende AXS-Standard-Templates einsammeln, als versionierte Library im Legal-Agent-Folder ablegen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-LEG-05",
+      "domaene": "LEG",
+      "kriterium": "Compliance-Schulung mit Nachweis: Code of Conduct + Kern-Policies geschult, dokumentierte Attestation, Wiederholungsrhythmus",
+      "messbar_an": "Schulungs-/Attestationsquote je Entity und Jahr (100% Führungskräfte); auditierbare Nachweisliste; Policy-Bestätigung im Onboarding",
+      "status": "unbekannt",
+      "evidenz": "Nur Verteilung an Stationsleitungen + Sanktionierbarkeit dokumentiert; zu Schulung/Attestation nichts",
+      "naechster_schritt": "Bestandsaufnahme bei Wüst/Charisius: existieren Nachweise zum Code of Conduct (CEO-INS-003), welche Abdeckung?",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "unbekannt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-LEG-06",
+      "domaene": "LEG",
+      "kriterium": "Konzern-Risiko-Register mit VR-Reporting: Top-Risiken mit Owner, Bewertung, Mitigations-Status, mind. halbjährlich im VR",
+      "messbar_an": "Gepflegtes Register (Risiko × Wahrscheinlichkeit × Impact × Owner × Massnahme) + wiederkehrendes VR-Traktandum mit Protokoll-Nachweis",
+      "status": "unbekannt",
+      "evidenz": "Viele Einzelrisiken dokumentiert (VIE, Goldair, Cash, Haftungen), aber kein konsolidiertes Register und kein VR-Risiko-Traktandum in Memory",
+      "naechster_schritt": "Bei Wüst/Cüneyt klären, ob ein Register existiert; falls nein, Top-10-Risiken als wiederkehrendes TRAK nach dem 26.08. aufsetzen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "unbekannt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-LEG-07",
+      "domaene": "LEG",
+      "kriterium": "Regulierungs- und Lizenz-Radar: systematisches Tracking aller Regulierungsfelder (Bodenabfertigungs-Lizenzen je Station mit Ablaufdaten, AÜG/ANÜ, EU AI Act) mit Triggern",
+      "messbar_an": "Lizenz-Register mit Ablauf-/Erneuerungsdaten und Vorwarn-Fristen; Tracking-Pipelines je Feld; Quartals-Quellen-Review",
+      "status": "vorhanden",
+      "evidenz": "EU-AI-Regulierung voll institutionalisiert (Monats-Radar, Meilenstein-Tracker, Quartals-Review); Stations-Lizenzen/AÜG nur ad hoc (VIE verloren 24.07., ANÜ = kritischer Pfad), kein Lizenz-Register",
+      "naechster_schritt": "AI-Radar-Muster auf Lizenzen übertragen: Register aller ~15 Stationen mit Ablaufdaten anlegen, Fristen in legal_radar-Sync einhängen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-LEG-08",
+      "domaene": "LEG",
+      "kriterium": "Datenschutz-Prozess mit zentralem Tracker: DSGVO-/nDSG-Betroffenenanfragen über standardisierten Prozess mit Register und 30-Tage-Fristenkontrolle",
+      "messbar_an": "Zentrales Anfrage-Register (Eingang/Frist/Status/Erledigung); dokumentierter Standard-Prozess; Quote fristgerechter Erledigung",
+      "status": "fehlt",
+      "evidenz": "DSGVO-Anfragen explizit «tbd Process … Skelett, kein zentraler Tracker» (Owner Charisius); Standardisierung erst als künftige Legal-Agent-Funktion",
+      "naechster_schritt": "Charisius beauftragen, minimales zentrales DSGVO-Register (Sheet) aufzusetzen — unabhängig vom Legal-Agent-Ausbau",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-DAT-01",
+      "domaene": "DAT",
+      "kriterium": "System- und Datenlandkarte: je Domäne genau EINE Single Source of Truth, dokumentiert in aktuell gehaltener Landkarte (System, Owner, Datenobjekte, Schnittstellen)",
+      "messbar_an": "Versionierte Domänen-SSOT-Map (1 A4) mit Datum <6 Monate; jede GL-Domäne kann ihre SSOT nennen; Konflikte dokumentiert aufgelöst",
+      "status": "im_aufbau",
+      "evidenz": "War-Room-Auftrag: SSOT-Map bis ~01.07., Lieferung nicht bestätigt; SSOT-Prinzip je Domäne benannt (master_index/Odoo/Finance-Ledger/Looker/Payroll)",
+      "naechster_schritt": "Bei Tine Petric Stand der SSOT-Map abfragen, Artefakt versioniert ablegen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-DAT-02",
+      "domaene": "DAT",
+      "kriterium": "Kanonische Identifier konzernweit verbindlich (Station=IATA, Entity=UID/HRB, Airline=IATA/ICAO, deterministische Contract-IDs); Änderungen nur via kontrollierten Prozess",
+      "messbar_an": "Versioniertes Identifier-Artefakt in mind. 2 produktiven Systemen angewendet; Änderungen über dokumentierten Freigabeprozess",
+      "status": "vorhanden",
+      "evidenz": "Schema v1.0.0 mit Identifier-Standards, semver; Backfill 177/177 Schema-Compliance im CoS-Memory",
+      "naechster_schritt": "Identifier-Satz als offizielles konzernweites PR-only-Artefakt im Anthology-Folder publizieren",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-DAT-03",
+      "domaene": "DAT",
+      "kriterium": "Rechenschaftspflichtige Daten-Ownership: benannter Daten-Owner mit Autorität auf Gruppenebene + je Domäne ein SSOT-Owner, schriftlich mandatiert",
+      "messbar_an": "Schriftliches Mandat; aktuelle Domänen-Owner-Liste; Owner berichtet in festem Rhythmus",
+      "status": "im_aufbau",
+      "evidenz": "War-Room-Empfehlung: Tine Petric als Daten-Ownerin 90 Tage; Rollen-Tabelle existiert; Mandat nicht fixiert",
+      "naechster_schritt": "Tines Daten-Owner-Mandat (90 Tage) schriftlich fixieren und in der GL kommunizieren",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-DAT-04",
+      "domaene": "DAT",
+      "kriterium": "Datenklassifizierung und Zugriffsmodell: verbindliche Sensitivity-Stufen mit technisch durchgesetzten Zugriffsregeln (Walls, ACLs, per-User-Rechte) für alle Bestände und KI-Indizes",
+      "messbar_an": "Schema in in Kraft gesetzter Richtlinie verankert; sensible Bestände in keinem teamweiten Index; Audit-Log aktiv",
+      "status": "vorhanden",
+      "evidenz": "§3 Permission-/Wall-Modell (m_a_restricted/hr_personal/finance_sensitive); Sensitivity-Pflichtfeld; Orakel-Regel 18.06. (Sensibles nie in teamweite Indizes)",
+      "naechster_schritt": "Orakel-Regel + Sensitivity-Schema als harte Vorgabe in AXS-INS-009 übernehmen (Charisius/Wüst)",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-DAT-05",
+      "domaene": "DAT",
+      "kriterium": "Datenqualität, Provenance und Lineage: jeder verarbeitete Datenpunkt mit source_uri, Parser-Version, Confidence, Zeitstempel; Stale-Detection automatisch",
+      "messbar_an": "Provenance-Felder im Schema Pflicht und in produktiven Pipelines befüllt; Stale-Detection-Job läuft regelmässig",
+      "status": "vorhanden",
+      "evidenz": "§4 Provenance+Confidence Pflicht, §5 ETL mit Cache/Re-Parse/Stale-Detection; Frontmatter-Pflicht",
+      "naechster_schritt": "Stichproben-Audit: 20 produktive Commercial-Agent-Datensätze auf vollständige Provenance-Felder prüfen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-DAT-06",
+      "domaene": "DAT",
+      "kriterium": "Operative Kernsysteme programmatisch erschlossen (EPG GHS/CnB/WFM, Odoo, Finance): automatisierte Datenlieferung auf Gruppenebene via API/Export",
+      "messbar_an": "Funktionierender API-/Export-Zugang zu EPG mit laufendem Sync-Job; Group-Reports ohne manuelle Datensammlung",
+      "status": "im_aufbau",
+      "evidenz": "Anforderung an Pajor 08.05., DRS-Zugriffsantrag 03.07., Zugang nicht erteilt; 4 von 5 offene Datenpakete hängen an EPG",
+      "naechster_schritt": "Bei Pajor Status der EPG-Zugangserteilung nachfassen, Discovery-Call mit EPG Solution-Architect terminieren",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-DAT-07",
+      "domaene": "DAT",
+      "kriterium": "Souveräner, compliance-fähiger KI-Stack: EU-Datenresidenz, CMEK, No-Training, IAM/Custom-Roles, Budget-Limits, forensische Audit-Logs",
+      "messbar_an": "Produktive Plattform-Instanz mit dokumentierter Konfiguration; Schatten-KI per Richtlinie untersagt und kontrolliert",
+      "status": "vorhanden",
+      "evidenz": "Stack-Entscheid 30.05.; Vertex-Instanz aixs-260106 produktiv (APIs, IAM/Custom-Roles, DWD für 3 Agenten, Budgets + Hard-Stop)",
+      "naechster_schritt": "Separaten AXS-Billing-Account (statt didit-konsolidiert) umsetzen, wie 18.06. verbindlich festgehalten",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-DAT-08",
+      "domaene": "DAT",
+      "kriterium": "KI-Richtlinie in Kraft + Regulatorik-Radar: verabschiedete KI-Einsatzrichtlinie (Zulässigkeit, Datenklassen, Human-Oversight, Insider-Prozess) konzernweit; AI-Act-/BetrVG-Tracking",
+      "messbar_an": "AXS-INS-009 (+ Insider-Listen-Anlage) formell verabschiedet und im Register; AI-Act-Tracking mit Fristen; BR-Einbindungsplan je Phase",
+      "status": "im_aufbau",
+      "evidenz": "INS-009-Erstentwurf + Insider-Listen-Draft existieren, Inkrafttreten Q3/26 geplant; nicht im Register der 9 aktiven Richtlinien; AI-Act aktiv getrackt (High-Risk auf Ende 2027 verschoben)",
+      "naechster_schritt": "INS-009 mit Charisius/Wüst finalisieren, als Beschlussvorlage VR 26.08. einbringen (Vorlage AI-Gov noch offen)",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-DAT-09",
+      "domaene": "DAT",
+      "kriterium": "KI-Use-Case-Portfolio mit Business-Ownership und ROI-Tracking: alle Initiativen mit Owner, €-Target, Zeitplan, quartalsweisem Realisierungs-Tracking; Priorisierung nach Datenreife und Sensitivität",
+      "messbar_an": "Portfolio-Doc mit 8 Initiativen inkl. Owner/Target/Status; Live-Tracker mit Ist-Werten nachgeführt; monatlicher Owner-Rhythmus läuft",
+      "status": "vorhanden",
+      "evidenz": "8 Initiativen mit Owner/Target €5.5M, Live-Tracker-Sheet, definierter Rhythmus, Wellen-Sequenzierung; Realisierung Q3/26 noch 0",
+      "naechster_schritt": "Ersten monatlichen Status-Zyklus (Owner an Tine, 1. Werktag) tatsächlich durchführen und im Tracker dokumentieren",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "vorhanden",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-DAT-10",
+      "domaene": "DAT",
+      "kriterium": "Wissensmanagement und zentrale Ablage-Disziplin: Konzernwissen in EINER kuratierten Struktur mit klaren Schreibrechten; Ablage-Standards durchgesetzt; Routine-Wissensfragen in Sekunden beantwortbar",
+      "messbar_an": "Zentrale Struktur (Anthology) produktiv befüllt; Ablage-Standard in Projekten nachweisbar; Knowledge-Bot beantwortet Top-Routinefragen (<30 Sek.)",
+      "status": "im_aufbau",
+      "evidenz": "Anthology-Skelett mit 9 Sub-Foldern angelegt; 4-Sub-Folder-Pattern Pflicht; Migrations-Liste definiert; Initiative 8 PLANNED (Q4/26)",
+      "naechster_schritt": "Die als Anthology-tauglich markierten Referenz-Memories (Legal Entities, Policies, Zeichnungsmatrix, SGHA etc.) migrieren",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-DAT-11",
+      "domaene": "DAT",
+      "kriterium": "MDM und Endpoint-Security flächendeckend: alle Endgeräte mit Konzerndatenzugriff im MDM, dokumentierter Härtungs-Standard (Verschlüsselung, Auto-Lock, Firewall, Remote-Wipe)",
+      "messbar_an": "MDM-Compliance-Report mit Einschreibe-/Härtungsquote (~100% GL/Management); Standard je Plattform schriftlich; Ausnahmen mit Ablaufdatum",
+      "status": "im_aufbau",
+      "evidenz": "GL = Mac/PC-Mix, Härtungs-Standards definiert; MDM via Intune; Mac-Härtung nur für DRS als abgeschlossen dokumentiert",
+      "naechster_schritt": "Von Gordon Intune-Compliance-Report für die 7 GL-Geräte anfordern (eingeschrieben? verschlüsselt? konform?)",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "im_aufbau",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    },
+    {
+      "id": "Z-DAT-12",
+      "domaene": "DAT",
+      "kriterium": "IT-Resilienz ohne Schlüsselpersonen-Risiko: kein kritisches System (Vertex, Odoo, Workspace, Agenten-Infra) hängt an einer Person; Stellvertretungen, Runbooks, getestete Backups, Incident-Response-Plan",
+      "messbar_an": "Je kritischem System mind. 2 kompetente Personen + Runbook; Backup-Restore-Test und Incident-Übung im letzten Jahr dokumentiert",
+      "status": "fehlt",
+      "evidenz": "Standortbestimmung 18.06.: «Top-Programmrisiko: Bus-Faktor Gordon/Didit»; Foundation-Gate 6 (Backup) offen; Gordon-Rolle in Klärung",
+      "naechster_schritt": "Gordon-Rollen-Klärung mit Stephanie abschliessen; je kritischem System Stellvertretung + Runbook-Auftrag festlegen",
+      "owner": null,
+      "ms_refs": [],
+      "status_historie": [
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        }
+      ]
+    }
+  ]
+}

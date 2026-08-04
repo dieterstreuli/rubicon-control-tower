@@ -125,6 +125,7 @@ export function createApi(rootDir) {
     kommentare: jsonStore('report_comments.json', {}),
     briefings: jsonStore('briefings.json', {}),
     domain: jsonStore('domain.json', {}),
+    zielbild: jsonStore('zielbild.json', { zielbild: [] }),
   }
   // ── Entscheids-Register (16.07., Säule 3 der Entscheidungsordnung INS-001 Anhang B) ──
   // Jeder Entscheid trägt eine dauerhafte Register-ID «E-<Jahr>-###» (monoton via seq,
@@ -458,6 +459,9 @@ export function createApi(rootDir) {
           t.erledigt_am = body.status === 'erledigt' ? (body.datum || new Date().toISOString().slice(0, 10)) : null
           // A5 (01.08.): Audit-Spur — WER hat abgehakt (Rolle bzw. Owner-Name)
           t.erledigt_von = body.status === 'erledigt' ? (role === 'Owner' ? me : 'CoS') : null
+          // Artefakt-Pflicht (04.08., «Datengehirn»): Ablage-Link des Arbeitsprodukts —
+          // optional beim Abhaken; validate meldet erledigt-ohne-Artefakt als Lücke.
+          if (body.artefakt !== undefined) t.artefakt = String(body.artefakt || '').trim() || null
           db.tasks.write(tstore)
           const roll = rollupMs(t.ms_id, tstore)
           // Input-Kopplung (13.07., DRS «auto-geliefert»): Inputs mit liefer_tasks werden
@@ -642,6 +646,37 @@ export function createApi(rootDir) {
             return
           }
           return json(200, { ok: true, entscheid: e })
+      })
+
+      // POST /api/zielbild/status — Reifegrad eines Zielbild-Kriteriums fortschreiben
+      // (04.08., «AXS-Datengehirn»). Datenehrlichkeit hart: Upgrade auf «vorhanden»/
+      // «gelebt» NUR mit Evidenz (Artefakt-/Quellen-Link) — sonst 400. Jede Änderung
+      // wird in status_historie protokolliert (revisionssicher, kein Lösch-Endpoint).
+      ep('/api/zielbild/status', {}, async ({ body, json, fail }) => {
+          const ZB = DOMAIN.zielbild || {}
+          const FLOW = ZB.reihenfolge || []
+          if (!body.id || !FLOW.includes(body.status))
+            return json(400, { ok: false, error: `id und status (${FLOW.join('|')}) sind Pflicht` })
+          requireCan(fail, body.role, body.me, 'zielbild.fortschreiben')
+          const store = db.zielbild.read()
+          const z = store.zielbild.find(x => x.id === body.id)
+          if (!z) return json(404, { ok: false, error: `Zielbild-Kriterium ${body.id} nicht gefunden` })
+          const rang = (s) => FLOW.indexOf(s)
+          const pflichtAb = rang(ZB.evidenz_pflicht_ab || 'vorhanden')
+          // Upgrade-Gate: eine ERHÖHUNG auf «vorhanden»/«gelebt» braucht FRISCHE Evidenz im
+          // Request — die Seed-Evidenz beschreibt den Ist-Zustand und belegt kein Upgrade.
+          if (rang(body.status) > rang(z.status) && rang(body.status) >= pflichtAb && !(body.evidenz || '').trim())
+            return json(400, { ok: false, error: `Upgrade auf «${body.status}» erfordert frische Evidenz (Artefakt-/Quellen-Link) — Datenehrlichkeit.` })
+          if (body.evidenz && String(body.evidenz).trim()) z.evidenz = String(body.evidenz).trim()
+          if (rang(body.status) >= pflichtAb && !(z.evidenz || '').trim())
+            return json(400, { ok: false, error: `Evidenz ist Pflicht für «${body.status}» — Artefakt-/Quellen-Link angeben (Datenehrlichkeit).` })
+          const today = new Date().toISOString().slice(0, 10)
+          z.status = body.status
+          if (body.naechster_schritt !== undefined) z.naechster_schritt = body.naechster_schritt || null
+          z.status_historie = z.status_historie || []
+          z.status_historie.push({ am: today, status: body.status, quelle: body.quelle || `manuell (${body.role})` })
+          db.zielbild.write(store)
+          return json(200, { ok: true, kriterium: z })
       })
 
       // POST /api/protokoll/export — Protokoll als PDF + Google Doc rendern (shellt Python)

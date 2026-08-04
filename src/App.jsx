@@ -11,7 +11,7 @@ import {
 import { T, STATUS_META, ROLES, applyTheme, initialTheme } from './lib/theme.js'
 import { BASE, ISSUES, NOW, ALL_TASKS, MS_META, tasksFor, tnr, taskOverdue, RADAR, reloadKeepScroll } from './lib/data.js'
 import { Pill, Bar, Kpi, PhaseTag, phaseColor, phaseShort, FR_COL, MsPicker } from './components/ui.jsx'
-import { DeltaWoche, FragDieDaten } from './views/TowerWidgets.jsx'
+import { DeltaWoche, FragDieDaten, ZielbildCard } from './views/TowerWidgets.jsx'
 import { FuehrungsrhythmusCard, IntroView } from './views/IntroView.jsx'
 import { AGENDA_BY_ID, ErfassungView, FR_MEETINGS, GeminiImport, ProtokolleView } from './views/SitzungenView.jsx'
 import { EntEdit, EntscheideView } from './views/EntscheideView.jsx'
@@ -418,8 +418,11 @@ export default function App() {
                     const accent = sc.all ? T.brass : ACCENTS[(i - 1) % ACCENTS.length]
                     return (
                       <button key={sc.id || 'all'} onClick={() => setProg(sc.id || '')}
-                        className="text-left rounded-lg border px-3 py-2 transition"
-                        style={{ minWidth: 158, borderColor: active ? T.brass : T.line,
+                        className="text-left rounded-lg px-3 py-2 transition"
+                        style={{ minWidth: 158,
+                          borderTop: `1px solid ${active ? T.brass : T.line}`,
+                          borderRight: `1px solid ${active ? T.brass : T.line}`,
+                          borderBottom: `1px solid ${active ? T.brass : T.line}`,
                           borderLeft: `4px solid ${accent}`,
                           background: active ? accent + '22' : 'transparent',
                           boxShadow: active ? `inset 0 0 0 1px ${T.brass}` : 'none' }}>
@@ -492,6 +495,9 @@ export default function App() {
 
           {/* Δ Woche (B2, 01.08.): Was hat sich seit letzter Woche geändert — deterministisch
               aus git-Historie (projekt.yaml) + erledigt_am/Protokollen/Entscheiden. */}
+          {/* AXS-Zielbild (04.08., «Datengehirn»): Konzern-Messlatte — nur in der Gesamt-Sicht */}
+          {!prog && <ZielbildCard role={role} />}
+
           <DeltaWoche prog={prog} />
 
           {/* Frag die Daten (K7, 01.08.): read-only NL-Abfrage, quellengebunden */}
