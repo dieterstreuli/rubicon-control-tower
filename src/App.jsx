@@ -37,6 +37,14 @@ import {
 } from './lib/status.js'
 
 // ---------- App ----------
+// Input→Programm (DRS 03.08.): Datenlieferungen haben kein programm-Feld, aber liefer_tasks
+// (Handlung «<MS>-H##») → Milestone → WS → Programm. Ungekoppelte Inputs = nur in AXS-Gesamt.
+const _taskById = new Map(ALL_TASKS.map(t => [t.id, t]))
+const inputProgramme = (i) => [...new Set((i.liefer_tasks || []).map(tid => {
+  const mid = _taskById.get(tid)?.ms_id || tid.replace(/-H\d+$/, '')
+  return MS_META[mid]?.programm || null
+}).filter(Boolean))]
+
 export default function App() {
   const [role, setRole] = useState('CoS')
   const [me, setMe] = useState('Andreas Fritthum') // aktive Identität in Rolle «Owner» (volle Namen, 13.07.)
@@ -106,8 +114,9 @@ export default function App() {
   // Programm-Dimension (16.07., Plattform-Zielbild): alle Sichten gelten je Programm.
   // Solange nur EIN Programm registriert ist, bleibt der Umschalter unsichtbar und
   // die Filterung ist Identität — Programm #2 wird reines Daten-Onboarding.
-  const [prog, setProg] = useState(() => sessionStorage.getItem('rubicon_prog') || BASE.meta.default_programm || null)
-  useEffect(() => { if (prog) sessionStorage.setItem('rubicon_prog', prog) }, [prog])
+  // Default = AXS-Gesamt ('' = alle Programme/Projekte); Programm/Projekt ist nur ein Filter (DRS 03.08.).
+  const [prog, setProg] = useState(() => sessionStorage.getItem('rubicon_prog') || '')
+  useEffect(() => { if (prog) sessionStorage.setItem('rubicon_prog', prog); else sessionStorage.removeItem('rubicon_prog') }, [prog])
 
   // effektive Daten = YAML + Session-Overlay, gefiltert aufs aktive Programm.
   // Nicht-Default-Programme steuern gegen ihr EIGENES Ende (meta-Override) —
@@ -130,7 +139,8 @@ export default function App() {
         return o ? { ...m, progress: o.progress ?? m.progress, reported_slip_days: o.slip ?? m.reported_slip_days } : m
       }),
     })),
-    inputs: BASE.inputs.map(i => ({ ...i, ...(inputState[i.id] || {}) })),
+    inputs: BASE.inputs.map(i => ({ ...i, ...(inputState[i.id] || {}) }))
+      .filter(i => !prog || inputProgramme(i).includes(prog)),
   }), [overlay, inputState, prog])
 
   const ms = useMemo(() => allMilestones(data), [data])
@@ -286,13 +296,13 @@ export default function App() {
               style={{ borderColor: nErr ? T.red : T.line, color: nErr ? T.red : T.inkDim, fontFamily: T.mono }}>
               Integrität: {nErr} Fehler · {nGap} Lücken{RADAR.length ? ` · ${RADAR.length} Radar` : ''}
             </button>
-            {(BASE.meta.programme || []).length > 1 && (
-              <select value={prog || ''} onChange={e => setProg(e.target.value)}
-                className="text-[12px] rounded px-2 py-1 border bg-transparent"
-                style={{ borderColor: T.brass + '88', color: T.brass, background: T.panelSoft }}
-                title="Aktives Programm — alle Sichten gelten je Programm">
-                {BASE.meta.programme.map(p => <option key={p.id} value={p.id} style={{ color: '#111' }}>Programm: {p.name}</option>)}
-              </select>
+            {prog && (
+              <button onClick={() => setProg('')}
+                className="text-[11px] px-2 py-1 rounded border"
+                style={{ borderColor: T.brass + '88', color: T.brass, background: T.panelSoft, fontFamily: T.mono }}
+                title="Filter aufheben — zurück zur AXS-Gesamtübersicht">
+                Fokus: {(BASE.meta.programme || []).find(p => p.id === prog)?.name || prog} ✕
+              </button>
             )}
             <select value={role} onChange={e => setRole(e.target.value)}
               className="text-[12px] rounded px-2 py-1 border bg-transparent"
@@ -384,10 +394,55 @@ export default function App() {
 
         {/* ══ 1 · KONTROLLTURM ══ */}
         {tab === 'tower' && (<>
+          {/* Scope-Kacheln (DRS 03.08.): AXS-Gesamt = Default, je Programm/Projekt zum Reinfokussieren */}
           {(() => {
-            // Handlungen-KPI je Programm (Test-Fund 17.07.): Tasks folgen via ms_id→WS
-            // dem Programm; ungekoppelte zählen überall (konzernweit, z.B. Nachlauf).
-            const progTasks = ALL_TASKS.filter(t => !prog || !t.ms_id || !MS_META[t.ms_id]?.programm || MS_META[t.ms_id].programm === prog)
+            const SCOPES = [{ id: '', name: 'AXS-Gesamt', all: true }, ...(BASE.meta.programme || [])]
+            const statOf = (pid) => {
+              const wss = BASE.workstreams.filter(w => !pid || w.programm === pid)
+              const msAll = wss.flatMap(w => w.milestones || [])
+              const done = msAll.filter(m => m.progress === 100).length
+              const offen = ALL_TASKS.filter(t => t.status === 'offen'
+                && (!pid || (t.ms_id && MS_META[t.ms_id]?.programm === pid))).length
+              return { ws: wss.length, ms: msAll.length, done, offen }
+            }
+            const ACCENTS = [T.blue, T.green, T.amber, T.red, T.grey]
+            return (
+              <div>
+                <div className="text-[10px] uppercase tracking-widest mb-2" style={{ color: T.inkFaint, fontFamily: T.mono }}>
+                  Portfolio · Fokus wählen
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {SCOPES.map((sc, i) => {
+                    const active = (sc.id || '') === (prog || '')
+                    const s = statOf(sc.id)
+                    const accent = sc.all ? T.brass : ACCENTS[(i - 1) % ACCENTS.length]
+                    return (
+                      <button key={sc.id || 'all'} onClick={() => setProg(sc.id || '')}
+                        className="text-left rounded-lg border px-3 py-2 transition"
+                        style={{ minWidth: 158, borderColor: active ? T.brass : T.line,
+                          borderLeft: `4px solid ${accent}`,
+                          background: active ? accent + '22' : 'transparent',
+                          boxShadow: active ? `inset 0 0 0 1px ${T.brass}` : 'none' }}>
+                        <div className="text-[12px] font-semibold leading-tight" style={{ color: active ? T.brass : accent }}>
+                          {sc.all ? '★ ' : ''}{sc.name}
+                        </div>
+                        <div className="text-[10px] mt-0.5" style={{ color: T.inkDim, fontFamily: T.mono }}>
+                          {s.ws} WS · {s.ms} MS · {s.done} ✓
+                        </div>
+                        <div className="text-[10px]" style={{ color: s.offen ? T.amber : T.inkFaint, fontFamily: T.mono }}>
+                          {s.offen} Handlungen offen
+                        </div>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+          })()}
+          {(() => {
+            // Handlungen-KPI (DRS 03.08.): im Projekt-Fokus STRIKT nur die Handlungen des Projekts
+            // (konsistent mit Kacheln + Aufgaben-Liste); ungekoppelte nur in AXS-Gesamt.
+            const progTasks = ALL_TASKS.filter(t => !prog || (t.ms_id && MS_META[t.ms_id]?.programm === prog))
             const ts = {
               total: progTasks.length,
               offen: progTasks.filter(t => t.status === 'offen').length,
@@ -437,7 +492,7 @@ export default function App() {
 
           {/* Δ Woche (B2, 01.08.): Was hat sich seit letzter Woche geändert — deterministisch
               aus git-Historie (projekt.yaml) + erledigt_am/Protokollen/Entscheiden. */}
-          <DeltaWoche />
+          <DeltaWoche prog={prog} />
 
           {/* Frag die Daten (K7, 01.08.): read-only NL-Abfrage, quellengebunden */}
           <FragDieDaten />
@@ -571,7 +626,7 @@ export default function App() {
                   className="bg-transparent border rounded px-1.5 py-0.5"
                   style={{ borderColor: T.line, background: T.panelSoft, color: T.ink }}>
                   <option value="alle" style={{ color: '#111' }}>alle Ströme</option>
-                  {BASE.workstreams.map(w => <option key={w.code} value={w.code} style={{ color: '#111' }}>{w.code} — {w.name?.slice(0, 40)}</option>)}
+                  {data.workstreams.map(w => <option key={w.code} value={w.code} style={{ color: '#111' }}>{w.code} — {w.name?.slice(0, 40)}</option>)}
                 </select>
                 <select value={phaseFilter} onChange={e => setPhaseFilter(e.target.value)}
                   className="bg-transparent border rounded px-1.5 py-0.5"

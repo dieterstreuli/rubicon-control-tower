@@ -2,20 +2,31 @@ import React, { useState, useEffect } from 'react'
 import { T } from '../lib/theme.js'
 import { fmtDate } from '../lib/status.js'
 import { Pill } from '../components/ui.jsx'
+import { MS_META } from '../lib/data.js'
 
 // ── Δ WOCHE (B2, 01.08.) — Führungs-Delta: erledigte Handlungen, Fortschritts-/
 // Ampel-Änderungen (git-Vergleich), neue Protokolle/Entscheide. Reine Fakten.
-export function DeltaWoche() {
-  const [d, setD] = useState(null)
+export function DeltaWoche({ prog }) {
+  const [d0, setD0] = useState(null)
   const [err, setErr] = useState(null)
   useEffect(() => {
     fetch('/api/delta?days=7')
       .then(r => (r.ok ? r.json() : Promise.reject(r.status)))
-      .then(j => (j.ok ? setD(j) : setErr(j.error || 'Fehler')))
+      .then(j => (j.ok ? setD0(j) : setErr(j.error || 'Fehler')))
       .catch(e => setErr(String(e)))
   }, [])
   if (err) return null   // Delta ist Komfort — bei Fehlern still weglassen (Log hat den Fehler)
-  if (!d) return <div className="text-[11px]" style={{ color: T.inkFaint, fontFamily: T.mono }}>Δ Woche wird berechnet…</div>
+  if (!d0) return <div className="text-[11px]" style={{ color: T.inkFaint, fontFamily: T.mono }}>Δ Woche wird berechnet…</div>
+  // Scope-Filter (DRS 03.08.): im Projekt-Fokus nur attribuierbare Δ — ampel/fortschritt via
+  // Milestone-Programm, erledigt via ms_id; Protokolle/Entscheide querschnittlich → ausgeblendet.
+  const d = !prog ? d0 : (() => {
+    const inP = (mid) => MS_META[mid]?.programm === prog
+    const ampel = (d0.ampel || []).filter(x => inP(x.id))
+    const fortschritt = (d0.fortschritt || []).filter(x => inP(x.id))
+    const erledigt = (d0.erledigt || []).filter(x => x.ms_id && inP(x.ms_id))
+    return { ...d0, ampel, fortschritt, erledigt, protokolle: [], entscheide: [],
+      summe: { erledigt: erledigt.length, fortschritt: fortschritt.length, ampel: ampel.length, protokolle: 0, entscheide: 0 } }
+  })()
   const s = d.summe || {}
   const none = !s.erledigt && !s.fortschritt && !s.ampel && !s.protokolle && !s.entscheide
   const cap = (arr, n = 8) => ({ show: arr.slice(0, n), rest: Math.max(0, arr.length - n) })

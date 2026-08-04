@@ -27,10 +27,11 @@ export function AufgabenView({ role, me, prog, onOpenMs }) {
   }, [fPhase, fWs, fOwner, fStatus, search])
   const [busy, setBusy] = useState(null)
 
-  // Programm-Filter: milestone-gekoppelte Handlungen folgen dem Programm ihres WS;
-  // ungekoppelte (ms_id null, z.B. Nachlauf-Reviews) bleiben in jedem Programm sichtbar.
+  // Scope-Filter (DRS 03.08.): AXS-Gesamt (kein prog) = alle Handlungen inkl. ungekoppelte.
+  // Projekt-Fokus (prog gesetzt) = STRIKT nur die Handlungen dieses Projekts (ms_id→WS→Programm);
+  // ungekoppelte (ms_id null) sind keinem Projekt zuordenbar → nur in AXS-Gesamt sichtbar.
   const rows = ALL_TASKS.map(t => ({ ...t, _m: t.ms_id ? MS_META[t.ms_id] : null }))
-    .filter(t => !prog || !t._m || !t._m.programm || t._m.programm === prog)
+    .filter(t => !prog || (t._m && t._m.programm === prog))
   const owners = [...new Set(rows.map(t => t.owner).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'de'))
   const wss = [...new Set(rows.map(t => t._m?.ws).filter(Boolean))].sort()
   const phases = PHASE_ORDER.filter(p => rows.some(t => t._m?.phase === p))
