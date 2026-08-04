@@ -11,6 +11,7 @@
       "naechster_schritt": "Beschlussvorlage «INS-001 Anhang B» fertigstellen, VR 26.08. genehmigen lassen",
       "owner": null,
       "ms_refs": [
+        "WS1-06",
         "WS2-07"
       ],
       "status_historie": [
@@ -67,7 +68,9 @@
       "naechster_schritt": "Freigabe bei Fritthum + Gökcöl einholen, Caroline Serientermine setzen lassen",
       "owner": null,
       "ms_refs": [
-        "WS2-02"
+        "WS2-02",
+        "WS2-09",
+        "WS2-11"
       ],
       "status_historie": [
         {
@@ -107,7 +110,9 @@
       "evidenz": "Register LIVE seit 16.07. (E-2026-###, 5-Stufen-Status, revisionssicher); Pflichtweg erst ab 01.09. (Rollout W3)",
       "naechster_schritt": "Register per 01.09. formell als Pflichtweg in Kraft setzen, GL kommunizieren",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS2-06"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -239,7 +244,8 @@
       "naechster_schritt": "Report-Lücken adressieren: AAS-GROUP-Konsolidierungsspalten + At-equity-Ausweis (ShAir/Goldair/Aeropoint)",
       "owner": null,
       "ms_refs": [
-        "WS3-10"
+        "WS3-10",
+        "WS6-10"
       ],
       "status_historie": [
         {
@@ -477,7 +483,11 @@
       "owner": null,
       "ms_refs": [
         "M02",
-        "M15"
+        "M03",
+        "M09",
+        "M15",
+        "M17",
+        "M42"
       ],
       "status_historie": [
         {
@@ -496,7 +506,9 @@
       "evidenz": "Ausgangslage 10% erfasst; OCR-Nachlese: 37 Fristen geborgen, 47 SGHAs evergreen bestätigt; 18 ohne Zahl",
       "naechster_schritt": "Act-by-Datum als berechnetes Feld für alle Verträge mit bekannter notice_period ausrollen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS4-01"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -555,7 +567,11 @@
       "evidenz": "369 Verträge/€283.4M klassifiziert (OPEN €95.6M, CLIFF-2027 €109.3M, CLIFF-2028 €56.3M); Stand 22.05., kein Refresh-Rhythmus; E7 Cadence offen",
       "naechster_schritt": "Quartals-Refresh gegen aktuelles Haeffner-FC terminieren, Standard-Slide in VR-Zyklus (26.08.) einhängen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "M04",
+        "M34",
+        "M35"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -575,6 +591,7 @@
       "owner": null,
       "ms_refs": [
         "M38",
+        "OE-07",
         "WS4-01"
       ],
       "status_historie": [
@@ -634,6 +651,8 @@
       "naechster_schritt": "Indexklausel-Pflicht als schriftliche Vorgabe für alle 2026/27-Renewals an Haeffner (Gremien-Beschluss erwägen)",
       "owner": null,
       "ms_refs": [
+        "M11",
+        "M15",
         "M22",
         "M32",
         "M36"
@@ -657,7 +676,9 @@
       "owner": null,
       "ms_refs": [
         "M06",
+        "M14",
         "M18",
+        "M25",
         "WS4-05"
       ],
       "status_historie": [
@@ -696,6 +717,7 @@
       "naechster_schritt": "Zugang zum Looker-Studio-Ops-Reporting erschliessen (Sheet-/BigQuery-Export oder Scheduled Delivery)",
       "owner": null,
       "ms_refs": [
+        "OE-05",
         "OE-09"
       ],
       "status_historie": [
@@ -716,7 +738,8 @@
       "naechster_schritt": "Excel-/Sheet-Quelle bei Pajor/Lesch nachfassen (angefragt 23.04.), PDF-Abhängigkeit ablösen",
       "owner": null,
       "ms_refs": [
-        "WS3-10"
+        "WS3-10",
+        "WS6-10"
       ],
       "status_historie": [
         {
@@ -870,6 +893,8 @@
       "naechster_schritt": "Erste Ops-Sektion in die Monatsanalyse aufnehmen, sobald Looker-/AHM-730-Daten erschlossen",
       "owner": null,
       "ms_refs": [
+        "OE-05",
+        "WS2-04",
         "WS2-08"
       ],
       "status_historie": [
@@ -970,6 +995,7 @@
       "naechster_schritt": "Bei Charisius 1-seitige Nachfolge-Map GL + Directors (inkl. Vakanzen mit Zieldatum) anfordern",
       "owner": null,
       "ms_refs": [
+        "WS5-08",
         "ZB-13"
       ],
       "status_historie": [
@@ -1051,6 +1077,7 @@
       "naechster_schritt": "Via Caroline gültige HR-Kontaktadresse klären, testen, publizieren lassen",
       "owner": null,
       "ms_refs": [
+        "WS6-11",
         "ZB-16"
       ],
       "status_historie": [
@@ -1071,7 +1098,11 @@
       "naechster_schritt": "Status-Update von Charisius zu AR-Gründung und BER-Abschluss einholen (Termine liegen in der Vergangenheit)",
       "owner": null,
       "ms_refs": [
-        "WS5-07"
+        "OE-11",
+        "WS5-07",
+        "WS5-10",
+        "WS5-12",
+        "WS7-11"
       ],
       "status_historie": [
         {
@@ -1242,6 +1273,7 @@
       "owner": null,
       "ms_refs": [
         "WS1-01",
+        "WS6-04",
         "WS6-05"
       ],
       "status_historie": [
@@ -1262,6 +1294,7 @@
       "naechster_schritt": "Identifier-Satz als offizielles konzernweites PR-only-Artefakt im Anthology-Folder publizieren",
       "owner": null,
       "ms_refs": [
+        "M01",
         "WS6-04"
       ],
       "status_historie": [
@@ -1317,7 +1350,9 @@
       "evidenz": "§4 Provenance+Confidence Pflicht, §5 ETL mit Cache/Re-Parse/Stale-Detection; Frontmatter-Pflicht",
       "naechster_schritt": "Stichproben-Audit: 20 produktive Commercial-Agent-Datensätze auf vollständige Provenance-Felder prüfen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "M42"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -1337,6 +1372,7 @@
       "owner": null,
       "ms_refs": [
         "M08",
+        "OE-01",
         "WS6-10"
       ],
       "status_historie": [
@@ -1356,7 +1392,10 @@
       "evidenz": "Stack-Entscheid 30.05.; Vertex-Instanz aixs-260106 produktiv (APIs, IAM/Custom-Roles, DWD für 3 Agenten, Budgets + Hard-Stop)",
       "naechster_schritt": "Separaten AXS-Billing-Account (statt didit-konsolidiert) umsetzen, wie 18.06. verbindlich festgehalten",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS2-12",
+        "WS6-09"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -1374,7 +1413,9 @@
       "evidenz": "INS-009-Erstentwurf + Insider-Listen-Draft existieren, Inkrafttreten Q3/26 geplant; nicht im Register der 9 aktiven Richtlinien; AI-Act aktiv getrackt (High-Risk auf Ende 2027 verschoben)",
       "naechster_schritt": "INS-009 mit Charisius/Wüst finalisieren, als Beschlussvorlage VR 26.08. einbringen (Vorlage AI-Gov noch offen)",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS6-03"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -1393,7 +1434,9 @@
       "naechster_schritt": "Ersten monatlichen Status-Zyklus (Owner an Tine, 1. Werktag) tatsächlich durchführen und im Tracker dokumentieren",
       "owner": null,
       "ms_refs": [
-        "WS6-02"
+        "WS6-02",
+        "WS6-07",
+        "WS6-12"
       ],
       "status_historie": [
         {
@@ -1451,7 +1494,9 @@
       "naechster_schritt": "Gordon-Rollen-Klärung mit Stephanie abschliessen; je kritischem System Stellvertretung + Runbook-Auftrag festlegen",
       "owner": null,
       "ms_refs": [
+        "WS1-12",
         "WS2-12",
+        "WS6-04",
         "WS6-09"
       ],
       "status_historie": [
