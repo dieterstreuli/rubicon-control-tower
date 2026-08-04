@@ -2538,6 +2538,240 @@ workstreams:
         depends_on:
           - PV-08
         nachlauf: false
+  - code: ZB
+    name: Zielbild-Schliessung — ungedeckte SOLL-Kriterien (AXS-Datengehirn)
+    owner: Dieter Streuli
+    support: Stephanie Rohde, Cüneyt Gökcöl, Amélie Charisius (Domänen-Owner); CoS (Register/Evidenz)
+    programm: transformation
+    milestones:
+      - id: ZB-01
+        name: 'Fast Close etabliert — Abschluss + Reporting-Versand bis Arbeitstag 10 (Z-FIN-02)'
+        owner: Stephanie Rohde
+        start: '2026-09-01'
+        due: '2027-01-31'
+        date_assumed: true
+        phase: Zielbild
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+      - id: ZB-02
+        name: 'Monats-Paket komplett: konsolidierte Bilanz + Cashflow + Liquidität + DSO/DPO im Monthly (Z-FIN-03)'
+        owner: Stephanie Rohde
+        start: '2026-09-01'
+        due: '2026-12-15'
+        date_assumed: true
+        phase: Zielbild
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+      - id: ZB-03
+        name: 'Budget-Prozess 2027 mit dokumentierter Treiber-Logik (Volumen × Preis × FTE × Kosten je Station) (Z-FIN-06)'
+        owner: Stephanie Rohde
+        start: '2026-09-01'
+        due: '2026-11-15'
+        date_assumed: true
+        phase: Zielbild
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+      - id: ZB-04
+        name: 'Konzernkonsolidierung in-house: monatlich, volle IC-Eliminierung, ein Konsol-Tool (Z-FIN-08)'
+        owner: Stephanie Rohde
+        start: '2026-09-01'
+        due: '2027-03-31'
+        date_assumed: true
+        phase: Zielbild
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+      - id: ZB-05
+        name: 'Audit-Disziplin: testierte Jahresabschlüsse aller Gesellschaften fristgerecht (Z-FIN-10)'
+        owner: Stephanie Rohde
+        start: '2026-09-01'
+        due: '2027-03-31'
+        date_assumed: true
+        phase: Zielbild
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+      - id: ZB-06
+        name: 'Treasury-/Cash-Pool-Governance: Pool-Verträge dokumentiert + monatliche Saldo-Matrix (Z-FIN-11)'
+        owner: Stephanie Rohde
+        start: '2026-09-01'
+        due: '2026-12-15'
+        date_assumed: true
+        phase: Zielbild
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+      - id: ZB-07
+        name: 'Delay-Code-Tracking Handler-Verantwortung (AHM-730 G31–39) je Station im Monatsrhythmus (Z-OPS-04)'
+        owner: Cüneyt Gökcöl
+        start: '2026-09-01'
+        due: '2026-12-15'
+        date_assumed: true
+        phase: Zielbild
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+      - id: ZB-08
+        name: 'Penalty-/Haftungs-Exposure je Station × Kunde monetarisiert, gegen Rückstellungen gespiegelt (Z-OPS-07)'
+        owner: Cüneyt Gökcöl
+        start: '2026-09-01'
+        due: '2027-01-31'
+        date_assumed: true
+        phase: Zielbild
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+      - id: ZB-09
+        name: 'FTE-/Headcount-Datenbasis + Produktivitätssteuerung je Station (monatlich) (Z-OPS-08)'
+        owner: Cüneyt Gökcöl
+        start: '2026-09-01'
+        due: '2026-11-15'
+        date_assumed: true
+        phase: Zielbild
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+      - id: ZB-10
+        name: 'Proaktive Kunden-Performance-Reviews: quartalsweise Service-Reviews Top-Airlines je Station (Z-OPS-11)'
+        owner: Cüneyt Gökcöl
+        start: '2026-09-01'
+        due: '2027-01-31'
+        date_assumed: true
+        phase: Zielbild
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+      - id: ZB-11
+        name: 'Safety-/Compliance-Nachweis auf Branchenstandard (SMS ICAO Annex 19 / ISAGO-Readiness) (Z-OPS-12)'
+        owner: Cüneyt Gökcöl
+        start: '2026-09-01'
+        due: '2027-03-31'
+        date_assumed: true
+        phase: Zielbild
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+      - id: ZB-12
+        name: 'HR-Kern-KPIs fest im Monatsreporting (Fluktuation, Cost/FTE, Krankenquote, Time-to-Fill) (Z-HR-02)'
+        owner: Amélie Charisius
+        start: '2026-09-01'
+        due: '2026-12-15'
+        date_assumed: true
+        phase: Zielbild
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+      - id: ZB-13
+        name: 'Nachfolge- und Talent-Pipeline für Schlüsselrollen (GL, Directors, Station Manager) (Z-HR-03)'
+        owner: Amélie Charisius
+        start: '2026-09-01'
+        due: '2026-11-15'
+        date_assumed: true
+        phase: Zielbild
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+      - id: ZB-14
+        name: 'Schriftliche GL-Zielvereinbarungen aus Strategie + Budget, mit unterjährigem Review (Z-HR-04)'
+        owner: Amélie Charisius
+        start: '2026-09-01'
+        due: '2026-12-31'
+        date_assumed: true
+        phase: Zielbild
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+      - id: ZB-15
+        name: 'Standardisiertes Onboarding für Mitarbeitende und Führungskräfte (Z-HR-05)'
+        owner: Amélie Charisius
+        start: '2026-09-01'
+        due: '2027-01-31'
+        date_assumed: true
+        phase: Zielbild
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+      - id: ZB-16
+        name: 'Publizierter HR-Servicekanal mit Self-Service für Standardanliegen (Z-HR-07)'
+        owner: Amélie Charisius
+        start: '2026-09-01'
+        due: '2027-03-31'
+        date_assumed: true
+        phase: Zielbild
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+      - id: ZB-17
+        name: 'Compliance-Schulung mit Nachweis: Code of Conduct + Kern-Policies, dokumentierte Attestierung (Z-LEG-05)'
+        owner: Amélie Charisius
+        start: '2026-09-01'
+        due: '2027-01-31'
+        date_assumed: true
+        phase: Zielbild
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+      - id: ZB-18
+        name: 'Konzern-Risiko-Register mit VR-Reporting (Top-Risiken, Owner, Mitigations-Status) (Z-LEG-06)'
+        owner: Cüneyt Gökcöl
+        start: '2026-09-01'
+        due: '2026-11-15'
+        date_assumed: true
+        phase: Zielbild
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+      - id: ZB-19
+        name: 'Datenschutz-Prozess mit zentralem Tracker (DSGVO/nDSG-Anfragen, Fristen) (Z-LEG-08)'
+        owner: Amélie Charisius
+        start: '2026-09-01'
+        due: '2027-01-31'
+        date_assumed: true
+        phase: Zielbild
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
 inputs:
   - id: IN-01
     owner: Thomas Pajor

@@ -258,7 +258,9 @@
       "evidenz": "Typisch ~20. des Folgemonats; JAN-Report 11.03., FEB-Report 24.03.",
       "naechster_schritt": "Fast-Close-Ziel AT 10 mit Rohde/Lesch als verbindliches SLA (inkl. Close-Kalender)",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "ZB-01"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -276,7 +278,9 @@
       "evidenz": "«Kein Cashflow / keine Bilanz» im Monthly; EY-Scope «no free cash flow»; DSO/DPO fehlen",
       "naechster_schritt": "Monatliches CF-Statement (indirekt aus Trial Balances) als Pflichtbestandteil bei Rohde/Lesch beauftragen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "ZB-02"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -332,7 +336,9 @@
       "evidenz": "Annahmen-Brücke 23.04. via Rohde angefragt, keine Lieferung; nur EY-Top-Level-Annahmen",
       "naechster_schritt": "Annahmen-Brücke bei Rohde re-eskalieren, Ziel: verfügbar vor Budget-Prozess 2027",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "ZB-03"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -371,7 +377,9 @@
       "evidenz": "EY: «no consolidated financials exist for AAS»; GROUP-Spalte ohne IC-Bereinigung; Intercompany manuell 50/50",
       "naechster_schritt": "Konsol-Tool- und Standard-CoA-Entscheid als terminiertes Arbeitspaket in Finance-TOM Phase 1 verankern",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "ZB-04"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -407,7 +415,9 @@
       "evidenz": "AHS-2025-Prüfung pausiert (Going-Concern-Gutachten Cash-Pool); AAS FY24 erst März/April 2026 final; Grossteil 2025er im Entwurf, Ziel 31.08.26",
       "naechster_schritt": "Status Going-Concern-Gutachten + Einhaltung 31.08.-Ziel bei Rohde abfragen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "ZB-05"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -425,7 +435,9 @@
       "evidenz": "Cash-Pool mit Non-Perimeter nicht eliminiert; AAS-Treasury-IC-Netting offen; Saldo-Matrix fehlt",
       "naechster_schritt": "Abschluss des Treasury-IC-Nettings (AAS Treasury AG) bei Rohde terminieren",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "ZB-06"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -741,7 +753,9 @@
       "evidenz": "Systematik vollständig dokumentiert; Datenquelle nicht identifiziert, kein Tracking etabliert",
       "naechster_schritt": "AHM-730-Datenquelle identifizieren, Pilot BER+VIE: 1 Monat G-Code-Rohdaten ziehen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "ZB-07"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -797,7 +811,9 @@
       "evidenz": "Nur als offene Spiegel-Logik/Skelett-Zielbild",
       "naechster_schritt": "Penalty-Exposure-Rechnung für Pilotstation BER: Klauseln × Ist-Delay-Quote × Volumen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "ZB-08"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -815,7 +831,9 @@
       "evidenz": "FTE-Projekt Skelett, Looker-Quelle seit 23.04. bei Rohde angefragt, kein Fortschritt; Rohdaten (Flights, FTE, Revenue) liegen aber in den Monthly-PDFs",
       "naechster_schritt": "Scheduled-CSV-Export aus Looker bei Rohde mit Zieldatum bestellen; parallel Flights/FTE + Revenue/FTE einmalig aus vorhandenen PDFs rechnen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "ZB-09"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -871,7 +889,9 @@
       "evidenz": "Keine Information in Memory; Beziehungspflege-Matrix deckt Ownership, nicht Service-Reviews",
       "naechster_schritt": "Cüneyt fragen, welche Stationen strukturierte Service-Reviews mit ihren Top-3-Kunden führen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "ZB-10"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -889,7 +909,9 @@
       "evidenz": "SGHA-Pflicht dokumentiert; kein AXS-Status zu ISAGO/SMS in Memory",
       "naechster_schritt": "ISAGO-/SMS-Status je Station bei Cüneyt/QM abfragen und als Referenz ablegen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "ZB-11"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -927,7 +949,9 @@
       "evidenz": "Ohne FTE-Basis nicht berechenbar; kein Beleg für HR-KPI-Sektion im Monthly (Lesch ~20.)",
       "naechster_schritt": "HR-KPI-Set als Pflichtsektion des Monthly bei Rohde/Lesch bestellen (startklar, sobald FTE-Quelle steht)",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "ZB-12"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -945,7 +969,9 @@
       "evidenz": "Mehrere N.N.-Vakanzen; CCO-Frage Haeffner seit Mai ungelöst; Abgänge (Griesch/Meinicke/Eslava) einzelfallweise gemanagt; kein Succession-Artefakt",
       "naechster_schritt": "Bei Charisius 1-seitige Nachfolge-Map GL + Directors (inkl. Vakanzen mit Zieldatum) anfordern",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "ZB-13"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -963,7 +989,9 @@
       "evidenz": "Keine Hinweise in Memory",
       "naechster_schritt": "Gökcöl/Charisius fragen, ob für 2026 schriftliche GL-Zielvereinbarungen existieren — und zeigen lassen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "ZB-14"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -981,7 +1009,9 @@
       "evidenz": "Onboarding nur als künftiger HR-Bot-Use-Case (PLANNED Q3/26–Q2/27); heutiger Standard unbelegt",
       "naechster_schritt": "Charisius fragen, ob ein gruppenweiter Onboarding-Standard existiert (Ist-Aufnahme vor HR-Bot-Start)",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "ZB-15"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -1020,7 +1050,9 @@
       "evidenz": "Alle drei bekannten HR-Adressen bounced 21.04. mit 550, Fallback über Caroline; Self-Service nur als geplanter HR-Bot-Use-Case",
       "naechster_schritt": "Via Caroline gültige HR-Kontaktadresse klären, testen, publizieren lassen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "ZB-16"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -1130,7 +1162,9 @@
       "evidenz": "Nur Verteilung an Stationsleitungen + Sanktionierbarkeit dokumentiert; zu Schulung/Attestation nichts",
       "naechster_schritt": "Bestandsaufnahme bei Wüst/Charisius: existieren Nachweise zum Code of Conduct (CEO-INS-003), welche Abdeckung?",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "ZB-17"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -1148,7 +1182,9 @@
       "evidenz": "Viele Einzelrisiken dokumentiert (VIE, Goldair, Cash, Haftungen), aber kein konsolidiertes Register und kein VR-Risiko-Traktandum in Memory",
       "naechster_schritt": "Bei Wüst/Cüneyt klären, ob ein Register existiert; falls nein, Top-10-Risiken als wiederkehrendes TRAK nach dem 26.08. aufsetzen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "ZB-18"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -1184,7 +1220,9 @@
       "evidenz": "DSGVO-Anfragen explizit «tbd Process … Skelett, kein zentraler Tracker» (Owner Charisius); Standardisierung erst als künftige Legal-Agent-Funktion",
       "naechster_schritt": "Charisius beauftragen, minimales zentrales DSGVO-Register (Sheet) aufzusetzen — unabhängig vom Legal-Agent-Ausbau",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "ZB-19"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
