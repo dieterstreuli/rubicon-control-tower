@@ -8,7 +8,27 @@
       "pdf": "/reports/vr-2026-Q3.pdf",
       "doc_id": "1aFJ-p_siXEFyxElzL22j4XOopMPaqkIcHoJwhFoAKvE",
       "doc_url": "https://docs.google.com/document/d/1aFJ-p_siXEFyxElzL22j4XOopMPaqkIcHoJwhFoAKvE/edit",
-      "stand": "Steuerungsstand 21.07.2026"
+      "stand": "Steuerungsstand 01.08.2026"
+    },
+    {
+      "id": "monat-2026-08",
+      "level": "monat",
+      "period": "2026-08",
+      "label": "August 2026",
+      "pdf": "/reports/monat-2026-08.pdf",
+      "doc_id": "1GiokBNUvC3dZZl6NFADOnBCWVDO3In1npoIQsw63Qsc",
+      "doc_url": "https://docs.google.com/document/d/1GiokBNUvC3dZZl6NFADOnBCWVDO3In1npoIQsw63Qsc/edit",
+      "stand": "Steuerungsstand 01.08.2026"
+    },
+    {
+      "id": "woche-2026-08-01",
+      "level": "woche",
+      "period": "2026-08-01",
+      "label": "KW 31 · 27.07.–02.08.2026",
+      "pdf": "/reports/woche-2026-08-01.pdf",
+      "doc_id": "1-70LICXnPKAEqjei3Rqjn3b2-qNIv_fgb0Td5njB_gk",
+      "doc_url": "https://docs.google.com/document/d/1-70LICXnPKAEqjei3Rqjn3b2-qNIv_fgb0Td5njB_gk/edit",
+      "stand": "Steuerungsstand 01.08.2026"
     },
     {
       "id": "monat-2026-07",

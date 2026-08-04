@@ -11,6 +11,8 @@ Exit-Code != 0 bei FEHLERn (als Pre-Commit/CI-Gate nutzbar).
 """
 import json
 import math
+import os
+import re
 import sys
 import datetime
 from pathlib import Path
@@ -293,6 +295,7 @@ def main():
     # Erfüllungsgrad wird deterministisch aus domain.json-Scores gerechnet.
     zb_path = ROOT / "src" / "data" / "zielbild.json"
     zb_line = ""
+    link_urls = []   # (where, url) — Archiv-Pointer für den Drive-Link-Check
     if zb_path.exists():
         try:
             zstore = json.loads(zb_path.read_text())
@@ -301,21 +304,36 @@ def main():
             err("zielbild.json", f"kein gültiges JSON: {ex}")
         zs = zstore.get("zielbild") or []
         try:
-            zmeta = (json.loads((ROOT / "src" / "data" / "domain.json").read_text()).get("zielbild") or {}).get("meta") or {}
+            zdom = json.loads((ROOT / "src" / "data" / "domain.json").read_text()).get("zielbild") or {}
         except Exception:
-            zmeta = {}
+            zdom = {}
+        zmeta = zdom.get("meta") or {}
+        # Evidenz-Format (Härtung 04.08.): Muster-SSOT aus domain.json — Evidenz muss einen
+        # Drive-/Docs-Link ODER eine Register-Referenz enthalten (Pointer ins Archiv).
+        zfmt = zdom.get("evidenz_formate") or {}
+        re_url = re.compile(zfmt.get("url", r"https?://(docs|drive)\.google\.com/"))
+        re_reg = re.compile(zfmt.get("register", r"$^"))
+        pointer_ok = lambda s: bool(re_url.search(s or "") or re_reg.search(s or ""))
         all_ms_ids = {m.get("id") for w in (doc.get("workstreams") or []) for m in (w.get("milestones") or [])}
-        score_sum = 0
+        n_freitext = 0
         for z in zs:
             zid = z.get("id") or "?"
             for ref in z.get("ms_refs") or []:
                 if ref not in all_ms_ids:
                     err(zid, f"ms_refs verweist auf unbekannten Milestone «{ref}»")
-            if z.get("status") in ("vorhanden", "gelebt") and not (z.get("evidenz") or "").strip():
-                gap(zid, f"Status «{z.get('status')}» ohne Evidenz (Datenehrlichkeit)")
-            score_sum += (zmeta.get(z.get("status")) or {}).get("score") or 0
+            ev = (z.get("evidenz") or "").strip()
+            if z.get("status") in ("vorhanden", "gelebt"):
+                if not ev:
+                    gap(zid, f"Status «{z.get('status')}» ohne Evidenz (Datenehrlichkeit)")
+                elif not pointer_ok(ev):
+                    n_freitext += 1
+                    gap(zid, "Evidenz ist Freitext ohne Archiv-Pointer (Drive-Link/Register-ID nachpflegen)")
+            for u in re.findall(r"https?://(?:docs|drive)\.google\.com/\S+", ev):
+                link_urls.append((zid, u))
         if zs:
-            zb_line = f"   Zielbild: {len(zs)} Kriterien · {round(score_sum / len(zs))}% erfüllt"
+            zb_line = f"   Zielbild: {len(zs)} Kriterien · {round(sum((zmeta.get(z.get('status')) or {}).get('score') or 0 for z in zs) / len(zs))}% erfüllt"
+            if n_freitext:
+                zb_line += f" · {n_freitext} Evidenzen ohne Pointer"
 
     # Artefakt-Pflicht (04.08., Baustein 2 «Datengehirn»): ab Stichtag erledigte
     # Handlungen sollen ihr Arbeitsprodukt verlinken (Drive «Datenlieferungen»/Doc/
@@ -324,6 +342,39 @@ def main():
     for t in tasks:
         if t.get("status") == "erledigt" and (t.get("erledigt_am") or "") >= ARTEFAKT_STICHTAG and not (t.get("artefakt") or "").strip():
             gap(t.get("id") or "?", "erledigt ohne Artefakt-Link (Ablage-Pflicht ab 04.08.)")
+        for u in re.findall(r"https?://(?:docs|drive)\.google\.com/\S+", t.get("artefakt") or ""):
+            link_urls.append((t.get("id") or "?", u))
+
+    # ── Drive-Link-Check (Härtung 04.08.): jeder Archiv-Pointer muss real auflösbar sein —
+    # toter/gelöschter Link = Datenlücke. Non-fatal & optional: läuft nur, wenn Google-Creds
+    # verfügbar sind (Portabilität — der Tower-Kern braucht kein Google, MIGRATION §7);
+    # Skip via RUBICON_SKIP_LINKCHECK=1.
+    if link_urls and os.environ.get("RUBICON_SKIP_LINKCHECK") != "1":
+        def _file_id(u):
+            m = re.search(r"/(?:d|folders|file/d)/([A-Za-z0-9_-]{10,})", u) or re.search(r"[?&]id=([A-Za-z0-9_-]{10,})", u)
+            return m.group(1) if m else None
+        try:
+            _ga = Path("/Users/dieterstreuli/Chief/Tools")
+            sys.path.insert(0, str(_ga if (_ga / "_google_auth.py").exists() else ROOT / "scripts" / "_tools"))
+            from _google_auth import load_credentials            # noqa: E402
+            from googleapiclient.discovery import build          # noqa: E402
+            _svc = build("drive", "v3", credentials=load_credentials("d.streuli@axs.aero"), cache_discovery=False)
+            seen_ids = {}
+            for where, u in link_urls:
+                fid = _file_id(u)
+                if not fid:
+                    gap(where, f"Archiv-Link ohne erkennbare Datei-ID: {u[:60]}")
+                    continue
+                if fid not in seen_ids:
+                    try:
+                        f = _svc.files().get(fileId=fid, fields="id,trashed", supportsAllDrives=True).execute()
+                        seen_ids[fid] = "papierkorb" if f.get("trashed") else "ok"
+                    except Exception:
+                        seen_ids[fid] = "tot"
+                if seen_ids[fid] != "ok":
+                    gap(where, f"Archiv-Link {seen_ids[fid]} (nicht auflösbar): …{fid[-8:]}")
+        except Exception as ex:
+            warn("link-check", f"übersprungen ({type(ex).__name__}) — {len(link_urls)} Archiv-Links ungeprüft")
 
     print("── RUBICON Control Tower · Datenintegrität " + "─" * 30)
     print(f"  Meilensteine: {n_ms}   Ströme: {len(doc.get('workstreams') or [])}   Inputs: {n_in}   Handlungen: {n_tasks}   Entscheide: {n_ents}{zb_line}")

@@ -74,6 +74,11 @@
       "unbekannt": { "label": "unbekannt", "token": "grey",  "score": 0 }
     },
     "evidenz_pflicht_ab": "vorhanden",
+    "evidenz_formate": {
+      "_kommentar": "Härtung 04.08.: gültige Evidenz MUSS einen Drive-/Docs-Link ODER eine Register-Referenz enthalten (Pointer ins Archiv — Freitext-Behauptung reicht nicht). JS (API) und Python (validate) lesen dieselben Muster.",
+      "url": "https?://(docs|drive)\\.google\\.com/",
+      "register": "\\b(E-\\d{4}-\\d{3}|T-\\d{3}|IN-\\d{2}|Z-(GOV|FIN|COM|OPS|HR|LEG|DAT)-\\d{2}|(WS\\d|OE|FIN|PV)-\\d{2}|M\\d{2})\\b"
+    },
     "domaenen": {
       "GOV": "Governance & Gremien",
       "FIN": "Finance & Liquidität",

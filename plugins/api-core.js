@@ -137,6 +137,14 @@ export function createApi(rootDir) {
   const DOMAIN = db.domain.read()
   const ENT_FLOW = DOMAIN.entscheide.flow
   const ENT_BEGRUENDUNG_AB = DOMAIN.entscheide.begruendung_pflicht_ab
+  // Evidenz-Format-Gate (Härtung 04.08., «Datengehirn»): gültige Evidenz/Artefakte müssen
+  // einen Drive-/Docs-Link ODER eine Register-Referenz enthalten — Muster-SSOT domain.json.
+  const ZB_FMT = (DOMAIN.zielbild || {}).evidenz_formate || {}
+  const evidenzGueltig = (s) => {
+    const txt = String(s || '')
+    return Boolean((ZB_FMT.url && new RegExp(ZB_FMT.url).test(txt)) ||
+                   (ZB_FMT.register && new RegExp(ZB_FMT.register).test(txt)))
+  }
   function mergeEntscheide(store, incoming, datum) {
     const byKey = new Map(store.entscheide.map(e => [e.key, e]))
     const ids = []
@@ -461,6 +469,9 @@ export function createApi(rootDir) {
           t.erledigt_von = body.status === 'erledigt' ? (role === 'Owner' ? me : 'CoS') : null
           // Artefakt-Pflicht (04.08., «Datengehirn»): Ablage-Link des Arbeitsprodukts —
           // optional beim Abhaken; validate meldet erledigt-ohne-Artefakt als Lücke.
+          // Format-Gate (Härtung 04.08.): wenn gesetzt, muss es ein Archiv-Pointer sein.
+          if (body.artefakt !== undefined && String(body.artefakt || '').trim() && !evidenzGueltig(String(body.artefakt)))
+            return json(400, { ok: false, error: 'Artefakt muss ein Drive-/Docs-Link oder eine Register-Referenz sein — Freitext ist kein Ablage-Pointer.' })
           if (body.artefakt !== undefined) t.artefakt = String(body.artefakt || '').trim() || null
           db.tasks.write(tstore)
           const roll = rollupMs(t.ms_id, tstore)
@@ -667,6 +678,10 @@ export function createApi(rootDir) {
           // Request — die Seed-Evidenz beschreibt den Ist-Zustand und belegt kein Upgrade.
           if (rang(body.status) > rang(z.status) && rang(body.status) >= pflichtAb && !(body.evidenz || '').trim())
             return json(400, { ok: false, error: `Upgrade auf «${body.status}» erfordert frische Evidenz (Artefakt-/Quellen-Link) — Datenehrlichkeit.` })
+          // Format-Gate (Härtung 04.08.): Evidenz ist ein POINTER ins Archiv — sie muss einen
+          // Drive-/Docs-Link oder eine Register-Referenz enthalten; Freitext-Behauptung reicht nicht.
+          if (body.evidenz && String(body.evidenz).trim() && !evidenzGueltig(String(body.evidenz)))
+            return json(400, { ok: false, error: 'Evidenz muss einen Drive-/Docs-Link oder eine Register-Referenz enthalten (E-JJJJ-### · T-### · IN-## · Z-XXX-## · Milestone-ID) — Freitext ist kein Beleg.' })
           if (body.evidenz && String(body.evidenz).trim()) z.evidenz = String(body.evidenz).trim()
           if (rang(body.status) >= pflichtAb && !(z.evidenz || '').trim())
             return json(400, { ok: false, error: `Evidenz ist Pflicht für «${body.status}» — Artefakt-/Quellen-Link angeben (Datenehrlichkeit).` })
