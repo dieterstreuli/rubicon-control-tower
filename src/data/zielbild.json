@@ -10,7 +10,9 @@
       "evidenz": "Kompetenzmatrix V1.0 gesetzt 16.07., validiert Rohde+Charisius 01.08., ExBoD-Ebene eingezogen; Beschlussvorlage + VR-Genehmigung 26.08. offen",
       "naechster_schritt": "Beschlussvorlage «INS-001 Anhang B» fertigstellen, VR 26.08. genehmigen lassen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS2-07"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -64,7 +66,9 @@
       "evidenz": "Umbau 01.08. (SC 2-wöchentlich, Monatsformate, GL-Weekly ohne DRS); One-Pager mit 12 Formaten existiert; Chairman Cockpit + ExBoD-Weekly laufen bereits; Freigabe AFR+CGO OFFEN",
       "naechster_schritt": "Freigabe bei Fritthum + Gökcöl einholen, Caroline Serientermine setzen lassen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS2-02"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -82,7 +86,10 @@
       "evidenz": "Sitzungserfassung + Gemini-Import + Protokoll-Export live, Commitment-Spiegel automatisch; ExBoD-Traktanden/Erledigt-Log gelebt; TRAK-Modell settled (23 TRAK); aber Lücken: VR 2023 fehlt komplett, Protokolle Treasury/ShAir/Goldair/SI/AHS liegen nicht vor",
       "naechster_schritt": "Protokoll-Inventar über alle Gesellschaften erstellen, Lücken benennen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS2-04",
+        "WS6-06"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -154,7 +161,10 @@
       "evidenz": "DRS ist GF fast aller DE/AT-Gesellschaften («Haftungsrisiko bei 18 Gesellschaften gleichzeitig»); DRS = alleiniger GF DE",
       "naechster_schritt": "Zweit-GF-Konzept (Gökcöl/Matthei/Rohde je Strang) als ExBoD-Vorlage erarbeiten",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS1-10",
+        "WS1-13"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -208,7 +218,9 @@
       "evidenz": "Dokumentierte Lücken (FLD seit 2024, Patronatserklärung AAS DE verschwunden, Technics-Frist überfällig); Commitment-Tracking live für GL-Ebene; Beschluss-Status-Tracker = Phase-1-MVP Governance-Agent (Sep–Nov 26)",
       "naechster_schritt": "Offene Alt-Beschlüsse (FLD, Patronatserklärung) ins Entscheids-Register nachtragen mit Owner + Frist",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS2-06"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -226,7 +238,9 @@
       "evidenz": "Monthly Report Lesch (AAS+AHS, Stationsebene, Kommentare, fester Rhythmus)",
       "naechster_schritt": "Report-Lücken adressieren: AAS-GROUP-Konsolidierungsspalten + At-equity-Ausweis (ShAir/Goldair/Aeropoint)",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS3-10"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -280,7 +294,9 @@
       "evidenz": "DRS 02.07.: Prio 1; Cashflow-Skeleton an Rohde übergeben; als fehlend/Prio HOCH gelistet",
       "naechster_schritt": "Liefertermin für erste operative 13-Wochen-Version bei Rohde fixieren",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS2-02"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -334,7 +350,10 @@
       "evidenz": "EUR-15M-Fazilität in Arbeit, Advisor Märki mandatiert, JB-Term-Sheet, Closing 31.10. zwingend; heute Kreditoren-Streckung (~€10M überfällig) als Finanzierungsersatz",
       "naechster_schritt": "Sicherheiten-Reframe (post-VIE) mit Märki finalisieren, Ansprache-Welle 1 starten",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "FIN-08",
+        "WS3-05"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -424,7 +443,9 @@
       "evidenz": "Soll-Bild + Gap-Analyse 24.07., 3 Phasen, gekoppelt an WS7/Elysium, VR-Vorlage 26.08.; harter Gap wartet auf Pajor-Daten (fällig 04.08.)",
       "naechster_schritt": "Pajor-Zulieferung einfordern, harten FTE/EUR-Gap rechnen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS1-09"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -442,7 +463,10 @@
       "evidenz": "2'299 Verträge in master_index.sqlite; Lücken 1'796→176 (−90%); 98% von €283M digitalisiert; Rest ~106 = fehlende Basisdokumente; Commercial-Agent-PDF-Basis 4'402/63%",
       "naechster_schritt": "~106 Rest-Lücken (Parent-/Rates-Waisen) per Dokumenten-Anforderung bei Haeffner schliessen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "M02",
+        "M15"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -478,7 +502,9 @@
       "evidenz": "E6 Hosting/SSO offen, E8 Adoption offen, E1 Odoo-Sync offen; 1 von 10 Endstate-Milestones erreicht; GL-Gateway #99 in Arbeit",
       "naechster_schritt": "CRM-Cockpit hinter das Internal-Apps-Gateway (#99) bringen, sobald Auth geliefert",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "M19"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -496,7 +522,10 @@
       "evidenz": "Schemas, /crm-Skill, new_activity.py gebaut; Datenordner leer; Telegram-Trigger + EB-Auto-Tag nicht verdrahtet",
       "naechster_schritt": "Telegram-«Aktivität:»-Trigger und EB-Auto-Tagging verdrahten",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "M12",
+        "M16"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -532,7 +561,10 @@
       "evidenz": "Heatmap operativ seit 11.06. (150 Zeilen, 110 rote Renewal-Zellen mit Empfehlung); SLA- und Aktivitäts-Spalte grau; kein Review-Rhythmus",
       "naechster_schritt": "Heatmap-Review als festen monatlichen Punkt im Commercial-/ExBoD-Rhythmus verankern",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "M38",
+        "WS4-01"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -568,7 +600,10 @@
       "evidenz": "Modul konzipiert (4 Funktionen, 17'965 Rate-Records); Status 01.07.: PENDENT geparkt, Cost-to-Serve aus Forecasting-Schicht 2 fehlt",
       "naechster_schritt": "Cost-to-Serve-Granularität mit Pajor/Lesch festlegen (Wiedereinstieg ins Pricing-Modul)",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "M40",
+        "M41"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -586,7 +621,11 @@
       "evidenz": "Indexklausel in nur ~1% (22 von 2'299 Verträgen); Matrix-Entscheid: Fehlen = Preiserosionssignal",
       "naechster_schritt": "Indexklausel-Pflicht als schriftliche Vorgabe für alle 2026/27-Renewals an Haeffner (Gremien-Beschluss erwägen)",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "M22",
+        "M32",
+        "M36"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -604,7 +643,11 @@
       "evidenz": "3-Tier-Modell definiert, Tier-A 10/10 allokiert, Log-Sheet angelegt; Tier-B offen, Touchpoint-Plan H2 offen, keine gelebte Kadenz",
       "naechster_schritt": "Tier-B-Allokation im nächsten ExBoD beschliessen, Touchpoint-Plan H2 je Pate einfordern",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "M06",
+        "M18",
+        "WS4-05"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -640,7 +683,9 @@
       "evidenz": "Skelett (Q3/2026+); Datenquellen fragmentiert, Verknüpfung mit Financials fehlt komplett",
       "naechster_schritt": "Zugang zum Looker-Studio-Ops-Reporting erschliessen (Sheet-/BigQuery-Export oder Scheduled Delivery)",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "OE-09"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -658,7 +703,9 @@
       "evidenz": "Monthly-Report-PDFs (Pajor/Lesch, S. 8–26) mit kompletter Stations-GuV + Kommentaren; verbindlicher 7-Schritte-Monatsworkflow (DRS-bestätigt 25.05.)",
       "naechster_schritt": "Excel-/Sheet-Quelle bei Pajor/Lesch nachfassen (angefragt 23.04.), PDF-Abhängigkeit ablösen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS3-10"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -730,7 +777,9 @@
       "evidenz": "SLA-Spalte bewusst GRAU (DRS 11.06.: Proxy unzureichend); SLA-Klauseln nur 25% extrahiert (deep-Nachlese 210); Annex-B-Kündigungsrecht dokumentiert, keine AXS-Messung",
       "naechster_schritt": "SLA-/Penalty-Klauseln der Top-5-Kunden aus Annex B extrahieren; AHM-730 als Datenquelle anbinden (EPG/GHS klären)",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "OE-07"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -802,7 +851,9 @@
       "evidenz": "Chairman Cockpit (DRS+AFR+CGO+SRO, 90 Min) + Muster-Spiegel + Aufträge-Tracker etabliert — aber rein finanzgetrieben, Ops-KPIs fehlen",
       "naechster_schritt": "Erste Ops-Sektion in die Monatsanalyse aufnehmen, sobald Looker-/AHM-730-Daten erschlossen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS2-08"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -856,7 +907,9 @@
       "evidenz": "Funktions-Org publiziert durch Wüst 03.06.26 (intern + extern, SoT-Regel); nur eine Publikation, kein Update-Rhythmus, mehrere N.N.-Vakanzen",
       "naechster_schritt": "Wüst fixen Quartals-Refresh beauftragen (nächste Version mit bereinigten N.N.-Feldern inkl. Besetzungsplan)",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS1-03"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -946,7 +999,10 @@
       "evidenz": "Manual V0.1 mit 4 Drive-Docs seit 26.05., Tier-1-Workflows definiert, Pilot Fritthum geplant, Rollout Aug–Okt; gated durch Foundation-Gates 1+2",
       "naechster_schritt": "Pilot-Review mit Fritthum terminieren (Gate-Entscheid für die Welle an die übrigen 6 GL-Mitglieder)",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS6-13",
+        "WS6-14"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -982,7 +1038,9 @@
       "evidenz": "AR-Gründung AXS + AHS DUS rechtlich geprüft (Charisius 20.07.), BER-Interessenausgleich mit Namensliste ~90 verhandelt 27./28.07., Matthei bei Vertrauensleuten 29.07.",
       "naechster_schritt": "Status-Update von Charisius zu AR-Gründung und BER-Abschluss einholen (Termine liegen in der Vergangenheit)",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS5-07"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -1144,7 +1202,10 @@
       "evidenz": "War-Room-Auftrag: SSOT-Map bis ~01.07., Lieferung nicht bestätigt; SSOT-Prinzip je Domäne benannt (master_index/Odoo/Finance-Ledger/Looker/Payroll)",
       "naechster_schritt": "Bei Tine Petric Stand der SSOT-Map abfragen, Artefakt versioniert ablegen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS1-01",
+        "WS6-05"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -1162,7 +1223,9 @@
       "evidenz": "Schema v1.0.0 mit Identifier-Standards, semver; Backfill 177/177 Schema-Compliance im CoS-Memory",
       "naechster_schritt": "Identifier-Satz als offizielles konzernweites PR-only-Artefakt im Anthology-Folder publizieren",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS6-04"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -1234,7 +1297,10 @@
       "evidenz": "Anforderung an Pajor 08.05., DRS-Zugriffsantrag 03.07., Zugang nicht erteilt; 4 von 5 offene Datenpakete hängen an EPG",
       "naechster_schritt": "Bei Pajor Status der EPG-Zugangserteilung nachfassen, Discovery-Call mit EPG Solution-Architect terminieren",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "M08",
+        "WS6-10"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -1288,7 +1354,9 @@
       "evidenz": "8 Initiativen mit Owner/Target €5.5M, Live-Tracker-Sheet, definierter Rhythmus, Wellen-Sequenzierung; Realisierung Q3/26 noch 0",
       "naechster_schritt": "Ersten monatlichen Status-Zyklus (Owner an Tine, 1. Werktag) tatsächlich durchführen und im Tracker dokumentieren",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS6-02"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -1306,7 +1374,9 @@
       "evidenz": "Anthology-Skelett mit 9 Sub-Foldern angelegt; 4-Sub-Folder-Pattern Pflicht; Migrations-Liste definiert; Initiative 8 PLANNED (Q4/26)",
       "naechster_schritt": "Die als Anthology-tauglich markierten Referenz-Memories (Legal Entities, Policies, Zeichnungsmatrix, SGHA etc.) migrieren",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS6-08"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
@@ -1342,7 +1412,10 @@
       "evidenz": "Standortbestimmung 18.06.: «Top-Programmrisiko: Bus-Faktor Gordon/Didit»; Foundation-Gate 6 (Backup) offen; Gordon-Rolle in Klärung",
       "naechster_schritt": "Gordon-Rollen-Klärung mit Stephanie abschliessen; je kritischem System Stellvertretung + Runbook-Auftrag festlegen",
       "owner": null,
-      "ms_refs": [],
+      "ms_refs": [
+        "WS2-12",
+        "WS6-09"
+      ],
       "status_historie": [
         {
           "am": "2026-08-04",
