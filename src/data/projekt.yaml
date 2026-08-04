@@ -2665,10 +2665,10 @@ workstreams:
         depends_on: []
         nachlauf: false
       - id: ZB-11
-        name: 'Safety-/Compliance-Nachweis auf Branchenstandard (SMS ICAO Annex 19 / ISAGO-Readiness) (Z-OPS-12)'
+        name: 'Safety-/Compliance-Nachweis BELEGEN: SMS-Doku + ISAGO-Zertifikate je Station im Zielbild-Register verlinkt (Z-OPS-12 — Fähigkeit gelebt, Evidenz fehlt)'
         owner: Cüneyt Gökcöl
         start: '2026-09-01'
-        due: '2027-03-31'
+        due: '2026-11-15'
         date_assumed: true
         phase: Zielbild
         gate: null

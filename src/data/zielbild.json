@@ -910,8 +910,8 @@
       "domaene": "OPS",
       "kriterium": "Proaktive Kunden-Performance-Reviews: mind. quartalsweise Service-Reviews mit Top-Airlines je Station mit eigener Performance-Sicht",
       "messbar_an": "Review-Kalender + dokumentierte QBR-Protokolle mit Top-Kunden",
-      "status": "unbekannt",
-      "evidenz": "Keine Information in Memory; Beziehungspflege-Matrix deckt Ownership, nicht Service-Reviews",
+      "status": "fehlt",
+      "evidenz": "DRS-Auskunft 04.08.2026: keine strukturierten Kunden-Service-Reviews/QBR",
       "naechster_schritt": "Cüneyt fragen, welche Stationen strukturierte Service-Reviews mit ihren Top-3-Kunden führen",
       "owner": null,
       "ms_refs": [
@@ -922,6 +922,11 @@
           "am": "2026-08-04",
           "status": "unbekannt",
           "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        },
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "DRS-Klärung «unbekannt»-Status (Chairman-Auskunft)"
         }
       ]
     },
@@ -930,8 +935,8 @@
       "domaene": "OPS",
       "kriterium": "Safety-/Compliance-Nachweis auf Branchenstandard: SMS nach ICAO Annex 19 / AHM 610, ISAGO-Audit-Readiness je Station, Safety-KPIs im Reporting",
       "messbar_an": "ISAGO-/SMS-Status je Station dokumentiert; Safety-KPIs im Monats-/Quartalsreporting",
-      "status": "unbekannt",
-      "evidenz": "SGHA-Pflicht dokumentiert; kein AXS-Status zu ISAGO/SMS in Memory",
+      "status": "gelebt",
+      "evidenz": "DRS-Auskunft 04.08.2026: SMS/ISAGO-Readiness je Station + Safety-KPIs im Reporting gelebt — ARTEFAKT-NACHWEIS (Zertifikate/SMS-Doku) noch zu verlinken",
       "naechster_schritt": "ISAGO-/SMS-Status je Station bei Cüneyt/QM abfragen und als Referenz ablegen",
       "owner": null,
       "ms_refs": [
@@ -942,6 +947,11 @@
           "am": "2026-08-04",
           "status": "unbekannt",
           "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        },
+        {
+          "am": "2026-08-04",
+          "status": "gelebt",
+          "quelle": "DRS-Klärung «unbekannt»-Status (Chairman-Auskunft)"
         }
       ]
     },
@@ -1011,8 +1021,8 @@
       "domaene": "HR",
       "kriterium": "Schriftliche GL-Zielvereinbarungen, abgeleitet aus Strategie und Budget, mit unterjährigem Review",
       "messbar_an": "Unterschriebene Zielvereinbarung je GL-Mitglied (max. 5 messbare Ziele) + Halbjahres-Review",
-      "status": "unbekannt",
-      "evidenz": "Keine Hinweise in Memory",
+      "status": "fehlt",
+      "evidenz": "DRS-Auskunft 04.08.2026: keine schriftlichen GL-Zielvereinbarungen 2026",
       "naechster_schritt": "Gökcöl/Charisius fragen, ob für 2026 schriftliche GL-Zielvereinbarungen existieren — und zeigen lassen",
       "owner": null,
       "ms_refs": [
@@ -1023,6 +1033,11 @@
           "am": "2026-08-04",
           "status": "unbekannt",
           "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        },
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "DRS-Klärung «unbekannt»-Status (Chairman-Auskunft)"
         }
       ]
     },
@@ -1031,8 +1046,8 @@
       "domaene": "HR",
       "kriterium": "Standardisiertes Onboarding für neue Mitarbeitende und Führungskräfte",
       "messbar_an": "Verbindliche Checkliste je Rolle (Tag 1 / Woche 1 / 90 Tage) mit Owner, bei jedem Eintritt angewendet",
-      "status": "unbekannt",
-      "evidenz": "Onboarding nur als künftiger HR-Bot-Use-Case (PLANNED Q3/26–Q2/27); heutiger Standard unbelegt",
+      "status": "fehlt",
+      "evidenz": "DRS-Auskunft 04.08.2026: kein gruppenweiter Onboarding-Standard",
       "naechster_schritt": "Charisius fragen, ob ein gruppenweiter Onboarding-Standard existiert (Ist-Aufnahme vor HR-Bot-Start)",
       "owner": null,
       "ms_refs": [
@@ -1043,6 +1058,11 @@
           "am": "2026-08-04",
           "status": "unbekannt",
           "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        },
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "DRS-Klärung «unbekannt»-Status (Chairman-Auskunft)"
         }
       ]
     },
@@ -1189,8 +1209,8 @@
       "domaene": "LEG",
       "kriterium": "Compliance-Schulung mit Nachweis: Code of Conduct + Kern-Policies geschult, dokumentierte Attestation, Wiederholungsrhythmus",
       "messbar_an": "Schulungs-/Attestationsquote je Entity und Jahr (100% Führungskräfte); auditierbare Nachweisliste; Policy-Bestätigung im Onboarding",
-      "status": "unbekannt",
-      "evidenz": "Nur Verteilung an Stationsleitungen + Sanktionierbarkeit dokumentiert; zu Schulung/Attestation nichts",
+      "status": "fehlt",
+      "evidenz": "DRS-Auskunft 04.08.2026: keine Compliance-Schulung mit dokumentierter Attestation",
       "naechster_schritt": "Bestandsaufnahme bei Wüst/Charisius: existieren Nachweise zum Code of Conduct (CEO-INS-003), welche Abdeckung?",
       "owner": null,
       "ms_refs": [
@@ -1201,6 +1221,11 @@
           "am": "2026-08-04",
           "status": "unbekannt",
           "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        },
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "DRS-Klärung «unbekannt»-Status (Chairman-Auskunft)"
         }
       ]
     },
@@ -1209,8 +1234,8 @@
       "domaene": "LEG",
       "kriterium": "Konzern-Risiko-Register mit VR-Reporting: Top-Risiken mit Owner, Bewertung, Mitigations-Status, mind. halbjährlich im VR",
       "messbar_an": "Gepflegtes Register (Risiko × Wahrscheinlichkeit × Impact × Owner × Massnahme) + wiederkehrendes VR-Traktandum mit Protokoll-Nachweis",
-      "status": "unbekannt",
-      "evidenz": "Viele Einzelrisiken dokumentiert (VIE, Goldair, Cash, Haftungen), aber kein konsolidiertes Register und kein VR-Risiko-Traktandum in Memory",
+      "status": "fehlt",
+      "evidenz": "DRS-Auskunft 04.08.2026: kein konsolidiertes Risiko-Register, kein VR-Risiko-Traktandum",
       "naechster_schritt": "Bei Wüst/Cüneyt klären, ob ein Register existiert; falls nein, Top-10-Risiken als wiederkehrendes TRAK nach dem 26.08. aufsetzen",
       "owner": null,
       "ms_refs": [
@@ -1221,6 +1246,11 @@
           "am": "2026-08-04",
           "status": "unbekannt",
           "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        },
+        {
+          "am": "2026-08-04",
+          "status": "fehlt",
+          "quelle": "DRS-Klärung «unbekannt»-Status (Chairman-Auskunft)"
         }
       ]
     },
