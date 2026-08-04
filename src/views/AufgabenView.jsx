@@ -4,7 +4,7 @@ import { ALL_TASKS, BASE, MS_META, reloadKeepScroll, taskOverdue, tnr } from '..
 import { fmtDate } from '../lib/status.js'
 import { PHASE_ORDER } from '../lib/domain.js'
 import { can } from '../lib/permissions.js'
-import { PhaseTag } from '../components/ui.jsx'
+import { ArtefaktZeile, PhaseTag } from '../components/ui.jsx'
 import { CheckCircle2, Circle, Filter } from 'lucide-react'
 
 // ── AUFGABEN — flache, filterbare Liste ALLER Handlungen (Phase × WS × Person ×
@@ -26,6 +26,7 @@ export function AufgabenView({ role, me, prog, onOpenMs }) {
     sessionStorage.setItem('rubicon_t_search', search)
   }, [fPhase, fWs, fOwner, fStatus, search])
   const [busy, setBusy] = useState(null)
+  const [artefaktFuer, setArtefaktFuer] = useState(null)   // Task-ID mit offener Artefakt-Zeile
 
   // Scope-Filter (DRS 03.08.): AXS-Gesamt (kein prog) = alle Handlungen inkl. ungekoppelte.
   // Projekt-Fokus (prog gesetzt) = STRIKT nur die Handlungen dieses Projekts (ms_id→WS→Programm);
@@ -55,13 +56,21 @@ export function AufgabenView({ role, me, prog, onOpenMs }) {
   const nOffen = filtered.filter(t => t.status === 'offen').length
   const nOver = filtered.filter(taskOverdue).length
   const mayToggle = (t) => can(role, me, 'task.abhaken', t)
-  const toggle = async (t) => {
+  // Artefakt-Pflicht Stufe 2 (04.08.): Abhaken fragt zuerst den Ablage-Pointer ab;
+  // Wiederöffnen läuft direkt durch.
+  const klick = (t) => {
+    if (busy || !mayToggle(t)) return
+    if (t.status === 'erledigt') toggle(t)
+    else setArtefaktFuer(t.id)
+  }
+  const toggle = async (t, artefakt) => {
     if (busy || !mayToggle(t)) return
     setBusy(t.id)
     try {
       const r = await fetch('/api/task/status', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ role, me, id: t.id, status: t.status === 'erledigt' ? 'offen' : 'erledigt' }),
+        body: JSON.stringify({ role, me, id: t.id, status: t.status === 'erledigt' ? 'offen' : 'erledigt',
+          ...(artefakt ? { artefakt } : {}) }),
       })
       const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
       if (j.ok) { reloadKeepScroll() }
@@ -125,9 +134,10 @@ export function AufgabenView({ role, me, prog, onOpenMs }) {
                 const ov = taskOverdue(t)
                 const can = mayToggle(t)
                 return (
-                  <tr key={t.id} style={{ borderTop: `1px solid ${T.line}`, opacity: t.status === 'erledigt' ? 0.55 : 1 }}>
+                  <React.Fragment key={t.id}>
+                  <tr style={{ borderTop: `1px solid ${T.line}`, opacity: t.status === 'erledigt' ? 0.55 : 1 }}>
                     <td className="px-3 py-1.5">
-                      <button onClick={() => toggle(t)} disabled={!can || !!busy}
+                      <button onClick={() => klick(t)} disabled={!can || !!busy}
                         title={can ? (t.status === 'erledigt' ? 'wieder öffnen' : 'abhaken') : 'Rolle darf diese Handlung nicht abhaken'}
                         style={{ cursor: can ? 'pointer' : 'not-allowed', opacity: busy === t.id ? 0.4 : 1 }}>
                         {t.status === 'erledigt'
@@ -146,8 +156,20 @@ export function AufgabenView({ role, me, prog, onOpenMs }) {
                         ? <button onClick={() => onOpenMs(t.ms_id)} title={t._m?.name || t.ms_id} style={{ color: T.brass }}>{t.ms_id}</button>
                         : <span style={{ color: T.grey }}>—</span>}
                     </td>
-                    <td className="px-2 py-1.5">{t._m ? <PhaseTag p={t._m.phase} /> : <span style={{ color: T.grey, fontSize: 10 }}>—</span>}</td>
+                    <td className="px-2 py-1.5">
+                      {t._m ? <PhaseTag p={t._m.phase} /> : <span style={{ color: T.grey, fontSize: 10 }}>—</span>}
+                      {t.artefakt && <span title={t.artefakt} style={{ color: T.brass, marginLeft: 6 }}>📎</span>}
+                    </td>
                   </tr>
+                  {artefaktFuer === t.id && (
+                    <tr><td colSpan={7} style={{ padding: 0 }}>
+                      <ArtefaktZeile busy={busy}
+                        onOk={(v) => { setArtefaktFuer(null); toggle(t, v) }}
+                        onSkip={() => { setArtefaktFuer(null); toggle(t) }}
+                        onCancel={() => setArtefaktFuer(null)} />
+                    </td></tr>
+                  )}
+                  </React.Fragment>
                 )
               })}
             </tbody>

@@ -2545,7 +2545,7 @@ workstreams:
     programm: transformation
     milestones:
       - id: ZB-01
-        name: 'Fast Close etabliert — Abschluss + Reporting-Versand bis Arbeitstag 10 (Z-FIN-02)'
+        name: Fast Close etabliert — Abschluss + Reporting-Versand bis Arbeitstag 10 (Z-FIN-02)
         owner: Stephanie Rohde
         start: '2026-09-01'
         due: '2027-01-31'
@@ -2569,7 +2569,7 @@ workstreams:
         depends_on: []
         nachlauf: false
       - id: ZB-03
-        name: 'Budget-Prozess 2027 mit dokumentierter Treiber-Logik (Volumen × Preis × FTE × Kosten je Station) (Z-FIN-06)'
+        name: Budget-Prozess 2027 mit dokumentierter Treiber-Logik (Volumen × Preis × FTE × Kosten je Station) (Z-FIN-06)
         owner: Stephanie Rohde
         start: '2026-09-01'
         due: '2026-11-15'
@@ -2617,7 +2617,7 @@ workstreams:
         depends_on: []
         nachlauf: false
       - id: ZB-07
-        name: 'Delay-Code-Tracking Handler-Verantwortung (AHM-730 G31–39) je Station im Monatsrhythmus (Z-OPS-04)'
+        name: Delay-Code-Tracking Handler-Verantwortung (AHM-730 G31–39) je Station im Monatsrhythmus (Z-OPS-04)
         owner: Cüneyt Gökcöl
         start: '2026-09-01'
         due: '2026-12-15'
@@ -2629,7 +2629,7 @@ workstreams:
         depends_on: []
         nachlauf: false
       - id: ZB-08
-        name: 'Penalty-/Haftungs-Exposure je Station × Kunde monetarisiert, gegen Rückstellungen gespiegelt (Z-OPS-07)'
+        name: Penalty-/Haftungs-Exposure je Station × Kunde monetarisiert, gegen Rückstellungen gespiegelt (Z-OPS-07)
         owner: Cüneyt Gökcöl
         start: '2026-09-01'
         due: '2027-01-31'
@@ -2641,7 +2641,7 @@ workstreams:
         depends_on: []
         nachlauf: false
       - id: ZB-09
-        name: 'FTE-/Headcount-Datenbasis + Produktivitätssteuerung je Station (monatlich) (Z-OPS-08)'
+        name: FTE-/Headcount-Datenbasis + Produktivitätssteuerung je Station (monatlich) (Z-OPS-08)
         owner: Cüneyt Gökcöl
         start: '2026-09-01'
         due: '2026-11-15'
@@ -2677,7 +2677,7 @@ workstreams:
         depends_on: []
         nachlauf: false
       - id: ZB-12
-        name: 'HR-Kern-KPIs fest im Monatsreporting (Fluktuation, Cost/FTE, Krankenquote, Time-to-Fill) (Z-HR-02)'
+        name: HR-Kern-KPIs fest im Monatsreporting (Fluktuation, Cost/FTE, Krankenquote, Time-to-Fill) (Z-HR-02)
         owner: Amélie Charisius
         start: '2026-09-01'
         due: '2026-12-15'
@@ -2689,7 +2689,7 @@ workstreams:
         depends_on: []
         nachlauf: false
       - id: ZB-13
-        name: 'Nachfolge- und Talent-Pipeline für Schlüsselrollen (GL, Directors, Station Manager) (Z-HR-03)'
+        name: Nachfolge- und Talent-Pipeline für Schlüsselrollen (GL, Directors, Station Manager) (Z-HR-03)
         owner: Amélie Charisius
         start: '2026-09-01'
         due: '2026-11-15'
@@ -2701,7 +2701,7 @@ workstreams:
         depends_on: []
         nachlauf: false
       - id: ZB-14
-        name: 'Schriftliche GL-Zielvereinbarungen aus Strategie + Budget, mit unterjährigem Review (Z-HR-04)'
+        name: Schriftliche GL-Zielvereinbarungen aus Strategie + Budget, mit unterjährigem Review (Z-HR-04)
         owner: Amélie Charisius
         start: '2026-09-01'
         due: '2026-12-31'
@@ -2713,7 +2713,7 @@ workstreams:
         depends_on: []
         nachlauf: false
       - id: ZB-15
-        name: 'Standardisiertes Onboarding für Mitarbeitende und Führungskräfte (Z-HR-05)'
+        name: Standardisiertes Onboarding für Mitarbeitende und Führungskräfte (Z-HR-05)
         owner: Amélie Charisius
         start: '2026-09-01'
         due: '2027-01-31'
@@ -2725,7 +2725,7 @@ workstreams:
         depends_on: []
         nachlauf: false
       - id: ZB-16
-        name: 'Publizierter HR-Servicekanal mit Self-Service für Standardanliegen (Z-HR-07)'
+        name: Publizierter HR-Servicekanal mit Self-Service für Standardanliegen (Z-HR-07)
         owner: Amélie Charisius
         start: '2026-09-01'
         due: '2027-03-31'
@@ -2749,7 +2749,7 @@ workstreams:
         depends_on: []
         nachlauf: false
       - id: ZB-18
-        name: 'Konzern-Risiko-Register mit VR-Reporting (Top-Risiken, Owner, Mitigations-Status) (Z-LEG-06)'
+        name: Konzern-Risiko-Register mit VR-Reporting (Top-Risiken, Owner, Mitigations-Status) (Z-LEG-06)
         owner: Cüneyt Gökcöl
         start: '2026-09-01'
         due: '2026-11-15'
@@ -2761,7 +2761,7 @@ workstreams:
         depends_on: []
         nachlauf: false
       - id: ZB-19
-        name: 'Datenschutz-Prozess mit zentralem Tracker (DSGVO/nDSG-Anfragen, Fristen) (Z-LEG-08)'
+        name: Datenschutz-Prozess mit zentralem Tracker (DSGVO/nDSG-Anfragen, Fristen) (Z-LEG-08)
         owner: Amélie Charisius
         start: '2026-09-01'
         due: '2027-01-31'

@@ -2508,7 +2508,9 @@
       "erledigt_am": null,
       "source": "zerlegung",
       "origin": "DRS-Ergänzung Phase 0, 13.07.2026 (Freigabe- & Commitment-Kaskade)",
-      "created_at": "2026-07-13"
+      "created_at": "2026-07-13",
+      "erledigt_von": null,
+      "artefakt": null
     },
     {
       "id": "WS2-16-H02",
@@ -2521,7 +2523,9 @@
       "erledigt_am": null,
       "source": "zerlegung",
       "origin": "DRS-Ergänzung Phase 0, 13.07.2026 (Freigabe- & Commitment-Kaskade)",
-      "created_at": "2026-07-13"
+      "created_at": "2026-07-13",
+      "erledigt_von": null,
+      "artefakt": null
     },
     {
       "id": "WS2-16-H03",

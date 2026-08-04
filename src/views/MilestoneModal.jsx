@@ -4,7 +4,7 @@ import { BASE, NOW, reloadKeepScroll, taskOverdue, tasksFor, tnr } from '../lib/
 import { allMilestones, daysBetween, fmtDate, projectedEnd, statusOf } from '../lib/status.js'
 import { PROGRESS_STEPS } from '../lib/domain.js'
 import { can, canAny } from '../lib/permissions.js'
-import { Pill } from '../components/ui.jsx'
+import { ArtefaktZeile, Pill } from '../components/ui.jsx'
 import { CheckCircle2, Circle, FileText, ListChecks, Lock, Save, X } from 'lucide-react'
 import BRIEFINGS from '../data/briefings.json'
 
@@ -14,6 +14,7 @@ import BRIEFINGS from '../data/briefings.json'
 export function TaskSection({ m, role, me }) {
   const ts = tasksFor(m.id)
   const [busy, setBusy] = useState(null)
+  const [artefaktFuer, setArtefaktFuer] = useState(null)   // Task-ID, für die die Artefakt-Zeile offen ist
   // Leerer Zustand statt Ausblenden (DRS 01.08.): sonst wirkt es, als gäbe es
   // die Handlungs-Ebene bei neuen MS (WS7/FIN/Kickoff) gar nicht.
   if (!ts.length) return (
@@ -27,7 +28,14 @@ export function TaskSection({ m, role, me }) {
   const driving = m.progress_source === 'tasks'
   const mayToggle = (t) => can(role, me, 'task.abhaken', t)
   const anyToggle = ts.some(mayToggle)
-  const toggle = async (t) => {
+  // Artefakt-Pflicht Stufe 2 (04.08.): Abhaken öffnet zuerst die Artefakt-Zeile;
+  // Wiederöffnen läuft weiterhin direkt durch (kein Nachweis nötig).
+  const klick = (t) => {
+    if (busy || !mayToggle(t)) return
+    if (t.status === 'erledigt') toggle(t)
+    else setArtefaktFuer(t.id)
+  }
+  const toggle = async (t, artefakt) => {
     if (busy || !mayToggle(t)) return
     setBusy(t.id)
     // Modal-Wiederöffnung VOR dem Write vormerken — der HMR-Reload nach dem
@@ -36,7 +44,8 @@ export function TaskSection({ m, role, me }) {
     try {
       const r = await fetch('/api/task/status', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ role, me, id: t.id, status: t.status === 'erledigt' ? 'offen' : 'erledigt' }),
+        body: JSON.stringify({ role, me, id: t.id, status: t.status === 'erledigt' ? 'offen' : 'erledigt',
+          ...(artefakt ? { artefakt } : {}) }),
       })
       const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
       if (j.ok) { reloadKeepScroll() }
@@ -58,8 +67,9 @@ export function TaskSection({ m, role, me }) {
           const ov = taskOverdue(t)
           const can = mayToggle(t)
           return (
-            <div key={t.id} className="px-3 py-2 flex items-start gap-2.5 text-[12px]">
-              <button onClick={() => toggle(t)} disabled={!can || !!busy}
+            <div key={t.id}>
+            <div className="px-3 py-2 flex items-start gap-2.5 text-[12px]">
+              <button onClick={() => klick(t)} disabled={!can || !!busy}
                 title={can ? (t.status === 'erledigt' ? 'wieder öffnen' : 'als erledigt abhaken') : 'Rolle darf diese Handlung nicht abhaken'}
                 className="mt-0.5 shrink-0" style={{ cursor: can ? 'pointer' : 'not-allowed', opacity: busy === t.id ? 0.4 : 1 }}>
                 {t.status === 'erledigt'
@@ -77,8 +87,16 @@ export function TaskSection({ m, role, me }) {
                     ? <span style={{ color: ov ? T.red : T.inkFaint }}>fällig {fmtDate(t.due)}{ov ? ' ⚠ überfällig' : ''}</span>
                     : <span>fällig — (Datenlücke)</span>}
                   {t.erledigt_am && <span style={{ color: T.green }}>erledigt {fmtDate(t.erledigt_am)}{t.erledigt_von ? ` · ${t.erledigt_von}` : ''}</span>}
+                  {t.artefakt && <span title={t.artefakt} style={{ color: T.brass }}>📎 Artefakt</span>}
                 </div>
               </div>
+            </div>
+            {artefaktFuer === t.id && (
+              <ArtefaktZeile busy={busy}
+                onOk={(v) => { setArtefaktFuer(null); toggle(t, v) }}
+                onSkip={() => { setArtefaktFuer(null); toggle(t) }}
+                onCancel={() => setArtefaktFuer(null)} />
+            )}
             </div>
           )
         })}

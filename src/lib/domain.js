@@ -58,3 +58,12 @@ export const ZB_COLOR = (st) => T[(D.zielbild.meta[st] || { token: 'grey' }).tok
 export const ZB_SCORE = (st) => (D.zielbild.meta[st] || { score: 0 }).score
 /** Ab diesem Status ist Evidenz Pflicht (Server erzwingt es zusätzlich). */
 export const ZB_EVIDENZ_AB = D.zielbild.evidenz_pflicht_ab
+
+// ── Archiv-Pointer (Härtung 04.08.): gültige Evidenz/Artefakte sind Drive-/Docs-Links
+// ODER Register-Referenzen — Muster aus domain.json, identisch mit Server + validate.py.
+const _FMT = D.zielbild.evidenz_formate || {}
+export const ARTEFAKT_HINWEIS = 'Drive-/Doc-Link oder Register-ID (E-2026-001 · T-042 · IN-03 · WS1-02)'
+export const artefaktGueltig = (s) => {
+  const t = String(s || '')
+  return Boolean((_FMT.url && new RegExp(_FMT.url).test(t)) || (_FMT.register && new RegExp(_FMT.register).test(t)))
+}

@@ -4,7 +4,7 @@ import { ALL_TASKS, reloadKeepScroll, taskOverdue, tnr } from '../lib/data.js'
 import { fmtDate } from '../lib/status.js'
 import { PROGRESS_STEPS, TYP_ICON, TYP_LABEL } from '../lib/domain.js'
 import { can } from '../lib/permissions.js'
-import { MsPicker } from '../components/ui.jsx'
+import { MsPicker, ArtefaktZeile } from '../components/ui.jsx'
 import { Circle, FileText, Plus, Save, Trash2 } from 'lucide-react'
 import FR from '../data/fuehrungsrhythmus.json'
 import PROTO from '../data/protokolle.json'
@@ -291,6 +291,7 @@ export function ErfassungView({ ms, today, role, me }) {
 // ── PROTOKOLLE — erfasste Sitzungen + aggregierte offene Commitments/Entscheide.
 export function ProtokolleView({ role, me }) {
   const [busy, setBusy] = useState(null)
+  const [artefaktFuer, setArtefaktFuer] = useState(null)   // Commitment-ID mit offener Artefakt-Zeile
   // Sensitiv-Filter (#6): sensitive Protokolle sind NICHT im Bundle — sie kommen nur
   // via Loopback-gated API (403 für Netz-/Tailnet-Clients → dann einfach unsichtbar).
   const [sensProtos, setSensProtos] = useState([])
@@ -317,13 +318,14 @@ export function ProtokolleView({ role, me }) {
   const offeneCommitments = commitmentTasks.filter(t => t.status === 'offen')
   const nErledigt = commitmentTasks.length - offeneCommitments.length
   const mayToggle = (t) => can(role, me, 'task.abhaken', t)
-  const erledige = async (t) => {
+  // Artefakt-Pflicht Stufe 2 (04.08.): Erledigen fragt zuerst den Ablage-Pointer ab.
+  const erledige = async (t, artefakt) => {
     if (busy || !mayToggle(t)) return
     setBusy(t.id)
     try {
       const r = await fetch('/api/task/status', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ role, me, id: t.id, status: 'erledigt' }),
+        body: JSON.stringify({ role, me, id: t.id, status: 'erledigt', ...(artefakt ? { artefakt } : {}) }),
       })
       const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
       if (j.ok) { reloadKeepScroll() }
@@ -343,8 +345,9 @@ export function ProtokolleView({ role, me }) {
             const ov = taskOverdue(c)
             const can = mayToggle(c)
             return (
-              <div key={c.id} className="text-[12px] py-1 flex items-start gap-2" style={{ borderTop: i ? `1px solid ${T.line}` : 'none' }}>
-                <button onClick={() => erledige(c)} disabled={!can || !!busy} className="mt-0.5 shrink-0"
+              <div key={c.id} style={{ borderTop: i ? `1px solid ${T.line}` : 'none' }}>
+                <div className="text-[12px] py-1 flex items-start gap-2">
+                <button onClick={() => setArtefaktFuer(c.id)} disabled={!can || !!busy} className="mt-0.5 shrink-0"
                   title={can ? 'als erledigt abhaken' : 'Rolle darf dieses Commitment nicht abhaken'}
                   style={{ cursor: can ? 'pointer' : 'not-allowed', opacity: busy === c.id ? 0.4 : 1 }}>
                   <Circle size={14} style={{ color: can ? T.brass : T.grey }} />
@@ -356,6 +359,13 @@ export function ProtokolleView({ role, me }) {
                   {c.ms_id && <span style={{ fontFamily: T.mono, color: T.brass }} title="an Milestone gekoppelt — treibt dessen Fortschritt"> · ▸ {c.ms_id}</span>}
                   <span style={{ color: T.inkFaint }}> · {c.origin || ''}</span>
                 </div>
+                </div>
+                {artefaktFuer === c.id && (
+                  <ArtefaktZeile busy={busy}
+                    onOk={(v) => { setArtefaktFuer(null); erledige(c, v) }}
+                    onSkip={() => { setArtefaktFuer(null); erledige(c) }}
+                    onCancel={() => setArtefaktFuer(null)} />
+                )}
               </div>
             )
           })}

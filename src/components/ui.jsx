@@ -2,7 +2,36 @@
 // Aus App.jsx herausgelöst; kennen nur Theme + Domänen-SSOT, keine Views.
 import React, { useState } from 'react'
 import { T, STATUS_META } from '../lib/theme.js'
-import { phaseToken } from '../lib/domain.js'
+import { phaseToken, artefaktGueltig, ARTEFAKT_HINWEIS } from '../lib/domain.js'
+
+// ── ARTEFAKT-ZEILE (Stufe 2, 04.08. «AXS-Datengehirn») — erscheint beim Abhaken und
+// fragt den Ablage-Pointer des Arbeitsprodukts ab. Bewusst KEIN Hard-Block: «ohne
+// Artefakt» bleibt möglich (sonst wird Schrott eingetippt), validate.py meldet den
+// Fall dann als Datenlücke. Format wird clientseitig geprüft, der Server nochmals.
+export function ArtefaktZeile({ onOk, onSkip, onCancel, busy }) {
+  const [v, setV] = useState('')
+  const ok = artefaktGueltig(v)
+  const btn = { padding: '2px 8px', borderRadius: 4, border: `1px solid ${T.line}` }
+  return (
+    <div className="px-3 py-2 flex flex-wrap items-center gap-2 text-[11.5px]"
+      style={{ background: T.panelSoft, borderTop: `1px solid ${T.brass}44` }}>
+      <span style={{ color: T.brass, fontFamily: T.mono, fontSize: 10 }}>ARTEFAKT</span>
+      <input value={v} autoFocus onChange={e => setV(e.target.value)}
+        onKeyDown={e => { if (e.key === 'Enter' && ok) onOk(v); if (e.key === 'Escape') onCancel() }}
+        placeholder={ARTEFAKT_HINWEIS} aria-label="Ablage-Link des Arbeitsprodukts"
+        className="flex-1 min-w-[220px] rounded border px-2 py-1"
+        style={{ background: T.panel, borderColor: v && !ok ? T.red : T.line, color: T.ink }} />
+      <button onClick={() => onOk(v)} disabled={!ok || !!busy} style={{ ...btn, borderColor: ok ? T.brass : T.line, color: ok ? T.brass : T.inkFaint, opacity: ok ? 1 : .5 }}>
+        abhaken
+      </button>
+      <button onClick={onSkip} disabled={!!busy} style={{ ...btn, color: T.inkFaint }} title="Handlung ohne Ablage-Nachweis schliessen — validate meldet das als Datenlücke">
+        ohne Artefakt
+      </button>
+      <button onClick={onCancel} disabled={!!busy} style={{ color: T.inkFaint }} aria-label="abbrechen">✕</button>
+      {v && !ok && <span style={{ color: T.red }}>kein gültiger Archiv-Pointer</span>}
+    </div>
+  )
+}
 
 // ---------- kleine Bausteine ----------
 export const Pill = ({ st }) => {
