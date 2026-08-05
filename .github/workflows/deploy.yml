@@ -1,0 +1,76 @@
+name: Deploy RUBICON to Cloud Run
+
+# Push auf main -> Build + Deploy auf die geteilte Umgebung rubicon.axs.aero.
+# Auth keyless via Workload Identity Federation (kein JSON-Key im Repo).
+# Daten liegen im GCS-Volume (bucket aixs-rubicon-tower-data) -> Code-Deploy
+# fasst die Daten NICHT an; nur der Container wird getauscht.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  PROJECT_ID: aixs-260106
+  REGION: europe-west4
+  SERVICE: rubicon-tower
+  IMAGE: europe-west4-docker.pkg.dev/aixs-260106/rubicon/rubicon-tower
+  BUCKET: aixs-rubicon-tower-data
+  WIF_PROVIDER: projects/646221535662/locations/global/workloadIdentityPools/github-actions/providers/rubicon-dst
+  DEPLOY_SA: rubicon-deployer@aixs-260106.iam.gserviceaccount.com
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Schema-/Datenintegritaets-Report. Informativ (continue-on-error): Dieters
+      # Baseline traegt bewusst Datenluecken + 2 bekannte Datumsfehler (WS3-01/13
+      # start>due) -> darf den Deploy vorerst nicht blockieren. Drive-Link-Check
+      # aus (RUBICON_SKIP_LINKCHECK=1), da keine Google-Credentials im Runner.
+      - name: Validate (Schema-Report, informativ)
+        continue-on-error: true
+        run: |
+          python3 -m pip install --quiet pyyaml
+          RUBICON_SKIP_LINKCHECK=1 python3 scripts/validate.py
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.WIF_PROVIDER }}
+          service_account: ${{ env.DEPLOY_SA }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Build + Push Image (Build-Stamp via build-args)
+        run: |
+          SHA_SHORT="${GITHUB_SHA::7}"
+          gcloud auth configure-docker ${REGION}-docker.pkg.dev --quiet
+          docker build \
+            --build-arg RUBICON_BUILD_SHA="${SHA_SHORT}" \
+            --build-arg RUBICON_BUILD_ISO="${{ github.event.head_commit.timestamp }}" \
+            -t "${IMAGE}:${GITHUB_SHA}" -t "${IMAGE}:latest" .
+          docker push "${IMAGE}:${GITHUB_SHA}"
+          docker push "${IMAGE}:latest"
+
+      # Deploy behaelt IAP-Annotation + Gruppen-Binding (werden nicht angefasst).
+      # GCS-Volume auf /app/src/data = Persistenz; max-instances=1 = Single-Writer.
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy "${SERVICE}" \
+            --project="${PROJECT_ID}" --region="${REGION}" \
+            --image="${IMAGE}:${GITHUB_SHA}" \
+            --no-allow-unauthenticated --max-instances=1 --port=8080 \
+            --add-volume=name=data,type=cloud-storage,bucket="${BUCKET}" \
+            --add-volume-mount=volume=data,mount-path=/app/src/data \
+            --set-env-vars="^@^RUBICON_OK_ORIGINS=https://rubicon.axs.aero,https://rubicon-tower-646221535662.europe-west4.run.app@RUBICON_PY=/usr/bin/python3"
+
+      - name: Deployte Revision + URL
+        run: |
+          gcloud run services describe "${SERVICE}" --project="${PROJECT_ID}" --region="${REGION}" \
+            --format="value(status.latestReadyRevisionName,status.url)"

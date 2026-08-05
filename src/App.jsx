@@ -849,6 +849,10 @@ export default function App() {
       <footer className="px-6 py-3 text-[10px] border-t" style={{ borderColor: T.line, color: T.inkFaint, fontFamily: T.mono }}>
         RUBICON Control Tower · Wahrheitsquelle: src/data/projekt.yaml · Statuslogik deterministisch (status.js) ·
         Erfasste Sitzungen/Reports werden persistiert · Reminder = Gmail-Entwürfe (DRS sendet) · Kalender/Eskalation simuliert · Vertraulich ExBoD/VR
+        {' · '}
+        <span title={`Build ${__BUILD_SHA__}`} className="cursor-help" style={{ borderBottom: `1px dotted ${T.inkFaint}` }}>
+          Stand {__BUILD_TIME__}
+        </span>
       </footer>
     </div>
   )

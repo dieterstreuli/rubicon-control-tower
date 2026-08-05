@@ -71,7 +71,7 @@ const OK_ORIGINS = [
   'https://rubicon.axs.aero',                              // Gateway-Deployment hinter Google IAP (01.08.)
   // R3 (01.08.): zusätzliche Origins per Env — nötig, sobald der App-Server unter
   // einem anderen Host/Port läuft (Cloud Run, Test-Instanz). Komma-getrennt.
-  ...(process.env.RUBICON_ORIGINS || '').split(',').map(o => o.trim()).filter(Boolean),
+  ...(process.env.RUBICON_OK_ORIGINS || process.env.RUBICON_ORIGINS || '').split(',').map(o => o.trim()).filter(Boolean),
 ]
 
 function readBody(req) {

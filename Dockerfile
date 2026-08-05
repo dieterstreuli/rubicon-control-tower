@@ -22,11 +22,18 @@ RUN npm ci --omit=dev || npm install --omit=dev
 
 # Build-Abhängigkeiten separat, damit dist/ erzeugt werden kann
 COPY . .
+
+# Build-Stamp: CI reicht kurzen SHA + Commit-ISO via --build-arg durch; lokal Fallback (vite nutzt Build-Zeit)
+ARG RUBICON_BUILD_SHA=dev
+ARG RUBICON_BUILD_ISO=
+ENV RUBICON_BUILD_SHA=$RUBICON_BUILD_SHA
+ENV RUBICON_BUILD_ISO=$RUBICON_BUILD_ISO
 RUN npm install --include=dev && npm run build && npm prune --omit=dev
 
 ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=8080
+ENV RUBICON_PY=/usr/bin/python3
 EXPOSE 8080
 
 # Kein Vite, kein HMR — der eigenständige App-Server (dist/ + public/ + API)
