@@ -89,6 +89,9 @@ Betriebsregeln (für alle Beteiligten):
    (`kontakte.json`, owner-Namen in `projekt.yaml`/`tasks.json`); die **Entkopplung**
    (Daten nur ins EU-Volume, `src/data`+`dist/` aus Git) ist als **Phase 2** geplant.
    Bis dahin bitte **keine neuen** Personendaten committen. `.gitignore`; gitleaks-Gate.
+   `dist/` + Render-HTML sind bereits aus Git (Build-Output) — der **Data-Guard**-CI-Check
+   (`.github/workflows/data-guard.yml`) schlägt fehl, falls sie wieder eingecheckt werden
+   (Fix: `git rm -r --cached <pfad>`; `dist/` wird im Container gebaut).
 6. **Cloud-/IAM-/Deploy-Änderungen laufen über die IT** (bzw. abgestimmt) — nicht
    doppelt, damit sich Infrastruktur-Stände nicht gegenseitig überschreiben.
 
@@ -105,6 +108,10 @@ Betriebsregeln (für alle Beteiligten):
 - **Daten:** Bucket auf DSTs aktuellen Stand geseedet (11 Ströme/196 MS + Zielbild).
   Voriger Live-Stand gesichert unter `gs://aixs-rubicon-tower-backup/20260805-pre-dst-cutover/`
   (Merge späterer Live-Writes bei Bedarf möglich).
+- **Sicherheit/Datenschutz:** Data-at-rest **CMEK-verschlüsselt** (dedizierter EU-Key);
+  Cloud Run mit **least-privilege Runtime-SA** (bucket-scoped); Buckets Object-Versioning
+  + Public-Access-Prevention enforced. `dist/` + Render-Zwischenstände aus Git entfernt,
+  **Data-Guard**-Workflow blockt Re-Add. Details/Plan: `DEPLOYMENT_GCP.md §7/§8`.
 
 ## Ausbaustufen
 
