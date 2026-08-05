@@ -103,7 +103,10 @@ export function createApi(rootDir) {
   // des Speichers (JSON → DB) oder ein echter App-Server hätte jede einzelne
   // Stelle getroffen. Jetzt gibt es EINEN Ort für Pfade, Lesen, Schreiben und
   // Atomik — Endpoints kennen nur noch db.<name>.read()/write().
-  const DATA = path.join(root, 'src', 'data')
+  // A3 (Block A, 05.08.2026): Laufzeit-Datenordner per Env entkoppelbar — gebraucht
+  // in Block C für den neutralen Mount-Pfad. Ohne Env unverändert src/data; in
+  // Block A KEIN Prod-Verhaltenswechsel (Mount bleibt /app/src/data).
+  const DATA = process.env.RUBICON_DATA_DIR || path.join(root, 'src', 'data')
   const jsonStore = (file, leer) => {
     const f = path.join(DATA, file)
     return {
@@ -126,6 +129,13 @@ export function createApi(rootDir) {
     briefings: jsonStore('briefings.json', {}),
     domain: jsonStore('domain.json', {}),
     zielbild: jsonStore('zielbild.json', { zielbild: [] }),
+    // Nur-Lese-Stores für GET /api/state (Block A, 05.08.): gleiche jsonStore-Mechanik,
+    // Leer-Defaults = das, was der Client heute bei Leerstand erwartet.
+    fuehrungsrhythmus: jsonStore('fuehrungsrhythmus.json', { gruppen: [] }),
+    traktandenDocs: jsonStore('traktanden_docs.json', {}),
+    traktanden: jsonStore('traktanden.json', { agendas: [] }),
+    reportsIndex: jsonStore('reports_index.json', { reports: [] }),
+    reminderLog: jsonStore('reminder_log.json', { reminders: [] }),
   }
   // ── Entscheids-Register (16.07., Säule 3 der Entscheidungsordnung INS-001 Anhang B) ──
   // Jeder Entscheid trägt eine dauerhafte Register-ID «E-<Jahr>-###» (monoton via seq,
@@ -279,6 +289,31 @@ export function createApi(rootDir) {
       ep('/api/protokoll/sensitiv', { method: 'GET', guard: false }, ({ req, json }) => {
         if (!isLoopback(req)) return json(403, { ok: false, error: 'nur lokal einsehbar' })
         return json(200, { ok: true, protokolle: db.sensitiv.read().protokolle })
+      })
+      // GET /api/state — Runtime-Nutzlast des Client-Bootstraps (Block A, 05.08.2026).
+      // Liest zur REQUEST-Zeit aus DATA (= GCS-Volume in Prod): Server-Writes sind
+      // damit nach einem Client-Reload sichtbar. projekt_yaml bewusst ROH — loader.js
+      // parst selbst (js-yaml) und erzeugt den Lücken-/Fehler-Report.
+      // NIEMALS protokolle_sensitiv (bleibt loopback-only via /api/protokoll/sensitiv).
+      // guard:false wie /api/delta: same-origin-GET hinter IAP; IAP ist das Zugangstor.
+      // Naht für Block B: hier wird die Nutzlast später rollen-gescopt.
+      ep('/api/state', { method: 'GET', guard: false }, ({ json, res }) => {
+        res.setHeader('Cache-Control', 'no-store')
+        return json(200, {
+          ok: true,
+          projekt_yaml: fs.existsSync(db.projekt.path) ? fs.readFileSync(db.projekt.path, 'utf8') : '',
+          tasks: db.tasks.read(),
+          domain: db.domain.read(),
+          briefings: db.briefings.read(),
+          fuehrungsrhythmus: db.fuehrungsrhythmus.read(),
+          traktanden_docs: db.traktandenDocs.read(),
+          protokolle: db.protokolle.read(),
+          traktanden: db.traktanden.read(),
+          reports_index: db.reportsIndex.read(),
+          entscheide: db.entscheide.read(),
+          reminder_log: db.reminderLog.read(),
+          zielbild: db.zielbild.read(),
+        })
       })
       // POST /api/sitzung — eine erfasste Sitzung speichern + Milestones aktualisieren
       ep('/api/sitzung', {}, async ({ body, json, fail }) => {

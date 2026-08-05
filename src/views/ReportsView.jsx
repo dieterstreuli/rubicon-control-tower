@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { T } from '../lib/theme.js'
-import { reloadKeepScroll } from '../lib/data.js'
+import { reloadKeepScroll, REPORTS } from '../lib/data.js'
 import { LVL_AUSWAHL, LVL_COLOR, LVL_LABEL } from '../lib/domain.js'
 import { BarChart3, FileText, Lock } from 'lucide-react'
-import REPORTS from '../data/reports_index.json'
 
 // ── REPORTS — verdichtete Standard-Reports (Woche/Monat/Quartal), auto-generiert
 // aus projekt.yaml + protokolle.json via /api/report/generate. Kein Neu-Erfassen.

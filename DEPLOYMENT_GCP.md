@@ -146,6 +146,25 @@ Datenschicht = GCS-Bucket `gs://aixs-rubicon-tower-data` (EUROPE-WEST4, EU).
 - **Manuelles Voll-Backup:** `gs://aixs-rubicon-tower-backup/20260805-pre-dst-cutover/`
   (Stand vor dem DST-Cutover). Weitere: `gcloud storage cp -r gs://aixs-rubicon-tower-data gs://aixs-rubicon-tower-backup/<datum>/`.
 
+**Pre-Deploy-Check: Read-only-Stores (seit dem Runtime-Fetch-Umbau, 05.08.2026).**
+Seit Block A liest der Client die Read-only-Stores (`domain.json`, `reports_index.json`,
+`fuehrungsrhythmus.json`, `traktanden.json`, `traktanden_docs.json`) zur Laufzeit über
+`GET /api/state` aus dem GCS-Volume statt aus dem Build-Bundle. Diese Stores werden vom
+Server NICHT geschrieben, sondern im Repo gepflegt — **vor jedem Deploy** prüfen, ob die
+Bucket-Kopien dem Repo-Stand entsprechen, sonst zeigt Prod still den (einmalig geseedeten)
+Alt-Stand:
+
+```bash
+gcloud storage rsync --dry-run \
+  -x '(protokolle_sensitiv\.json|projekt\.yaml|tasks\.json|entscheide\.json|protokolle\.json|reminder_log\.json|zielbild\.json|report_comments\.json)' \
+  src/data gs://aixs-rubicon-tower-data
+```
+
+Die vom Server geschriebenen Live-Stores sind im Exclude-Pattern bewusst ausgeschlossen
+(sonst überschreibt der Diff die Live-Writes) — bei Abweichungen anschließend nur die
+Read-only-Stores gezielt nachziehen (z.B. `gcloud storage cp src/data/domain.json
+gs://aixs-rubicon-tower-data/domain.json`).
+
 **Offen (DSGVO/Geheimhaltung — Zielarchitektur):**
 - **Noncurrent-Version-Lifecycle** setzen (Kosten + DSGVO-Retention: Vorversionen
   nicht unbegrenzt halten, z.B. 90 Tage) — bewusste Aufbewahrungsdauer wählen.

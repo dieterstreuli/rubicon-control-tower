@@ -1,18 +1,18 @@
 // loader.js — parst projekt.yaml, normalisiert, markiert Datenlücken.
-// EINZIGE Wahrheitsquelle: src/data/projekt.yaml. Das UI liest NUR aus diesem Loader.
-// NIE RATEN: fehlende Werte bleiben null und landen im gaps-Report.
+// EINZIGE Wahrheitsquelle: projekt.yaml — seit Block A (05.08.2026) zur LAUFZEIT
+// via GET /api/state geholt; der rohe YAML-Text kommt als Parameter herein
+// (kein ?raw-Build-Import mehr). NIE RATEN: fehlende Werte bleiben null → gaps-Report.
 
 import yaml from 'js-yaml'
-import raw from '../data/projekt.yaml?raw'
 import { parseDate } from './status.js'
 
 function push(arr, level, where, msg) { arr.push({ level, where, msg }) }
 
-export function loadProject() {
+export function loadProject(rawYaml) {
   const issues = [] // {level: 'FEHLER'|'WARNUNG'|'LÜCKE', where, msg}
   let doc
   try {
-    doc = yaml.load(raw)
+    doc = yaml.load(rawYaml)
   } catch (e) {
     return { data: { meta: {}, workstreams: [], inputs: [] }, issues: [{ level: 'FEHLER', where: 'projekt.yaml', msg: 'YAML nicht parsebar: ' + e.message }] }
   }

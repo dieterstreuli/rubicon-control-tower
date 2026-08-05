@@ -8,7 +8,10 @@
 // (Ausnahme bleibt die Statuslogik selbst — status.js + gen_report.status_of mit
 // Paritätstest; das ist eine bewusst gespiegelte Regel, keine Konstante.)
 
-import D from '../data/domain.json'
+// Block A (05.08.2026): Die SSOT kommt zur Laufzeit aus der /api/state-Nutzlast
+// (Live-Binding DOMAIN_JSON aus data.js). Dieses Modul darf erst NACH initData
+// evaluiert werden — garantiert durch den dynamischen App-Import in main.jsx.
+import { DOMAIN_JSON as D } from './data.js'
 import { T } from './theme.js'
 
 export const DOMAIN = D

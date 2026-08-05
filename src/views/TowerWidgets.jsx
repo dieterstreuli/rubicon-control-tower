@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { T } from '../lib/theme.js'
 import { fmtDate } from '../lib/status.js'
 import { Pill } from '../components/ui.jsx'
-import { MS_META, reloadKeepScroll } from '../lib/data.js'
+import { MS_META, reloadKeepScroll, ZBSTORE } from '../lib/data.js'
 import { ZB_FLOW, ZB_META, ZB_DOMAENEN, ZB_COLOR, ZB_SCORE, ZB_EVIDENZ_AB } from '../lib/domain.js'
 import { canAny } from '../lib/permissions.js'
-import ZBSTORE from '../data/zielbild.json'
 
 // ── Δ WOCHE (B2, 01.08.) — Führungs-Delta: erledigte Handlungen, Fortschritts-/
 // Ampel-Änderungen (git-Vergleich), neue Protokolle/Entscheide. Reine Fakten.

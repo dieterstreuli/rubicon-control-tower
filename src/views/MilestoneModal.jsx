@@ -1,12 +1,11 @@
 import React, { useState, useMemo } from 'react'
 import { T } from '../lib/theme.js'
-import { BASE, NOW, reloadKeepScroll, taskOverdue, tasksFor, tnr } from '../lib/data.js'
+import { BASE, NOW, reloadKeepScroll, taskOverdue, tasksFor, tnr, BRIEFINGS } from '../lib/data.js'
 import { allMilestones, daysBetween, fmtDate, projectedEnd, statusOf } from '../lib/status.js'
 import { PROGRESS_STEPS } from '../lib/domain.js'
 import { can, canAny } from '../lib/permissions.js'
 import { ArtefaktZeile, Pill } from '../components/ui.jsx'
 import { CheckCircle2, Circle, FileText, ListChecks, Lock, Save, X } from 'lucide-react'
-import BRIEFINGS from '../data/briefings.json'
 
 // Handlungen im Milestone-Modal — abhakbar (CoS alles, Owner nur eigene; sonst lesend).
 // Abhaken schreibt via POST /api/task/status (atomar, serverseitiges Owner-Scoping);

@@ -9,7 +9,7 @@ import {
   ClipboardList, Plus, Trash2, Save, Sun, Moon, BarChart3, Circle, Scale,
 } from 'lucide-react'
 import { T, STATUS_META, ROLES, applyTheme, initialTheme } from './lib/theme.js'
-import { BASE, ISSUES, NOW, ALL_TASKS, MS_META, tasksFor, tnr, taskOverdue, RADAR, reloadKeepScroll } from './lib/data.js'
+import { BASE, ISSUES, NOW, ALL_TASKS, MS_META, tasksFor, tnr, taskOverdue, RADAR, reloadKeepScroll, BRIEFINGS, FR, TRAKT_DOCS, PROTO, AGENDAS, REPORTS, ENTS, REMLOG } from './lib/data.js'
 import { Pill, Bar, Kpi, PhaseTag, phaseColor, phaseShort, FR_COL, MsPicker } from './components/ui.jsx'
 import { DeltaWoche, FragDieDaten, ZielbildCard } from './views/TowerWidgets.jsx'
 import { FuehrungsrhythmusCard, IntroView } from './views/IntroView.jsx'
@@ -23,14 +23,6 @@ import {
   PHASE_ORDER, phaseToken, ENT_FLOW, ENT_TYPEN, ENT_GREMIEN, ENT_COLOR,
   TYP_LABEL, TYP_ICON, LVL_LABEL, LVL_AUSWAHL, LVL_COLOR, PROGRESS_STEPS, roleInfo,
 } from './lib/domain.js'
-import BRIEFINGS from './data/briefings.json'
-import FR from './data/fuehrungsrhythmus.json'
-import TRAKT_DOCS from './data/traktanden_docs.json'
-import PROTO from './data/protokolle.json'
-import AGENDAS from './data/traktanden.json'
-import REPORTS from './data/reports_index.json'
-import ENTS from './data/entscheide.json'
-import REMLOG from './data/reminder_log.json'
 import {
   statusOf, slipDays, projectedEnd, counts, overallStatus, allMilestones,
   parseDate, fmtDate, daysBetween, hardEdgeBreaches,

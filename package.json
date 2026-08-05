@@ -10,6 +10,7 @@
     "preview": "vite preview --port 8621",
     "validate": "python3 scripts/validate.py",
     "test": "node scripts/test_api_smoke.mjs",
+    "test:state": "node scripts/test_runtime_state.mjs",
     "test:parity": "python3 scripts/test_status_parity.py",
     "start": "node server.mjs",
     "serve": "npm run build && node server.mjs"

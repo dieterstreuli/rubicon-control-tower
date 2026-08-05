@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { T } from '../lib/theme.js'
-import { ALL_TASKS, reloadKeepScroll, tnr } from '../lib/data.js'
+import { ALL_TASKS, reloadKeepScroll, tnr, ENTS } from '../lib/data.js'
 import { fmtDate } from '../lib/status.js'
 import { ENT_COLOR, ENT_FLOW, ENT_GREMIEN, ENT_TYPEN } from '../lib/domain.js'
 import { can, canAny } from '../lib/permissions.js'
 import { Filter, Plus, Save } from 'lucide-react'
-import ENTS from '../data/entscheide.json'
 
 // ── ENTSCHEIDS-REGISTER — Säule 3 der Entscheidungsordnung (INS-001 Anhang B):
 // jeder Entscheid zentral, mit dauerhafter E-Nummer, Begründung, Datengrundlage,

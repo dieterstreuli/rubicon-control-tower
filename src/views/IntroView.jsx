@@ -3,8 +3,7 @@ import { STATUS_META, T } from '../lib/theme.js'
 import { fmtDate, parseDate, statusOf } from '../lib/status.js'
 import { FR_COL, Pill } from '../components/ui.jsx'
 import { FileText } from 'lucide-react'
-import FR from '../data/fuehrungsrhythmus.json'
-import TRAKT_DOCS from '../data/traktanden_docs.json'
+import { FR, TRAKT_DOCS } from '../lib/data.js'
 
 // ── INTRO-PAGE: Sinn & Zweck · WS-Übersicht (grafisch, Live-Ampeln) · Zeitachse ──
 // Inhalte aus RUBICON-Doc v2 (Sektionen 1–3, 7); Ströme/Status live aus projekt.yaml.

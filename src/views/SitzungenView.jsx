@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { T } from '../lib/theme.js'
-import { ALL_TASKS, reloadKeepScroll, taskOverdue, tnr } from '../lib/data.js'
+import { ALL_TASKS, reloadKeepScroll, taskOverdue, tnr, FR, PROTO, AGENDAS } from '../lib/data.js'
 import { fmtDate } from '../lib/status.js'
 import { PROGRESS_STEPS, TYP_ICON, TYP_LABEL } from '../lib/domain.js'
 import { can } from '../lib/permissions.js'
 import { MsPicker, ArtefaktZeile } from '../components/ui.jsx'
 import { Circle, FileText, Plus, Save, Trash2 } from 'lucide-react'
-import FR from '../data/fuehrungsrhythmus.json'
-import PROTO from '../data/protokolle.json'
-import AGENDAS from '../data/traktanden.json'
 
 // ── SITZUNG ERFASSEN — Sitzungs-Output strukturiert erfassen (5 Typen),
 // schreibt via /api/sitzung in projekt.yaml (Fortschritt/Blocker) + protokolle.json.

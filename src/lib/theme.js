@@ -3,7 +3,10 @@
 // alle Styles T.* zur Render-Zeit lesen, greift ein Re-Render sofort. STATUS_META
 // liefert die Signalfarben über Getter → zieht bei Theme-Wechsel automatisch mit.
 
-import DOMAIN from '../data/domain.json'
+// Block A (05.08.2026): domain.json kommt zur Laufzeit aus der /api/state-Nutzlast
+// (Live-Binding aus data.js; Evaluation erst nach initData — dynamischer App-Import
+// in main.jsx). Kein Zyklus: data.js importiert theme.js nicht.
+import { DOMAIN_JSON as DOMAIN } from './data.js'
 
 const FONTS = {
   mono: "'SF Mono','JetBrains Mono','Roboto Mono',ui-monospace,monospace",

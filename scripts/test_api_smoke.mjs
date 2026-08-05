@@ -18,6 +18,7 @@
  * Aufruf:  node scripts/test_api_smoke.mjs [--base http://127.0.0.1:8621] [-v]
  * Exit:    0 = alle grün · 1 = mindestens ein Fehlschlag · 2 = Server nicht erreichbar
  */
+import yaml from 'js-yaml'
 
 const BASE = (() => {
   const i = process.argv.indexOf('--base')
@@ -144,6 +145,30 @@ async function main() {
   await expect('protokoll/sensitiv: Loopback erlaubt → 200', '/api/protokoll/sensitiv', { method: 'GET' }, 200)
   await expect('sensitiv-Store: /src-Pfad gesperrt → 403', '/src/data/protokolle_sensitiv.json', { method: 'GET' }, 403)
   await expect('sensitiv-Store: /@fs-Pfad gesperrt → 403', '/@fs/tmp/protokolle_sensitiv.json', { method: 'GET' }, 403)
+
+  // ── 9 · Runtime-State (Block A, 05.08.): /api/state = Client-Bootstrap-Nutzlast ──
+  {
+    const STATE_KEYS = ['projekt_yaml', 'tasks', 'domain', 'briefings', 'fuehrungsrhythmus',
+      'traktanden_docs', 'protokolle', 'traktanden', 'reports_index', 'entscheide',
+      'reminder_log', 'zielbild']
+    const { status, json } = await call('/api/state', { method: 'GET' })
+    const keys = Object.keys(json || {}).filter(k => k !== 'ok').sort()
+    const keysOk = JSON.stringify(keys) === JSON.stringify([...STATE_KEYS].sort())
+    let yamlOk = false
+    try { yamlOk = !!yaml.load(json?.projekt_yaml)?.meta?.projekt } catch { yamlOk = false }
+    const sensFrei = !('protokolle_sensitiv' in (json || {}))
+      && !JSON.stringify(json ?? {}).includes('protokolle_sensitiv')
+    const checks = [
+      ['state: GET → 200 + ok:true', status === 200 && json?.ok === true],
+      ['state: genau die 12 Client-Stores (nicht mehr, nicht weniger)', keysOk],
+      ['state: projekt_yaml ist roher, js-yaml-parsebarer String', typeof json?.projekt_yaml === 'string' && yamlOk],
+      ['state: protokolle_sensitiv in keiner Form enthalten', sensFrei],
+    ]
+    for (const [name, ok] of checks) {
+      if (ok) { pass++; if (VERBOSE) console.log(`  ✓ ${name}`) }
+      else fails.push(`${name}: fehlgeschlagen`)
+    }
+  }
 
   // ── Ergebnis ──
   const total = pass + fails.length
