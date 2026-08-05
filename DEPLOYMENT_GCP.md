@@ -154,3 +154,42 @@ Datenschicht = GCS-Bucket `gs://aixs-rubicon-tower-data` (EUROPE-WEST4, EU).
 - **Vertrauliche Daten (ExBoD/VR, Sensitiv) segregieren** (eigener Store/Key/engere Gruppe).
 - Zielbild Datenschicht: **Firestore (Native, EU)** als SSOT + Runtime-Fetch (Phase 2),
   Personendaten aus dem Git-Repo entkoppeln.
+
+## 8 · Datenschutz-Härtung — Audit 05.08.2026 (Stand + Phase-2-Plan)
+
+Compliance-Audit (DSGVO/FADP + interne Geheimhaltung) der Datenschicht.
+**Einordnung:** Repos privat, 0 Forks, kleiner Zugriffskreis → **kein öffentliches Leck**;
+aber Personen- + ExBoD/VR- + Finanzdaten liegen auf GitHub-US (in Historie seit 13.07.) —
+EU-Residenz/„keine Daten im SCM" verletzt. Kein akuter Notfall, aber zu remediieren.
+
+**Erledigt (05.08.):**
+- GCS Object Versioning auf Daten- UND Backup-Bucket aktiv (§7); Sensitiv-Store im Bucket leer (verifiziert).
+- **Teil-Reduktion Repo:** `dist/` (376) + `scripts/_briefing_html` (167) + `_trakt_html` (14)
+  aus Git-Tracking entfernt + gitignored; **Guardrail** `.github/workflows/data-guard.yml`
+  blockt Re-Add. (`dist/` wird im Container gebaut.)
+- **Positiv-Ist:** Daten EU-resident (europe-west4); IAP-Invoker nur IAP-Service-Agent;
+  GCS-Data-Access-Audit-Logs AN; `protokolle_sensitiv.json` git-/dockerignored (Vorbild).
+
+**AKUT-Plan (Infra — bewusst noch NICHT ausgeführt, „erst planen"):**
+- Runtime weg vom Default-Compute-SA (projektweit `roles/editor`) → dedizierter
+  `rubicon-runtime@aixs-260106` mit **bucket-scoped** `roles/storage.objectUser`; Redeploy.
+- **CMEK**: eigener `axs-rubicon-keyring`/Key (EU, Auto-Rotation 90d), `--default-encryption-key`
+  auf beide Buckets, GCS-Service-Agent `cryptoKeyEncrypterDecrypter`, Bestand `objects rewrite`.
+- **Org-Policies** auf aixs-260106: `gcp.resourceLocations=in:eu-locations`,
+  `storage.publicAccessPrevention=enforced`, `storage.uniformBucketLevelAccess=enforced`.
+- Backup-Bucket **Bucket-Lock/Retention** (Immutabilität gegen Löschung durch SA).
+- Sensitiv-Pfad im Cloud-Deploy segregieren/deaktivieren (leer, aber scharf).
+
+**Phase-2-Plan (Datenschicht-Umbau, mit dem der History-Rewrite erst möglich wird):**
+- **Firestore Native (EU) + CMEK bei Erstellung** als SSOT (Location + CMEK sind nur
+  at-creation setzbar; API noch aus = Clean-Slate). Region-Entscheidung europe-west4 vs eur3.
+- **Runtime-Fetch-Refactor** (Client lädt Daten zur Laufzeit statt Build-Zeit-`import`) →
+  löst die Build-Kopplung; danach `src/data`-Personendaten raus + **History-Rewrite**
+  (git-filter-repo über `src/data/*`, `dist/**`, `scripts/_*`, `public/briefings|…`) + Force-Push.
+- **Server-seitige RBAC** (IAP-JWT verifizieren) statt Client-`role/me`.
+- **Vertrauliches segregieren**: eigene `sensitiv/*`-Collection + eigener Key + engere Gruppe.
+- **Pseudonymisierung**: `owner_id`/Rolle statt Klarname; Namen in getrennter `directory`-Collection.
+- `public/`-Renders (PII-PDFs) auf EU-Volume/Bucket verlagern statt ins Repo.
+- **Organisatorisch:** Google-CDPA/AVV aktenkundig, VVT/RoPA-Eintrag, Retention-Dossier
+  (OR 958f + DSGVO Art. 6(1)(c)/(f) + FADP), Art. 33/34-Bewertung dokumentieren (contained →
+  voraussichtlich keine Meldepflicht, aber ins DS-Dossier).

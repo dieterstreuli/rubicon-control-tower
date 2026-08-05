@@ -1,0 +1,24 @@
+name: Data Guard
+
+# Verhindert, dass Build-Output/Render-Artefakte (enthalten Personen- + ExBoD/VR-
+# Vertraulich-Daten) versehentlich (wieder) ins Git kommen. Läuft bei jedem Push/PR.
+# Voll-Bereinigung (src/data-Entkopplung + History-Rewrite) folgt in Phase 2 —
+# siehe DEPLOYMENT_GCP.md §8.
+
+on: [push, pull_request]
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Keine Build-/Render-Artefakte im Git
+        run: |
+          BAD="$(git ls-files 'dist/**' 'scripts/_briefing_html/**' 'scripts/_trakt_html/**')"
+          if [ -n "$BAD" ]; then
+            echo "::error::Verbotene getrackte Pfade (Build-Output/Renders mit Personen-/Vertraulich-Daten):"
+            echo "$BAD" | head -20
+            echo "Fix: git rm -r --cached <pfad> ; steht in .gitignore. dist/ wird im Container gebaut."
+            exit 1
+          fi
+          echo "OK — keine dist//Render-Artefakte getrackt."
