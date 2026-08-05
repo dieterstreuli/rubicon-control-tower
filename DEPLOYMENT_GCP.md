@@ -131,3 +131,26 @@ env $Q gcloud storage rsync -r --delete-unmatched-destination-objects \
 - `MIGRATION.md` — DRS-Runbook (Daten-Inventar, Portabilität).
 - `README.md` — Tower-Funktion, Ausbaustufen (§Ausblick nennt genau dieses Gateway).
 - `GWS-Gemini/GEMINI.md` §2.2/§3.1 + `agents/group-expert.md` — Gruppen-Regeln.
+
+## 7 · Datensicherung & Datenschutz (Data-at-rest)
+
+Datenschicht = GCS-Bucket `gs://aixs-rubicon-tower-data` (EUROPE-WEST4, EU).
+
+- **Object Versioning: AKTIV (seit 05.08.2026).** Jede Überschreibung/Löschung
+  behält die Vorversion → Point-in-time-Rollback ohne Handarbeit.
+  Prüfen: `gcloud storage buckets describe gs://aixs-rubicon-tower-data | grep versioning`.
+  Vorversionen listen: `gcloud storage ls -a gs://aixs-rubicon-tower-data/<datei>`;
+  wiederherstellen: `gcloud storage cp gs://…/<datei>#<generation> gs://…/<datei>`.
+- **Soft-Delete: 7 Tage** (Bucket-Default, `retentionDurationSeconds: 604800`) —
+  auch hart gelöschte Objekte 7 Tage wiederherstellbar.
+- **Manuelles Voll-Backup:** `gs://aixs-rubicon-tower-backup/20260805-pre-dst-cutover/`
+  (Stand vor dem DST-Cutover). Weitere: `gcloud storage cp -r gs://aixs-rubicon-tower-data gs://aixs-rubicon-tower-backup/<datum>/`.
+
+**Offen (DSGVO/Geheimhaltung — Zielarchitektur):**
+- **Noncurrent-Version-Lifecycle** setzen (Kosten + DSGVO-Retention: Vorversionen
+  nicht unbegrenzt halten, z.B. 90 Tage) — bewusste Aufbewahrungsdauer wählen.
+- **CMEK** statt Google-managed (vorhandene `europe`-KMS-Keys nutzen) — Key-Kontrolle/Widerruf.
+- **Cloud Audit Data-Access-Logs** (wer liest/schreibt) aktivieren.
+- **Vertrauliche Daten (ExBoD/VR, Sensitiv) segregieren** (eigener Store/Key/engere Gruppe).
+- Zielbild Datenschicht: **Firestore (Native, EU)** als SSOT + Runtime-Fetch (Phase 2),
+  Personendaten aus dem Git-Repo entkoppeln.
