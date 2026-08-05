@@ -47,6 +47,10 @@ Entwicklung, **nicht** als Parallel-Produktion.
   gemountet auf `/app/src/data`. **Alle Schreibvorgänge** (tasks/entscheide/
   protokolle/zielbild) landen dort und **überleben Neustart/Redeploy** — der
   frühere „flüchtiges Cloud-Run-FS"-Vorbehalt ist damit erledigt.
+- **Datenbezug (Runtime-Fetch):** Der Client holt die Daten **zur Laufzeit** über
+  `GET /api/state` aus dem Volume (statt sie zur Build-Zeit ins Bundle zu backen) —
+  Server-Writes sind damit **nach einem Reload sichtbar**. Der Sensitiv-Store bleibt
+  davon ausgenommen (loopback-only).
 - Details/Runbook: **`DEPLOYMENT_GCP.md`**.
 
 **CI/CD — Push auf `main` deployt automatisch:**
@@ -103,6 +107,11 @@ Betriebsregeln (für alle Beteiligten):
   `RUBICON_PY=/usr/bin/python3` (Container-Python für die Renderer),
   `package.name` → `rubicon`, Dockerfile-Build-Args für den Build-Stamp.
 - **Build-Stamp** im Footer (Datum/Zeit sichtbar, SHA im Hover).
+- **Runtime-Fetch der Datenschicht:** Der Client liest die 12 Stores zur Laufzeit über
+  `GET /api/state` statt aus dem Build-Bundle → Live-Writes nach Reload sichtbar
+  (Bundle ~618→146 KB); Sensitiv-Store bleibt loopback-only. Die Read-only-Stores
+  (`domain`/`reports_index`/`fuehrungsrhythmus`/`traktanden`/`traktanden_docs`) kommen
+  nun aus dem Bucket → Pre-Deploy-Sync-Check in `DEPLOYMENT_GCP.md`.
 - **CI/CD** neu: `.github/workflows/deploy.yml` (WIF, keyless) — Push auf `main`
   deployt auf `rubicon.axs.aero`.
 - **Daten:** Bucket auf DSTs aktuellen Stand geseedet (11 Ströme/196 MS + Zielbild).
@@ -118,5 +127,6 @@ Betriebsregeln (für alle Beteiligten):
 1. **v1:** Kontrollturm live, geteilt, IAP-gated; Durchsetzung simuliert.
 2. **MCP-Bridge produktiv:** Reminder/Kalender/Eskalation real (`mcp/calendar_bridge.md`).
 3. **Tracker-Sync:** Gruppen-Commitment-Tracker ↔ read-only-Import.
-4. **Phase 2 (Datenschutz-Härtung):** `src/data`/`dist/` aus Git; Daten nur im
-   EU-Volume; Client von Build-Zeit-Import auf Runtime-Fetch umstellen.
+4. **Phase 2 (Datenschutz-Härtung):** Client-Runtime-Fetch (`/api/state`) ✅ umgesetzt
+   (Daten zur Laufzeit aus dem Volume); verbleibend: `src/data`-Personendaten +
+   `public/`-PDFs aus Git lösen (EU-Volume als alleinige Quelle).
