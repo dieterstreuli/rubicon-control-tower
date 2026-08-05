@@ -65,6 +65,7 @@ jobs:
           gcloud run deploy "${SERVICE}" \
             --project="${PROJECT_ID}" --region="${REGION}" \
             --image="${IMAGE}:${GITHUB_SHA}" \
+            --service-account=rubicon-runtime@aixs-260106.iam.gserviceaccount.com \
             --no-allow-unauthenticated --max-instances=1 --port=8080 \
             --add-volume=name=data,type=cloud-storage,bucket="${BUCKET}" \
             --add-volume-mount=volume=data,mount-path=/app/src/data \

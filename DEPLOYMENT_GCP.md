@@ -170,15 +170,24 @@ EU-Residenz/„keine Daten im SCM" verletzt. Kein akuter Notfall, aber zu remedi
 - **Positiv-Ist:** Daten EU-resident (europe-west4); IAP-Invoker nur IAP-Service-Agent;
   GCS-Data-Access-Audit-Logs AN; `protokolle_sensitiv.json` git-/dockerignored (Vorbild).
 
-**AKUT-Plan (Infra — bewusst noch NICHT ausgeführt, „erst planen"):**
-- Runtime weg vom Default-Compute-SA (projektweit `roles/editor`) → dedizierter
-  `rubicon-runtime@aixs-260106` mit **bucket-scoped** `roles/storage.objectUser`; Redeploy.
-- **CMEK**: eigener `axs-rubicon-keyring`/Key (EU, Auto-Rotation 90d), `--default-encryption-key`
-  auf beide Buckets, GCS-Service-Agent `cryptoKeyEncrypterDecrypter`, Bestand `objects rewrite`.
-- **Org-Policies** auf aixs-260106: `gcp.resourceLocations=in:eu-locations`,
-  `storage.publicAccessPrevention=enforced`, `storage.uniformBucketLevelAccess=enforced`.
-- Backup-Bucket **Bucket-Lock/Retention** (Immutabilität gegen Löschung durch SA).
-- Sensitiv-Pfad im Cloud-Deploy segregieren/deaktivieren (leer, aber scharf).
+**Infra-Hardening ERLEDIGT (05.08.):**
+- **CMEK**: dedizierter EU-Keyring `axs-rubicon-keyring` (europe-west4) + Key `rubicon-ssot-key`
+  (Auto-Rotation 90d); GCS-Service-Agent via `service-agent --authorize-cmek` berechtigt;
+  `--default-encryption-key` auf **beide** Buckets; **alle** Bestandsobjekte umgeschlüsselt
+  (Daten 17/17, Backup 12/12). Prüfen: `gcloud storage buckets describe … | grep kms`.
+- **Runtime-SA least-privilege**: Dienst läuft als `rubicon-runtime@aixs-260106` (Rev 00008+)
+  mit **bucket-scoped** `roles/storage.objectAdmin` (nur Datenbucket) + logging/monitoring;
+  Default-Compute-SA-Binding am Bucket entfernt; in `deploy.yml` als `--service-account` verankert.
+- **Public-Access-Prevention = enforced** + **UBLA = on** auf beiden Buckets.
+
+**Zurückgestellt (bewusst — höhere Tragweite):**
+- **Org-Policy `gcp.resourceLocations=in:eu`** projektweit: kann Vertex/Discovery-Ressourcen-
+  erstellung im geteilten AI-Projekt blocken → erst prüfen was jede Last erzeugt, dann setzen.
+- Backup-Bucket **Bucket-Lock/Retention** (WORM) — irreversibel, eigene Entscheidung.
+- Legacy-Projekt-Primitive-Bucketzugriff (projectViewer/Editor lesen/schreiben) restringieren —
+  Sperr-Risiko, separat.
+- Default-Compute-SA projektweiten `roles/editor` entziehen — betrifft andere Dienste, separat.
+- Sensitiv-Pfad im Cloud-Deploy segregieren/deaktivieren (Store leer, aber scharf) → Phase 2.
 
 **Phase-2-Plan (Datenschicht-Umbau, mit dem der History-Rewrite erst möglich wird):**
 - **Firestore Native (EU) + CMEK bei Erstellung** als SSOT (Location + CMEK sind nur
