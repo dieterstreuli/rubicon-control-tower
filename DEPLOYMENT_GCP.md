@@ -174,12 +174,9 @@ gs://aixs-rubicon-tower-data/domain.json`).
 - Zielbild Datenschicht: **Firestore (Native, EU)** als SSOT + Runtime-Fetch (Phase 2),
   Personendaten aus dem Git-Repo entkoppeln.
 
-## 8 · Datenschutz-Härtung — Audit 05.08.2026 (Stand + Phase-2-Plan)
+## 8 · Infra-/Datenschutz-Härtung (Stand)
 
-Compliance-Audit (DSGVO/FADP + interne Geheimhaltung) der Datenschicht.
-**Einordnung:** Repos privat, 0 Forks, kleiner Zugriffskreis → **kein öffentliches Leck**;
-aber Personen- + ExBoD/VR- + Finanzdaten liegen auf GitHub-US (in Historie seit 13.07.) —
-EU-Residenz/„keine Daten im SCM" verletzt. Kein akuter Notfall, aber zu remediieren.
+Stand der Härtung der Datenschicht (data-at-rest + Zugriff).
 
 **Erledigt (05.08.):**
 - GCS Object Versioning auf Daten- UND Backup-Bucket aktiv (§7); Sensitiv-Store im Bucket leer (verifiziert).
@@ -207,17 +204,3 @@ EU-Residenz/„keine Daten im SCM" verletzt. Kein akuter Notfall, aber zu remedi
   Sperr-Risiko, separat.
 - Default-Compute-SA projektweiten `roles/editor` entziehen — betrifft andere Dienste, separat.
 - Sensitiv-Pfad im Cloud-Deploy segregieren/deaktivieren (Store leer, aber scharf) → Phase 2.
-
-**Phase-2-Plan (Datenschicht-Umbau, mit dem der History-Rewrite erst möglich wird):**
-- **Firestore Native (EU) + CMEK bei Erstellung** als SSOT (Location + CMEK sind nur
-  at-creation setzbar; API noch aus = Clean-Slate). Region-Entscheidung europe-west4 vs eur3.
-- **Runtime-Fetch-Refactor** (Client lädt Daten zur Laufzeit statt Build-Zeit-`import`) →
-  löst die Build-Kopplung; danach `src/data`-Personendaten raus + **History-Rewrite**
-  (git-filter-repo über `src/data/*`, `dist/**`, `scripts/_*`, `public/briefings|…`) + Force-Push.
-- **Server-seitige RBAC** (IAP-JWT verifizieren) statt Client-`role/me`.
-- **Vertrauliches segregieren**: eigene `sensitiv/*`-Collection + eigener Key + engere Gruppe.
-- **Pseudonymisierung**: `owner_id`/Rolle statt Klarname; Namen in getrennter `directory`-Collection.
-- `public/`-Renders (PII-PDFs) auf EU-Volume/Bucket verlagern statt ins Repo.
-- **Organisatorisch:** Google-CDPA/AVV aktenkundig, VVT/RoPA-Eintrag, Retention-Dossier
-  (OR 958f + DSGVO Art. 6(1)(c)/(f) + FADP), Art. 33/34-Bewertung dokumentieren (contained →
-  voraussichtlich keine Meldepflicht, aber ins DS-Dossier).
