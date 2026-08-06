@@ -44,7 +44,7 @@ def test_stammdaten_overwrite():
     try:
         _write(seed, 'domain.json', {'phasen': ['neu'], 'v': 2})
         _write(data, 'domain.json', {'phasen': ['alt'], 'v': 1})
-        mb.run(seed, data, apply=True)
+        mb.run(seed, data, 'apply')
         assert json.loads(_read(data, 'domain.json')) == {'phasen': ['neu'], 'v': 2}
     finally:
         _cleanup(seed, data)
@@ -58,7 +58,7 @@ def test_transaktion_untouched():
         # SEED trägt bewusst anderen Inhalt — darf NICHT durchschlagen.
         _write(seed, 'reports_index.json', {'reports': []})
         before = _read(data, 'reports_index.json')
-        report = mb.run(seed, data, apply=True)
+        report = mb.run(seed, data, 'apply')
         after = _read(data, 'reports_index.json')
         assert before == after
         assert json.loads(after)['reports'][0]['server_doc_id'] == 'SRV-1'
@@ -164,14 +164,58 @@ def test_dry_run_writes_nothing():
         _write(data, 'tasks.json', {'tasks': [{'id': 'T-1', 'text': 'x'}, {'id': 'T-2', 'text': 'live'}]})
 
         before = {n: _read(data, n) for n in ('domain.json', 'projekt.yaml', 'tasks.json')}
-        report = mb.run(seed, data, apply=False)
+        report = mb.run(seed, data, 'dry-run')
         after = {n: _read(data, n) for n in ('domain.json', 'projekt.yaml', 'tasks.json')}
 
         assert before == after                        # DATA byte-identisch (nichts geschrieben)
         assert report['mode'] == 'dry-run'
+        assert report['applied'] is False
         assert 'domain.json' in report['stammdaten']  # geplante Änderung gelistet
         assert report['misch']['tasks.json']['volume_only'] == 1
         assert any(c['id'] == 'GONE' for c in report['conflicts'])  # Konflikt gemeldet
+    finally:
+        _cleanup(seed, data)
+
+
+# ── 7. AUTO: 0 Konflikte → wendet automatisch an ─────────────────────────────
+def test_auto_applies_when_clean():
+    seed, data = _mkdirs()
+    try:
+        import yaml
+        _write(seed, 'domain.json', {'v': 2})
+        _write(data, 'domain.json', {'v': 1})
+        clean = _projekt(milestones=[{'id': 'M1', 'name': 'a', 'progress': 0}])
+        _write(seed, 'projekt.yaml', None, raw=yaml.safe_dump(clean, allow_unicode=True, sort_keys=False))
+        _write(data, 'projekt.yaml', None, raw=yaml.safe_dump(clean, allow_unicode=True, sort_keys=False))
+        _write(seed, 'tasks.json', {'tasks': [{'id': 'T-1', 'text': 'x'}]})
+        _write(data, 'tasks.json', {'tasks': [{'id': 'T-1', 'text': 'x'}]})
+        report = mb.run(seed, data, 'auto')
+        assert report['conflicts'] == []
+        assert report['applied'] is True
+        assert json.loads(_read(data, 'domain.json')) == {'v': 2}   # sauber → angewandt
+    finally:
+        _cleanup(seed, data)
+
+
+# ── 8. AUTO: Konflikt → hält (schreibt NICHT), meldet ────────────────────────
+def test_auto_holds_on_conflict():
+    seed, data = _mkdirs()
+    try:
+        import yaml
+        _write(seed, 'domain.json', {'v': 2})
+        _write(data, 'domain.json', {'v': 1})
+        seed_pj = _projekt(milestones=[{'id': 'KEEP', 'name': 'a', 'progress': 0}])
+        vol_pj = _projekt(milestones=[{'id': 'KEEP', 'name': 'a', 'progress': 0},
+                                      {'id': 'GONE', 'name': 'weg', 'progress': 30}])
+        _write(seed, 'projekt.yaml', None, raw=yaml.safe_dump(seed_pj, allow_unicode=True, sort_keys=False))
+        _write(data, 'projekt.yaml', None, raw=yaml.safe_dump(vol_pj, allow_unicode=True, sort_keys=False))
+        _write(seed, 'tasks.json', {'tasks': [{'id': 'T-1', 'text': 'x'}]})
+        _write(data, 'tasks.json', {'tasks': [{'id': 'T-1', 'text': 'x'}]})
+        before = _read(data, 'domain.json')
+        report = mb.run(seed, data, 'auto')
+        assert any(c['id'] == 'GONE' for c in report['conflicts'])
+        assert report['applied'] is False
+        assert _read(data, 'domain.json') == before       # Konflikt → NICHT geschrieben (gehalten)
     finally:
         _cleanup(seed, data)
 
@@ -183,6 +227,8 @@ TESTS = [
     test_projekt_delete_conflict,
     test_tasks_merge,
     test_dry_run_writes_nothing,
+    test_auto_applies_when_clean,
+    test_auto_holds_on_conflict,
 ]
 
 

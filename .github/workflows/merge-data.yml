@@ -6,10 +6,12 @@ name: RUBICON Merge-Bruecke (Struktur -> Volume)
 #
 # Zwei Ausloeser:
 #  A) automatisch NACH einem erfolgreichen Deploy, dessen Commit-SUBJECT (erste Zeile!)
-#     den Marker [publish-data] traegt -> laeuft als DRY-RUN (Vorschau in den Logs; wendet
-#     NIE automatisch an). Bewusst nur die erste Zeile: eine Prosa-Erwaehnung im Body soll
-#     NICHT triggern.
-#  B) manuell (workflow_dispatch): apply=false = Dry-Run, apply=true = Backup + Anwenden.
+#     den Marker [publish-data] traegt -> laeuft als AUTO: wendet automatisch an, WENN der
+#     Merge 0 Konflikte hat (Normalfall: neue Struktur ohne Loeschungen); bei Konflikten
+#     wird NICHT angewandt, sondern gehalten + gemeldet (nie stiller Apply). Bewusst nur die
+#     erste Zeile: eine Prosa-Erwaehnung im Body soll NICHT triggern.
+#  B) manuell (workflow_dispatch): apply=false = Dry-Run, apply=true = Backup + Anwenden
+#     (erzwingt das Schreiben, auch bei Konflikten — bewusste menschliche Entscheidung).
 #
 # Der eigentliche Merge laeuft im Cloud-Run-Job rubicon-merge-job (Zugriff aufs Volume);
 # dieser Workflow steuert Modus, Backup und fuehrt den Job aus.
@@ -56,18 +58,18 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "proceed=1" >> "$GITHUB_OUTPUT"
             if [ "${{ inputs.apply }}" = "true" ]; then
-              echo "apply=1" >> "$GITHUB_OUTPUT"; echo "MODE=APPLY (Backup + schreiben)"
+              echo "mode=apply" >> "$GITHUB_OUTPUT"; echo "MODE=APPLY (Backup + schreiben)"
             else
-              echo "apply=0" >> "$GITHUB_OUTPUT"; echo "MODE=DRY-RUN (Vorschau)"
+              echo "mode=dry-run" >> "$GITHUB_OUTPUT"; echo "MODE=DRY-RUN (Vorschau)"
             fi
           else
-            # Nur die ERSTE Zeile (Commit-Subject) auf den Marker pruefen.
+            # Auto: nur die ERSTE Zeile (Commit-Subject) auf den Marker pruefen.
             SUBJECT=$(printf '%s\n' "$HEAD_MSG" | head -1)
             if printf '%s' "$SUBJECT" | grep -qF '[publish-data]'; then
-              echo "proceed=1" >> "$GITHUB_OUTPUT"; echo "apply=0" >> "$GITHUB_OUTPUT"
-              echo "Auto-Lauf ([publish-data] im Subject) — DRY-RUN."
+              echo "proceed=1" >> "$GITHUB_OUTPUT"; echo "mode=auto" >> "$GITHUB_OUTPUT"
+              echo "Auto-Lauf ([publish-data] im Subject) — AUTO: wendet an, WENN 0 Konflikte; sonst haelt+meldet."
             else
-              echo "proceed=0" >> "$GITHUB_OUTPUT"; echo "apply=0" >> "$GITHUB_OUTPUT"
+              echo "proceed=0" >> "$GITHUB_OUTPUT"; echo "mode=none" >> "$GITHUB_OUTPUT"
               echo "Kein [publish-data] im Commit-Subject — kein Merge (no-op)."
             fi
           fi
@@ -82,9 +84,10 @@ jobs:
       - if: steps.gate.outputs.proceed == '1'
         uses: google-github-actions/setup-gcloud@v2
 
-      # Backup NUR bei apply: volles Volume nach gs://…-backup/merge-<ts>/ kopieren.
-      - name: Backup Volume (nur bei apply)
-        if: steps.gate.outputs.proceed == '1' && steps.gate.outputs.apply == '1'
+      # Backup, wenn geschrieben werden KANN (apply oder auto): volles Volume nach
+      # gs://…-backup/merge-<ts>/ kopieren. (auto schreibt evtl. nicht — Backup schadet nie.)
+      - name: Backup Volume (apply/auto)
+        if: steps.gate.outputs.proceed == '1' && (steps.gate.outputs.mode == 'apply' || steps.gate.outputs.mode == 'auto')
         run: |
           TS=$(date -u +%Y%m%dT%H%M%SZ)
           echo "Backup -> gs://${BACKUP_BUCKET}/merge-${TS}/"
@@ -99,11 +102,11 @@ jobs:
             echo "${JOB} nicht gefunden — uebersprungen (erst anlegen, s. DEPLOYMENT_GCP §10)"
             exit 0
           fi
-          if [ "${{ steps.gate.outputs.apply }}" = "1" ]; then
-            ARGS="scripts/merge_bridge.py,--apply"
-          else
-            ARGS="scripts/merge_bridge.py"
-          fi
+          case "${{ steps.gate.outputs.mode }}" in
+            apply) ARGS="scripts/merge_bridge.py,--apply" ;;   # bewusster Apply (immer schreiben)
+            auto)  ARGS="scripts/merge_bridge.py,--auto" ;;    # publiziert, WENN 0 Konflikte
+            *)     ARGS="scripts/merge_bridge.py" ;;           # Dry-Run
+          esac
           gcloud run jobs update "${JOB}" --project="${PROJECT_ID}" --region="${REGION}" \
             --command=python3 --args="${ARGS}"
           gcloud run jobs execute "${JOB}" --project="${PROJECT_ID}" --region="${REGION}" --wait

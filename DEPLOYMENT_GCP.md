@@ -371,15 +371,19 @@ Die Deploy-Pipeline hebt den Job automatisch aufs neue Image (§ „Cloud-Run-Jo
 
 **Trigger** (`.github/workflows/merge-data.yml`):
 - **A (auto):** nach erfolgreichem Deploy, dessen **Commit-Subject (ERSTE Zeile)** `[publish-data]`
-  trägt → **Dry-Run** (Vorschau in den Logs; wendet NIE automatisch an → Konflikte nie still
-  angewandt). Bewusst nur die erste Zeile: eine Prosa-Erwähnung von `[publish-data]` im Commit-
-  **Body** (z.B. Feature-Beschreibung) triggert NICHT — ein Gate-Step im Workflow prüft die
-  Subject-Zeile, nicht die ganze Message.
-- **B (manuell):** `workflow_dispatch` mit `apply` — `false` = Dry-Run, `true` = **Backup + Anwenden**.
-  Der Workflow setzt den Job-Modus über `--args` (`--apply` nur im Apply-Fall). Fehlt der Job, wird
-  sauber übersprungen (Guard).
+  trägt → Modus **`--auto`**: **wendet automatisch an, WENN der Merge 0 Konflikte hat** (mit Backup
+  vorher) — der Normalfall (neue Struktur ohne Löschungen) publiziert damit automatisch live. Bei
+  **Konflikten** (entfernte Struktur mit Live-Daten) wird **NICHT** angewandt, sondern gehalten +
+  gemeldet → manueller Apply nach Prüfung (nie stiller Apply). Bewusst nur die erste Zeile: eine
+  Prosa-Erwähnung von `[publish-data]` im Commit-**Body** (z.B. Feature-Beschreibung) triggert NICHT.
+- **B (manuell):** `workflow_dispatch` mit `apply` — `false` = Dry-Run, `true` = **Backup + Anwenden**
+  (`--apply`, erzwingt das Schreiben auch bei Konflikten = bewusste Entscheidung). Fehlt der Job,
+  wird sauber übersprungen (Guard).
 
-**Backup + Konflikte:** Bei `apply` sichert der Workflow zuerst das ganze Volume nach
+Der Job kennt drei Modi (`scripts/merge_bridge.py`): **dry-run** (nie schreiben), **`--auto`**
+(schreiben nur bei 0 Konflikten), **`--apply`** (immer schreiben).
+
+**Backup + Konflikte:** Bei `apply`/`auto` sichert der Workflow zuerst das ganze Volume nach
 `gs://aixs-rubicon-tower-backup/merge-<ts>/` (rollback-fähig). Der Merge-Job gibt eine JSON-Zusammenfassung
 + Konfliktliste in die Logs; der Workflow-Step „Merge-Zusammenfassung" macht sie sichtbar.
 

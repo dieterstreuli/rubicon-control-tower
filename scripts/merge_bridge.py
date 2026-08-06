@@ -225,52 +225,16 @@ def _copy_atomic(src, dst):
 
 
 # ── Orchestrierung ───────────────────────────────────────────────────────────
-def run(seed_dir, data_dir, apply):
-    """Führt den Merge über alle drei Datei-Klassen aus und gibt den Report-Dict zurück.
-    Schreibt nur bei apply=True ins DATA-Verzeichnis (atomar)."""
-    seed_dir, data_dir = str(seed_dir), str(data_dir)
-    os.makedirs(data_dir, exist_ok=True)
-    report = {
-        'mode': 'apply' if apply else 'dry-run',
-        'stammdaten': [],
-        'transaktion': [],
-        'misch': {},
-        'conflicts': [],
-    }
-
-    # STAMMDATEN — Repo überschreibt Volume. Fehlt die Datei im SEED → überspringen (INFO).
-    for name in STAMMDATEN:
-        src = os.path.join(seed_dir, name)
-        if not os.path.exists(src):
-            log.info('Stammdaten übersprungen (nicht im SEED): %s', name)
-            continue
-        report['stammdaten'].append(name)
-        if apply:
-            _copy_atomic(src, os.path.join(data_dir, name))
-    log.info('Stammdaten: %d Datei(en) %s', len(report['stammdaten']),
-             'überschrieben' if apply else 'geplant')
-
-    # TRANSAKTION — nie anfassen, nur die im Volume vorhandenen melden.
-    for name in TRANSAKTION:
-        if os.path.exists(os.path.join(data_dir, name)):
-            report['transaktion'].append(name)
-    log.info('Transaktion: %d Datei(en) unberührt gelassen', len(report['transaktion']))
-
-    # MISCH — projekt.yaml (YAML) + tasks.json (JSON), Merge-by-Key.
-    _merge_projekt_file(seed_dir, data_dir, apply, report)
-    _merge_tasks_file(seed_dir, data_dir, apply, report)
-
-    return report
-
-
-def _merge_projekt_file(seed_dir, data_dir, apply, report):
+def _plan_projekt(seed_dir, data_dir, report):
+    """Berechnet den projekt.yaml-Merge OHNE zu schreiben. Fuellt report um conflicts +
+    misch-Statistik; gibt (data_path, merged_dict) zurueck oder None (SEED fehlt)."""
     seed_path = os.path.join(seed_dir, 'projekt.yaml')
     data_path = os.path.join(data_dir, 'projekt.yaml')
     if not os.path.exists(seed_path):
         # Ohne SEED-Struktur kann nicht gemergt werden — Volume bleibt unberührt (resilient).
         log.warning('projekt.yaml fehlt im SEED — Merge übersprungen, Volume unberührt')
         report['misch']['projekt.yaml'] = {'skipped': 'seed_missing'}
-        return
+        return None
     seed_doc = yaml.safe_load(_read_text(seed_path)) or {}
     vol_doc = (yaml.safe_load(_read_text(data_path)) or {}) if os.path.exists(data_path) else {}
     merged, conflicts = merge_projekt(seed_doc, vol_doc)
@@ -281,27 +245,70 @@ def _merge_projekt_file(seed_dir, data_dir, apply, report):
         'inputs': len(merged.get('inputs') or []),
         'conflicts': len(conflicts),
     }
-    log.info('projekt.yaml: %d Konflikt(e) (behalten+gemeldet)', len(conflicts))
-    if apply:
-        _write_atomic(data_path, yaml.safe_dump(merged, allow_unicode=True, sort_keys=False,
-                                                default_flow_style=False))
+    return (data_path, merged)
 
 
-def _merge_tasks_file(seed_dir, data_dir, apply, report):
+def _plan_tasks(seed_dir, data_dir, report):
+    """Berechnet den tasks.json-Merge OHNE zu schreiben; gibt (data_path, merged) oder None."""
     seed_path = os.path.join(seed_dir, 'tasks.json')
     data_path = os.path.join(data_dir, 'tasks.json')
     if not os.path.exists(seed_path):
         log.warning('tasks.json fehlt im SEED — Merge übersprungen, Volume unberührt')
         report['misch']['tasks.json'] = {'skipped': 'seed_missing'}
-        return
+        return None
     seed_doc = json.loads(_read_text(seed_path))
     vol_doc = json.loads(_read_text(data_path)) if os.path.exists(data_path) else {'tasks': []}
     merged, stats = merge_tasks(seed_doc, vol_doc)
     report['misch']['tasks.json'] = stats
-    log.info('tasks.json: %d SEED + %d volume-only = %d gesamt',
-             stats['seed'], stats['volume_only'], stats['total'])
-    if apply:
-        _write_atomic(data_path, json.dumps(merged, ensure_ascii=False, indent=2))
+    return (data_path, merged)
+
+
+def run(seed_dir, data_dir, mode):
+    """mode: 'dry-run' | 'auto' | 'apply'. Berechnet den kompletten Merge, ermittelt die
+    Konfliktzahl und entscheidet DANN, ob geschrieben wird:
+      apply   = immer schreiben (bewusster manueller Apply),
+      auto    = nur schreiben, wenn 0 Konflikte (sonst halten + melden),
+      dry-run = nie schreiben (reine Vorschau).
+    Schreiben ist atomar (Stammdaten-Copy + Misch-Write). Gibt den Report-Dict zurueck."""
+    seed_dir, data_dir = str(seed_dir), str(data_dir)
+    os.makedirs(data_dir, exist_ok=True)
+    report = {'mode': mode, 'applied': False, 'stammdaten': [], 'transaktion': [],
+              'misch': {}, 'conflicts': []}
+
+    # 1. Stammdaten-Plan: welche SEED-Dateien wuerden das Volume ueberschreiben.
+    stamm = [n for n in STAMMDATEN if os.path.exists(os.path.join(seed_dir, n))]
+    for n in STAMMDATEN:
+        if n not in stamm:
+            log.info('Stammdaten übersprungen (nicht im SEED): %s', n)
+    report['stammdaten'] = stamm
+
+    # 2. Transaktion — nie anfassen, nur die im Volume vorhandenen melden.
+    report['transaktion'] = [n for n in TRANSAKTION if os.path.exists(os.path.join(data_dir, n))]
+
+    # 3. Misch berechnen (noch NICHT schreiben) — liefert die Konflikte.
+    projekt_plan = _plan_projekt(seed_dir, data_dir, report)
+    tasks_plan = _plan_tasks(seed_dir, data_dir, report)
+
+    # 4. Schreib-Entscheidung nach Modus + Konfliktzahl.
+    n_conflicts = len(report['conflicts'])
+    write = (mode == 'apply') or (mode == 'auto' and n_conflicts == 0)
+    report['applied'] = write
+    log.info('Stammdaten: %d · Transaktion: %d unberührt · Konflikte: %d · schreibt: %s',
+             len(stamm), len(report['transaktion']), n_conflicts, write)
+    if mode == 'auto' and n_conflicts:
+        log.warning('AUTO: %d Konflikt(e) → NICHT angewandt; manueller Apply nach Prüfung nötig', n_conflicts)
+
+    # 5. Schreiben (falls entschieden) — atomar, Stammdaten + Misch.
+    if write:
+        for n in stamm:
+            _copy_atomic(os.path.join(seed_dir, n), os.path.join(data_dir, n))
+        if projekt_plan is not None:
+            _write_atomic(projekt_plan[0], yaml.safe_dump(projekt_plan[1], allow_unicode=True,
+                                                          sort_keys=False, default_flow_style=False))
+        if tasks_plan is not None:
+            _write_atomic(tasks_plan[0], json.dumps(tasks_plan[1], ensure_ascii=False, indent=2))
+
+    return report
 
 
 def _seed_dir():
@@ -315,16 +322,16 @@ def _data_dir():
 def main(argv=None):
     logging.basicConfig(level=logging.INFO, stream=sys.stderr, format='%(message)s')
     args = list(sys.argv[1:] if argv is None else argv)
-    apply = '--apply' in args
+    mode = 'apply' if '--apply' in args else ('auto' if '--auto' in args else 'dry-run')
     seed_dir = _seed_dir()
     data_dir = _data_dir()
     if not os.path.isdir(seed_dir):
         # Fehlendes SEED-Verzeichnis = Fehlkonfiguration, kein informativer Konflikt → Exit 1.
         log.error('SEED-Verzeichnis fehlt: %s', seed_dir)
         return 1
-    log.info('Merge-Brücke (%s) — SEED=%s DATA=%s', 'apply' if apply else 'dry-run', seed_dir, data_dir)
+    log.info('Merge-Brücke (%s) — SEED=%s DATA=%s', mode, seed_dir, data_dir)
     try:
-        report = run(seed_dir, data_dir, apply)
+        report = run(seed_dir, data_dir, mode)
     except Exception as ex:  # noqa: BLE001 — Parse-/IO-Fehler sind echte Fehler → Exit 1
         log.error('Merge-Fehler: %s', ex)
         return 1
