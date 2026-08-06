@@ -315,7 +315,7 @@ gcloud scheduler jobs create http rubicon-report-sched \
 |---|---|
 | Shared Drive „00 AXS - Rubicon" + 6 Ordner + 373 Baseline-Dokumente | ✅ angelegt/befüllt |
 | Service-User `rubicon@axs.aero` | ✅ angelegt |
-| SA `rubicon-workspace` + DWD-Freigabe (drive/documents) | ✅ angelegt/approved |
+| SA `rubicon-workspace` + DWD-Freigabe (`drive`/`documents`/`spreadsheets`/`gmail.send`/`gmail.modify`/`calendar.events`) | ✅ angelegt/approved (Gmail/Calendar für spätere Features vorab autorisiert) |
 | `rubicon@axs.aero` = Mitglied des Shared Drive | ✅ |
 | Grant `rubicon-runtime` → `rubicon-workspace` (tokenCreator) | ⏳ beim Job-Anlegen (ersetzt das Test-Self-Binding) |
 | Cloud-Run-Job `rubicon-report-job` | ⏳ nach dem Push (Job nutzt das frische Image) |

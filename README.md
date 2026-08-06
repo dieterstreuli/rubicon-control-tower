@@ -153,6 +153,8 @@ im Detail: `DEPLOYMENT_GCP.md §9` (Reports) + `§10` (Merge-Brücke).
 | Δ-Block (Wochen-Delta) | git-Vergleich `projekt.yaml` | GCS-Object-Version statt git | ⏳ Follow-up |
 | KI-Narrativ | lokale `claude`-CLI | AIXS-Plattform (konfigurierbares Modell/Prompt) | ⏳ Follow-up |
 | Protokoll/Traktanden/Entscheide-Doc **+ AXS-Branding** | Chrome-HTML-PDF; Branding im HTML/CSS je Generator | **Vorlagen-Engine**: eine AXS-gebrandete Google-Doc-Vorlage je Typ (Layout **+** Logo/Header/Footer) + Merge, kein Chrome | ⏳ geplant |
+| Reminder / Mailversand | Gmail-Entwurf lokal (DRS sendet) | serverseitig via DWD `gmail.send`/`gmail.modify` als `rubicon@axs.aero` | ⏳ geplant (Scopes autorisiert) |
+| Kalender / Eskalation | simuliert / MCP-Bridge lokal | serverseitig via DWD `calendar.events` | ⏳ geplant (Scopes autorisiert) |
 
 **Bis zur 1:1-Parität** bleibt lokal die vollständige Umgebung; serverseitig wächst die Abdeckung
 inkrementell. Diese Tabelle wird je Ausbauschritt aktualisiert.
@@ -165,7 +167,10 @@ werden (Headless-Chrome ins Image) — die PDF-Quelle im Code ist dafür pluggba
 ## Ausbaustufen
 
 1. **v1:** Kontrollturm live, geteilt, IAP-gated; Durchsetzung simuliert.
-2. **MCP-Bridge produktiv:** Reminder/Kalender/Eskalation real (`mcp/calendar_bridge.md`).
+2. **Mail/Kalender serverseitig:** Reminder-Versand + Kalender/Eskalation real —
+   serverseitig via SA-Impersonation (`rubicon@axs.aero`), DWD-Scopes `gmail.send`/
+   `gmail.modify`/`calendar.events` **bereits autorisiert** (kein erneuter Admin-Approval
+   nötig). Löst den bisherigen lokalen MCP-Bridge-Weg (`mcp/calendar_bridge.md`) ab.
 3. **Tracker-Sync:** Gruppen-Commitment-Tracker ↔ read-only-Import.
 4. **Phase 2 (Datenschutz-Härtung):** Client-Runtime-Fetch (`/api/state`) ✅ umgesetzt
    (Daten zur Laufzeit aus dem Volume); verbleibend: `src/data`-Personendaten +
