@@ -298,6 +298,7 @@ def main():
             try:
                 res.append(generate(lvl, per))
             except Exception as ex:  # noqa: BLE001
+                log.exception("report failed level=%s periode=%s", lvl, per)
                 res.append({'ok': False, 'level': lvl, 'error': str(ex)})
         print(json.dumps({'auto': True, 'results': res}, ensure_ascii=False))
     else:
@@ -563,4 +564,12 @@ def build_md(title, label, prog_ampel, level, doc, meta, now, inper, start, end,
 
 
 if __name__ == '__main__':
+    # Logs (rubicon.report/rubicon.gdoc: Messpunkte + Fehler) auf stderr sichtbar machen;
+    # stdout bleibt sauberes JSON (server.mjs parst stdout). Ohne dies unterdrückt der
+    # Root-Default (WARNING) alle INFO-Messpunkte — ein Job-Fehler bleibt unsichtbar.
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s %(levelname)s %(name)s %(message)s',
+        stream=sys.stderr,
+    )
     main()

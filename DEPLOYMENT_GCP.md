@@ -276,7 +276,9 @@ gcloud run jobs create rubicon-report-job \
   --add-volume-mount=volume=data,mount-path=/app/src/data \
   --command=python3 --args=scripts/gen_report.py,--auto \
   --task-timeout=1800 --max-retries=1 \
-  --set-env-vars="^@^RUBICON_PY=/usr/bin/python3@RUBICON_DOCS_DIR=/app/src/data/_generated@RUBICON_WORKSPACE_SA=rubicon-workspace@aixs-260106.iam.gserviceaccount.com@RUBICON_IMPERSONATE_SUBJECT=rubicon@axs.aero@RUBICON_DRIVE_REPORTS_FOLDER=1hiuxVPBO3Hwd3I0g1lDTxKFAwk851Y0m"
+  --set-env-vars="^#^RUBICON_PY=/usr/bin/python3#RUBICON_DOCS_DIR=/app/src/data/_generated#RUBICON_WORKSPACE_SA=rubicon-workspace@aixs-260106.iam.gserviceaccount.com#RUBICON_IMPERSONATE_SUBJECT=rubicon@axs.aero#RUBICON_DRIVE_REPORTS_FOLDER=1hiuxVPBO3Hwd3I0g1lDTxKFAwk851Y0m"
+# Delimiter MUSS ^#^ sein (nicht ^@^): die Werte enthalten @ (SA-/Subject-Emails) →
+# ^@^ würde mitten in den Email-Adressen splitten und die Env-Var kaputt setzen.
 # Manueller Test-Lauf:
 gcloud run jobs execute rubicon-report-job --project=aixs-260106 --region=europe-west4 --wait
 ```
