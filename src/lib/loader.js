@@ -39,7 +39,10 @@ export function loadProject(rawYaml) {
   // --- workstreams / milestones ---
   const ids = new Set()
   for (const ws of doc?.workstreams || []) {
+    // ziel (06.08., Rohde-Feedback): übergeordnete Zielsetzung je Strom — MUSS
+    // durchgereicht werden, sonst zeigt der Tower nur Aufgaben ohne das Wozu.
     const w = { code: ws.code ?? null, name: ws.name ?? null, owner: ws.owner ?? null, support: ws.support ?? null,
+                ziel: ws.ziel ?? null,
                 programm: ws.programm ?? data.meta.default_programm ?? null, milestones: [] }
     if (!w.code) push(issues, 'FEHLER', 'workstream', 'workstream ohne code')
     if (w.programm && progIds.size && !progIds.has(w.programm))

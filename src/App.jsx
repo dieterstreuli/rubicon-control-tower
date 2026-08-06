@@ -642,6 +642,18 @@ export default function App() {
                 </select>
               </div>
             </div>
+            {/* Ziel des gefilterten Stroms (Rohde-Feedback 06.08.) — sonst sieht man in der
+                Standardansicht nur Aufgaben und nie das Wozu. */}
+            {wsFilter !== 'alle' && (() => {
+              const zws = data.workstreams.find(w => w.code === wsFilter)
+              return zws?.ziel ? (
+                <div className="mx-4 mb-2 rounded-lg px-3 py-2 text-[11.5px]"
+                  style={{ background: T.brass + '14', borderLeft: `3px solid ${T.brass}`, color: T.ink }}>
+                  <span style={{ fontFamily: T.mono, color: T.brass, fontSize: 10 }}>ZIEL {zws.code} </span>
+                  {zws.ziel}
+                </div>
+              ) : null
+            })()}
             <div className="overflow-x-auto">
               <table className="w-full text-[12px]">
                 <thead>
@@ -725,6 +737,15 @@ export default function App() {
                       </a>
                     </div>
                   </div>
+                  {/* Ziel-Ebene (Rohde-Feedback 06.08.): Ohne Ziel sind Milestones eine
+                      Aufgabenliste ohne Sinn. Steht bewusst ÜBER den Meilensteinen. */}
+                  {ws.ziel && (
+                    <div className="mt-3 rounded-lg px-3 py-2 text-[11.5px]"
+                      style={{ background: T.brass + '14', borderLeft: `3px solid ${T.brass}`, color: T.ink }}>
+                      <span style={{ fontFamily: T.mono, color: T.brass, fontSize: 10 }}>ZIEL </span>
+                      {ws.ziel}
+                    </div>
+                  )}
                   <div className="mt-3 space-y-2 max-h-72 overflow-auto pr-1">
                     {phases.map(ph => (
                       <div key={ph || 'ohne'}>

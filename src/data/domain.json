@@ -4,7 +4,7 @@
   "rollen_meta": {
     "CoS": { "titel": "CoS — Projektleitung", "token": "brass", "beschreibung": "Volle Steuerung: Fortschritt/Blocker erfassen, Inputs abhaken, Durchsetzungs-Queue (Reminder/Kalender/Eskalation)." },
     "Chairman": { "titel": "Chairman (DRS) — steuert & kontrolliert", "token": "blue", "beschreibung": "Nur-Lesen-Aufsicht über alle Ströme. Steuerung erfolgt über Cockpit + VR, nicht durch Editieren im Tool." },
-    "Owner": { "titel": "Owner", "token": "green", "beschreibung": "Editierbar sind nur die eigenen Meilensteine; die übrigen Ströme sind sichtbar (Nur-Lesen)." },
+    "Owner": { "titel": "Owner — Umsetzungs-Lead des eigenen Stroms", "token": "green", "beschreibung": "Mandat (DRS-Entscheid 06.08.2026): Das Ziel des Stroms setzen Chairman/ExBoD. Der Owner verantwortet die Umsetzung — zerlegt das Ziel in Aufträge, treibt sie mit den Teams, meldet Fortschritt und Blocker früh. Kein eigenes Zielsetzungsrecht, aber volle Verantwortung für das Erreichen. Terminverschiebungen gehören in den Tower, nicht ins Stillschweigen. Editierbar sind nur die eigenen Meilensteine; die übrigen Ströme sind sichtbar (Nur-Lesen)." },
     "Teilnehmer": { "titel": "Teilnehmer", "token": "grey", "beschreibung": "Nur-Lesen-Ansicht des gesamten Programms." }
   },
   "status": {
