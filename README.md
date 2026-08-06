@@ -141,21 +141,25 @@ Betriebsregeln (für alle Beteiligten):
 
 Der Tower läuft **unverändert lokal** (`npm run dev`) UND serverseitig — dasselbe Image, dieselbe
 Codebasis. Die Anpassung an die Umgebung ist **automatisch über Env-Variablen (kein Flag):** lokal
-(Env unset) = wie bisher (Chrome-PDF, User-OAuth, `public/`, git-Historie); serverseitig (DWD-Env am
-Job) = GCS-Volume + Google Drive via Service-Account-Impersonation. So lässt sich lokal **1:1
-weiterarbeiten**, bis alle Funktionen serverseitig migriert sind. Server-Infra im Detail:
-`DEPLOYMENT_GCP.md §9`.
+(Env unset) = wie bisher (Chrome-PDF, User-OAuth, `public/`, git-Historie); serverseitig = GCS-Volume
++ Google Drive via Service-Account-Impersonation. Zwei Env-Signale: der **Job** erkennt den
+Server-Modus an der **DWD-Env** (`RUBICON_WORKSPACE_SA` + `RUBICON_IMPERSONATE_SUBJECT`) für die
+Doc-Erzeugung; **Service/App** an **`RUBICON_DOCS_DIR`** (steuert u.a. die Report-Links im Tower). So
+lässt sich lokal **1:1 weiterarbeiten**, bis alle Funktionen serverseitig migriert sind. Server-Infra
+im Detail: `DEPLOYMENT_GCP.md §9` (Reports) + `§10` (Merge-Brücke).
 
-| Funktion | Lokal (Env unset) | Serverseitig (DWD-Env) | Status |
+| Funktion | Lokal (Env unset) | Serverseitig | Status |
 |---|---|---|---|
-| Report-Doc + PDF | Chrome-HTML-PDF + Doc in Dieters Drive | Google Doc im Shared Drive + `files.export` | ✅ Code migriert |
+| Report-Doc + PDF | Chrome-HTML-PDF + Doc in Dieters Drive | Google Doc + PDF-Datei im Shared Drive (`files.export`) | ✅ live |
 | Google-Auth | User-OAuth (`~/.config/google-mcp`) | keyless-DWD als `rubicon@axs.aero` | ✅ |
 | Dokument-Persistenz | `public/` | GCS-Volume `_generated/` + Serving-Precedence | ✅ |
-| Report-Trigger | launchd-Cron (Mac) | Cloud Scheduler → Cloud-Run-Job | ⏳ nach Push |
+| Report-Trigger | launchd-Cron (Mac) | Cloud Scheduler → Cloud-Run-Job (Mo 06:00) | ✅ live |
+| Report-Links im Tower | Dieters `doc_url` | `server_doc_url` (Shared Drive), modusabhängig; nur-lokale Alt-Reports ohne tote Links | ✅ live |
+| Struktur → Live-Daten | git / Re-Seed (überschreiben) | **Merge-Brücke**: Repo-Struktur + Volume-Live per Merge-by-Key, Backup, Konflikt-Meldung | ✅ Code (§10) |
 | Δ-Block (Wochen-Delta) | git-Vergleich `projekt.yaml` | GCS-Object-Version statt git | ⏳ Follow-up |
 | KI-Narrativ | lokale `claude`-CLI | AIXS-Plattform (konfigurierbares Modell/Prompt) | ⏳ Follow-up |
-| Protokoll/Traktanden/Entscheide-Export | Chrome + Drive | Doc-Export (analog Report) | ⏳ Follow-up |
-| AXS-Doc-Template (Header/Footer) | Template-Copy (lokal) | Template im Shared Drive + Config | ⏳ Follow-up |
+| Protokoll/Traktanden/Entscheide-Doc | Chrome-HTML-PDF | **Vorlagen-Engine** (Google-Doc-Template + Merge, kein Chrome) | ⏳ geplant |
+| AXS-Branding (Logo/Header/Footer) | im HTML/CSS je Generator | in der Google-Doc-Vorlage (WYSIWYG) | ⏳ geplant |
 
 **Bis zur 1:1-Parität** bleibt lokal die vollständige Umgebung; serverseitig wächst die Abdeckung
 inkrementell. Diese Tabelle wird je Ausbauschritt aktualisiert.

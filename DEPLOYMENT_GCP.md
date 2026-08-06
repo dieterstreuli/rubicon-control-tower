@@ -326,3 +326,59 @@ statt git), KI-Narrativ (via AIXS-Plattform), AXS-Template, die Generatoren prot
 **Gebrandeter HTML-Chrome-Renderer** (die heute lokal via MCP erzeugte gebrandete Report-Version) kann
 später serverseitig **optional per Feature-Flag** angeboten werden (Headless-Chrome ins Image); die
 PDF-Quelle im Code ist dafür pluggbar gehalten (Alternative zum aktuellen chromefreien Doc-Export-Weg).
+
+---
+
+## 10. Merge-Brücke — Struktur (Repo) → Live-Daten (Volume)
+
+**Problem:** Der Code-Deploy fasst das Volume nicht an (Deploy ≠ Daten) → Struktur-Änderungen (neue
+Meilensteine/Ströme/Briefings) erreichen den Live-Server nie. Das Volume aber einfach überschreiben
+zerstört den Live-Zustand (Protokolle, Entscheide, abgehakte Tasks, Fortschritt). Die Merge-Brücke
+zieht Struktur nach, **ohne** Live-Daten zu zerstören.
+
+**Struktur-Quelle im Container:** Das Volume mountet über `/app/src/data` und verdeckt die gebackene
+`src/data`. Darum legt der `Dockerfile` eine Kopie nach **`/app/_repo_seed`** (außerhalb des
+Mount-Punkts) = Repo-Struktur; das Volume `/app/src/data` = Live-SSOT.
+
+**Datei-Klassen** (`scripts/merge_bridge.py`):
+- **Stammdaten** (Repo überschreibt): `domain/schema/briefings/fuehrungsrhythmus/traktanden/kontakte/gemini_meetings.json`
+- **Transaktion** (Volume unberührt): `protokolle/protokolle_sensitiv/entscheide/reminder_log/report_comments/zielbild.json` **+ `reports_index.json`/`traktanden_docs.json`** (tragen job-geschriebene `server_doc_id`/`server_pdf_id` → Repo-Überschreiben würde die wipen)
+- **Misch** (Merge-by-Key, Schlüssel `id`): `projekt.yaml`, `tasks.json`
+
+**Feld-Vertrag** (aus `build_projekt_yaml.py:242-266` + `api-core.js` `mergeTasks`):
+- `projekt.yaml`/Milestones: Struktur (`name/depends_on/gate/critical/phase/nachlauf`) aus Repo;
+  Live (`progress/reported_slip_days/due/owner/progress_source/start`) aus Volume. Inputs:
+  `status`+`liefer_tasks` aus Volume. `meta.today`/`datenlieferungen_url` aus Volume erhalten.
+- `tasks.json`: Repo (`text/owner/due/ms_id/source/origin`); Volume (`nr/status/erledigt_am/erledigt_von/created_at`).
+  Volume-only Tasks (live erfasst) bleiben erhalten.
+- **Lösch-Politik = behalten + melden:** Milestone/Input im Volume mit Live-Daten, im Repo entfernt →
+  bleibt erhalten + wird als Konflikt gemeldet (nie stiller Verlust).
+
+**Job anlegen** (analog `rubicon-report-job`, gleicher SA/Volume/Image; Default = Dry-Run):
+```bash
+gcloud run jobs create rubicon-merge-job \
+  --project=aixs-260106 --region=europe-west4 \
+  --image=<PIPELINE-IMAGE>:latest \
+  --service-account=rubicon-runtime@aixs-260106.iam.gserviceaccount.com \
+  --add-volume=name=data,type=cloud-storage,bucket=aixs-rubicon-tower-data \
+  --add-volume-mount=volume=data,mount-path=/app/src/data \
+  --command=python3 --args=scripts/merge_bridge.py \
+  --task-timeout=900 --max-retries=0
+# Test (Dry-Run, schreibt nichts):
+gcloud run jobs execute rubicon-merge-job --project=aixs-260106 --region=europe-west4 --wait
+```
+Die Deploy-Pipeline hebt den Job automatisch aufs neue Image (§ „Cloud-Run-Jobs auf neues Image heben").
+
+**Trigger** (`.github/workflows/merge-data.yml`):
+- **A (auto):** nach erfolgreichem Deploy, dessen Head-Commit `[publish-data]` trägt → **Dry-Run**
+  (Vorschau in den Logs; wendet NIE automatisch an → Konflikte nie still angewandt).
+- **B (manuell):** `workflow_dispatch` mit `apply` — `false` = Dry-Run, `true` = **Backup + Anwenden**.
+  Der Workflow setzt den Job-Modus über `--args` (`--apply` nur im Apply-Fall).
+
+**Backup + Konflikte:** Bei `apply` sichert der Workflow zuerst das ganze Volume nach
+`gs://aixs-rubicon-tower-backup/merge-<ts>/` (rollback-fähig). Der Merge-Job gibt eine JSON-Zusammenfassung
++ Konfliktliste in die Logs; der Workflow-Step „Merge-Zusammenfassung" macht sie sichtbar.
+
+**IAM (beim Einrichten):** `rubicon-deployer` braucht auf `rubicon-report-job`/`rubicon-merge-job`
+`run.jobs.run`/`update` (act-as `rubicon-runtime`, schon vorhanden) **+ Storage-Zugriff** auf
+`aixs-rubicon-tower-data` (lesen) und `aixs-rubicon-tower-backup` (schreiben) für das Backup.

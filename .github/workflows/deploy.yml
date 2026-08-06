@@ -71,19 +71,22 @@ jobs:
             --add-volume-mount=volume=data,mount-path=/app/src/data \
             --set-env-vars="^@^RUBICON_OK_ORIGINS=https://rubicon.axs.aero,https://rubicon-tower-646221535662.europe-west4.run.app@RUBICON_PY=/usr/bin/python3@RUBICON_DOCS_DIR=/app/src/data/_generated"
 
-      # Der Cloud-Run-JOB (rubicon-report-job) pinnt seinen Image-Digest beim update — die
-      # Service-Deploy oben aktualisiert ihn NICHT. Ohne diesen Schritt laufen die geplanten
-      # Report-Laeufe (Scheduler Mo 06:00) auf altem Code. Conditional: ueberspringt sauber,
-      # falls (noch) kein Job existiert. Laeuft als rubicon-deployer (act-as rubicon-runtime).
-      - name: Report-Job auf neues Image heben
+      # Die Cloud-Run-JOBS (report + merge) pinnen ihren Image-Digest beim update — die
+      # Service-Deploy oben aktualisiert sie NICHT. Ohne diesen Schritt laufen die geplanten
+      # Report-Laeufe (Scheduler Mo 06:00) UND die Merge-Bruecke auf altem Code. Conditional:
+      # ueberspringt sauber je Job, falls (noch) keiner existiert. Laeuft als rubicon-deployer
+      # (act-as rubicon-runtime).
+      - name: Cloud-Run-Jobs auf neues Image heben
         run: |
-          if gcloud run jobs describe rubicon-report-job --project="${PROJECT_ID}" --region="${REGION}" >/dev/null 2>&1; then
-            gcloud run jobs update rubicon-report-job \
-              --project="${PROJECT_ID}" --region="${REGION}" \
-              --image="${IMAGE}:${GITHUB_SHA}"
-          else
-            echo "rubicon-report-job nicht gefunden — Job-Image-Update uebersprungen"
-          fi
+          for JOB in rubicon-report-job rubicon-merge-job; do
+            if gcloud run jobs describe "$JOB" --project="${PROJECT_ID}" --region="${REGION}" >/dev/null 2>&1; then
+              gcloud run jobs update "$JOB" \
+                --project="${PROJECT_ID}" --region="${REGION}" \
+                --image="${IMAGE}:${GITHUB_SHA}"
+            else
+              echo "$JOB nicht gefunden — Job-Image-Update uebersprungen"
+            fi
+          done
 
       - name: Deployte Revision + URL
         run: |

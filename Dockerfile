@@ -25,6 +25,12 @@ RUN npm ci --omit=dev || npm install --omit=dev
 # Build-Abhängigkeiten separat, damit dist/ erzeugt werden kann
 COPY . .
 
+# Struktur-Snapshot fuer die Merge-Bruecke (DEPLOYMENT_GCP.md §10): das GCS-Volume
+# mountet zur Laufzeit ueber /app/src/data (= Live-SSOT) und verdeckt die gebackene
+# src/data. Darum eine Kopie AUSSERHALB des Mount-Punkts ablegen — der Merge-Job liest
+# die Repo-Struktur aus /app/_repo_seed, die Live-Daten aus dem Volume.
+RUN cp -a src/data _repo_seed
+
 # Build-Stamp: CI reicht kurzen SHA + Commit-ISO via --build-arg durch; lokal Fallback (vite nutzt Build-Zeit)
 ARG RUBICON_BUILD_SHA=dev
 ARG RUBICON_BUILD_ISO=

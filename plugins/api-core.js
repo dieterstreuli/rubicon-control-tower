@@ -220,6 +220,7 @@ export function createApi(rootDir) {
         due: t.due || null,                                  // nie geraten — null erlaubt
         status: prev ? prev.status : (t.status === 'erledigt' ? 'erledigt' : 'offen'),
         erledigt_am: prev ? prev.erledigt_am : null,
+        erledigt_von: prev ? prev.erledigt_von : null,        // Live-Feld (gesetzt in /api/task/status) — beim Upsert NIE verlieren
         source: t.source || 'zerlegung',
         origin: t.origin || null,
         created_at: prev ? prev.created_at : (datum || new Date().toISOString().slice(0, 10)),

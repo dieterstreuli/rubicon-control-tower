@@ -1,0 +1,97 @@
+name: RUBICON Merge-Bruecke (Struktur -> Volume)
+
+# Zieht Struktur-Aenderungen (Repo src/data) in die Live-Daten (GCS-Volume) nach, OHNE
+# Live-Zustand zu zerstoeren: Stammdaten aus Repo, Transaktionsdaten unberuehrt, Misch
+# (projekt.yaml/tasks.json) per Merge-by-Key. Details: DEPLOYMENT_GCP.md §10.
+#
+# Zwei Ausloeser:
+#  A) automatisch NACH einem erfolgreichen Deploy, dessen Head-Commit den Marker
+#     [publish-data] traegt -> laeuft als DRY-RUN (Vorschau in den Logs; wendet NIE
+#     automatisch an -> Konflikte werden nie still angewandt).
+#  B) manuell (workflow_dispatch): apply=false = Dry-Run, apply=true = Backup + Anwenden.
+#
+# Der eigentliche Merge laeuft im Cloud-Run-Job rubicon-merge-job (Zugriff aufs Volume);
+# dieser Workflow steuert Modus, Backup und fuehrt den Job aus.
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Anwenden (schreibt ins Volume, mit Backup). Aus = nur Dry-Run/Vorschau."
+        type: boolean
+        default: false
+  workflow_run:
+    workflows: ["Deploy RUBICON to Cloud Run"]
+    types: [completed]
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  PROJECT_ID: aixs-260106
+  REGION: europe-west4
+  BUCKET: aixs-rubicon-tower-data
+  BACKUP_BUCKET: aixs-rubicon-tower-backup
+  JOB: rubicon-merge-job
+  WIF_PROVIDER: projects/646221535662/locations/global/workloadIdentityPools/github-actions/providers/rubicon-dst
+  DEPLOY_SA: rubicon-deployer@aixs-260106.iam.gserviceaccount.com
+
+jobs:
+  merge:
+    # Auto-Lauf nur bei erfolgreichem Deploy MIT [publish-data] im Head-Commit; manueller
+    # Lauf immer.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       contains(github.event.workflow_run.head_commit.message, '[publish-data]'))
+    runs-on: ubuntu-latest
+    steps:
+      - id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.apply }}" = "true" ]; then
+            echo "apply=1" >> "$GITHUB_OUTPUT"
+            echo "MODE=APPLY (Backup + schreiben)"
+          else
+            echo "apply=0" >> "$GITHUB_OUTPUT"
+            echo "MODE=DRY-RUN (Vorschau, nichts geschrieben)"
+          fi
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.WIF_PROVIDER }}
+          service_account: ${{ env.DEPLOY_SA }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      # Backup NUR bei apply: volles Volume nach gs://…-backup/merge-<ts>/ kopieren.
+      - name: Backup Volume (nur bei apply)
+        if: steps.mode.outputs.apply == '1'
+        run: |
+          TS=$(date -u +%Y%m%dT%H%M%SZ)
+          echo "Backup -> gs://${BACKUP_BUCKET}/merge-${TS}/"
+          gcloud storage cp -r "gs://${BUCKET}/*" "gs://${BACKUP_BUCKET}/merge-${TS}/"
+
+      # Modus in die Job-Args schreiben (--apply nur im Apply-Fall), dann Job ausfuehren.
+      - name: Merge-Job ausfuehren
+        run: |
+          if [ "${{ steps.mode.outputs.apply }}" = "1" ]; then
+            ARGS="scripts/merge_bridge.py,--apply"
+          else
+            ARGS="scripts/merge_bridge.py"
+          fi
+          gcloud run jobs update "${JOB}" --project="${PROJECT_ID}" --region="${REGION}" \
+            --command=python3 --args="${ARGS}"
+          gcloud run jobs execute "${JOB}" --project="${PROJECT_ID}" --region="${REGION}" --wait
+
+      # Merge-Zusammenfassung + Konflikte aus den Job-Logs sichtbar machen.
+      - name: Merge-Zusammenfassung
+        if: always()
+        run: |
+          echo "== Merge-Bruecke Logzeilen (rubicon.merge / Zusammenfassung / Konflikte) =="
+          gcloud logging read \
+            'resource.type="cloud_run_job" AND resource.labels.job_name="rubicon-merge-job"' \
+            --project="${PROJECT_ID}" --freshness=10m --limit=100 \
+            --format="value(textPayload)" --order=asc \
+            | grep -iE "merge|conflict|konflikt|stammdaten|transaktion|misch|\{" || echo "(keine Merge-Logzeilen gefunden)"
