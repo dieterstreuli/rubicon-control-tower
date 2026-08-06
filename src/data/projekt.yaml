@@ -39,6 +39,7 @@ workstreams:
     name: Accountability & Target Operating Model (TOM)
     owner: Andreas Fritthum
     support: Charisius, Rohde, Pajor, DRS (Design-/Governance-Rahmen)
+    ziel: 'Klare Verantwortung statt Doppelstrukturen: ein P&L-Owner je Einheit, GL auf 6 bereinigt, Organigramm v2 in Kraft — und EINE Finance-Linie statt zwei (AT/DE).'
     milestones:
       - id: WS1-01
         name: Systemlandkarte + Zielsystem-Entscheid je Ops-Bereich (konsolidieren vs. KI-Ersatz)
@@ -54,7 +55,7 @@ workstreams:
         nachlauf: false
         progress_source: tasks
       - id: WS1-02
-        name: Baseline-Datenpaket WS1 inkl. Finance-Kompetenz-Assessment (VIE↔HAM kartiert)
+        name: 'Bestandsaufnahme Finance-Organisation: Wer erledigt heute welche Finance-Aufgabe an welchem Standort (Wien und Hamburg) und mit welcher Qualifikation — die Ist-Grundlage für die Ziel-Organisation (Soll-Zustand: WS1-09)'
         owner: Stephanie Rohde
         start: '2026-09-30'
         due: '2026-10-15'
@@ -147,7 +148,7 @@ workstreams:
         nachlauf: false
         progress_source: tasks
       - id: WS1-09
-        name: Eine Finance-Linie operativ (cross-border AT↔DE; §613a-Widerspruchsfrist abgelaufen)
+        name: 'Ziel-Zustand erreicht: Die Finance-Organisation arbeitet als EINE Linie über Österreich und Deutschland hinweg; die Übergänge der Mitarbeitenden sind rechtlich vollzogen (Widerspruchsfristen abgelaufen). Baut auf der Bestandsaufnahme WS1-02 auf'
         owner: Stephanie Rohde
         start: '2026-10-30'
         due: '2027-01-31'
@@ -229,6 +230,7 @@ workstreams:
     name: Führungsprozesse & Management Operating System (MOS)
     owner: Andreas Fritthum
     support: CEO-Office (Tracker-Betrieb), Rohde, Matthei, Charisius, Petric; Umsetzungsmotor CGO
+    ziel: 'Führung nach verbindlichem Rhythmus: jede Sitzung mit Traktanden und Protokoll, jeder Entscheid im Register, Umsetzungsquote der Zusagen von heute rund 50% auf über 90%.'
     milestones:
       - id: WS2-01
         name: GL bereinigt = 6 publiziert; Ebenen-Trennung GL / Vice Chairman / Chairman («5 vs. 7» aufgelöst)
@@ -459,9 +461,11 @@ workstreams:
     name: Overhead, Kosten & Kostenführerschaft
     owner: Stephanie Rohde
     support: Pajor, AFR (Finanz-Challenge + AAS-Technics-Turnaround), Wüst, Charisius
+    ziel: 'Elysium liefert die Basis: OPEX von EUR 23.83 Mio (FY26) auf EUR 19.78 Mio (FY27), also minus EUR 4.06 Mio. Darauf kommt ein Zusatzhebel: Zentralkosten minus 30% und externe Kosten minus 20% gegenüber der Baseline — gemessen an der CFO-testierten Run-Rate mit Zwischen-Checkpoint. (DRS-Entscheid 06.08.2026: Elysium + Zusatzhebel, nicht Radikalkur.)'
     milestones:
       - id: WS3-01
-        name: 'Sofortpaket cash-neutral: Interims-Zentralkostendeckel, Berater-Freeze >EUR 25k, P&L-Interimsliste 100%'
+        name: 'Sofortmassnahmen ohne Zahlungswirkung sind in Kraft: eine Obergrenze für Zentralkosten gilt, neue Beraterverträge über EUR 25''000 brauchen Freigabe, und für jede Einheit ist benannt, wer das Ergebnis verantwortet'
+
         owner: Stephanie Rohde
         start: '2026-09-11'
         due: '2026-09-05'
@@ -500,7 +504,8 @@ workstreams:
         nachlauf: false
         progress_source: tasks
       - id: WS3-03
-        name: 'Baseline-Datenpaket komplett + Diagnose-Review GL: Zielwerte validiert (−30%/−5%/−50%/−20%)'
+        name: 'Kostenbasis vollständig erhoben und im Diagnose-Review mit der GL bestätigt — inklusive der Zielwerte je Kostenart (Zentralkosten minus 30%, externe Kosten minus 20%; die Zuordnung der beiden weiteren Werte minus 5% und minus 50% ist im Review zu klären)'
+
         owner: Stephanie Rohde
         start: '2026-09-12'
         due: '2026-10-15'
@@ -514,7 +519,7 @@ workstreams:
         nachlauf: false
         progress_source: tasks
       - id: WS3-04
-        name: Overhead-Baseline-Report final (echte Holding-Kostenbasis ersetzt Recharge-Proxy)
+        name: 'Der Overhead-Report liegt final vor: Er weist die echten Holding-Kosten aus statt der bisherigen Näherung über Konzernumlagen'
         owner: Stephanie Rohde
         start: '2026-10-20'
         due: '2026-10-31'
@@ -527,7 +532,8 @@ workstreams:
         nachlauf: false
         progress_source: tasks
       - id: WS3-05
-        name: 'Finanzierungs-Closing (G6): cash-wirksame Schritte ab jetzt zulässig; BER-Disclosure in Closing-Doku'
+        name: 'Gate: Mit dem Finanzierungs-Closing sind Massnahmen mit Zahlungswirkung freigegeben (bis dahin nur zahlungsneutrale Schritte). Die BER-Situation ist in der Closing-Dokumentation offengelegt'
+
         owner: Stephanie Rohde
         start: '2026-08-14'
         due: '2026-10-31'
@@ -567,10 +573,10 @@ workstreams:
         nachlauf: false
         progress_source: tasks
       - id: WS3-08
-        name: Verlustbringer-Beschlussvorlagen AAS Technics + BER beschlussreif «drehen vs. eliminieren»; MUC-Fahrplan
+        name: 'Beschlussvorlagen für AAS Technics und BER liegen entscheidungsreif vor — fortführen und sanieren oder aufgeben, mit Zahlen und Szenarien (VR-Entscheid 26.08., Pre-Read 18.08.)'
         owner: Stephanie Rohde
         start: '2026-11-13'
-        due: '2026-11-30'
+        due: '2026-08-18'
         date_assumed: true
         phase: Phase 1
         gate: null
@@ -735,11 +741,51 @@ workstreams:
         depends_on:
           - WS3-04
         nachlauf: false
+      - id: WS3-22
+        name: 'Fahrplan MUC beschlossen: Sanierung oder Rückzug — inklusive Absicherung des Standorts (abgetrennt von WS3-08, Frist gemäss Rohde 06.08.)'
+        owner: Stephanie Rohde
+        start: '2026-09-01'
+        due: '2026-10-31'
+        date_assumed: true
+        phase: Phase 1
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+        support: Cüneyt Gökcöl (Betrieb)
+      - id: WS3-23
+        name: 'Zielbild Personalkosten je Stunde steht: Tarif-Hebel (Bodenverkehrsdienste-Tarif gegenüber Zeitarbeitstarif, rund EUR 3-4 je Stunde), Beitrag des eigenen Personalverleihers und Reduktion des Krankenstands sind quantifiziert und zu einem Massnahmenpfad verbunden (strategisches Ziel Rohde 06.08.)'
+        owner: Stephanie Rohde
+        start: '2026-09-01'
+        due: '2026-10-31'
+        date_assumed: true
+        phase: Phase 1
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+        support: DRS (Programm Personalverleiher) · Amélie Charisius (Tarif/Arbeitsrecht)
+      - id: WS3-24
+        name: 'Wirtschaftliche Nachhaltigkeit DUS geklärt: Ergebnisbeitrag je Kunde, Konzentrationsrisiko und die Frage der Zusammenführung von DE und Ramp sind analysiert und entschieden (strategisches Ziel Rohde 06.08.)'
+        owner: Stephanie Rohde
+        start: '2026-09-01'
+        due: '2026-11-30'
+        date_assumed: true
+        phase: Phase 2
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+        support: Andreas Fritthum (Struktur) · Michael Haeffner (Kunden)
     programm: transformation
   - code: OE
     name: Operational Excellence / Stabilisierung
     owner: Cüneyt Gökcöl
     support: Matthei (Delivery/Ops-Lead), Pajor, Charisius, Petric
+    ziel: 'Ein stabiler, messbarer Betrieb: Ops-Scorecard je Station monatlich befüllt, Qualitäts- und Pünktlichkeitskennzahlen im Reporting — und die Standorte sind gesichert.'
     milestones:
       - id: OE-01
         name: 'Datenzugangs-Gate G1: EPG-GHS + Looker/FTE erteilt oder Eskalation Stufe 3 (Interim AHM-730-Rohdaten)'
@@ -885,8 +931,22 @@ workstreams:
         depends_on: []
         nachlauf: true
         progress_source: tasks
+      - id: OE-12
+        name: 'Sicherungsplan Standort FRA steht: Risiken für Kunden, Lizenz und Kostenbasis sind benannt und Gegenmassnahmen beschlossen (strategisches Ziel Rohde 06.08.)'
+        owner: Cüneyt Gökcöl
+        start: '2026-09-01'
+        due: '2026-10-31'
+        date_assumed: true
+        phase: Phase 1
+        gate: null
+        critical: false
+        progress: 0
+        depends_on: []
+        nachlauf: false
+        support: Stephanie Rohde (Zahlen) · Amélie Charisius (Lizenz/Recht)
     programm: transformation
   - code: WS4
+    ziel: 'Den Bestand sichern und verteuern: EUR 283 Mio Vertragsvolumen über 369 Verträge halten, Renewals rechtzeitig verhandeln (grösster Einzel-Cliff Eurowings DUS Ramp, EUR 26.26 Mio) und Indexklauseln zum Standard machen.'
     name: Commercial & Kundennähe (inkl. Commercial-Masterplan 1:1)
     owner: Michael Haeffner
     support: >-
@@ -1753,6 +1813,7 @@ workstreams:
     name: Kultur & Execution-Disziplin
     owner: Amélie Charisius
     support: CGO (Vorbild/Rollenmodell GL-Ebene) · Wüst (Richtlinien) · DRS (Steuerung/Kontrolle, Vorbild Gremienebene)
+    ziel: 'Execution wird verbindlich: Zusagen werden gehalten und nachgehalten; Mitbestimmung wird proaktiv gestaltet statt reaktiv abgewehrt.'
     milestones:
       - id: WS5-01
         name: 'Mitbestimmungs-Fundament: BR-Landkarte DE/AT/ES beauftragt + ES-Assessment (Zaforesa) gestartet'
@@ -1912,6 +1973,7 @@ workstreams:
         progress_source: tasks
     programm: transformation
   - code: WS6
+    ziel: 'KI liefert einen messbaren Ergebnisbeitrag: Run-Rate mindestens EUR 1''000k CFO-testiert bis Q4/26, mindestens EUR 3''500k bis Q2/27, bestätigter Pfad auf EUR 5''000k bis Q4/27.'
     name: AI-Enablement (AI@AXS ≡ Elysium 3.0)
     owner: Tine Petric
     support: >-
@@ -2104,6 +2166,7 @@ workstreams:
     name: VIE-Wegfall & Restrukturierung (Kompensation & Overhead-Abbau)
     owner: Stephanie Rohde
     support: Gökcöl (Umsetzung), Matthei (VIE-Abwicklung/Ops), Pajor (Zahlen/Elysium), DRS (Governance)
+    ziel: 'Zwei getrennte Ziele — Z1: den VIE-Ergebnisbeitrag von rund CHF 4.6 Mio EBITDA kompensieren. Z2: die von VIE getragenen Gruppen-Overheads vollständig eliminieren statt umverteilen (VIE-Residual EUR 1''058''251). Hinweis Rohde 06.08.: das Gruppen-Zielbild über Z1/Z2 hinaus ist noch zu definieren.'
     programm: transformation
     milestones:
       - id: WS7-01
@@ -2296,6 +2359,7 @@ workstreams:
     name: Refinanzierung Lieferanten-Ausstände (EUR 15 Mio, Closing 31.10.2026)
     owner: Dieter Streuli
     support: Stephanie Rohde, Andreas Fritthum; Advisor Clearwater (Michael Märki)
+    ziel: 'EUR 15 Mio committed bis zum Closing am 31.10.2026 — ohne diese Linie ist die Winter-Liquidität 2026/27 nicht gesichert.'
     programm: finanzierung-2026
     milestones:
       - id: FIN-01
@@ -2364,7 +2428,7 @@ workstreams:
         name: Fallback-Plan Closing-Verzug steht — Winter-Liquidität 2026/27 auch ohne Closing per 31.10. gesichert
         owner: Stephanie Rohde
         start: '2026-08-14'
-        due: '2026-09-15'
+        due: '2026-09-30'
         date_assumed: true
         phase: Ansprache
         gate: null
@@ -2417,6 +2481,7 @@ workstreams:
     name: AXS Personalverleiher DE — Insourcing Leiharbeit (Go-Live Sommer-Peak 2027)
     owner: Dieter Streuli
     support: Amélie Charisius (Legal/ANÜ), Stephanie Rohde (Zahlen), Cüneyt Gökcöl (Ops)
+    ziel: 'Ab der Sommer-Peak 2027 das heute extern zugekaufte Leiharbeitsvolumen (rund EUR 5 Mio pro Jahr, etwa 150''000 Stunden) selbst sourcen: Kapazität sichern und die Agentur-Marge zurückholen.'
     programm: personalverleiher
     milestones:
       - id: PV-01
@@ -2542,6 +2607,7 @@ workstreams:
     name: Zielbild-Schliessung — ungedeckte SOLL-Kriterien (AXS-Datengehirn)
     owner: Dieter Streuli
     support: Stephanie Rohde, Cüneyt Gökcöl, Amélie Charisius (Domänen-Owner); CoS (Register/Evidenz)
+    ziel: 'Alle 19 heute ungedeckten SOLL-Kriterien erreichen mindestens den Reifegrad «vorhanden» — der AXS-Zielbild-Erfüllungsgrad steigt damit von 38% auf rund 55%.'
     programm: transformation
     milestones:
       - id: ZB-01

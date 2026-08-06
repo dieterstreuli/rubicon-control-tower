@@ -98,6 +98,21 @@ Parität 16/16, vendored Module standalone). Tower-Kern braucht KEIN Google — 
 GDoc-/Drive-Exporte + Gemini-Import (Creds ersetzen, s. Runbook §7). Nach jeder
 substanziellen Änderung: `git add -A && git commit` (Repo-Identität d.streuli@axs.aero).
 
+## ⚠️ Betriebsmodell seit 05.08.2026 (Gordon/Didit — VERBINDLICH)
+
+**Die Live-Umgebung ist `https://rubicon.axs.aero`, nicht mehr der Mac.**
+
+| Regel | Konsequenz für die Arbeit hier |
+|---|---|
+| **Kanonisches Repo = `rubicon-dst` (main).** Push auf main → **Auto-Deploy** live. `rubicon-control-tower` ist archiviert. | Vor jeder Arbeit `git fetch dst && git merge --ff-only dst/main`. Grössere Änderungen über Feature-Branch + kurzen PR (verhindert Überschreiben). |
+| **Live-Daten liegen im GCS-Volume** (`gs://aixs-rubicon-tower-data`, europe-west4, gemountet auf `/app/src/data`). Der Mount **überschattet** die ins Image gebackenen Dateien. | Ein Code-Deploy fasst Live-Daten NICHT an. `src/data/` im Repo ist **nur Baseline** — Änderungen dort werden NICHT automatisch live. |
+| **Kein Re-Seed bei normalen Deploys** (`gcloud storage rsync` nur einmalig/bewusst). | Repo-`src/data` niemals als «so sieht die Produktion aus» lesen. Strukturänderungen (neue MS/Ströme/Briefings/Stores) brauchen einen **bewussten Weg live** — offener Punkt mit Gordon. |
+| **Lokal = nur Entwicklung** (`npm run dev`). Keine parallele «Produktion» auf dem Mac. | Datenpflege, die live wirken soll, gehört in die Live-Instanz — nicht in lokale Dateien. |
+| **Keine Credentials/Personendaten ins Git.** | Personendaten (kontakte.json) werden entkoppelt; Sensitiv-Store bleibt lokal. |
+| **Versionsprüfung:** Footer zeigt Stand + Zeitstempel (Hover = Build-SHA). | So prüfen, ob ein Push wirklich live ist. |
+| **Rollen:** DRS = inhaltlich-fachliche Führung · Didit/IT = Umsetzung, Infrastruktur, gesetzliche/interne Prüfung. | Infrastruktur-Themen (Volume, CMEK, SA, Pipeline) laufen über Gordon, nicht hier. |
+| `RUBICON_SKIP_LINKCHECK=1` in der Pipeline (Drive-Link-Check ohne Service-Account). | Lokal ebenso setzen, wenn keine Google-Credentials aktiv sind. |
+
 ## Code-Struktur (Refactoring-Programm 01.08.2026 — Q1-Q6, R1-R4)
 
 **Absicherung zuerst:** `npm test` = `scripts/test_api_smoke.mjs` (33 Prüfungen über alle 15 Endpoints: Guards 415/403, Rollen-Gates, Pflichtfelder, 404/409, read-only, Sensitiv-Sperre). **Mutationsfrei** — schreibt auch dann nichts, wenn ein Gate bricht (Fortschritt wird als No-Op-Wert gesendet). `npm run test:parity` = Statuslogik JS↔Python. `npm run validate` = Daten- + Schema-Gate.
