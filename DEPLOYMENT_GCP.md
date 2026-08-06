@@ -370,10 +370,14 @@ gcloud run jobs execute rubicon-merge-job --project=aixs-260106 --region=europe-
 Die Deploy-Pipeline hebt den Job automatisch aufs neue Image (§ „Cloud-Run-Jobs auf neues Image heben").
 
 **Trigger** (`.github/workflows/merge-data.yml`):
-- **A (auto):** nach erfolgreichem Deploy, dessen Head-Commit `[publish-data]` trägt → **Dry-Run**
-  (Vorschau in den Logs; wendet NIE automatisch an → Konflikte nie still angewandt).
+- **A (auto):** nach erfolgreichem Deploy, dessen **Commit-Subject (ERSTE Zeile)** `[publish-data]`
+  trägt → **Dry-Run** (Vorschau in den Logs; wendet NIE automatisch an → Konflikte nie still
+  angewandt). Bewusst nur die erste Zeile: eine Prosa-Erwähnung von `[publish-data]` im Commit-
+  **Body** (z.B. Feature-Beschreibung) triggert NICHT — ein Gate-Step im Workflow prüft die
+  Subject-Zeile, nicht die ganze Message.
 - **B (manuell):** `workflow_dispatch` mit `apply` — `false` = Dry-Run, `true` = **Backup + Anwenden**.
-  Der Workflow setzt den Job-Modus über `--args` (`--apply` nur im Apply-Fall).
+  Der Workflow setzt den Job-Modus über `--args` (`--apply` nur im Apply-Fall). Fehlt der Job, wird
+  sauber übersprungen (Guard).
 
 **Backup + Konflikte:** Bei `apply` sichert der Workflow zuerst das ganze Volume nach
 `gs://aixs-rubicon-tower-backup/merge-<ts>/` (rollback-fähig). Der Merge-Job gibt eine JSON-Zusammenfassung
@@ -382,3 +386,9 @@ Die Deploy-Pipeline hebt den Job automatisch aufs neue Image (§ „Cloud-Run-Jo
 **IAM (beim Einrichten):** `rubicon-deployer` braucht auf `rubicon-report-job`/`rubicon-merge-job`
 `run.jobs.run`/`update` (act-as `rubicon-runtime`, schon vorhanden) **+ Storage-Zugriff** auf
 `aixs-rubicon-tower-data` (lesen) und `aixs-rubicon-tower-backup` (schreiben) für das Backup.
+
+**Status (06.08. erledigt):** `rubicon-merge-job` **angelegt** (Image `2d8db5d`, SA `rubicon-runtime`,
+Volume, `merge_bridge.py`, Default Dry-Run); `rubicon-deployer` Storage-Grants gesetzt
+(`objectViewer` auf data, `objectAdmin` auf backup). **Dry-Run E2E verifiziert** (Exec `v4m9d`):
+Stammdaten 7 / Transaktion 8 unberührt / projekt.yaml **0 Konflikte** / tasks.json 836 (0 volume-only),
+schreibt nichts. Die Deploy-Pipeline hebt den Job künftig automatisch aufs neue Image.

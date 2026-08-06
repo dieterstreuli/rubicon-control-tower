@@ -5,9 +5,10 @@ name: RUBICON Merge-Bruecke (Struktur -> Volume)
 # (projekt.yaml/tasks.json) per Merge-by-Key. Details: DEPLOYMENT_GCP.md §10.
 #
 # Zwei Ausloeser:
-#  A) automatisch NACH einem erfolgreichen Deploy, dessen Head-Commit den Marker
-#     [publish-data] traegt -> laeuft als DRY-RUN (Vorschau in den Logs; wendet NIE
-#     automatisch an -> Konflikte werden nie still angewandt).
+#  A) automatisch NACH einem erfolgreichen Deploy, dessen Commit-SUBJECT (erste Zeile!)
+#     den Marker [publish-data] traegt -> laeuft als DRY-RUN (Vorschau in den Logs; wendet
+#     NIE automatisch an). Bewusst nur die erste Zeile: eine Prosa-Erwaehnung im Body soll
+#     NICHT triggern.
 #  B) manuell (workflow_dispatch): apply=false = Dry-Run, apply=true = Backup + Anwenden.
 #
 # Der eigentliche Merge laeuft im Cloud-Run-Job rubicon-merge-job (Zugriff aufs Volume);
@@ -39,44 +40,66 @@ env:
 
 jobs:
   merge:
-    # Auto-Lauf nur bei erfolgreichem Deploy MIT [publish-data] im Head-Commit; manueller
-    # Lauf immer.
+    # Manuell IMMER; Auto nur bei erfolgreichem Deploy (der eigentliche Marker-Check laeuft
+    # im Gate-Step unten, weil eine Prasenz-Pruefung auf die erste Zeile im if-Ausdruck nicht
+    # moeglich ist).
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.conclusion == 'success' &&
-       contains(github.event.workflow_run.head_commit.message, '[publish-data]'))
+      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
-      - id: mode
+      # Gate: entscheidet proceed (laeuft der Merge ueberhaupt?) + apply (schreiben?).
+      - id: gate
+        env:
+          HEAD_MSG: ${{ github.event.workflow_run.head_commit.message }}
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.apply }}" = "true" ]; then
-            echo "apply=1" >> "$GITHUB_OUTPUT"
-            echo "MODE=APPLY (Backup + schreiben)"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "proceed=1" >> "$GITHUB_OUTPUT"
+            if [ "${{ inputs.apply }}" = "true" ]; then
+              echo "apply=1" >> "$GITHUB_OUTPUT"; echo "MODE=APPLY (Backup + schreiben)"
+            else
+              echo "apply=0" >> "$GITHUB_OUTPUT"; echo "MODE=DRY-RUN (Vorschau)"
+            fi
           else
-            echo "apply=0" >> "$GITHUB_OUTPUT"
-            echo "MODE=DRY-RUN (Vorschau, nichts geschrieben)"
+            # Nur die ERSTE Zeile (Commit-Subject) auf den Marker pruefen.
+            SUBJECT=$(printf '%s\n' "$HEAD_MSG" | head -1)
+            if printf '%s' "$SUBJECT" | grep -qF '[publish-data]'; then
+              echo "proceed=1" >> "$GITHUB_OUTPUT"; echo "apply=0" >> "$GITHUB_OUTPUT"
+              echo "Auto-Lauf ([publish-data] im Subject) — DRY-RUN."
+            else
+              echo "proceed=0" >> "$GITHUB_OUTPUT"; echo "apply=0" >> "$GITHUB_OUTPUT"
+              echo "Kein [publish-data] im Commit-Subject — kein Merge (no-op)."
+            fi
           fi
 
       - id: auth
+        if: steps.gate.outputs.proceed == '1'
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ env.WIF_PROVIDER }}
           service_account: ${{ env.DEPLOY_SA }}
 
-      - uses: google-github-actions/setup-gcloud@v2
+      - if: steps.gate.outputs.proceed == '1'
+        uses: google-github-actions/setup-gcloud@v2
 
       # Backup NUR bei apply: volles Volume nach gs://…-backup/merge-<ts>/ kopieren.
       - name: Backup Volume (nur bei apply)
-        if: steps.mode.outputs.apply == '1'
+        if: steps.gate.outputs.proceed == '1' && steps.gate.outputs.apply == '1'
         run: |
           TS=$(date -u +%Y%m%dT%H%M%SZ)
           echo "Backup -> gs://${BACKUP_BUCKET}/merge-${TS}/"
           gcloud storage cp -r "gs://${BUCKET}/*" "gs://${BACKUP_BUCKET}/merge-${TS}/"
 
       # Modus in die Job-Args schreiben (--apply nur im Apply-Fall), dann Job ausfuehren.
+      # Guard: ueberspringt sauber, falls der Job (noch) nicht existiert.
       - name: Merge-Job ausfuehren
+        if: steps.gate.outputs.proceed == '1'
         run: |
-          if [ "${{ steps.mode.outputs.apply }}" = "1" ]; then
+          if ! gcloud run jobs describe "${JOB}" --project="${PROJECT_ID}" --region="${REGION}" >/dev/null 2>&1; then
+            echo "${JOB} nicht gefunden — uebersprungen (erst anlegen, s. DEPLOYMENT_GCP §10)"
+            exit 0
+          fi
+          if [ "${{ steps.gate.outputs.apply }}" = "1" ]; then
             ARGS="scripts/merge_bridge.py,--apply"
           else
             ARGS="scripts/merge_bridge.py"
@@ -87,9 +110,9 @@ jobs:
 
       # Merge-Zusammenfassung + Konflikte aus den Job-Logs sichtbar machen.
       - name: Merge-Zusammenfassung
-        if: always()
+        if: always() && steps.gate.outputs.proceed == '1'
         run: |
-          echo "== Merge-Bruecke Logzeilen (rubicon.merge / Zusammenfassung / Konflikte) =="
+          echo "== Merge-Bruecke Logzeilen (Zusammenfassung / Konflikte) =="
           gcloud logging read \
             'resource.type="cloud_run_job" AND resource.labels.job_name="rubicon-merge-job"' \
             --project="${PROJECT_ID}" --freshness=10m --limit=100 \
