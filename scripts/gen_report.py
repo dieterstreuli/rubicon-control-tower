@@ -35,6 +35,20 @@ def _reports_folder():
     return os.environ.get("RUBICON_DRIVE_REPORTS_FOLDER", PARENT)
 
 
+def _merge_report_record(prev, base, doc_id, server):
+    """Merge-sicheren Report-Datensatz bilden: bestehende Felder erhalten (v.a. die
+    doc-Felder der ANDEREN Umgebung), nur die Felder DIESER Umgebung + die geteilten
+    (base) aktualisieren. Server schreibt server_doc_id/server_doc_url, lokal
+    doc_id/doc_url — so ueberschreiben sich die Umgebungen im selben Index nie."""
+    rec = dict(prev) if prev else {}
+    rec.update(base)
+    doc_key = 'server_doc_id' if server else 'doc_id'
+    url_key = 'server_doc_url' if server else 'doc_url'
+    rec[doc_key] = doc_id
+    rec[url_key] = f'https://docs.google.com/document/d/{doc_id}/edit' if doc_id else None
+    return rec
+
+
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, __file__.rsplit('/', 1)[0] + '/_tools')   # vendored Fallback (Portabilität, s. MIGRATION.md)
 sys.path.insert(0, '/Users/dieterstreuli/Chief/Tools')  # Original gewinnt auf dem DRS-Mac
@@ -241,10 +255,15 @@ def generate(level, period, ki=False):
     md = build_md(title, label, prog_ampel, level, doc, meta, now, inper, start, end, kom)
     idx = json.loads((DATA / 'reports_index.json').read_text())
     prev = next((r for r in idx['reports'] if r['id'] == slug), None)
-    doc_id = prev.get('doc_id') if prev else None
+    # Dual-Mode: die doc_id ist umgebungsspezifisch. Der Server fuehrt eigene Felder
+    # (server_doc_id/server_doc_url) und fasst Dieters lokale doc_id/doc_url NIE an;
+    # lokal bleibt alles wie bisher. Merge-by-Key haelt beide Umgebungen nebeneinander.
+    server = _is_server()
+    doc_id = prev.get('server_doc_id' if server else 'doc_id') if prev else None
 
-    if _is_server():
+    if server:
         from googleapiclient.discovery import build
+        from googleapiclient.errors import HttpError
         from _google_auth import load_credentials
         sys.path.insert(0, str(Path(__file__).parent / '_tools'))
         import gdoc_pdf
@@ -254,7 +273,20 @@ def generate(level, period, ki=False):
         docs = build('docs', 'v1', credentials=creds)
         if not doc_id:
             doc_id = gdoc_pdf.create_gdoc_in_folder(drive, title, _reports_folder())
-        gdoc_pdf.build_doc_body(docs, doc_id, md)
+        try:
+            gdoc_pdf.build_doc_body(docs, doc_id, md)
+        except HttpError as ex:
+            # server_doc_id nicht erreichbar (geloescht, oder Alt-Seed zeigt noch auf ein
+            # FREMDES Doc, z.B. Dieters lokale Docs) -> eigenes Doc im Shared-Ordner neu
+            # anlegen und fortfahren. Selbstheilend, auch gegen kuenftige Re-Seeds.
+            status = getattr(getattr(ex, 'resp', None), 'status', None)
+            if status in (403, 404):
+                log.warning("server doc_id=%s not accessible (%s) — creating fresh server doc",
+                            doc_id, status)
+                doc_id = gdoc_pdf.create_gdoc_in_folder(drive, title, _reports_folder())
+                gdoc_pdf.build_doc_body(docs, doc_id, md)
+            else:
+                raise
         pdf = gdoc_pdf.export_gdoc_pdf(drive, doc_id)
         (OUT / f'{slug}.pdf').write_bytes(pdf)
         log.info("server report slug=%s doc_id=%s pdf_bytes=%d total_ms=%d",
@@ -273,10 +305,9 @@ def generate(level, period, ki=False):
         m = re.search(r'/document/d/([A-Za-z0-9_-]+)/', out.stdout)
         doc_id = m.group(1) if m else doc_id
 
-    rec = {'id': slug, 'level': level, 'period': period, 'label': label,
-           'pdf': pdf_rel, 'doc_id': doc_id,
-           'doc_url': f'https://docs.google.com/document/d/{doc_id}/edit' if doc_id else None,
-           'stand': STAMP}
+    base = {'id': slug, 'level': level, 'period': period, 'label': label,
+            'pdf': pdf_rel, 'stand': STAMP}
+    rec = _merge_report_record(prev, base, doc_id, server)
     idx['reports'] = [r for r in idx['reports'] if r['id'] != slug]
     idx['reports'].insert(0, rec)
     _atomic_write(DATA / 'reports_index.json', json.dumps(idx, ensure_ascii=False, indent=2))
