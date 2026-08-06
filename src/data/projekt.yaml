@@ -465,10 +465,9 @@ workstreams:
     milestones:
       - id: WS3-01
         name: 'Sofortmassnahmen ohne Zahlungswirkung sind in Kraft: eine Obergrenze für Zentralkosten gilt, neue Beraterverträge über EUR 25''000 brauchen Freigabe, und für jede Einheit ist benannt, wer das Ergebnis verantwortet'
-
         owner: Stephanie Rohde
-        start: '2026-09-11'
-        due: '2026-09-05'
+        start: '2026-09-01'
+        due: '2026-09-30'
         date_assumed: true
         phase: Phase 0
         gate: null
@@ -505,7 +504,6 @@ workstreams:
         progress_source: tasks
       - id: WS3-03
         name: 'Kostenbasis vollständig erhoben und im Diagnose-Review mit der GL bestätigt — inklusive der Zielwerte je Kostenart (Zentralkosten minus 30%, externe Kosten minus 20%; die Zuordnung der beiden weiteren Werte minus 5% und minus 50% ist im Review zu klären)'
-
         owner: Stephanie Rohde
         start: '2026-09-12'
         due: '2026-10-15'
@@ -533,7 +531,6 @@ workstreams:
         progress_source: tasks
       - id: WS3-05
         name: 'Gate: Mit dem Finanzierungs-Closing sind Massnahmen mit Zahlungswirkung freigegeben (bis dahin nur zahlungsneutrale Schritte). Die BER-Situation ist in der Closing-Dokumentation offengelegt'
-
         owner: Stephanie Rohde
         start: '2026-08-14'
         due: '2026-10-31'
@@ -575,7 +572,7 @@ workstreams:
       - id: WS3-08
         name: 'Beschlussvorlagen für AAS Technics und BER liegen entscheidungsreif vor — fortführen und sanieren oder aufgeben, mit Zahlen und Szenarien (VR-Entscheid 26.08., Pre-Read 18.08.)'
         owner: Stephanie Rohde
-        start: '2026-11-13'
+        start: '2026-08-01'
         due: '2026-08-18'
         date_assumed: true
         phase: Phase 1
@@ -641,8 +638,8 @@ workstreams:
       - id: WS3-13
         name: 'Zielbild-Nachweis Kosten: Zentralkosten −30%, externe Kosten −20%; Einsparungs-Brücke CFO-testiert'
         owner: Stephanie Rohde
-        start: '2027-04-09'
-        due: '2027-03-31'
+        start: '2027-03-01'
+        due: '2027-04-30'
         date_assumed: true
         phase: Phase 3
         gate: null
