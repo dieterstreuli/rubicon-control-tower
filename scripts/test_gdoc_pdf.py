@@ -52,8 +52,37 @@ def test_export_rejects_nonpdf():
         pass
 
 
+class _FilesPdf:
+    def __init__(self): self.created = None; self.updated = None
+    def create(self, body=None, media_body=None, supportsAllDrives=None, fields=None):
+        self.created = {"body": body, "sad": supportsAllDrives}
+        return _Exec({"id": "PDF_NEW"})
+    def update(self, fileId=None, media_body=None, supportsAllDrives=None, fields=None):
+        self.updated = {"fileId": fileId, "sad": supportsAllDrives}
+        return _Exec({"id": fileId})
+
+
+def test_upload_pdf_create():
+    d = _Drive(_FilesPdf())
+    fid = gdoc_pdf.upload_pdf_to_folder(d, "R.pdf", "FOLDER1", b"%PDF-1.7 x", None)
+    assert fid == "PDF_NEW"
+    assert d._f.created["body"]["parents"] == ["FOLDER1"]
+    assert d._f.created["body"]["mimeType"] == "application/pdf"
+    assert d._f.created["sad"] is True
+
+
+def test_upload_pdf_update_in_place():
+    d = _Drive(_FilesPdf())
+    fid = gdoc_pdf.upload_pdf_to_folder(d, "R.pdf", "FOLDER1", b"%PDF-1.7 x", "EXISTING")
+    assert fid == "EXISTING"
+    assert d._f.updated["fileId"] == "EXISTING"
+    assert d._f.created is None                    # kein neues Doc bei update-in-place
+
+
 if __name__ == "__main__":
     test_create_gdoc_in_folder()
     test_export_gdoc_pdf_ok()
     test_export_rejects_nonpdf()
-    print("gdoc_pdf: 3/3 gruen")
+    test_upload_pdf_create()
+    test_upload_pdf_update_in_place()
+    print("gdoc_pdf: 5/5 gruen")

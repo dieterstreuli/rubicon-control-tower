@@ -56,3 +56,20 @@ def export_gdoc_pdf(drive, doc_id):
         raise ValueError(f"export lieferte kein PDF (doc_id={doc_id}, head={pdf[:8]!r})")
     log.info("exported pdf bytes=%d export_ms=%d doc_id=%s", len(pdf), int((time.monotonic() - _t) * 1000), doc_id)
     return bytes(pdf)
+
+
+def upload_pdf_to_folder(drive, name, folder_id, pdf_bytes, file_id=None):
+    """PDF-Bytes als Drive-Datei ablegen: update-in-place wenn file_id gegeben (stabile
+    Datei + URL je Report), sonst neu im Ordner anlegen. Gibt die file_id zurueck."""
+    from googleapiclient.http import MediaInMemoryUpload
+    media = MediaInMemoryUpload(bytes(pdf_bytes), mimetype="application/pdf", resumable=False)
+    if file_id:
+        f = drive.files().update(fileId=file_id, media_body=media,
+                                 supportsAllDrives=True, fields="id").execute()
+    else:
+        f = drive.files().create(body={"name": name, "parents": [folder_id],
+                                       "mimeType": "application/pdf"},
+                                 media_body=media, supportsAllDrives=True, fields="id").execute()
+    fid = f["id"]
+    log.info("uploaded pdf file_id=%s bytes=%d", fid, len(pdf_bytes))
+    return fid

@@ -260,6 +260,7 @@ def generate(level, period, ki=False):
     # lokal bleibt alles wie bisher. Merge-by-Key haelt beide Umgebungen nebeneinander.
     server = _is_server()
     doc_id = prev.get('server_doc_id' if server else 'doc_id') if prev else None
+    pdf_file_id = prev.get('server_pdf_id') if prev else None
 
     if server:
         from googleapiclient.discovery import build
@@ -289,8 +290,20 @@ def generate(level, period, ki=False):
                 raise
         pdf = gdoc_pdf.export_gdoc_pdf(drive, doc_id)
         (OUT / f'{slug}.pdf').write_bytes(pdf)
-        log.info("server report slug=%s doc_id=%s pdf_bytes=%d total_ms=%d",
-                 slug, doc_id, len(pdf), int((time.monotonic() - _t0) * 1000))
+        # PDF zusaetzlich als eingefrorene Datei in die Shared-Ablage (neben dem editierbaren
+        # Doc) — update-in-place ueber server_pdf_id; Self-Heal wenn die Datei-ID stale ist.
+        try:
+            pdf_file_id = gdoc_pdf.upload_pdf_to_folder(drive, f'{title}.pdf', _reports_folder(), pdf, pdf_file_id)
+        except HttpError as ex:
+            status = getattr(getattr(ex, 'resp', None), 'status', None)
+            if status in (403, 404):
+                log.warning("server pdf file_id=%s not accessible (%s) — creating fresh pdf",
+                            pdf_file_id, status)
+                pdf_file_id = gdoc_pdf.upload_pdf_to_folder(drive, f'{title}.pdf', _reports_folder(), pdf, None)
+            else:
+                raise
+        log.info("server report slug=%s doc_id=%s pdf_id=%s pdf_bytes=%d total_ms=%d",
+                 slug, doc_id, pdf_file_id, len(pdf), int((time.monotonic() - _t0) * 1000))
     else:
         # --- lokaler Pfad UNVERAENDERT (heutiges html_to_pdf + md_to_gdoc-Subprocess) ---
         hp = Path(tempfile.mktemp(suffix='.html'))
@@ -307,6 +320,9 @@ def generate(level, period, ki=False):
 
     base = {'id': slug, 'level': level, 'period': period, 'label': label,
             'pdf': pdf_rel, 'stand': STAMP}
+    if server:
+        base['server_pdf_id'] = pdf_file_id
+        base['server_pdf_url'] = f'https://drive.google.com/file/d/{pdf_file_id}/view' if pdf_file_id else None
     rec = _merge_report_record(prev, base, doc_id, server)
     idx['reports'] = [r for r in idx['reports'] if r['id'] != slug]
     idx['reports'].insert(0, rec)
