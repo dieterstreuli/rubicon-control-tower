@@ -22,10 +22,12 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createApi } from './plugins/api-core.js'
+import { resolveStaticPath } from './static_resolve.mjs'
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url))
 const DIST = path.join(ROOT, 'dist')
 const PUBLIC = path.join(ROOT, 'public')
+const DOCS = process.env.RUBICON_DOCS_DIR || null
 const PORT = Number(process.env.PORT || 8621)
 const HOST = process.env.HOST || '127.0.0.1'
 
@@ -60,9 +62,10 @@ const server = http.createServer(async (req, res) => {
 
     const urlPath = (req.url || '/').split('?')[0]
 
-    // 2) statische Artefakte aus public/ (Briefings, Reports, Protokolle, Traktanden)
-    const pub = safeJoin(PUBLIC, urlPath)
-    if (pub && fs.existsSync(pub) && fs.statSync(pub).isFile()) return sendFile(res, pub)
+    // 2) statische Artefakte: RUBICON_DOCS_DIR-Volume zuerst, dann public/-Baseline
+    // (Briefings, Reports, Protokolle, Traktanden)
+    const filePath = resolveStaticPath(urlPath, DOCS, PUBLIC)
+    if (filePath) return sendFile(res, filePath)
 
     // 3) gebauter Client aus dist/
     const dist = safeJoin(DIST, urlPath)

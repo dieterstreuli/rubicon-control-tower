@@ -18,6 +18,13 @@ def atomic_write(path, text):
     os.replace(tmp, path)
 
 
+def docs_dir(subdir, root):
+    """Zielordner fuer generierte Dokumente. RUBICON_DOCS_DIR uebersteuert
+    (persistentes Volume); sonst <root>/public/<subdir> (lokaler Dev)."""
+    base = os.environ.get('RUBICON_DOCS_DIR') or os.path.join(str(root), 'public')
+    return os.path.join(base, subdir)
+
+
 def e(s):
     """HTML-escape; None → leer."""
     return html.escape(str(s if s is not None else ''))

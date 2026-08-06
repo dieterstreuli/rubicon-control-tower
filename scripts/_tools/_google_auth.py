@@ -1,21 +1,75 @@
-"""Shared Google OAuth credential loader for Chief Tools."""
+"""Shared Google credential loader for Chief Tools.
+
+Serverseitig (RUBICON_WORKSPACE_SA + RUBICON_IMPERSONATE_SUBJECT gesetzt): keyless
+Domain-Wide-Delegation via IAM-Credentials signJwt -> Token als der Service-User.
+Sonst: lokaler User-OAuth aus ~/.config/google-mcp. google-Libs lazy importiert,
+damit das Modul ohne google-auth importierbar (testbar) bleibt.
+"""
 import json
+import os
+import time
+import urllib.parse
+import urllib.request
 from pathlib import Path
-from google.oauth2.credentials import Credentials
 
 CREDS_DIR = Path.home() / ".config" / "google-mcp"
 
-# Account-Registry: short-name → credentials filename
-# Hinweis: commercial@axs.aero ist eine Group/Alias, kein eigener Account.
-# Der User d.straus@axs.aero hat Zugriff und wird als Operator-Account verwendet.
+# Account-Registry: short-name -> credentials filename (lokaler Dev).
 ACCOUNTS = {
-    "d.streuli@axs.aero":  ".gdrive-write-credentials.json",
-    "d.straus@axs.aero":   ".gdrive-dstraus-credentials.json",
+    "d.streuli@axs.aero": ".gdrive-write-credentials.json",
+    "d.straus@axs.aero": ".gdrive-dstraus-credentials.json",
 }
 
+# DWD-freigegebene Schreib-Scopes (Drive/Docs).
+DEFAULT_SCOPES = [
+    "https://www.googleapis.com/auth/drive",
+    "https://www.googleapis.com/auth/documents",
+]
 
-def load_credentials(account: str = "d.streuli@axs.aero"):
-    """Load OAuth credentials for the given account (default d.streuli@axs.aero)."""
+
+def _build_jwt_payload(sa_email, subject, scopes, now):
+    """DWD-JWT-Claims: SA gibt sich als subject aus, 1h gueltig."""
+    return {
+        "iss": sa_email,
+        "sub": subject,
+        "aud": "https://oauth2.googleapis.com/token",
+        "iat": now,
+        "exp": now + 3600,
+        "scope": " ".join(scopes),
+    }
+
+
+def _dwd_credentials(sa_email, subject, scopes):
+    """Keyless DWD via IAM-Credentials signJwt (kein JSON-Key). Basis-ADC
+    (Cloud-Run-Metadata = Job-SA) signiert das JWT als sa_email -> Token als subject."""
+    from google.auth import default
+    from google.auth.transport.requests import Request
+    from google.oauth2.credentials import Credentials
+
+    base, _ = default(scopes=["https://www.googleapis.com/auth/iam"])
+    base.refresh(Request())
+    payload = _build_jwt_payload(sa_email, subject, scopes, int(time.time()))
+    sign_req = urllib.request.Request(
+        f"https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/{sa_email}:signJwt",
+        data=json.dumps({"payload": json.dumps(payload)}).encode(),
+        headers={"Authorization": f"Bearer {base.token}", "Content-Type": "application/json"},
+    )
+    signed = json.loads(urllib.request.urlopen(sign_req).read())["signedJwt"]
+    tok_req = urllib.request.Request(
+        "https://oauth2.googleapis.com/token",
+        data=urllib.parse.urlencode({
+            "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
+            "assertion": signed,
+        }).encode(),
+    )
+    token = json.loads(urllib.request.urlopen(tok_req).read())
+    return Credentials(token["access_token"])
+
+
+def _load_user_credentials(account):
+    """Lokaler Dev-Pfad: User-OAuth aus ~/.config/google-mcp."""
+    from google.oauth2.credentials import Credentials
+
     fname = ACCOUNTS.get(account)
     if not fname:
         raise ValueError(f"Unknown account '{account}'. Known: {list(ACCOUNTS)}")
@@ -38,3 +92,13 @@ def load_credentials(account: str = "d.streuli@axs.aero"):
         client_secret=ci["client_secret"],
         scopes=creds_data.get("scopes") or (creds_data.get("scope", "").split() or None),
     )
+
+
+def load_credentials(account: str = "d.streuli@axs.aero", scopes=None):
+    """Server-seitig (RUBICON_WORKSPACE_SA + RUBICON_IMPERSONATE_SUBJECT) keyless DWD
+    als der Service-User; sonst lokaler User-OAuth fuer `account`."""
+    sa_email = os.environ.get("RUBICON_WORKSPACE_SA")
+    subject = os.environ.get("RUBICON_IMPERSONATE_SUBJECT")
+    if sa_email and subject:
+        return _dwd_credentials(sa_email, subject, scopes or DEFAULT_SCOPES)
+    return _load_user_credentials(account)

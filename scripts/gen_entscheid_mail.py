@@ -29,14 +29,14 @@ sys.path.insert(0, __file__.rsplit('/', 1)[0])          # _kontakte/_lib
 sys.path.insert(0, __file__.rsplit('/', 1)[0] + '/_tools')   # vendored Fallback (Portabilität)
 sys.path.insert(0, '/Users/dieterstreuli/Chief/Tools')       # Original gewinnt auf dem DRS-Mac
 from html_to_pdf import html_to_pdf  # noqa: E402
-from _lib import atomic_write as _atomic_write  # noqa: E402
+from _lib import atomic_write as _atomic_write, docs_dir  # noqa: E402
 
 ENTS = ROOT / 'src' / 'data' / 'entscheide.json'
 
 # Verteiler aus der Personen-SSOT (Q5, 01.08.): src/data/kontakte.json
 from _kontakte import GL_VERTEILER  # noqa: E402
 
-OUT = ROOT / 'public' / 'entscheide'
+OUT = Path(docs_dir('entscheide', ROOT))
 LOGO = (ROOT / 'scripts' / 'axs_logo.png.b64').read_text().strip()
 STAMP = datetime.datetime.now().strftime('%d.%m.%Y %H:%M')
 

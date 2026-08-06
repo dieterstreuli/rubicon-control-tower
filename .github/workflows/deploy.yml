@@ -69,7 +69,7 @@ jobs:
             --no-allow-unauthenticated --max-instances=1 --port=8080 \
             --add-volume=name=data,type=cloud-storage,bucket="${BUCKET}" \
             --add-volume-mount=volume=data,mount-path=/app/src/data \
-            --set-env-vars="^@^RUBICON_OK_ORIGINS=https://rubicon.axs.aero,https://rubicon-tower-646221535662.europe-west4.run.app@RUBICON_PY=/usr/bin/python3"
+            --set-env-vars="^@^RUBICON_OK_ORIGINS=https://rubicon.axs.aero,https://rubicon-tower-646221535662.europe-west4.run.app@RUBICON_PY=/usr/bin/python3@RUBICON_DOCS_DIR=/app/src/data/_generated"
 
       - name: Deployte Revision + URL
         run: |

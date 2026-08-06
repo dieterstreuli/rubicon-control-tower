@@ -47,6 +47,16 @@ Entwicklung, **nicht** als Parallel-Produktion.
   gemountet auf `/app/src/data`. **Alle Schreibvorgänge** (tasks/entscheide/
   protokolle/zielbild) landen dort und **überleben Neustart/Redeploy** — der
   frühere „flüchtiges Cloud-Run-FS"-Vorbehalt ist damit erledigt.
+- **Dokument-Persistenz:** Beim Ausliefern hat **`RUBICON_DOCS_DIR`**
+  (= `/app/src/data/_generated` auf dem GCS-Volume) Vorrang vor der ins Image
+  gebackenen `public`-Baseline. Reports (Woche/Monat/Quartal) werden bereits
+  serverseitig **chromefrei** erzeugt (Google Doc + Drive-`files.export`, s.
+  `DEPLOYMENT_GCP.md` §9) und landen dort — sie überleben damit Neustart/Redeploy.
+  Protokolle/Briefings/Entscheide/Traktanden entstehen weiterhin außerhalb des
+  Containers über den lokalen HTML-PDF-Pfad (Chromium bleibt dafür vorerst lokal
+  beim CoS, s. `DEPLOYMENT_GCP.md` §5) und werden über die `public`-Baseline
+  ausgeliefert, bis auch ihre Generierung serverseitig nach `RUBICON_DOCS_DIR`
+  schreibt.
 - **Datenbezug (Runtime-Fetch):** Der Client holt die Daten **zur Laufzeit** über
   `GET /api/state` aus dem Volume (statt sie zur Build-Zeit ins Bundle zu backen) —
   Server-Writes sind damit **nach einem Reload sichtbar**. Der Sensitiv-Store bleibt
@@ -114,6 +124,11 @@ Betriebsregeln (für alle Beteiligten):
   nun aus dem Bucket → Pre-Deploy-Sync-Check in `DEPLOYMENT_GCP.md`.
 - **CI/CD** neu: `.github/workflows/deploy.yml` (WIF, keyless) — Push auf `main`
   deployt auf `rubicon.axs.aero`.
+- **Dokument-Persistenz (Infrastruktur):** Serving-Precedence ergänzt —
+  `RUBICON_DOCS_DIR=/app/src/data/_generated` auf dem GCS-Volume geht beim Ausliefern
+  vor der `public`-Baseline. Es findet noch keine serverseitige PDF-Generierung statt
+  (die PDFs entstehen weiterhin außerhalb des Containers, `public`-Baseline unverändert
+  im Einsatz); sobald eine Generierung dorthin schreibt, überlebt sie Redeploy.
 - **Daten:** Bucket auf DSTs aktuellen Stand geseedet (11 Ströme/196 MS + Zielbild).
   Voriger Live-Stand gesichert unter `gs://aixs-rubicon-tower-backup/20260805-pre-dst-cutover/`
   (Merge späterer Live-Writes bei Bedarf möglich).
@@ -121,6 +136,34 @@ Betriebsregeln (für alle Beteiligten):
   Cloud Run mit **least-privilege Runtime-SA** (bucket-scoped); Buckets Object-Versioning
   + Public-Access-Prevention enforced. `dist/` + Render-Zwischenstände aus Git entfernt,
   **Data-Guard**-Workflow blockt Re-Add. Details/Plan: `DEPLOYMENT_GCP.md §7/§8`.
+
+## Dual-Mode: lokal ↔ zentral (Migrations-Status)
+
+Der Tower läuft **unverändert lokal** (`npm run dev`) UND serverseitig — dasselbe Image, dieselbe
+Codebasis. Die Anpassung an die Umgebung ist **automatisch über Env-Variablen (kein Flag):** lokal
+(Env unset) = wie bisher (Chrome-PDF, User-OAuth, `public/`, git-Historie); serverseitig (DWD-Env am
+Job) = GCS-Volume + Google Drive via Service-Account-Impersonation. So lässt sich lokal **1:1
+weiterarbeiten**, bis alle Funktionen serverseitig migriert sind. Server-Infra im Detail:
+`DEPLOYMENT_GCP.md §9`.
+
+| Funktion | Lokal (Env unset) | Serverseitig (DWD-Env) | Status |
+|---|---|---|---|
+| Report-Doc + PDF | Chrome-HTML-PDF + Doc in Dieters Drive | Google Doc im Shared Drive + `files.export` | ✅ Code migriert |
+| Google-Auth | User-OAuth (`~/.config/google-mcp`) | keyless-DWD als `rubicon@axs.aero` | ✅ |
+| Dokument-Persistenz | `public/` | GCS-Volume `_generated/` + Serving-Precedence | ✅ |
+| Report-Trigger | launchd-Cron (Mac) | Cloud Scheduler → Cloud-Run-Job | ⏳ nach Push |
+| Δ-Block (Wochen-Delta) | git-Vergleich `projekt.yaml` | GCS-Object-Version statt git | ⏳ Follow-up |
+| KI-Narrativ | lokale `claude`-CLI | AIXS-Plattform (konfigurierbares Modell/Prompt) | ⏳ Follow-up |
+| Protokoll/Traktanden/Entscheide-Export | Chrome + Drive | Doc-Export (analog Report) | ⏳ Follow-up |
+| AXS-Doc-Template (Header/Footer) | Template-Copy (lokal) | Template im Shared Drive + Config | ⏳ Follow-up |
+
+**Bis zur 1:1-Parität** bleibt lokal die vollständige Umgebung; serverseitig wächst die Abdeckung
+inkrementell. Diese Tabelle wird je Ausbauschritt aktualisiert.
+
+Das serverseitige Report-PDF ist aktuell die schlichtere **Doc-Export-Fassung** (kein Chromium im
+Image). Die **gebrandete** HTML-Chrome-Version (Logo/Ampel-Pills/Styling), die heute lokal via MCP
+erzeugt wird, kann in einer späteren Phase **optional per Feature-Flag** auch serverseitig angeboten
+werden (Headless-Chrome ins Image) — die PDF-Quelle im Code ist dafür pluggbar gehalten.
 
 ## Ausbaustufen
 

@@ -8,10 +8,12 @@
 # Lauf:   docker run -p 8080:8080 -e PORT=8080 -e RUBICON_ORIGINS=https://rubicon.axs.aero rubicon-tower
 FROM node:24-slim
 
-# Python für die Renderer (Reports/Briefings/Protokolle) — ohne sie laufen nur
-# die Lese-Funktionen. Chrome für die PDF-Erzeugung ist BEWUSST nicht enthalten
-# (Image-Grösse); PDF-Generierung bleibt vorerst lokal beim CoS.
-RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-yaml \
+# Python + Google-API-Client-Libs fuer die serverseitige Report-Erzeugung
+# (Google Doc via Docs-API + PDF via Drive files.export, DEPLOYMENT_GCP.md §9).
+# Chromium fuer den HTML-PDF-Pfad (Protokolle/Briefings/Entscheide) ist BEWUSST
+# nicht enthalten (Image-Groesse) — dieser Pfad bleibt vorerst lokal beim CoS.
+RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-yaml python3-pip \
+    && pip3 install --no-cache-dir --break-system-packages google-api-python-client google-auth \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

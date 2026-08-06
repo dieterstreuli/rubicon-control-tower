@@ -12,21 +12,34 @@ aktualisiert reports_index.json. Letzte stdout-Zeile = JSON {ok, pdf, doc_url}.
 import datetime as dt
 import html
 import json
+import logging
 import os
 import re
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 import yaml
+
+
+log = logging.getLogger("rubicon.report")
+
+
+def _is_server():
+    return bool(os.environ.get("RUBICON_WORKSPACE_SA") and os.environ.get("RUBICON_IMPERSONATE_SUBJECT"))
+
+
+def _reports_folder():
+    return os.environ.get("RUBICON_DRIVE_REPORTS_FOLDER", PARENT)
 
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, __file__.rsplit('/', 1)[0] + '/_tools')   # vendored Fallback (Portabilität, s. MIGRATION.md)
 sys.path.insert(0, '/Users/dieterstreuli/Chief/Tools')  # Original gewinnt auf dem DRS-Mac
 from html_to_pdf import html_to_pdf  # noqa: E402
-from _lib import atomic_write as _atomic_write  # noqa: E402
+from _lib import atomic_write as _atomic_write, docs_dir  # noqa: E402
 
 MD2GDOC = '/Users/dieterstreuli/Chief/Tools/md_to_gdoc.py'
 import os as _os
@@ -34,7 +47,7 @@ if not _os.path.exists(MD2GDOC):
     MD2GDOC = __file__.rsplit('/', 1)[0] + '/_tools/md_to_gdoc.py'  # vendored (Portabilität)
 PARENT = '1n8FcDCa8T5vYzME5zXrMpmt0i70pKXt5'  # Drive: RUBICON — Reports
 DATA = ROOT / 'src' / 'data'
-OUT = ROOT / 'public' / 'reports'
+OUT = Path(docs_dir('reports', ROOT))
 LOGO = (ROOT / 'scripts' / 'axs_logo.png.b64').read_text().strip()
 STAMP = dt.datetime.now().strftime('%d.%m.%Y %H:%M')
 MON = ['', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
@@ -224,23 +237,41 @@ def generate(level, period, ki=False):
 
     OUT.mkdir(parents=True, exist_ok=True)
     slug = f'{level}-{period}'.replace('/', '-')
-    hp = Path(tempfile.mktemp(suffix='.html'))
-    hp.write_text(html_doc)
     pdf_rel = f'/reports/{slug}.pdf'
-    html_to_pdf(str(hp), str(OUT / f'{slug}.pdf'))
-
-    # Google Doc
     md = build_md(title, label, prog_ampel, level, doc, meta, now, inper, start, end, kom)
-    with tempfile.NamedTemporaryFile('w', suffix='.md', delete=False) as f:
-        f.write(md); mdp = f.name
     idx = json.loads((DATA / 'reports_index.json').read_text())
     prev = next((r for r in idx['reports'] if r['id'] == slug), None)
-    cmd = ['python3', MD2GDOC, mdp, title, PARENT]
-    if prev and prev.get('doc_id'):
-        cmd += ['--doc-id', prev['doc_id']]
-    out = subprocess.run(cmd, capture_output=True, text=True)
-    m = re.search(r'/document/d/([A-Za-z0-9_-]+)/', out.stdout)
-    doc_id = m.group(1) if m else (prev.get('doc_id') if prev else None)
+    doc_id = prev.get('doc_id') if prev else None
+
+    if _is_server():
+        from googleapiclient.discovery import build
+        from _google_auth import load_credentials
+        sys.path.insert(0, str(Path(__file__).parent / '_tools'))
+        import gdoc_pdf
+        creds = load_credentials()
+        _t0 = time.monotonic()
+        drive = build('drive', 'v3', credentials=creds)
+        docs = build('docs', 'v1', credentials=creds)
+        if not doc_id:
+            doc_id = gdoc_pdf.create_gdoc_in_folder(drive, title, _reports_folder())
+        gdoc_pdf.build_doc_body(docs, doc_id, md)
+        pdf = gdoc_pdf.export_gdoc_pdf(drive, doc_id)
+        (OUT / f'{slug}.pdf').write_bytes(pdf)
+        log.info("server report slug=%s doc_id=%s pdf_bytes=%d total_ms=%d",
+                 slug, doc_id, len(pdf), int((time.monotonic() - _t0) * 1000))
+    else:
+        # --- lokaler Pfad UNVERAENDERT (heutiges html_to_pdf + md_to_gdoc-Subprocess) ---
+        hp = Path(tempfile.mktemp(suffix='.html'))
+        hp.write_text(html_doc)
+        html_to_pdf(str(hp), str(OUT / f'{slug}.pdf'))
+        with tempfile.NamedTemporaryFile('w', suffix='.md', delete=False) as f:
+            f.write(md); mdp = f.name
+        cmd = ['python3', MD2GDOC, mdp, title, _reports_folder()]
+        if prev and prev.get('doc_id'):
+            cmd += ['--doc-id', prev['doc_id']]
+        out = subprocess.run(cmd, capture_output=True, text=True)
+        m = re.search(r'/document/d/([A-Za-z0-9_-]+)/', out.stdout)
+        doc_id = m.group(1) if m else doc_id
 
     rec = {'id': slug, 'level': level, 'period': period, 'label': label,
            'pdf': pdf_rel, 'doc_id': doc_id,

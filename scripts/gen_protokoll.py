@@ -18,7 +18,7 @@ import tempfile
 
 from pathlib import Path
 sys.path.insert(0, __file__.rsplit('/', 1)[0])                  # _lib (Q6)
-from _lib import atomic_write as _atomic_write  # noqa: E402
+from _lib import atomic_write as _atomic_write, docs_dir  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, __file__.rsplit('/', 1)[0] + '/_tools')   # vendored Fallback (Portabilität, s. MIGRATION.md)
@@ -32,7 +32,7 @@ if not _os.path.exists(MD2GDOC):
     MD2GDOC = __file__.rsplit('/', 1)[0] + '/_tools/md_to_gdoc.py'  # vendored (Portabilität)
 PARENT = '16eHUDx59O5_nR3wIcDim7OhEqlg86jB0'  # Drive: RUBICON — Sitzungsprotokolle
 PROTO = ROOT / 'src' / 'data' / 'protokolle.json'
-OUT = ROOT / 'public' / 'protokolle'
+OUT = Path(docs_dir('protokolle', ROOT))
 LOGO = (ROOT / 'scripts' / 'axs_logo.png.b64').read_text().strip()
 STAMP = datetime.datetime.now().strftime('%d.%m.%Y %H:%M')
 

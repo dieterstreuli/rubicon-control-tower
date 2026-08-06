@@ -12,12 +12,18 @@ Unterstuetzt: # / ## / ### Headings, Absaetze mit **bold**, Markdown-Tabellen,
 Listen (- / 1.) als Gedankenstrich-Absaetze (AXS: keine •-Bullets), --- wird
 uebersprungen (AXS: keine Separatoren).
 """
+import logging
+import os
 import re
 import sys
 import time
 from pathlib import Path
 
-sys.path.insert(0, '/Users/dieterstreuli/Chief/Tools')
+log = logging.getLogger("rubicon.gdoc")
+
+_CHIEF_TOOLS = "/Users/dieterstreuli/Chief/Tools"
+if os.path.isdir(_CHIEF_TOOLS):
+    sys.path.insert(0, _CHIEF_TOOLS)
 from _google_auth import load_credentials
 from _templates import (create_doc_from_template, ensure_doc_body_empty,
                         heading_text_style, body_text_style, AXS_STYLE)
@@ -97,6 +103,7 @@ class DocBuilder:
     def __init__(self, docs, doc_id):
         self.docs = docs
         self.doc_id = doc_id
+        self._retry_429 = 0
 
     def bu(self, requests):
         for attempt in range(6):
@@ -105,7 +112,10 @@ class DocBuilder:
                     documentId=self.doc_id, body={'requests': requests}).execute()
             except HttpError as e:
                 if e.resp.status == 429 and attempt < 5:
-                    print(f'   429 — warte 22s ({attempt + 1})'); time.sleep(22); continue
+                    self._retry_429 += 1
+                    log.warning("docs 429 retry %d/5 doc_id=%s", attempt + 1, self.doc_id)
+                    time.sleep(22)
+                    continue
                 raise
 
     def get(self):
