@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { T } from '../lib/theme.js'
-import { reloadKeepScroll, REPORTS } from '../lib/data.js'
+import { reloadKeepScroll, REPORTS, SERVER } from '../lib/data.js'
 import { LVL_AUSWAHL, LVL_COLOR, LVL_LABEL } from '../lib/domain.js'
 import { BarChart3, FileText, Lock } from 'lucide-react'
 
@@ -72,16 +72,27 @@ export function ReportsView({ canEdit, today }) {
         </div>
         {reports.length === 0 && <div className="px-4 py-6 text-[12px]" style={{ color: T.inkFaint }}>Noch kein Report erzeugt.</div>}
         <div className="divide-y" style={{ borderColor: T.line }}>
-          {reports.map(r => (
-            <div key={r.id} className="px-4 py-2.5 flex flex-wrap items-center gap-2 text-[12px]" style={{ borderTop: `1px solid ${T.line}` }}>
-              <span className="px-1.5 py-0.5 rounded text-[10px]" style={{ background: LVL_COLOR(r.level) + '22', color: LVL_COLOR(r.level), fontFamily: T.mono }}>{LVL_LABEL[r.level] || r.level}</span>
-              <b style={{ color: T.ink }}>{r.label}</b>
-              <span className="muted" style={{ color: T.inkFaint, fontFamily: T.mono }}>Stand {r.stand}</span>
-              <span className="flex-1" />
-              <a href={r.pdf} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.brass, color: T.brass }}><FileText size={10} /> PDF</a>
-              {r.doc_url && <a href={r.doc_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.blue, color: T.blue }}><FileText size={10} /> Doc</a>}
-            </div>
-          ))}
+          {reports.map(r => {
+            // Modusabhängig: auf dem Server zeigen die Links auf die Server-Artefakte
+            // (server_doc_url + volume-PDF, das der Job erzeugt hat), lokal auf Dieters
+            // eigene doc_url/PDF. KEIN Fallback auf die jeweils andere Umgebung (sonst 403
+            // für Server-Nutzer auf Dieters privatem Doc). Ältere Reports ohne Server-
+            // Artefakte (nie serverseitig erzeugt) erscheinen ohne tote Links.
+            const docUrl = SERVER ? r.server_doc_url : r.doc_url
+            const pdfShown = SERVER ? !!r.server_pdf_id : true
+            const localOnly = SERVER && !r.server_doc_id && !r.server_pdf_id
+            return (
+              <div key={r.id} className="px-4 py-2.5 flex flex-wrap items-center gap-2 text-[12px]" style={{ borderTop: `1px solid ${T.line}` }}>
+                <span className="px-1.5 py-0.5 rounded text-[10px]" style={{ background: LVL_COLOR(r.level) + '22', color: LVL_COLOR(r.level), fontFamily: T.mono }}>{LVL_LABEL[r.level] || r.level}</span>
+                <b style={{ color: T.ink }}>{r.label}</b>
+                <span className="muted" style={{ color: T.inkFaint, fontFamily: T.mono }}>Stand {r.stand}</span>
+                <span className="flex-1" />
+                {localOnly && <span className="text-[10px]" style={{ color: T.inkFaint, fontFamily: T.mono }}>nur lokal</span>}
+                {pdfShown && <a href={r.pdf} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.brass, color: T.brass }}><FileText size={10} /> PDF</a>}
+                {docUrl && <a href={docUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.blue, color: T.blue }}><FileText size={10} /> Doc</a>}
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>

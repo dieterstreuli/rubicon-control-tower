@@ -18,6 +18,10 @@ import { can, requireCan } from '../src/lib/permissions.js'   // Q4: EINE Rechte
 
 const PY_BIN = process.env.RUBICON_PY || '/Library/Frameworks/Python.framework/Versions/3.14/bin/python3'  // Portabilität: env-Override (MIGRATION.md)
 const CLAUDE_BIN = process.env.RUBICON_CLAUDE || '/Users/dieterstreuli/.local/bin/claude'  // K4/K7: KI-Aufrufe (headless, Sonnet)
+// Server-Modus = DWD-Env gesetzt (identisch zu gen_report._is_server): steuert im UI,
+// ob Report-Links auf die Server-Google-Docs (server_doc_url) oder auf Dieters lokale
+// doc_url zeigen. /api/state reicht das Flag an die SPA (src/lib/data.js SERVER).
+const IS_SERVER = !!(process.env.RUBICON_WORKSPACE_SA && process.env.RUBICON_IMPERSONATE_SUBJECT)
 
 // K4/K7 (01.08.): headless-Claude-Aufruf — Prompt via stdin (Grössen-sicher),
 // Sonnet, hartes Timeout. Reine Text-Antwort; JSON extrahiert der Aufrufer.
@@ -301,6 +305,7 @@ export function createApi(rootDir) {
         res.setHeader('Cache-Control', 'no-store')
         return json(200, {
           ok: true,
+          server: IS_SERVER,
           projekt_yaml: fs.existsSync(db.projekt.path) ? fs.readFileSync(db.projekt.path, 'utf8') : '',
           tasks: db.tasks.read(),
           domain: db.domain.read(),

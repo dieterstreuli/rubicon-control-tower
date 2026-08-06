@@ -21,6 +21,7 @@ export let REPORTS = { reports: [] }             // reports_index.json
 export let ENTS = { seq: 0, entscheide: [] }     // entscheide.json
 export let REMLOG = { reminders: [] }            // reminder_log.json
 export let ZBSTORE = { zielbild: [] }            // zielbild.json
+export let SERVER = false                        // Server-Modus (DWD-Env gesetzt): Drive- statt Volume-/Dieter-Links
 
 // ── Abgeleitete Werte (in initData berechnet) ──
 export let BASE = { meta: {}, workstreams: [], inputs: [] }
@@ -43,6 +44,7 @@ export function initData(state) {
   ENTS = state.entscheide || { seq: 0, entscheide: [] }
   REMLOG = state.reminder_log || { reminders: [] }
   ZBSTORE = state.zielbild || { zielbild: [] }
+  SERVER = !!state.server
 
   const res = loadProject(state.projekt_yaml || '')
   BASE = res.data
