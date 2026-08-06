@@ -109,33 +109,27 @@ Betriebsregeln (für alle Beteiligten):
 6. **Cloud-/IAM-/Deploy-Änderungen laufen über die IT** (bzw. abgestimmt) — nicht
    doppelt, damit sich Infrastruktur-Stände nicht gegenseitig überschreiben.
 
-## Änderungen 05.08.2026 (IT / Didit)
+## Changelog (IT / Didit)
 
-- **Konvergenz:** `rubicon-dst` = kanonische PROD-Quelle; `rubicon-control-tower`
-  archiviert (Read-only-Mirror).
-- **Deploy-Fixes:** Origin-Guard-Env auf `RUBICON_OK_ORIGINS` (rückwärtskompatibel),
-  `RUBICON_PY=/usr/bin/python3` (Container-Python für die Renderer),
-  `package.name` → `rubicon`, Dockerfile-Build-Args für den Build-Stamp.
-- **Build-Stamp** im Footer (Datum/Zeit sichtbar, SHA im Hover).
-- **Runtime-Fetch der Datenschicht:** Der Client liest die 12 Stores zur Laufzeit über
-  `GET /api/state` statt aus dem Build-Bundle → Live-Writes nach Reload sichtbar
-  (Bundle ~618→146 KB); Sensitiv-Store bleibt loopback-only. Die Read-only-Stores
-  (`domain`/`reports_index`/`fuehrungsrhythmus`/`traktanden`/`traktanden_docs`) kommen
-  nun aus dem Bucket → Pre-Deploy-Sync-Check in `DEPLOYMENT_GCP.md`.
-- **CI/CD** neu: `.github/workflows/deploy.yml` (WIF, keyless) — Push auf `main`
-  deployt auf `rubicon.axs.aero`.
-- **Dokument-Persistenz (Infrastruktur):** Serving-Precedence ergänzt —
-  `RUBICON_DOCS_DIR=/app/src/data/_generated` auf dem GCS-Volume geht beim Ausliefern
-  vor der `public`-Baseline. Es findet noch keine serverseitige PDF-Generierung statt
-  (die PDFs entstehen weiterhin außerhalb des Containers, `public`-Baseline unverändert
-  im Einsatz); sobald eine Generierung dorthin schreibt, überlebt sie Redeploy.
-- **Daten:** Bucket auf DSTs aktuellen Stand geseedet (11 Ströme/196 MS + Zielbild).
-  Voriger Live-Stand gesichert unter `gs://aixs-rubicon-tower-backup/20260805-pre-dst-cutover/`
-  (Merge späterer Live-Writes bei Bedarf möglich).
-- **Sicherheit/Datenschutz:** Data-at-rest **CMEK-verschlüsselt** (dedizierter EU-Key);
-  Cloud Run mit **least-privilege Runtime-SA** (bucket-scoped); Buckets Object-Versioning
-  + Public-Access-Prevention enforced. `dist/` + Render-Zwischenstände aus Git entfernt,
-  **Data-Guard**-Workflow blockt Re-Add. Details/Plan: `DEPLOYMENT_GCP.md §7/§8`.
+**06.08.2026 — Serverseitige Doc-Erzeugung + Merge-Brücke:**
+- Reports (Woche/Monat/Quartal) werden jetzt **serverseitig chromefrei** erzeugt (Google
+  Doc + PDF-Datei im Shared Drive); Cloud-Run-Job + Scheduler (Mo 06:00) live; Report-Links
+  im Tower modusabhängig auf die Server-Docs. Details: `DEPLOYMENT_GCP.md §9`.
+- **Merge-Brücke** (`DEPLOYMENT_GCP.md §10`): Struktur-Änderungen (Repo) live nachziehen
+  **ohne** Live-Daten zu zerstören — Merge-by-Key, Backup, Konflikt-Meldung; Trigger
+  `[publish-data]` (Vorschau) + manuell (Anwenden). `mergeTasks`-Fix: `erledigt_von` bleibt erhalten.
+- Bucket auf **200 MS / 11 Ströme** nachgezogen (Owner-Review-Stand).
+
+**05.08.2026 — Zentralisierung & geteilte Umgebung:**
+- **Konvergenz:** `rubicon-dst` = kanonische PROD-Quelle; `rubicon-control-tower` archiviert (Read-only-Mirror).
+- **CI/CD:** `deploy.yml` (WIF, keyless) — Push auf `main` deployt auf `rubicon.axs.aero`.
+  Deploy-Fixes: `RUBICON_OK_ORIGINS`, `RUBICON_PY=/usr/bin/python3`, `package.name`→`rubicon`, Build-Stamp im Footer.
+- **Runtime-Fetch:** Client liest die Stores zur Laufzeit über `GET /api/state` (Live-Writes
+  nach Reload sichtbar; Bundle ~618→146 KB); Sensitiv-Store loopback-only.
+- **Daten:** Bucket erstmals geseedet; Live-Stand gesichert unter `gs://aixs-rubicon-tower-backup/20260805-pre-dst-cutover/`.
+- **Sicherheit:** Data-at-rest **CMEK** (EU-Key), **least-privilege Runtime-SA**,
+  Object-Versioning + Public-Access-Prevention; `dist/`/Render-Artefakte aus Git, **Data-Guard**
+  blockt Re-Add. Details: `DEPLOYMENT_GCP.md §7/§8`.
 
 ## Dual-Mode: lokal ↔ zentral (Migrations-Status)
 
@@ -158,8 +152,7 @@ im Detail: `DEPLOYMENT_GCP.md §9` (Reports) + `§10` (Merge-Brücke).
 | Struktur → Live-Daten | git / Re-Seed (überschreiben) | **Merge-Brücke**: Repo-Struktur + Volume-Live per Merge-by-Key, Backup, Konflikt-Meldung | ✅ Code (§10) |
 | Δ-Block (Wochen-Delta) | git-Vergleich `projekt.yaml` | GCS-Object-Version statt git | ⏳ Follow-up |
 | KI-Narrativ | lokale `claude`-CLI | AIXS-Plattform (konfigurierbares Modell/Prompt) | ⏳ Follow-up |
-| Protokoll/Traktanden/Entscheide-Doc | Chrome-HTML-PDF | **Vorlagen-Engine** (Google-Doc-Template + Merge, kein Chrome) | ⏳ geplant |
-| AXS-Branding (Logo/Header/Footer) | im HTML/CSS je Generator | in der Google-Doc-Vorlage (WYSIWYG) | ⏳ geplant |
+| Protokoll/Traktanden/Entscheide-Doc **+ AXS-Branding** | Chrome-HTML-PDF; Branding im HTML/CSS je Generator | **Vorlagen-Engine**: eine AXS-gebrandete Google-Doc-Vorlage je Typ (Layout **+** Logo/Header/Footer) + Merge, kein Chrome | ⏳ geplant |
 
 **Bis zur 1:1-Parität** bleibt lokal die vollständige Umgebung; serverseitig wächst die Abdeckung
 inkrementell. Diese Tabelle wird je Ausbauschritt aktualisiert.
