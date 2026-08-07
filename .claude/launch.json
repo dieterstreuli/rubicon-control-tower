@@ -4,8 +4,12 @@
     {
       "name": "rubicon-tower",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "port": 8620
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 8621,
+      "autoPort": false
     }
   ]
 }

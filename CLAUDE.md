@@ -113,6 +113,19 @@ substanziellen Änderung: `git add -A && git commit` (Repo-Identität d.streuli@
 | **Rollen:** DRS = inhaltlich-fachliche Führung · Didit/IT = Umsetzung, Infrastruktur, gesetzliche/interne Prüfung. | Infrastruktur-Themen (Volume, CMEK, SA, Pipeline) laufen über Gordon, nicht hier. |
 | `RUBICON_SKIP_LINKCHECK=1` in der Pipeline (Drive-Link-Check ohne Service-Account). | Lokal ebenso setzen, wenn keine Google-Credentials aktiv sind. |
 
+### Remotes — welcher wofür (DRS 06.08.2026, verbindlich)
+
+Es gibt drei Remotes mit **klar getrennten Rollen**. Wer sie verwechselt, deployt entweder
+nichts oder ins Leere:
+
+| Remote | Repo | Rolle |
+|---|---|---|
+| **`dst`** | `diditgmbh/rubicon-dst` | **Wahrheit und Deploy-Pfad.** Hier wird gearbeitet, hierhin wird gepusht — Push auf `main` löst den Auto-Deploy nach `rubicon.axs.aero` aus. Vor der Arbeit `git fetch dst && git merge --ff-only dst/main`. |
+| **`origin`** | `dieterstreuli/rubicon-control-tower` | **Reiner Spiegel / Backup — nie Quelle.** Nach dem `dst`-Push zusätzlich `git push origin HEAD`. Begründung: die AXS-Steuerungsplattform darf nicht ausschliesslich in der GitHub-Organisation des Dienstleisters liegen (Bus-Faktor-1-Risiko, Zielbild-Kriterium **Z-DAT-12**). Aus `origin` wird nie deployt und nie gemerged. |
+| **`didit`** | `diditgmbh/rubicon-control-tower` | **Tot (archiviert).** Nichts mehr dorthin pushen, nichts von dort ziehen. |
+
+**Merksatz:** *`dst` = wirkt · `origin` = versichert · `didit` = tot.*
+
 ## Code-Struktur (Refactoring-Programm 01.08.2026 — Q1-Q6, R1-R4)
 
 **Absicherung zuerst:** `npm test` = `scripts/test_api_smoke.mjs` (33 Prüfungen über alle 15 Endpoints: Guards 415/403, Rollen-Gates, Pflichtfelder, 404/409, read-only, Sensitiv-Sperre). **Mutationsfrei** — schreibt auch dann nichts, wenn ein Gate bricht (Fortschritt wird als No-Op-Wert gesendet). `npm run test:parity` = Statuslogik JS↔Python. `npm run validate` = Daten- + Schema-Gate.
