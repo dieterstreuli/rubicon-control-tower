@@ -106,7 +106,8 @@ substanziellen Änderung: `git add -A && git commit` (Repo-Identität d.streuli@
 |---|---|
 | **Kanonisches Repo = `rubicon-dst` (main).** Push auf main → **Auto-Deploy** live. `rubicon-control-tower` ist archiviert. | Vor jeder Arbeit `git fetch dst && git merge --ff-only dst/main`. Grössere Änderungen über Feature-Branch + kurzen PR (verhindert Überschreiben). |
 | **Live-Daten liegen im GCS-Volume** (`gs://aixs-rubicon-tower-data`, europe-west4, gemountet auf `/app/src/data`). Der Mount **überschattet** die ins Image gebackenen Dateien. | Ein Code-Deploy fasst Live-Daten NICHT an. `src/data/` im Repo ist **nur Baseline** — Änderungen dort werden NICHT automatisch live. |
-| **Kein Re-Seed bei normalen Deploys** (`gcloud storage rsync` nur einmalig/bewusst). | Repo-`src/data` niemals als «so sieht die Produktion aus» lesen. Strukturänderungen (neue MS/Ströme/Briefings/Stores) brauchen einen **bewussten Weg live** — offener Punkt mit Gordon. |
+| **Kein Re-Seed bei normalen Deploys** (`gcloud storage rsync` nur einmalig/bewusst). | Repo-`src/data` niemals als «so sieht die Produktion aus» lesen. |
+| **Struktur → Live: die Merge-Brücke** (`merge-data.yml`, Gordon; DEPLOYMENT_GCP §10) — **GELÖST, nicht mehr offen.** Datenänderungen im Repo wirken NUR mit Marker **`[publish-data]` in der Commit-TITELZEILE** (erste Zeile, nicht im Body); Auto-Apply bei 0 Konflikten, sonst wird gehalten und gemeldet. Alternativ manuell via `workflow_dispatch` (`apply=false` = Dry-Run, `apply=true` = Backup + Anwenden). | **Wer Daten ändert, MUSS den Marker setzen** — sonst ist die Änderung nur Baseline und niemand sieht sie live. Bei grossen Änderungen zuerst Dry-Run. |
 | **Lokal = nur Entwicklung** (`npm run dev`). Keine parallele «Produktion» auf dem Mac. | Datenpflege, die live wirken soll, gehört in die Live-Instanz — nicht in lokale Dateien. |
 | **Keine Credentials/Personendaten ins Git.** | Personendaten (kontakte.json) werden entkoppelt; Sensitiv-Store bleibt lokal. |
 | **Versionsprüfung:** Footer zeigt Stand + Zeitstempel (Hover = Build-SHA). | So prüfen, ob ein Push wirklich live ist. |
@@ -121,7 +122,7 @@ nichts oder ins Leere:
 | Remote | Repo | Rolle |
 |---|---|---|
 | **`dst`** | `diditgmbh/rubicon-dst` | **Wahrheit und Deploy-Pfad.** Hier wird gearbeitet, hierhin wird gepusht — Push auf `main` löst den Auto-Deploy nach `rubicon.axs.aero` aus. Vor der Arbeit `git fetch dst && git merge --ff-only dst/main`. |
-| **`origin`** | `dieterstreuli/rubicon-control-tower` | **Reiner Spiegel / Backup — nie Quelle.** Nach dem `dst`-Push zusätzlich `git push origin HEAD`. Begründung: die AXS-Steuerungsplattform darf nicht ausschliesslich in der GitHub-Organisation des Dienstleisters liegen (Bus-Faktor-1-Risiko, Zielbild-Kriterium **Z-DAT-12**). Aus `origin` wird nie deployt und nie gemerged. |
+| **`origin`** | `dieterstreuli/rubicon-control-tower` | **Reiner Spiegel / Backup — nie Quelle.** Nach dem `dst`-Push zusätzlich `git push origin HEAD`. Begründung: die AXS-Steuerungsplattform darf nicht ausschliesslich in der GitHub-Organisation des Dienstleisters liegen (Bus-Faktor-1-Risiko, Zielbild-Kriterium **Z-DAT-12**). Aus `origin` wird nie deployt und nie gemerged. ⚠️ **Voraussetzung: GitHub Actions in origin deaktivieren** (Settings → Actions → General → Disable) — sonst startet der geerbte Deploy-Workflow bei jedem Spiegel-Push und schlägt fehl, weil Workload Identity nur `rubicon-dst` vertraut (passiert am 07.08., 2 Fehlläufe). |
 | **`didit`** | `diditgmbh/rubicon-control-tower` | **Tot (archiviert).** Nichts mehr dorthin pushen, nichts von dort ziehen. |
 
 **Merksatz:** *`dst` = wirkt · `origin` = versichert · `didit` = tot.*
