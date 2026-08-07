@@ -417,9 +417,14 @@ Die Deploy-Pipeline hebt den Job automatisch aufs neue Image (§ „Cloud-Run-Jo
 Der Job kennt drei Modi (`scripts/merge_bridge.py`): **dry-run** (nie schreiben), **`--auto`**
 (schreiben nur bei 0 Konflikten), **`--apply`** (immer schreiben).
 
-**Backup + Konflikte:** Bei `apply`/`auto` sichert der Workflow zuerst das ganze Volume nach
-`gs://aixs-rubicon-tower-backup/merge-<ts>/` (rollback-fähig). Der Merge-Job gibt eine JSON-Zusammenfassung
-+ Konfliktliste in die Logs; der Workflow-Step „Merge-Zusammenfassung" macht sie sichtbar.
+**Backup + Konflikte:** Bei `apply`/`auto` sichert der Workflow zuerst die **Quell-Stores** (Top-Level
+`*.json`/`*.yaml`) nach `gs://aixs-rubicon-tower-backup/merge-<ts>/` (rollback-fähig). **Bewusst OHNE
+`_generated/`** (PDFs/PNGs): regenerierbar über den docs-job, blähen das Backup auf und racen mit
+gleichzeitigen docs-job-Writes (ein rekursives `cp` traf eine gerade ersetzte Datei → 404 → Backup-Step
+failte → Merge übersprungen). Der Merge fasst nur die Stores an — nur die gehören ins Rollback-Backup.
+**Betriebsregel:** docs-job-Vollauf und Merge-`apply`/`auto` NICHT gleichzeitig laufen lassen. Der
+Merge-Job gibt eine JSON-Zusammenfassung + Konfliktliste in die Logs; der Workflow-Step
+„Merge-Zusammenfassung" macht sie sichtbar.
 
 **IAM (beim Einrichten):** `rubicon-deployer` braucht auf `rubicon-report-job`/`rubicon-merge-job`
 `run.jobs.run`/`update` (act-as `rubicon-runtime`, schon vorhanden) **+ Storage-Zugriff** auf
