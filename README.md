@@ -112,7 +112,7 @@ Betriebsregeln (für alle Beteiligten):
 
 ## Changelog (IT / Didit)
 
-**07.08.2026 — Serverseitige Doc-Erzeugung (zwei Wege):**
+**07.08.2026 — Serverseitige Doc-Erzeugung (zwei Wege), Server-DWD, Robustheit & Datenvertrag:**
 - **Weg 1 — feste, gebrandete Fix-Struktur-Dokumente live:** Traktanden/Entscheide/Briefings/
   Führungsrhythmus entstehen serverseitig über die Docs-Vorlagen-Engine als Google-Doc + PDF; Treiber
   als Cloud-Run-Job **`rubicon-docs-job`** (Dual-Mode, fasst nur `server_*`-Felder an). Additive
@@ -120,23 +120,20 @@ Betriebsregeln (für alle Beteiligten):
 - **Weg 2 — dynamische HTML→PDF (Report/Protokoll):** Gotenberg-Service **`rubicon-gotenberg`** ist
   deployed; App-Wiring **live** (`RUBICON_GOTENBERG_URL` am App-Service, Aufruf per **OIDC-ID-Token**),
   `html_to_pdf` verzweigt serverseitig auf Gotenberg (lokal unverändert Chrome).
-- **Robustheit:** Exponential-Backoff um die Docs-API-Writes (429 bei Docs-API-Quota 60/min);
-  `rubicon-docs-job` gehärtet (2 GiB, kein Retry, Timeout 3600 s).
-- **Kosten:** Label `app=rubicon` auf allen RUBICON-Ressourcen (Kosten-Separierung im geteilten Projekt).
-
-**07.08.2026 — Server-DWD, Doc-Pipeline-Robustheit, Daten­vertrag:**
 - **Server-DWD am Web-Service:** die App agiert server-seitig als `rubicon@axs.aero` (Env
   `RUBICON_WORKSPACE_SA` + `RUBICON_IMPERSONATE_SUBJECT`) — nötig für on-demand Protokoll-Export,
   Report-Generierung und Gemini-Notiz-Import (fielen sonst auf eine lokale User-OAuth-Datei zurück,
   die im Container fehlt). **Keine neue IAM-Bindung** — die bestehende `rubicon-runtime`-Delegation
   wird nur am Service aktiviert (`DEPLOYMENT_GCP.md §9.1`).
-- **Doc-Pipeline-Robustheit:** `batchUpdate`-Bündelung (Tabellen-Fill+Style in einem Batch;
-  Bullet-Anker eines Docs in **einem** Batch; ein Anker-Sweep) **+ Pacing** (< 60 Docs-Writes/min)
-  gegen die 429-Sättigung bei großen Läufen (viele Briefings).
+- **Robustheit:** Exponential-Backoff um die Docs-API-Writes (429 bei Docs-API-Quota 60/min) **+**
+  `batchUpdate`-Bündelung (Tabellen-Fill+Style in einem Batch; Bullet-Anker eines Docs in **einem**
+  Batch; ein Anker-Sweep) **+ Pacing** (< 60 Docs-Writes/min) gegen die 429-Sättigung bei großen
+  Läufen (viele Briefings); `rubicon-docs-job` gehärtet (2 GiB, kein Retry, Timeout 3600 s).
 - **Datenvertrag `meta` Repo-getrieben:** das Steuerungsdatum (`meta.today`) + `datenlieferungen_url`
   kommen jetzt aus dem **Repo** (`projekt.yaml`, via `[publish-data]` live) statt aus dem Volume
   bewahrt — vorher ließ sich das Steuerungsdatum live nicht fortschreiben (`DEPLOYMENT_GCP.md §10`).
 - **FR-Ordner-Default:** der Führungsrhythmus-Ordner hat wie die anderen drei einen Code-Default.
+- **Kosten:** Label `app=rubicon` auf allen RUBICON-Ressourcen (Kosten-Separierung im geteilten Projekt).
 
 **06.08.2026 — Serverseitige Doc-Erzeugung + Merge-Brücke:**
 - Reports (Woche/Monat/Quartal) werden jetzt **serverseitig chromefrei** erzeugt (Google
