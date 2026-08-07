@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import { T } from '../lib/theme.js'
-import { BASE, NOW, reloadKeepScroll, taskOverdue, tasksFor, tnr, BRIEFINGS } from '../lib/data.js'
+import { BASE, NOW, reloadKeepScroll, taskOverdue, tasksFor, tnr, BRIEFINGS, BRIEFINGS_DOCS } from '../lib/data.js'
 import { allMilestones, daysBetween, fmtDate, projectedEnd, statusOf } from '../lib/status.js'
 import { PROGRESS_STEPS } from '../lib/domain.js'
 import { can, canAny } from '../lib/permissions.js'
@@ -384,7 +384,12 @@ export function BriefingModal({ m, role, me, onClose, onNav }) {
             <div className="px-3 py-1.5 text-[10px] flex items-center justify-between"
               style={{ background: T.panelSoft, color: T.inkDim, fontFamily: T.mono }}>
               <span className="flex items-center gap-1.5"><FileText size={11} /> Briefing-PDF — {m.id}.pdf (automatisch generiert, aktueller Stand)</span>
-              <a href={pdfUrl} target="_blank" rel="noreferrer" style={{ color: T.brass }}>vollständig öffnen →</a>
+              <span className="flex items-center gap-2">
+                <a href={pdfUrl} target="_blank" rel="noreferrer" style={{ color: T.brass }}>vollständig öffnen →</a>
+                {BRIEFINGS_DOCS[m.id]?.server_doc_url && (
+                  <a href={BRIEFINGS_DOCS[m.id].server_doc_url} target="_blank" rel="noopener noreferrer" style={{ color: T.blue }}>Doc ↗</a>
+                )}
+              </span>
             </div>
             <a href={pdfUrl} target="_blank" rel="noreferrer" title="Vollständige PDF öffnen"
               className="block" style={{ maxHeight: '58vh', overflow: 'auto', background: '#fff' }}>

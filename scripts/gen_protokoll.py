@@ -24,7 +24,10 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, __file__.rsplit('/', 1)[0] + '/_tools')   # vendored Fallback (Portabilität, s. MIGRATION.md)
 sys.path.insert(0, '/Users/dieterstreuli/Chief/Tools')  # Original gewinnt auf dem DRS-Mac
 from html_to_pdf import html_to_pdf  # noqa: E402
-import fitz  # noqa: E402
+try:
+    import pymupdf as fitz  # kanonischer Name (PyMuPDF>=1.24.3); vermeidet die fitz-Deprecation
+except ImportError:          # Fallback fuer aeltere PyMuPDF-Installationen
+    import fitz  # noqa: E402
 
 MD2GDOC = '/Users/dieterstreuli/Chief/Tools/md_to_gdoc.py'
 import os as _os

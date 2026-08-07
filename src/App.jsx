@@ -9,7 +9,7 @@ import {
   ClipboardList, Plus, Trash2, Save, Sun, Moon, BarChart3, Circle, Scale,
 } from 'lucide-react'
 import { T, STATUS_META, ROLES, applyTheme, initialTheme } from './lib/theme.js'
-import { BASE, ISSUES, NOW, ALL_TASKS, MS_META, tasksFor, tnr, taskOverdue, RADAR, reloadKeepScroll, BRIEFINGS, FR, TRAKT_DOCS, PROTO, AGENDAS, REPORTS, ENTS, REMLOG } from './lib/data.js'
+import { BASE, ISSUES, NOW, ALL_TASKS, MS_META, tasksFor, tnr, taskOverdue, RADAR, reloadKeepScroll, BRIEFINGS, FR, PROTO, AGENDAS, REPORTS, ENTS, REMLOG } from './lib/data.js'
 import { Pill, Bar, Kpi, PhaseTag, phaseColor, phaseShort, FR_COL, MsPicker } from './components/ui.jsx'
 import { DeltaWoche, FragDieDaten, ZielbildCard } from './views/TowerWidgets.jsx'
 import { FuehrungsrhythmusCard, IntroView } from './views/IntroView.jsx'

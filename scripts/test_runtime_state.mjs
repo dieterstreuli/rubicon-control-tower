@@ -34,6 +34,8 @@ const state = {
   briefings: j('briefings.json'),
   fuehrungsrhythmus: j('fuehrungsrhythmus.json'),
   traktanden_docs: j('traktanden_docs.json'),
+  briefings_docs: j('briefings_docs.json'),
+  fuehrungsrhythmus_doc: j('fuehrungsrhythmus_doc.json'),
   protokolle: j('protokolle.json'),
   traktanden: j('traktanden.json'),
   reports_index: j('reports_index.json'),
@@ -68,6 +70,11 @@ check('initData: Roh-Stores injiziert (Identität)',
   && d.AGENDAS === state.traktanden && d.REPORTS === state.reports_index && d.BRIEFINGS === state.briefings
   && d.TRAKT_DOCS === state.traktanden_docs && d.REMLOG === state.reminder_log && d.ZBSTORE === state.zielbild
   && d.DOMAIN_JSON === state.domain)
+check('initData: neue Doc-Index-Stores injiziert (Identität)',
+  d.BRIEFINGS_DOCS === state.briefings_docs && d.FR_DOC === state.fuehrungsrhythmus_doc)
+const _mid = Object.keys(d.TRAKT_DOCS)[0]
+check('traktDocUrl: bekannte ID → /edit-URL', !_mid || (d.traktDocUrl(_mid) || '').endsWith('/edit'))
+check('traktDocUrl: unbekannt → null', d.traktDocUrl('__none__') === null)
 check('initData: tasksFor liest das Live-Binding', d.tasksFor(d.ALL_TASKS[0]?.ms_id).length > 0)
 
 // ── 3 · domain.js / theme.js — Domänen-SSOT POST-init aus data.js ──

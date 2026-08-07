@@ -25,6 +25,9 @@ def html_to_pdf(html_path, pdf_path=None, landscape=False, timeout=60):
     und beendet Chrome dann (mit eigenem Profilordner beendet es sich sonst nicht)."""
     html_path = Path(html_path).resolve()
     pdf_path = Path(pdf_path).resolve() if pdf_path else html_path.with_suffix(".pdf")
+    gotenberg = os.environ.get("RUBICON_GOTENBERG_URL")
+    if gotenberg:
+        return _render_via_gotenberg(gotenberg.rstrip("/"), html_path, pdf_path, landscape, timeout)
     if not Path(CHROME).exists():
         raise FileNotFoundError(f"Chrome nicht gefunden: {CHROME}")
     if pdf_path.exists():
@@ -56,6 +59,46 @@ def html_to_pdf(html_path, pdf_path=None, landscape=False, timeout=60):
     if not ok:
         err = proc.stderr.read().decode("utf-8", "ignore")[:600] if proc.stderr else ""
         raise RuntimeError(f"PDF nicht erzeugt. stderr: {err}")
+    return pdf_path
+
+
+def _multipart(boundary, fields, html_bytes):
+    """multipart/form-data-Body: Formfelder + die HTML-Datei als `files`/index.html (Gotenberg-Pflicht)."""
+    import io
+    b = boundary.encode()
+    buf = io.BytesIO()
+    for name, value in fields:
+        buf.write(b"--" + b + b"\r\n")
+        buf.write(f'Content-Disposition: form-data; name="{name}"\r\n\r\n'.encode())
+        buf.write(value.encode() + b"\r\n")
+    buf.write(b"--" + b + b"\r\n")
+    buf.write(b'Content-Disposition: form-data; name="files"; filename="index.html"\r\n')
+    buf.write(b"Content-Type: text/html\r\n\r\n")
+    buf.write(html_bytes + b"\r\n")
+    buf.write(b"--" + b + b"--\r\n")
+    return buf.getvalue()
+
+
+def _render_via_gotenberg(base_url, html_path, pdf_path, landscape, timeout):
+    """Serverseitige Fassung des lokalen Chrome-Renderers: POST self-contained HTML an einen
+    Gotenberg-Chromium-Endpoint, schreibt die PDF-Antwort nach pdf_path."""
+    import urllib.request
+    html_bytes = Path(html_path).read_bytes()
+    boundary = f"----rubicon{uuid.uuid4().hex}"
+    fields = [("preferCssPageSize", "true")]
+    if landscape:
+        fields.append(("landscape", "true"))
+    body = _multipart(boundary, fields, html_bytes)
+    req = urllib.request.Request(
+        f"{base_url}/forms/chromium/convert/html", data=body, method="POST",
+        headers={"Content-Type": f"multipart/form-data; boundary={boundary}"})
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        pdf = resp.read()
+    if pdf[:4] != b"%PDF":
+        raise RuntimeError(f"Gotenberg lieferte kein PDF (head={pdf[:8]!r})")
+    if pdf_path.exists():
+        pdf_path.unlink()
+    pdf_path.write_bytes(pdf)
     return pdf_path
 
 

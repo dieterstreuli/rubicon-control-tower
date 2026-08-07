@@ -12,7 +12,10 @@ public/pakete/<code>.pdf   -> public/pakete/<code>.png   (Seite 1)
 import sys
 from pathlib import Path
 
-import fitz  # PyMuPDF
+try:
+    import pymupdf as fitz  # kanonischer Name (PyMuPDF>=1.24.3); vermeidet die fitz-Deprecation
+except ImportError:          # Fallback fuer aeltere PyMuPDF-Installationen
+    import fitz
 
 ROOT = Path(__file__).resolve().parent.parent
 ZOOM = 2.0  # ~144 DPI — scharf genug für die Modal-Vorschau

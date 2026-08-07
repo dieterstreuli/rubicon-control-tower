@@ -29,11 +29,13 @@ log = logging.getLogger("rubicon.merge")
 # STAMMDATEN: aus dem Repo gepflegte Struktur/Definitionen — SEED überschreibt Volume.
 STAMMDATEN = ['domain.json', 'schema.json', 'briefings.json', 'fuehrungsrhythmus.json',
               'traktanden.json', 'kontakte.json', 'gemini_meetings.json']
-# TRANSAKTION: job-/app-geschriebene Live-Daten — Volume bleibt unberührt. reports_index.json
-# und traktanden_docs.json stehen hier, WEIL sie job-geschriebene server_doc_id/server_pdf_id
-# tragen; ein Repo-Überschreiben würde diese wipen. protokolle_sensitiv.json ist volume-only.
+# TRANSAKTION: job-/app-geschriebene Live-Daten — Volume bleibt unberührt. reports_index.json,
+# traktanden_docs.json, briefings_docs.json und fuehrungsrhythmus_doc.json stehen hier, WEIL sie
+# job-geschriebene server_doc_id/server_pdf_id tragen; ein Repo-Überschreiben würde diese wipen.
+# protokolle_sensitiv.json ist volume-only.
 TRANSAKTION = ['protokolle.json', 'protokolle_sensitiv.json', 'entscheide.json', 'reminder_log.json',
-               'report_comments.json', 'zielbild.json', 'reports_index.json', 'traktanden_docs.json']
+               'report_comments.json', 'zielbild.json', 'reports_index.json', 'traktanden_docs.json',
+               'briefings_docs.json', 'fuehrungsrhythmus_doc.json']
 # MISCH: Struktur (SEED) + Live-Pflege (Volume) müssen zusammengeführt werden (Merge-by-Key).
 MISCH = ['projekt.yaml', 'tasks.json']
 

@@ -139,6 +139,8 @@ export function createApi(rootDir) {
     // Leer-Defaults = das, was der Client heute bei Leerstand erwartet.
     fuehrungsrhythmus: jsonStore('fuehrungsrhythmus.json', { gruppen: [] }),
     traktandenDocs: jsonStore('traktanden_docs.json', {}),
+    briefingsDocs: jsonStore('briefings_docs.json', {}),
+    fuehrungsrhythmusDoc: jsonStore('fuehrungsrhythmus_doc.json', {}),
     traktanden: jsonStore('traktanden.json', { agendas: [] }),
     reportsIndex: jsonStore('reports_index.json', { reports: [] }),
     reminderLog: jsonStore('reminder_log.json', { reminders: [] }),
@@ -315,6 +317,8 @@ export function createApi(rootDir) {
           briefings: db.briefings.read(),
           fuehrungsrhythmus: db.fuehrungsrhythmus.read(),
           traktanden_docs: db.traktandenDocs.read(),
+          briefings_docs: db.briefingsDocs.read(),
+          fuehrungsrhythmus_doc: db.fuehrungsrhythmusDoc.read(),
           protokolle: db.protokolle.read(),
           traktanden: db.traktanden.read(),
           reports_index: db.reportsIndex.read(),

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { T } from '../lib/theme.js'
-import { ALL_TASKS, reloadKeepScroll, taskOverdue, tnr, FR, PROTO, AGENDAS } from '../lib/data.js'
+import { ALL_TASKS, reloadKeepScroll, taskOverdue, tnr, FR, PROTO, AGENDAS, traktDocUrl } from '../lib/data.js'
 import { fmtDate } from '../lib/status.js'
 import { PROGRESS_STEPS, TYP_ICON, TYP_LABEL } from '../lib/domain.js'
 import { can } from '../lib/permissions.js'
@@ -212,7 +212,12 @@ export function ErfassungView({ ms, today, role, me }) {
         <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
           <div className="flex items-center justify-between mb-2">
             <div className="text-[11px] uppercase tracking-widest" style={{ color: T.inkFaint, fontFamily: T.mono }}>Traktanden dieser Sitzung (Leitfaden)</div>
-            <a href={`/traktanden/${meetingId}.pdf`} target="_blank" rel="noreferrer" className="text-[11px]" style={{ color: T.brass }}><FileText size={11} className="inline mr-1" />Agenda-PDF</a>
+            <div className="flex items-center gap-2">
+              <a href={`/traktanden/${meetingId}.pdf`} target="_blank" rel="noreferrer" className="text-[11px]" style={{ color: T.brass }}><FileText size={11} className="inline mr-1" />Agenda-PDF</a>
+              {traktDocUrl(meetingId) && (
+                <a href={traktDocUrl(meetingId)} target="_blank" rel="noreferrer" className="text-[11px]" style={{ color: T.blue }}><FileText size={11} className="inline mr-1" />Doc ↗</a>
+              )}
+            </div>
           </div>
           <ol className="list-decimal pl-5 text-[11.5px] space-y-0.5" style={{ color: T.inkDim }}>
             {(agenda.traktanden || []).map((t, i) => <li key={i}>{t.titel} <span style={{ color: T.inkFaint }}>— {t.output}</span></li>)}

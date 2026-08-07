@@ -15,6 +15,8 @@ export let DOMAIN_JSON = null                    // domain.json → lib/domain.j
 export let BRIEFINGS = {}                        // briefings.json
 export let FR = { gruppen: [] }                  // fuehrungsrhythmus.json
 export let TRAKT_DOCS = {}                       // traktanden_docs.json
+export let BRIEFINGS_DOCS = {}                   // briefings_docs.json (server_*-Doc-Index je Milestone)
+export let FR_DOC = {}                           // fuehrungsrhythmus_doc.json (server_*-Doc-Index)
 export let PROTO = { protokolle: [] }            // protokolle.json
 export let AGENDAS = { agendas: [] }             // traktanden.json
 export let REPORTS = { reports: [] }             // reports_index.json
@@ -38,6 +40,8 @@ export function initData(state) {
   BRIEFINGS = state.briefings || {}
   FR = state.fuehrungsrhythmus || { gruppen: [] }
   TRAKT_DOCS = state.traktanden_docs || {}
+  BRIEFINGS_DOCS = state.briefings_docs || {}
+  FR_DOC = state.fuehrungsrhythmus_doc || {}
   PROTO = state.protokolle || { protokolle: [] }
   AGENDAS = state.traktanden || { agendas: [] }
   REPORTS = state.reports_index || { reports: [] }
@@ -76,6 +80,14 @@ export function reloadKeepScroll() {
 export const tasksFor = (msId) => ALL_TASKS.filter(t => t.ms_id === msId)
 export const tnr = (t) => 'T-' + String(t.nr || 0).padStart(3, '0')   // kurze Referenz-Nummer (dauerhaft, nie neu vergeben)
 export const taskOverdue = (t) => t.status === 'offen' && !!t.due && !!NOW && parseDate(t.due) < NOW
+
+/** Traktanden-Doc-URL aus TRAKT_DOCS — toleriert Alt-String (docId) und Neu-Objekt (server_doc_id). */
+export const traktDocUrl = (mid) => {
+  const v = TRAKT_DOCS[mid]
+  if (!v) return null
+  const id = typeof v === 'string' ? v : (v.server_doc_id || v.doc_id)
+  return id ? `https://docs.google.com/document/d/${id}/edit` : null
+}
 
 // ── K6 (01.08.): Plausibilitäts-Radar — rein regelbasierte Muster-Checks über
 // Milestones + Handlungen (kein KI-Raten). Logik unverändert; seit Block A als

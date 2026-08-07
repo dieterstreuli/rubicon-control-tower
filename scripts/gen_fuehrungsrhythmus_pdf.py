@@ -8,7 +8,10 @@ import json
 import sys
 from pathlib import Path
 
-import fitz  # PyMuPDF (PNG-Vorschau)
+try:
+    import pymupdf as fitz  # PyMuPDF (PNG-Vorschau); kanonischer Name, vermeidet die fitz-Deprecation
+except ImportError:          # Fallback fuer aeltere PyMuPDF-Installationen
+    import fitz
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, __file__.rsplit('/', 1)[0] + '/_tools')   # vendored Fallback (Portabilität, s. MIGRATION.md)

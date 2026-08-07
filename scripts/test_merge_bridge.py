@@ -220,6 +220,15 @@ def test_auto_holds_on_conflict():
         _cleanup(seed, data)
 
 
+# ── 9. Neue Doc-Index-Stores sind TRANSAKTION (server_doc_id/server_pdf_id) ──
+def test_new_doc_indexes_are_transaktion():
+    import merge_bridge as mb
+    assert "briefings_docs.json" in mb.TRANSAKTION
+    assert "fuehrungsrhythmus_doc.json" in mb.TRANSAKTION
+    # briefings.json/fuehrungsrhythmus.json bleiben STAMMDATEN (Struktur)
+    assert "briefings.json" in mb.STAMMDATEN and "fuehrungsrhythmus.json" in mb.STAMMDATEN
+
+
 TESTS = [
     test_stammdaten_overwrite,
     test_transaktion_untouched,
@@ -229,6 +238,7 @@ TESTS = [
     test_dry_run_writes_nothing,
     test_auto_applies_when_clean,
     test_auto_holds_on_conflict,
+    test_new_doc_indexes_are_transaktion,
 ]
 
 

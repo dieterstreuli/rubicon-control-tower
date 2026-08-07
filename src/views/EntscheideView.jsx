@@ -292,6 +292,7 @@ export function EntscheideView({ role, me, today }) {
                             <div style={{ color: T.inkFaint, fontFamily: T.mono }}>
                               {e.quelle ? `Quelle: Protokoll ${e.quelle} · ` : ''}erfasst {fmtDate(e.created_at)}
                               {e.export?.pdf && <> · <a href={e.export.pdf} target="_blank" rel="noreferrer" style={{ color: T.brass }}>Entscheid-PDF ↗</a></>}
+                              {e.export?.server_doc_url && <> · <a href={e.export.server_doc_url} target="_blank" rel="noopener noreferrer" style={{ color: T.blue }}>Doc ↗</a></>}
                               {e.export?.draft_id && <> · <a href="https://mail.google.com/mail/u/0/#drafts" target="_blank" rel="noreferrer" style={{ color: T.brass }} title="Gmail-Entwurf mit PDF-Anhang — DRS sendet">Gmail-Entwurf ↗</a></>}
                             </div>
                           </div>

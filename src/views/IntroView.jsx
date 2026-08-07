@@ -3,7 +3,7 @@ import { STATUS_META, T } from '../lib/theme.js'
 import { fmtDate, parseDate, statusOf } from '../lib/status.js'
 import { FR_COL, Pill } from '../components/ui.jsx'
 import { FileText } from 'lucide-react'
-import { FR, TRAKT_DOCS } from '../lib/data.js'
+import { FR, FR_DOC, traktDocUrl } from '../lib/data.js'
 
 // ── INTRO-PAGE: Sinn & Zweck · WS-Übersicht (grafisch, Live-Ampeln) · Zeitachse ──
 // Inhalte aus RUBICON-Doc v2 (Sektionen 1–3, 7); Ströme/Status live aus projekt.yaml.
@@ -207,11 +207,20 @@ export function FuehrungsrhythmusCard() {
           </div>
           <div className="text-[11px] mt-0.5" style={{ color: T.inkDim }}>{FR.untertitel}</div>
         </div>
-        <a href="/fuehrungsrhythmus.pdf" target="_blank" rel="noreferrer"
-          className="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded border whitespace-nowrap"
-          style={{ borderColor: T.brass, color: T.brass }}>
-          <FileText size={13} /> One-Pager als PDF
-        </a>
+        <span className="flex items-center gap-2">
+          <a href="/fuehrungsrhythmus.pdf" target="_blank" rel="noreferrer"
+            className="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded border whitespace-nowrap"
+            style={{ borderColor: T.brass, color: T.brass }}>
+            <FileText size={13} /> One-Pager als PDF
+          </a>
+          {FR_DOC?.server_doc_url && (
+            <a href={FR_DOC.server_doc_url} target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded border whitespace-nowrap"
+              style={{ borderColor: T.blue, color: T.blue }}>
+              <FileText size={13} /> Doc ↗
+            </a>
+          )}
+        </span>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-[11px]" style={{ minWidth: 820 }}>
@@ -247,8 +256,8 @@ export function FuehrungsrhythmusCard() {
                             style={{ borderColor: T.brass, color: T.brass }}>
                             <FileText size={10} /> PDF
                           </a>
-                          {TRAKT_DOCS[m.id] && (
-                            <a href={`https://docs.google.com/document/d/${TRAKT_DOCS[m.id]}/edit`} target="_blank" rel="noreferrer"
+                          {traktDocUrl(m.id) && (
+                            <a href={traktDocUrl(m.id)} target="_blank" rel="noreferrer"
                               className="inline-flex items-center justify-center gap-1 px-2 py-1 rounded border text-[10px]"
                               style={{ borderColor: T.blue, color: T.blue }}>
                               <FileText size={10} /> Doc

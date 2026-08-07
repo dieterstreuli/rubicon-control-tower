@@ -149,8 +149,8 @@ async function main() {
   // ── 9 · Runtime-State (Block A, 05.08.): /api/state = Client-Bootstrap-Nutzlast ──
   {
     const STATE_KEYS = ['projekt_yaml', 'tasks', 'domain', 'briefings', 'fuehrungsrhythmus',
-      'traktanden_docs', 'protokolle', 'traktanden', 'reports_index', 'entscheide',
-      'reminder_log', 'zielbild']
+      'traktanden_docs', 'briefings_docs', 'fuehrungsrhythmus_doc', 'protokolle', 'traktanden',
+      'reports_index', 'entscheide', 'reminder_log', 'zielbild', 'server']
     const { status, json } = await call('/api/state', { method: 'GET' })
     const keys = Object.keys(json || {}).filter(k => k !== 'ok').sort()
     const keysOk = JSON.stringify(keys) === JSON.stringify([...STATE_KEYS].sort())
@@ -160,7 +160,7 @@ async function main() {
       && !JSON.stringify(json ?? {}).includes('protokolle_sensitiv')
     const checks = [
       ['state: GET → 200 + ok:true', status === 200 && json?.ok === true],
-      ['state: genau die 12 Client-Stores (nicht mehr, nicht weniger)', keysOk],
+      ['state: genau die 15 Client-Stores (nicht mehr, nicht weniger)', keysOk],
       ['state: projekt_yaml ist roher, js-yaml-parsebarer String', typeof json?.projekt_yaml === 'string' && yamlOk],
       ['state: protokolle_sensitiv in keiner Form enthalten', sensFrei],
     ]
