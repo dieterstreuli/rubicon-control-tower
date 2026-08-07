@@ -417,6 +417,13 @@ Die Deploy-Pipeline hebt den Job automatisch aufs neue Image (§ „Cloud-Run-Jo
 Der Job kennt drei Modi (`scripts/merge_bridge.py`): **dry-run** (nie schreiben), **`--auto`**
 (schreiben nur bei 0 Konflikten), **`--apply`** (immer schreiben).
 
+**Doc-Regenerierung nach Merge (Hook):** Bei `apply`/`auto` führt der Workflow **nach** dem Merge-Job
+sequenziell den **`rubicon-docs-job`** aus — so passen die serverseitigen Weg-1-Docs (Traktanden/
+Entscheide/Briefings/FR) zum frisch publizierten Datenstand. Dank Content-Hash-Gating (§12.1) ist das
+**inkrementell** (nur geänderte Docs; No-Op, wenn nichts sich änderte) und **sequenziell** (kein
+Backup-Race mit der Doc-Erzeugung). Damit haben Datenänderer keinen separaten Trigger nötig: ein
+`[publish-data]`-Merge zieht die Docs automatisch nach.
+
 **Backup + Konflikte:** Bei `apply`/`auto` sichert der Workflow zuerst die **Quell-Stores** (Top-Level
 `*.json`/`*.yaml`) nach `gs://aixs-rubicon-tower-backup/merge-<ts>/` (rollback-fähig). **Bewusst OHNE
 `_generated/`** (PDFs/PNGs): regenerierbar über den docs-job, blähen das Backup auf und racen mit

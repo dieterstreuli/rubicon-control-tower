@@ -116,6 +116,22 @@ jobs:
             --command=python3 --args="${ARGS}"
           gcloud run jobs execute "${JOB}" --project="${PROJECT_ID}" --region="${REGION}" --wait
 
+      # Nach einem Daten-Merge (apply/auto) die serverseitigen Weg-1-Docs (Traktanden/Entscheide/
+      # Briefings/FR) regenerieren, damit die gebrandeten Google-Docs/PDFs zum frisch publizierten
+      # Datenstand passen. SEQUENZIELL nach dem Merge (kein Nebenlaeufigkeits-Race mit dem Backup)
+      # und dank Content-Hash-Gating INKREMENTELL: nur die durch den Merge geaenderten Docs werden
+      # neu gerendert (unveraenderte uebersprungen) -> No-Op, wenn sich nichts aenderte. Guard:
+      # ueberspringt sauber, falls der Job (noch) nicht existiert.
+      - name: Docs-Job ausfuehren (nach Merge-Apply, inkrementell)
+        if: steps.gate.outputs.proceed == '1' && (steps.gate.outputs.mode == 'apply' || steps.gate.outputs.mode == 'auto')
+        run: |
+          DOCS_JOB=rubicon-docs-job
+          if ! gcloud run jobs describe "${DOCS_JOB}" --project="${PROJECT_ID}" --region="${REGION}" >/dev/null 2>&1; then
+            echo "${DOCS_JOB} nicht gefunden — Doc-Regenerierung uebersprungen"
+            exit 0
+          fi
+          gcloud run jobs execute "${DOCS_JOB}" --project="${PROJECT_ID}" --region="${REGION}" --wait
+
       # Merge-Zusammenfassung + Konflikte aus den Job-Logs sichtbar machen.
       - name: Merge-Zusammenfassung
         if: always() && steps.gate.outputs.proceed == '1'
