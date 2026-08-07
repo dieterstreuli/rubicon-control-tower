@@ -217,6 +217,8 @@ Damit die additiven UI-Links (`traktDocUrl`, `BRIEFINGS_DOCS`, `FR_DOC`, `export
 | `briefings_docs.json` | `{milestone_id: {server_*}}` | `server_doc_id/url`, `server_pdf_id/url` |
 | `fuehrungsrhythmus_doc.json` | `{server_*}` (flach) | `server_doc_id/url`, `server_pdf_id/url` |
 
+Zusätzlich trägt jeder Server-Record ein **`server_hash`** (Content-Hash der Render-Eingaben) — Grundlage fürs **inkrementelle** Rendern: `gen_docs_server` überspringt unveränderte Docs (Hash gleich + `server_doc_id` vorhanden), `RUBICON_DOCS_FORCE=1` erzwingt den Vollauf. Additives Skalar-Feld, DB-tauglich; Dieters lokale Felder bleiben unangetastet.
+
 `/api/state` (`plugins/api-core.js`) reicht `traktanden_docs`/`briefings_docs`/`fuehrungsrhythmus_doc`
 an die SPA; `traktDocUrl(mid)` ist **shape-tolerant** (Alt-String → `docId`, Neu-Objekt →
 `server_doc_id || doc_id`). Fehlt die `server_*_url` (rein lokaler Stand), rendert das UI **keinen**

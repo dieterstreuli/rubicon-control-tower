@@ -23,7 +23,9 @@ PDF_MIME = "application/pdf"
 
 
 def _exec_retry(request, tries=6):
-    """request.execute() mit Backoff bei transienten Fehlern (429/500/503). Andere Fehler sofort weiter."""
+    """request.execute() mit Backoff bei transienten Fehlern. Retryt 429/500/503 UND das
+    Drive-Rate-Limit, das als `403` mit reason `userRateLimitExceeded`/`rateLimitExceeded`
+    kommt (NICHT ein echtes Permission-403). Andere Fehler sofort weiter."""
     import time, random
     from googleapiclient.errors import HttpError
     for attempt in range(tries):
@@ -31,7 +33,11 @@ def _exec_retry(request, tries=6):
             return request.execute()
         except HttpError as ex:
             status = getattr(getattr(ex, "resp", None), "status", None)
-            if status in (429, 500, 503) and attempt < tries - 1:
+            content = getattr(ex, "content", b"") or b""
+            if isinstance(content, str):
+                content = content.encode("utf-8", "ignore")
+            rate_403 = status == 403 and (b"userRateLimitExceeded" in content or b"rateLimitExceeded" in content)
+            if (status in (429, 500, 503) or rate_403) and attempt < tries - 1:
                 time.sleep(min(2 ** attempt + random.uniform(0, 1), 30))
                 continue
             raise

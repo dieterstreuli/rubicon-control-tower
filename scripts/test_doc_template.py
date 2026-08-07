@@ -358,6 +358,57 @@ def test_exec_retry_backs_off_on_429():
     assert req.n == 2                                   # 1x 429 (retry) + 1x Erfolg
 
 
+def test_exec_retry_retries_403_ratelimit():
+    """Drive-Rate-Limit kommt als 403 userRateLimitExceeded -> muss retryt werden."""
+    import time
+    from googleapiclient.errors import HttpError
+
+    class _Resp(dict):
+        status = 403
+        reason = "Forbidden"
+
+    class _Req:
+        def __init__(self): self.n = 0
+        def execute(self):
+            self.n += 1
+            if self.n == 1:
+                raise HttpError(_Resp(), b'{"error":{"errors":[{"reason":"userRateLimitExceeded"}]}}')
+            return {"ok": True}
+
+    req = _Req()
+    orig = time.sleep
+    time.sleep = lambda *a: None
+    try:
+        out = dt._exec_retry(req)
+    finally:
+        time.sleep = orig
+    assert out == {"ok": True}
+    assert req.n == 2                                   # 403-Rate-Limit -> retry + Erfolg
+
+
+def test_exec_retry_no_retry_403_permission():
+    """Echtes Permission-403 (kein Rate-Limit-reason) -> NICHT retryen, sofort werfen."""
+    from googleapiclient.errors import HttpError
+
+    class _Resp(dict):
+        status = 403
+        reason = "Forbidden"
+
+    class _Req:
+        def __init__(self): self.n = 0
+        def execute(self):
+            self.n += 1
+            raise HttpError(_Resp(), b'{"error":{"errors":[{"reason":"insufficientPermissions"}]}}')
+
+    req = _Req()
+    try:
+        dt._exec_retry(req)
+        assert False, "sollte HttpError werfen"
+    except HttpError:
+        pass
+    assert req.n == 1                                   # kein Retry bei Permission-403
+
+
 if __name__ == "__main__":
     test_build_replace_requests()
     test_render_copies_fills_exports_and_cleans()
@@ -378,4 +429,6 @@ if __name__ == "__main__":
     test_scanning_skips_anchors()
     test_all_text_walks_paragraphs_and_tables()
     test_exec_retry_backs_off_on_429()
-    print("doc_template: 19/19 gruen")
+    test_exec_retry_retries_403_ratelimit()
+    test_exec_retry_no_retry_403_permission()
+    print("doc_template: 21/21 gruen")

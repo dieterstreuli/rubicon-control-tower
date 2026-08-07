@@ -133,6 +133,7 @@ Betriebsregeln (für alle Beteiligten):
   kommen jetzt aus dem **Repo** (`projekt.yaml`, via `[publish-data]` live) statt aus dem Volume
   bewahrt — vorher ließ sich das Steuerungsdatum live nicht fortschreiben (`DEPLOYMENT_GCP.md §10`).
 - **FR-Ordner-Default:** der Führungsrhythmus-Ordner hat wie die anderen drei einen Code-Default.
+- **Inkrementelle Doc-Erzeugung:** der `rubicon-docs-job` rendert nur noch **geänderte** Docs — je Doc ein Content-Hash der Quelldaten (`server_hash`); unveränderte werden übersprungen. Ein normaler Lauf schreibt typisch 0–wenige statt ~214 Docs (nimmt die Quota-Last raus). `RUBICON_DOCS_FORCE=1` erzwingt den Vollauf (Vorlagen-Inhaltsänderung / extern getrashtes Doc).
 - **Kosten:** Label `app=rubicon` auf allen RUBICON-Ressourcen (Kosten-Separierung im geteilten Projekt).
 
 **06.08.2026 — Serverseitige Doc-Erzeugung + Merge-Brücke:**

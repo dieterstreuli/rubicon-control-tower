@@ -5,6 +5,7 @@ Entscheide, Briefings, Führungsrhythmus) über die gebrandete doc_template-Engi
 Läuft NUR im Server-Modus (DWD-Env). Dieters lokaler Betrieb bleibt unberührt (eigene Generatoren,
 eigene Felder). Server fasst ausschließlich server_*-Felder an."""
 import datetime as dt
+import hashlib
 import json
 import logging
 import os
@@ -95,26 +96,54 @@ def _server_fields(r, with_stand):
     return f
 
 
+def _force():
+    """RUBICON_DOCS_FORCE gesetzt -> Hash-Gating aus, alles neu rendern. Noetig, wenn der Quell-
+    Hash die Aenderung NICHT sieht: (a) Vorlagen-INHALT geaendert (gleiche template_id); (b) ein
+    Server-Doc wurde extern getrasht/geloescht (Quell-Hash matcht -> wuerde sonst dauerhaft
+    uebersprungen, der Store-Link dinge ins Leere) -> FORCE-Lauf erzeugt es neu."""
+    return bool(os.environ.get("RUBICON_DOCS_FORCE"))
+
+
+def _render_hash(template_id, spec):
+    """Stabiler Content-Hash der Render-Eingaben (Vorlagen-ID + Spec = values/tables/bullets).
+    Aendert sich NUR, wenn sich die Quelldaten oder die Vorlagen-ID aendern -> Grundlage fuers
+    inkrementelle Ueberspringen. Der `stand`-Zeitstempel geht NICHT ein (steht nur im Store-
+    Record) — unveraenderte Daten behalten ihren alten Stand (korrekt, das Doc aenderte sich nicht)."""
+    blob = json.dumps({"t": template_id, "s": spec}, sort_keys=True, ensure_ascii=False, default=str)
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()[:16]
+
+
+def _skip(prev, h):
+    """True -> Item unveraendert + Server-Doc existiert -> ueberspringen (nicht rendern).
+    FORCE hebt das auf. `prev` = bisheriger Store-Record (dict) oder {}."""
+    return (not _force()) and prev.get("server_hash") == h and bool(prev.get("server_doc_id"))
+
+
 def _do_entscheide(drive, docs, root):
     store = _load(root, "entscheide.json")
     if not store or not store.get("entscheide"):
-        return 0
-    results = {}  # id -> materialize-Ergebnis
-    n = 0
+        return {"rendered": 0, "skipped": 0}
+    th = dm.template_id("entscheide")
+    results = {}  # id -> {"r": materialize-Ergebnis, "h": render_hash}
+    rendered = skipped = 0
     for e in store["entscheide"]:
         try:
             spec = dmap.entscheid_spec(e)
-            exp = dict(e.get("export") or {})
+            h = _render_hash(th, spec)
+            exp0 = e.get("export") or {}
+            if _skip(exp0, h):                      # unveraendert + Doc existiert -> ueberspringen
+                skipped += 1
+                continue
             r = _mat(drive, docs, "entscheide", spec,
-                     exp.get("server_doc_id"), exp.get("server_pdf_id"))
+                     exp0.get("server_doc_id"), exp0.get("server_pdf_id"))
             _vol_pdf(root, "entscheide", spec["name"], r["pdf_bytes"])
-            results[e.get("id")] = r
-            n += 1
+            results[e.get("id")] = {"r": r, "h": h}
+            rendered += 1
         except Exception as ex:  # noqa: BLE001
             log.warning("entscheid %s fehlgeschlagen: %s", e.get("id"), ex)
     if results:
         # Race-Schutz: Store FRISCH laden (Node-API schreibt entscheide.json live) und NUR die
-        # export.server_*-Felder je id patchen. with_stand=False -> lokales export.stand unberührt.
+        # export.server_*/server_hash-Felder je id patchen. with_stand=False -> lokales export.stand unberührt.
         fresh = _load(root, "entscheide.json")
         if fresh is None:
             log.warning("entscheide.json beim Reload verschwunden — server_*-Patch uebersprungen")
@@ -123,61 +152,76 @@ def _do_entscheide(drive, docs, root):
                 if not e.get("id") or e.get("id") not in results:   # falsy/unbekannte id skippen
                     continue
                 exp = dict(e.get("export") or {})
-                exp.update(_server_fields(results[e["id"]], with_stand=False))
+                exp.update(_server_fields(results[e["id"]]["r"], with_stand=False))
+                exp["server_hash"] = results[e["id"]]["h"]
                 e["export"] = exp
             _write(root, "entscheide.json", fresh)
-    return n
+    log.info("entscheide rendered=%d skipped=%d", rendered, skipped)
+    return {"rendered": rendered, "skipped": skipped}
 
 
 def _do_traktanden(drive, docs, root):
     store = _load(root, "traktanden.json")
     if not store or not store.get("agendas"):
-        return 0
+        return {"rendered": 0, "skipped": 0}
+    th = dm.template_id("traktanden")
     idx = _load(root, "traktanden_docs.json") or {}
-    n = 0
+    rendered = skipped = 0
     for a in store["agendas"]:
         mid = a.get("meeting_id")
         try:
             spec = dmap.traktanden_spec(a)
+            h = _render_hash(th, spec)
             prev = idx.get(mid)
             prev_dict = prev if isinstance(prev, dict) else {}
+            if _skip(prev_dict, h):                 # unveraendert + Server-Doc existiert -> ueberspringen
+                skipped += 1
+                continue
             # Trash-Ziel NUR das vorherige SERVER-Doc — NIE der Alt-String (Dieters lokale Doc-ID).
             prev_doc = prev_dict.get("server_doc_id")
             prev_pdf = prev_dict.get("server_pdf_id")
             r = _mat(drive, docs, "traktanden", spec, prev_doc, prev_pdf)
             rec = _server_fields(r, with_stand=True)
+            rec["server_hash"] = h
             # Dieters lokale Doc-ID erhalten (nie trashen): Alt-String ODER prev_dict["doc_id"].
             local_doc = prev if isinstance(prev, str) else prev_dict.get("doc_id")
             if local_doc:
                 rec["doc_id"] = local_doc
             idx[mid] = rec
             _vol_pdf(root, "traktanden", spec["name"], r["pdf_bytes"])
-            n += 1
+            rendered += 1
         except Exception as ex:  # noqa: BLE001
             log.warning("traktanden %s fehlgeschlagen: %s", mid, ex)
     _write(root, "traktanden_docs.json", idx)
-    return n
+    log.info("traktanden rendered=%d skipped=%d", rendered, skipped)
+    return {"rendered": rendered, "skipped": skipped}
 
 
 def _do_fr(drive, docs, root):
     fr = _load(root, "fuehrungsrhythmus.json")
     if not fr:
-        return 0
+        return {"rendered": 0, "skipped": 0}
     if not FOLDERS["fuehrungsrhythmus"]:
         log.error("RUBICON_DRIVE_FR_FOLDER ungesetzt — FR-Doc wird NICHT erzeugt (kein stiller ok).")
         return "ENV_MISSING"
     prev = _load(root, "fuehrungsrhythmus_doc.json") or {}
     try:
         spec = dmap.fr_spec(fr)
+        h = _render_hash(dm.template_id("fuehrungsrhythmus"), spec)
+        if _skip(prev, h):                          # unveraendert + Doc existiert -> ueberspringen
+            log.info("fuehrungsrhythmus rendered=0 skipped=1")
+            return {"rendered": 0, "skipped": 1}
         r = _mat(drive, docs, "fuehrungsrhythmus", spec,
                  prev.get("server_doc_id"), prev.get("server_pdf_id"))
-        _write(root, "fuehrungsrhythmus_doc.json", _server_fields(r, with_stand=True))
+        rec = _server_fields(r, with_stand=True)
+        rec["server_hash"] = h
+        _write(root, "fuehrungsrhythmus_doc.json", rec)
         _vol_pdf(root, "", "fuehrungsrhythmus.pdf", r["pdf_bytes"])
         _vol_png(root, "", "fuehrungsrhythmus.png", r["pdf_bytes"])
-        return 1
+        return {"rendered": 1, "skipped": 0}
     except Exception as ex:  # noqa: BLE001
         log.warning("fuehrungsrhythmus fehlgeschlagen: %s", ex)
-        return 0
+        return {"rendered": 0, "skipped": 0}
 
 
 def _do_briefings(drive, docs, root):
@@ -185,11 +229,12 @@ def _do_briefings(drive, docs, root):
     yml = Path(ddir) / "projekt.yaml"
     bpath = Path(ddir) / "briefings.json"
     if not yml.exists() or not bpath.exists():
-        return 0
+        return {"rendered": 0, "skipped": 0}
     data = yaml.safe_load(yml.read_text())
     briefings = json.loads(bpath.read_text())
+    th = dm.template_id("briefings")
     idx = _load(root, "briefings_docs.json") or {}
-    n = 0
+    rendered = skipped = 0
     for ws in (data.get("workstreams") or []):
         ws_name = f"{ws.get('code')} — {ws.get('name')}"
         for m in (ws.get("milestones") or []):
@@ -197,17 +242,24 @@ def _do_briefings(drive, docs, root):
             try:
                 b = briefings.get(mid) or {}
                 spec = dmap.briefing_spec(m, b, ws_name)
+                h = _render_hash(th, spec)
                 prev = idx.get(mid) or {}
+                if _skip(prev, h):                  # unveraendert + Doc existiert -> ueberspringen
+                    skipped += 1
+                    continue
                 r = _mat(drive, docs, "briefings", spec,
                          prev.get("server_doc_id"), prev.get("server_pdf_id"))
-                idx[mid] = _server_fields(r, with_stand=True)
+                rec = _server_fields(r, with_stand=True)
+                rec["server_hash"] = h
+                idx[mid] = rec
                 _vol_pdf(root, "briefings", spec["name"], r["pdf_bytes"])
                 _vol_png(root, "briefings", _png_name(spec["name"]), r["pdf_bytes"])
-                n += 1
+                rendered += 1
             except Exception as ex:  # noqa: BLE001
                 log.warning("briefing %s fehlgeschlagen: %s", mid, ex)
     _write(root, "briefings_docs.json", idx)
-    return n
+    log.info("briefings rendered=%d skipped=%d", rendered, skipped)
+    return {"rendered": rendered, "skipped": skipped}
 
 
 def run(drive, docs, root):

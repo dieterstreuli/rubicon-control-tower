@@ -537,6 +537,13 @@ seine eigenen on-demand Drive/Docs-Aktionen, s. §11) — an dieser Job-Invarian
 - **Template-Override (optional):** `RUBICON_TEMPLATE_<TYP>` (Singular, z.B.
   `RUBICON_TEMPLATE_ENTSCHEIDE`) übersteuert die Template-ID aus
   `scripts/_tools/rubicon_templates.json`.
+- **`RUBICON_DOCS_FORCE` (optional):** hebt das **inkrementelle Hash-Gating** auf und rendert
+  ALLES neu. Standard ist inkrementell: je Doc wird ein Content-Hash der Render-Eingaben
+  (Vorlagen-ID + Spec, ohne Zeitstempel) als `server_hash` neben `server_doc_id` gespeichert;
+  ein Lauf **überspringt** unveränderte Docs (Hash gleich + Server-Doc existiert) und rendert nur
+  geänderte/neue → ein normaler Lauf schreibt typisch 0–wenige Docs (nimmt die Docs-/Drive-Quota-
+  Last raus). FORCE nötig bei **Vorlagen-Inhaltsänderung** (gleiche Template-ID) oder wenn ein
+  Server-Doc **extern getrasht** wurde (Hash matcht sonst → dauerhaft übersprungen).
 - **Volume/Standard-Env wie die anderen Jobs:** `RUBICON_DATA_DIR`/`RUBICON_DOCS_DIR` (= Volume),
   `RUBICON_PY`, plus die DWD-Env (`RUBICON_WORKSPACE_SA`, `RUBICON_IMPERSONATE_SUBJECT`).
 

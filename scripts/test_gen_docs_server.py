@@ -76,8 +76,49 @@ def test_fr_guard_env_missing():
     assert res["per_typ"]["fuehrungsrhythmus"] == "ENV_MISSING"   # lauter Marker, kein 0/ok
     assert not os.path.exists(os.path.join(root, "src/data/fuehrungsrhythmus_doc.json"))  # nicht geschrieben
 
+def test_hash_gating_skips_unchanged():
+    # Inkrementell: 1. Lauf rendert alles + schreibt server_hash; 2. Lauf (unveraenderte Daten)
+    # ueberspringt ALLES -> materialize wird nicht erneut aufgerufen.
+    for k in ("RUBICON_DATA_DIR", "RUBICON_DOCS_DIR", "RUBICON_DOCS_FORCE"):
+        os.environ.pop(k, None)
+    os.environ["RUBICON_DRIVE_FR_FOLDER"] = "F-FR"
+    import doc_materialize as dm, gen_docs_server as gds
+    gds.FOLDERS["fuehrungsrhythmus"] = "F-FR"
+    calls = [0]
+    def _mat(*a, **k):
+        calls[0] += 1
+        return {"doc_id": "D", "doc_url": "u/D/edit", "pdf_id": "P", "pdf_url": "v/P", "pdf_bytes": b"%PDF x"}
+    dm.materialize = _mat
+    root = tempfile.mkdtemp()
+    os.makedirs(os.path.join(root, "src/data"))
+    json.dump({"entscheide": [{"id": "E-1", "titel": "T", "entscheid": "B"}]},
+              open(os.path.join(root, "src/data/entscheide.json"), "w"))
+    json.dump({"agendas": [{"meeting_id": "m1", "traktanden": []}]},
+              open(os.path.join(root, "src/data/traktanden.json"), "w"))
+    json.dump({"titel": "T", "untertitel": "U", "gruppen": [], "grundsaetze": []},
+              open(os.path.join(root, "src/data/fuehrungsrhythmus.json"), "w"))
+    json.dump({"M01": {"kontext": "k"}}, open(os.path.join(root, "src/data/briefings.json"), "w"))
+    open(os.path.join(root, "src/data/projekt.yaml"), "w").write(
+        "meta: {today: 2026-08-01}\nworkstreams:\n- code: WS4\n  name: X\n  milestones:\n  - {id: M01, name: N}\n")
+    gds.run(_D(), _D(), root)
+    n1 = calls[0]
+    assert n1 == 4                                   # entscheid + traktand + fr + briefing gerendert
+    r2 = gds.run(_D(), _D(), root)                   # 2. Lauf, unveraenderte Daten
+    assert calls[0] == n1                            # materialize NICHT erneut -> alles uebersprungen
+    for typ in ("entscheide", "traktanden", "fuehrungsrhythmus", "briefings"):
+        assert r2["per_typ"][typ] == {"rendered": 0, "skipped": 1}, (typ, r2["per_typ"][typ])
+    # FORCE hebt das Gating auf -> rendert wieder
+    os.environ["RUBICON_DOCS_FORCE"] = "1"
+    try:
+        gds.run(_D(), _D(), root)
+        assert calls[0] == n1 + 4                     # alle vier erneut gerendert
+    finally:
+        os.environ.pop("RUBICON_DOCS_FORCE", None)
+
+
 if __name__ == "__main__":
     test_run_writes_stores()
     test_traktanden_never_trashes_local_doc()
     test_fr_guard_env_missing()
-    print("gen_docs_server: 3/3 gruen")
+    test_hash_gating_skips_unchanged()
+    print("gen_docs_server: 4/4 gruen")
