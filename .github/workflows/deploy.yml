@@ -61,29 +61,22 @@ jobs:
       # Deploy behaelt IAP-Annotation + Gruppen-Binding (werden nicht angefasst).
       # GCS-Volume auf /app/src/data = Persistenz; max-instances=1 = Single-Writer.
       #
-      # MULTI-CONTAINER (07.08.2026): App-Container (Ingress, Port 8080) + Gotenberg-Sidecar.
-      # gen_protokoll (vom Web-Service getriggert) rendert HTML->PDF ueber den Sidecar statt lokales
-      # Chrome; der App-Container erreicht ihn ueber localhost:3000 (geteilter Netz-Namespace).
-      # RUBICON_GOTENBERG_URL biegt den PDF-Schritt in html_to_pdf um; Env unset -> Chrome-Pfad (lokal).
-      # Service-level-Flags stehen VOR dem ersten --container; container-spezifische danach.
-      # --memory je Container: Gotenberg/Chromium braucht mehr als den 512Mi-Default (Werte tunebar).
-      # gotenberg-Image: Docker-Hub-Public; fuer Prod-Zuverlaessigkeit ggf. nach Artifact Registry spiegeln.
-      # ACHTUNG: erster Deploy nach dieser Umstellung auf Multi-Container BEOBACHTEN (RAM/Start/localhost).
+      # Gotenberg-Sidecar (Weg 2, gen_protokoll serverseitig) folgt SEPARAT via Service-YAML
+      # (`gcloud run services replace`): ueber imperative --container-Flags kollidiert der
+      # EXPOSE-3000-Port des Gotenberg-Images mit dem App-Port -> Cloud Run erlaubt genau EINEN
+      # Container mit Port. Solange kein Sidecar existiert, ist RUBICON_GOTENBERG_URL NICHT gesetzt
+      # -> `html_to_pdf` bleibt auf dem (lokalen) Chrome-Pfad; der serverseitige Protokoll-PDF-Weg
+      # ist damit weiterhin "geplant" (kein Regress ggue. dem heutigen Stand).
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy "${SERVICE}" \
             --project="${PROJECT_ID}" --region="${REGION}" \
+            --image="${IMAGE}:${GITHUB_SHA}" \
             --service-account=rubicon-runtime@aixs-260106.iam.gserviceaccount.com \
-            --no-allow-unauthenticated --max-instances=1 \
+            --no-allow-unauthenticated --max-instances=1 --port=8080 \
             --add-volume=name=data,type=cloud-storage,bucket="${BUCKET}" \
-            --container=app \
-              --image="${IMAGE}:${GITHUB_SHA}" \
-              --port=8080 --memory=1Gi --cpu=1 \
-              --add-volume-mount=volume=data,mount-path=/app/src/data \
-              --set-env-vars="^@^RUBICON_OK_ORIGINS=https://rubicon.axs.aero,https://rubicon-tower-646221535662.europe-west4.run.app@RUBICON_PY=/usr/bin/python3@RUBICON_DOCS_DIR=/app/src/data/_generated@RUBICON_GOTENBERG_URL=http://localhost:3000" \
-            --container=gotenberg \
-              --image=docker.io/gotenberg/gotenberg:8 \
-              --memory=1Gi --cpu=1
+            --add-volume-mount=volume=data,mount-path=/app/src/data \
+            --set-env-vars="^@^RUBICON_OK_ORIGINS=https://rubicon.axs.aero,https://rubicon-tower-646221535662.europe-west4.run.app@RUBICON_PY=/usr/bin/python3@RUBICON_DOCS_DIR=/app/src/data/_generated"
 
       # Die Cloud-Run-JOBS (report + merge) pinnen ihren Image-Digest beim update — die
       # Service-Deploy oben aktualisiert sie NICHT. Ohne diesen Schritt laufen die geplanten
