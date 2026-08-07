@@ -4,6 +4,14 @@ Kontrollturm für Projekt RUBICON («Alea iacta est.») — Transformationsplan
 AXS Group 2026/27. 8-Monats-Kernumsetzung (01.09.2026 → 30.04.2027) +
 gesetzlicher Nachlauf Q2/27.
 
+> **Instruktions-Stand:** 2026-08-08 · zuletzt geprüft 08.08.2026 (Didit: Server-Pipeline-Verweis,
+> Domänen-Zuständigkeit, Datenvertrag, Push-Regeln, Kontext-Legende ergänzt).
+>
+> **Kontext-Tags:** `[Mac]` = nur die lokale Dev-Umgebung (DRS-Mac) · `[Server]` = nur die Live-Instanz
+> `rubicon.axs.aero` · ohne Tag = universell. `[Mac]`-lastig: launchd-Cron (`reports_cron`), `~/Chief/Tools`,
+> der Remotes-Block. `[Server]`-lastig: GCS-Volume, Cloud-Run-Jobs, Merge-Brücke — Details in
+> `DEPLOYMENT_GCP.md` (s. Abschnitt „Server-Seite").
+
 ## Architektur-Grundregeln (verbindlich)
 
 1. **Einzige Wahrheitsquelle:** alle Projektdaten leben in `src/data/projekt.yaml`.
@@ -126,6 +134,58 @@ nichts oder ins Leere:
 | **`didit`** | `diditgmbh/rubicon-control-tower` | **Tot (archiviert).** Nichts mehr dorthin pushen, nichts von dort ziehen. |
 
 **Merksatz:** *`dst` = wirkt · `origin` = versichert · `didit` = tot.*
+
+## Server-Seite → DEPLOYMENT_GCP.md  `[Server]`
+
+Diese Datei deckt den **lokalen** Tower + das Datenmodell. Die **serverseitige** Doc-Erzeugung und
+Infrastruktur sind kanonisch in **`DEPLOYMENT_GCP.md`**: Weg 1 (gebrandete Fix-Docs via
+`gen_docs_server.py`/`doc_template.py` → Google-Doc + PDF, inkrementell per Content-Hash), Weg 2
+(dynamische HTML→PDF via **Gotenberg**), die Cloud-Run-Jobs (`rubicon-docs-job`/`-report-job`/
+`-merge-job`), keyless-DWD, Scheduler, Merge-Brücke. Die lokal-fokussierte Dateikarte oben nennt nur
+die Mac-Generatoren — hier die **Dual-Mode-Pendants**:
+
+| Lokal (DRS-Mac) | Server (Live) |
+|---|---|
+| `gen_briefing_pdfs`/`gen_traktanden_pdfs`/`gen_protokoll` → `public/` (Chrome-PDF) | `gen_docs_server.py` (Weg 1) → Doc + PDF im Shared Drive + Volume; Protokoll-PDF via Gotenberg (Weg 2) |
+| `gen_report.py` (Chrome-PDF + `md_to_gdoc`) | `gen_report.py` Server-Pfad (Doc-Export, chromefrei) |
+| launchd-Cron Mo 06:00 | Cloud Scheduler → `rubicon-report-job`; Weg-1-Docs regenerieren nach `[publish-data]`-Merge |
+| User-OAuth (`~/.config/google-mcp`) | keyless-DWD als `rubicon@axs.aero` |
+
+## Datenvertrag (maschinenlesbar; Zielbild = 1:1 DB-Schema)
+
+Kanonische Quelle der Klassen = `scripts/merge_bridge.py`, Feld-Schema = `src/data/schema.json`.
+
+```yaml
+store_klassen:               # Merge-Brücke (DEPLOYMENT_GCP §10)
+  stammdaten:  [domain, schema, briefings, fuehrungsrhythmus, traktanden, kontakte, gemini_meetings]   # Repo (SEED) überschreibt Volume
+  transaktion: [protokolle, protokolle_sensitiv, entscheide, reminder_log, report_comments, zielbild,
+                reports_index, traktanden_docs, briefings_docs, fuehrungsrhythmus_doc]                  # Volume unberührt (job-/app-geschrieben)
+  misch:       [projekt.yaml, tasks.json]                                                               # Merge-by-Key (id)
+meta:                        # Repo-getrieben (nicht mehr Volume-bewahrt)
+  quelle: repo/projekt.yaml  # meta.today (Steuerungsdatum) + datenlieferungen_url; live via [publish-data]
+dual_mode:                   # Server fasst NUR server_*-Felder an; lokale Felder nie umbenennen/entfernen (additiv)
+  server_felder: [server_doc_id, server_doc_url, server_pdf_id, server_pdf_url, stand, server_hash]     # server_hash = inkrementelles Gating
+  ablage:        { report: reports_index.json, traktanden: traktanden_docs.json, entscheide: entscheide.json→export,
+                   briefings: briefings_docs.json, fr: fuehrungsrhythmus_doc.json }
+db_zielbild: "stabile Keys; server_* additiv neben den lokalen Feldern → 1:1 Tabellenschema."
+```
+
+## Domänen-Zuständigkeit (wer ändert was)
+
+- **DRS (fachlich-inhaltlich):** `projekt.yaml` (SSOT), `status.js`, Inhalte von briefings/traktanden/
+  entscheide/tasks, UI-Views, Rollen/Führungsmodell. Owner der Wahrheit.
+- **Didit/IT (Infrastruktur/Umsetzung):** Server-Doc-Pipeline (`doc_template`/Gotenberg/`gen_docs_server`),
+  GCS-Volume, Cloud-Run-Jobs, DWD/SA/IAM, `deploy.yml`, Merge-Brücke, CMEK.
+- **Faustregel:** Server-/Infra-Artefakte nicht ohne Didit-Kontext ändern; DRS-Fachdaten nicht ohne DRS-Freigabe.
+
+## Push-/Zusammenarbeitsregeln (Multi-Agent)
+
+- **HEAD-Check vor JEDEM Push (alle):** `git fetch` + prüfen, ob `main` weitergelaufen ist; bei Divergenz
+  **rebasen** — nie blind pushen (parallele Agenten/Sessions clobbern sich sonst).
+- **DRS:** darf nach HEAD-Check/Rebase **direkt** auf `main` pushen (PR optional).
+- **IT/Didit-Agenten:** Remote-Veröffentlichung **nur per PR** (klein, Review), nicht direkt auf `main`.
+- **Universell:** keine Credentials/Personendaten ins Git; Datenänderungen brauchen `[publish-data]` im
+  Commit-**Subject** (sonst nur Baseline, nicht live).
 
 ## Code-Struktur (Refactoring-Programm 01.08.2026 — Q1-Q6, R1-R4)
 
