@@ -12,7 +12,8 @@ FROM node:24-slim
 # (Google Doc via Docs-API + PDF via Drive files.export, DEPLOYMENT_GCP.md §9/§12).
 # PyMuPDF (fitz) fuer die PDF->PNG-Vorschauen (Briefings/Fuehrungsrhythmus) und gen_protokoll.
 # Chromium ist BEWUSST nicht enthalten (Image-Groesse): der HTML->PDF-Pfad laeuft
-# serverseitig ueber den Gotenberg-Sidecar (RUBICON_GOTENBERG_URL), nicht lokales Chrome.
+# serverseitig ueber den eigenen privaten Gotenberg-Service "rubicon-gotenberg"
+# (RUBICON_GOTENBERG_URL, OIDC), nicht lokales Chrome.
 RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-yaml python3-pip \
     && pip3 install --no-cache-dir --break-system-packages google-api-python-client google-auth PyMuPDF \
     && rm -rf /var/lib/apt/lists/*

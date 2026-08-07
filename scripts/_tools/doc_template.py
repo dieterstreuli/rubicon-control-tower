@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """doc_template.py — vorlagenbasierte Doc-Erzeugung (Ersatz fuer HTML->Headless-Chrome).
 
-Ansatz (aus catering_nxt/serienbrief abgeleitet): eine AXS-gebrandete Google-Doc-VORLAGE
+Ansatz (aus bewährten GAS-Vorlagen-Engines abgeleitet): eine AXS-gebrandete Google-Doc-VORLAGE
 mit {{PLATZHALTERN}} wird kopiert, die Platzhalter werden ueber die Docs-API gefuellt und
 das Ergebnis als PDF exportiert. Der Doc ist ein ZWISCHENPRODUKT (wird nach dem Export
 getrasht); das PDF ist das Endprodukt.
@@ -22,6 +22,21 @@ log = logging.getLogger("rubicon.doctpl")
 PDF_MIME = "application/pdf"
 
 
+def _exec_retry(request, tries=6):
+    """request.execute() mit Backoff bei transienten Fehlern (429/500/503). Andere Fehler sofort weiter."""
+    import time, random
+    from googleapiclient.errors import HttpError
+    for attempt in range(tries):
+        try:
+            return request.execute()
+        except HttpError as ex:
+            status = getattr(getattr(ex, "resp", None), "status", None)
+            if status in (429, 500, 503) and attempt < tries - 1:
+                time.sleep(min(2 ** attempt + random.uniform(0, 1), 30))
+                continue
+            raise
+
+
 def build_replace_requests(values):
     """Pure: baut die batchUpdate-Requests fuer {{FELD}}->Wert. Ein replaceAllText je Feld
     (matchCase). None/fehlend -> leerer String (kein rohes 'None' im Dokument)."""
@@ -37,7 +52,7 @@ def build_replace_requests(values):
     return requests
 
 
-# ── Modifier-Pipeline (Port aus gmail_dedup/templateHelper.js Gen2) ──────────
+# ── Modifier-Pipeline (Port aus einer bewährten Mail-Vorlagen-Engine, Gen2) ──
 # Token: {{KEY}} | {{KEY:mod}} | {{KEY:mod(args)}} | {{KEY:mod1:mod2(args)}} (Ketten).
 # Statt values zu iterieren wird der Dokument-TEXT gescannt (build_replace_requests_scanning)
 # — so werden auch Modifier-Varianten desselben Keys getroffen und KEINE {{...}} bleiben
@@ -144,7 +159,8 @@ def build_replace_requests_scanning(doc_text, values, skip=None):
 # ── Anker -> Tabelle (Wiederhol-Gruppen, z.B. Traktanden-Agenda) ─────────────
 # Docs-API kann keine dynamischen Zeilen per replaceAllText — darum: leere Tabelle an
 # der Anker-Position einfuegen, Doc neu holen (Indizes verschieben sich), Zellen ABSTEIGEND
-# nach Index fuellen (spaetere Inserts verschieben fruehere nicht). Muster aus catering_nxt.
+# nach Index fuellen (spaetere Inserts verschieben fruehere nicht). Bewährtes Muster aus einer
+# vergleichbaren Doc-Vorlagen-Engine.
 
 def _paragraph_text(el):
     """Text eines Paragraph-StructuralElements (alle textRuns verkettet)."""
@@ -181,11 +197,11 @@ def _batch(docs, doc_id, requests, revision_id=None):
     """batchUpdate; mit `revision_id` -> writeControl.requiredRevisionId-Riegel: schreibt NUR,
     wenn der Doc-Kopf noch bei dieser Revision steht. Fuer NICHT-idempotente Ops (insertTable/
     insertText) — ein stale-Retry scheitert dann hart (400) statt Inhalte zu verdoppeln
-    (AGENTS-Lektion catering_nxt §10). Idempotente Ops (replaceAllText/Styling) ohne Riegel."""
+    (Lektion aus einer vergleichbaren Doc-Vorlagen-Engine). Idempotente Ops (replaceAllText/Styling) ohne Riegel."""
     body = {"requests": requests}
     if revision_id:
         body["writeControl"] = {"requiredRevisionId": revision_id}
-    return docs.documents().batchUpdate(documentId=doc_id, body=body).execute()
+    return _exec_retry(docs.documents().batchUpdate(documentId=doc_id, body=body))
 
 
 def _build_grid(header, rows):
@@ -232,13 +248,13 @@ def _cell_text_style_requests(cell, text_style, fields):
 
 
 def insert_table_at_anchor(docs, doc_id, anchor, header, rows, col_widths_pt=None,
-                           header_bg=None, header_text_rgb=None):
+                           header_bg=None, header_text_rgb=None, remove_anchor=True):
     """Ersetzt den Anker `{{...}}` durch eine echte Docs-Tabelle: erste Zeile = header,
     danach je Eintrag eine Datenzeile. rows = Liste; ein Eintrag ist eine Liste (Zellen
     als Strings) ODER ein dict {"group": label, "bg": rgb?, "text_rgb": rgb?} fuer eine
     Gruppen-Bandzeile (Kadenz-Trenner o.ae.): Label in Spalte 0 fett, ganze Zeile mit bg.
     col_widths_pt: optionale feste Spaltenbreiten in PT (sonst blaeht Docs die Tabelle,
-    catering_nxt-Fallstrick). header_bg: optionale rgbColor-dict fuer die Kopfzeile.
+    bekannter Fallstrick). header_bg: optionale rgbColor-dict fuer die Kopfzeile.
     header_text_rgb: optionale rgbColor-dict fuer den Kopftext; default WEISS wenn ein
     header_bg gesetzt ist (dunkler Grund -> heller Text, sonst schwarz auf navy = unlesbar)."""
     grid, group_rows = _build_grid(header, rows)
@@ -264,9 +280,13 @@ def insert_table_at_anchor(docs, doc_id, anchor, header, rows, col_widths_pt=Non
     table_start = table_el["startIndex"]
 
     # 3. Zellen ABSTEIGEND nach Index fuellen (Kern-Invariant: sonst verschieben fruehe Inserts
-    #    die spaeteren Positionen). insertText ist NICHT idempotent -> Riegel rev1. Der Riegel
-    #    MUSS direkt auf den rev1-get folgen (kein Write dazwischen) — das Styling laeuft DANACH
-    #    (idempotent, kein Riegel), sonst wuerde es rev1 veralten lassen (400 revision-mismatch).
+    #    die spaeteren Positionen) + das STRUKTURELLE Styling (Spaltenbreiten/Kopf-/Gruppen-
+    #    Hintergrund) im SELBEN rev1-Batch. insertText ist NICHT idempotent -> Riegel rev1; der
+    #    Riegel MUSS direkt auf den rev1-get folgen (kein Write dazwischen). Die Style-Requests
+    #    adressieren die Tabelle strukturell (tableStartLocation/rowIndex/columnIndex) und sind
+    #    gegen die in-Batch-Textinserts stabil (die Inserts liegen INNERHALB der Zellen, hinter
+    #    table_start) -> kein separater Round-Trip noetig. Das INDEXabhaengige Text-Styling (3b)
+    #    laeuft danach nach einem frischen get.
     inserts = []  # (index, text)
     for r, trow in enumerate(table_el["table"]["tableRows"]):
         for c, cell in enumerate(trow["tableCells"]):
@@ -275,27 +295,20 @@ def insert_table_at_anchor(docs, doc_id, anchor, header, rows, col_widths_pt=Non
                 # content[0] = erster Paragraph der Zelle; dort ab startIndex einfuegen.
                 inserts.append((cell["content"][0]["startIndex"], text))
     inserts.sort(key=lambda x: x[0], reverse=True)
-    if inserts:
-        _batch(docs, doc_id, [
-            {"insertText": {"location": {"index": i}, "text": t}} for i, t in inserts
-        ], rev1)
-
-    # 3a. Styling (Spaltenbreiten + Kopf-/Gruppen-Hintergrund) — idempotent, aendert KEINE
-    #     Content-Indizes; laeuft NACH dem Fuellen (s.o.). tableStartLocation/row/col stabil.
-    style = []
+    fill_and_style = [{"insertText": {"location": {"index": i}, "text": t}} for i, t in inserts]
     for ci, w in enumerate(col_widths_pt or []):
-        style.append({"updateTableColumnProperties": {
+        fill_and_style.append({"updateTableColumnProperties": {
             "tableStartLocation": {"index": table_start}, "columnIndices": [ci],
             "tableColumnProperties": {"widthType": "FIXED_WIDTH", "width": {"magnitude": w, "unit": "PT"}},
             "fields": "widthType,width",
         }})
     if header_bg:
-        style.append(_cell_bg_request(table_start, 0, n_cols, header_bg))
+        fill_and_style.append(_cell_bg_request(table_start, 0, n_cols, header_bg))
     for ri, meta in group_rows.items():
         if meta["bg"]:
-            style.append(_cell_bg_request(table_start, ri, n_cols, meta["bg"]))
-    if style:
-        docs.documents().batchUpdate(documentId=doc_id, body={"requests": style}).execute()
+            fill_and_style.append(_cell_bg_request(table_start, ri, n_cols, meta["bg"]))
+    if fill_and_style:
+        _batch(docs, doc_id, fill_and_style, rev1)
 
     # 3b. Text-Styling (Kopf weiss+fett auf header_bg; Gruppen-Label fett+farbig). Erst JETZT
     #     moeglich, weil der Zelltext eben erst eingefuegt wurde; Styling verschiebt keine
@@ -322,26 +335,35 @@ def insert_table_at_anchor(docs, doc_id, anchor, header, rows, col_widths_pt=Non
                     fields = "bold,foregroundColor"
                 text_reqs += _cell_text_style_requests(trows[ri]["tableCells"][0], ts, fields)
         if text_reqs:
-            docs.documents().batchUpdate(documentId=doc_id, body={"requests": text_reqs}).execute()
+            _exec_retry(docs.documents().batchUpdate(documentId=doc_id, body={"requests": text_reqs}))
 
-    # 4. Anker-Text entfernen (die Tabelle steht jetzt davor).
-    docs.documents().batchUpdate(documentId=doc_id, body={"requests": [
-        {"replaceAllText": {"containsText": {"text": anchor, "matchCase": True}, "replaceText": ""}}
-    ]}).execute()
+    # 4. Anker-Text entfernen (die Tabelle steht jetzt davor). Der Treiber (_copy_fill_export)
+    #    buendelt alle Anker in EINEM Sweep am Ende (remove_anchor=False); ein Standalone-Aufruf
+    #    raeumt selbst auf.
+    if remove_anchor:
+        _exec_retry(docs.documents().batchUpdate(documentId=doc_id, body={"requests": [
+            {"replaceAllText": {"containsText": {"text": anchor, "matchCase": True}, "replaceText": ""}}
+        ]}))
     log.info("table inserted anchor=%s rows=%d cols=%d groups=%d doc_id=%s",
              anchor, n_rows, n_cols, len(group_rows), doc_id)
 
 
-def insert_bullets_at_anchor(docs, doc_id, anchor, items, ordered=False):
+def insert_bullets_at_anchor(docs, doc_id, anchor, items, ordered=False, remove_anchor=True):
     """Ersetzt den Anker `{{...}}` durch eine Bullet-/Nummern-Liste (ein Punkt je item).
     Docs kann Listen nicht per replaceAllText erzeugen -> Text mit \\n an der Anker-Position
-    einfuegen, dann `createParagraphBullets` ueber den eingefuegten Bereich, dann Anker weg.
-    Leere/keine items -> Anker einfach entfernen (kein leerer Listenpunkt)."""
+    einfuegen, dann `createParagraphBullets` ueber den eingefuegten Bereich. Beides laeuft in
+    EINEM batchUpdate: die Requests eines Batches wirken sequenziell, darum sieht das
+    createParagraphBullets ueber [idx, idx+len(text)) den insertText schon — ein Round-Trip
+    statt zwei, weniger Docs-Write-Quota-Last (60/min).
+    `remove_anchor=True` haengt den Anker-Cleanup (idempotent, textbasiert) an denselben Batch;
+    der Treiber (_copy_fill_export) setzt False und wischt alle Anker gebuendelt am Ende.
+    Leere/keine items -> nur Anker entfernen (kein leerer Listenpunkt)."""
     items = [str(x) for x in (items or []) if str(x).strip()]
-    remove_anchor = {"replaceAllText": {"containsText": {"text": anchor, "matchCase": True},
-                                        "replaceText": ""}}
+    remove_req = {"replaceAllText": {"containsText": {"text": anchor, "matchCase": True},
+                                     "replaceText": ""}}
     if not items:
-        docs.documents().batchUpdate(documentId=doc_id, body={"requests": [remove_anchor]}).execute()
+        if remove_anchor:
+            _exec_retry(docs.documents().batchUpdate(documentId=doc_id, body={"requests": [remove_req]}))
         return
 
     doc = docs.documents().get(documentId=doc_id).execute()
@@ -351,17 +373,18 @@ def insert_bullets_at_anchor(docs, doc_id, anchor, items, ordered=False):
         raise ValueError(f"Anker {anchor} nicht im Dokument gefunden")
 
     text = "\n".join(items) + "\n"
-    # insertText ist NICHT idempotent -> Riegel (stale-Retry scheitert statt doppelt zu bulleten).
-    _batch(docs, doc_id, [
-        {"insertText": {"location": {"index": idx}, "text": text}}
-    ], rev)
-    # Der eingefuegte Text belegt [idx, idx+len(text)); die item-Paragraphen darin bulleten.
     preset = "NUMBERED_DECIMAL_ALPHA_ROMAN" if ordered else "BULLET_DISC_CIRCLE_SQUARE"
-    docs.documents().batchUpdate(documentId=doc_id, body={"requests": [
+    # Ein Batch (rev-Riegel, weil insertText NICHT idempotent ist -> stale-Retry scheitert statt
+    # doppelt zu bulleten): erst den Text einfuegen, dann die eben eingefuegten Paragraphen
+    # [idx, idx+len(text)) bulleten, optional den Anker entfernen. Alles sequenziell im Batch.
+    reqs = [
+        {"insertText": {"location": {"index": idx}, "text": text}},
         {"createParagraphBullets": {"range": {"startIndex": idx, "endIndex": idx + len(text)},
-                                     "bulletPreset": preset}}
-    ]}).execute()
-    docs.documents().batchUpdate(documentId=doc_id, body={"requests": [remove_anchor]}).execute()
+                                     "bulletPreset": preset}},
+    ]
+    if remove_anchor:
+        reqs.append(remove_req)
+    _batch(docs, doc_id, reqs, rev)
     log.info("bullets inserted anchor=%s n=%d ordered=%s doc_id=%s", anchor, len(items), ordered, doc_id)
 
 
@@ -369,11 +392,11 @@ def _copy_fill_export(drive, docs, template_id, folder_id, name, values, tables,
     """copy Vorlage -> {{...}} scannend fuellen -> Tabellen/Bullets -> PDF exportieren+validieren.
     Gibt (doc_id, pdf_bytes) zurueck; trasht NICHT."""
     # 1. Vorlage in den Zielordner kopieren (Shared-Drive-tauglich).
-    copy = drive.files().copy(
+    copy = _exec_retry(drive.files().copy(
         fileId=template_id,
         body={"name": name, "parents": [folder_id]},
         supportsAllDrives=True, fields="id",
-    ).execute()
+    ))
     doc_id = copy["id"]
     log.info("template copied doc_id=%s from=%s", doc_id, template_id)
     # Alles NACH dem Copy in EINEN try/except: jede Post-Copy-Exception (get/batchUpdate/
@@ -389,21 +412,30 @@ def _copy_fill_export(drive, docs, template_id, folder_id, name, values, tables,
         doc = docs.documents().get(documentId=doc_id).execute()
         requests = build_replace_requests_scanning(_all_text(doc), values, skip=anchors)
         if requests:
-            docs.documents().batchUpdate(documentId=doc_id, body={"requests": requests}).execute()
+            _exec_retry(docs.documents().batchUpdate(documentId=doc_id, body={"requests": requests}))
         # 2b. Anker->Tabellen (Wiederhol-Gruppen, z.B. Traktanden-Agenda) einfuegen.
         # spec = {"header":[...], "rows":[[...]], "col_widths_pt":[...]?, "header_bg":{...}?}
         for anchor, spec in (tables or {}).items():
             insert_table_at_anchor(docs, doc_id, anchor, spec["header"], spec["rows"],
                                    col_widths_pt=spec.get("col_widths_pt"),
                                    header_bg=spec.get("header_bg"),
-                                   header_text_rgb=spec.get("header_text_rgb"))
+                                   header_text_rgb=spec.get("header_text_rgb"),
+                                   remove_anchor=False)
         # 2c. Anker->Bullet-Listen (z.B. Briefing-Deliverables, FR-Grundsaetze).
         for anchor, spec in (bullets or {}).items():
             its = spec.get("items") if isinstance(spec, dict) else spec
             ordered = spec.get("ordered", False) if isinstance(spec, dict) else False
-            insert_bullets_at_anchor(docs, doc_id, anchor, its, ordered=ordered)
+            insert_bullets_at_anchor(docs, doc_id, anchor, its, ordered=ordered, remove_anchor=False)
+        # 2d. Alle Anker in EINEM batchUpdate entfernen statt je Tabelle/Liste einzeln —
+        #     replaceAllText ist idempotent + textbasiert, darum Reihenfolge egal und
+        #     buendelbar. Spart je Anker einen Round-Trip -> weniger Docs-Write-Quota-Last.
+        if anchors:
+            _exec_retry(docs.documents().batchUpdate(documentId=doc_id, body={"requests": [
+                {"replaceAllText": {"containsText": {"text": a, "matchCase": True}, "replaceText": ""}}
+                for a in sorted(anchors)
+            ]}))
         # 3. PDF exportieren + validieren.
-        data = drive.files().export(fileId=doc_id, mimeType=PDF_MIME).execute()
+        data = _exec_retry(drive.files().export(fileId=doc_id, mimeType=PDF_MIME))
         pdf = bytes(data) if not isinstance(data, (bytes, bytearray)) else bytes(data)
         if pdf[:4] != b"%PDF":
             raise ValueError(f"export lieferte kein PDF (doc_id={doc_id}, head={pdf[:8]!r})")

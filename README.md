@@ -52,13 +52,12 @@ Entwicklung, **nicht** als Parallel-Produktion.
   gebackenen `public`-Baseline. Reports (Woche/Monat/Quartal) werden bereits
   serverseitig **chromefrei** erzeugt (Google Doc + Drive-`files.export`, s.
   `DEPLOYMENT_GCP.md` §9) und landen dort — sie überleben damit Neustart/Redeploy.
-  Briefings/Entscheide/Traktanden/Führungsrhythmus sind inzwischen **serverseitig
-  verdrahtet** (Weg 1, `gen_docs_server.py`, chromefrei via Docs-Export; Job-
-  Provisionierung offen, `DEPLOYMENT_GCP.md` §12). Der dynamische HTML-PDF-Pfad
-  (Protokolle) rendert serverseitig über den **Gotenberg-Sidecar**
-  (`RUBICON_GOTENBERG_URL`) statt lokales Chrome — **Chromium muss dafür nicht ins
-  Image**. Bis die Jobs/der Sidecar provisioniert sind, werden diese Artefakte
-  weiter über die `public`-Baseline ausgeliefert.
+  Briefings/Entscheide/Traktanden/Führungsrhythmus laufen **serverseitig live**
+  (Weg 1, `gen_docs_server.py`, chromefrei via Docs-Export; Cloud-Run-Job
+  `rubicon-docs-job`, `DEPLOYMENT_GCP.md` §12). Der dynamische HTML-PDF-Pfad
+  (Protokolle) rendert serverseitig über den **eigenen privaten Cloud-Run-Service
+  `rubicon-gotenberg`** (per OIDC, `RUBICON_GOTENBERG_URL`) statt lokales Chrome —
+  **Chromium muss dafür nicht ins Image**.
 - **Datenbezug (Runtime-Fetch):** Der Client holt die Daten **zur Laufzeit** über
   `GET /api/state` aus dem Volume (statt sie zur Build-Zeit ins Bundle zu backen) —
   Server-Writes sind damit **nach einem Reload sichtbar**. Der Sensitiv-Store bleibt
@@ -113,6 +112,19 @@ Betriebsregeln (für alle Beteiligten):
 
 ## Changelog (IT / Didit)
 
+**07.08.2026 — Serverseitige Doc-Erzeugung (zwei Wege):**
+- **Weg 1 — feste, gebrandete Fix-Struktur-Dokumente live:** Traktanden/Entscheide/Briefings/
+  Führungsrhythmus entstehen serverseitig über die Docs-Vorlagen-Engine als Google-Doc + PDF; Treiber
+  als Cloud-Run-Job **`rubicon-docs-job`** (Dual-Mode, fasst nur `server_*`-Felder an). Additive
+  „Doc ↗"-Drive-Links im Tower; PDF + Seite-1-PNG ins Volume.
+- **Weg 2 — dynamische HTML→PDF (Report/Protokoll):** Gotenberg-Service **`rubicon-gotenberg`** ist
+  deployed; im Code/Config auf **OIDC-ID-Token**-Aufruf gewired, `html_to_pdf` verzweigt auf
+  `RUBICON_GOTENBERG_URL` (lokal unverändert Chrome) — App-Wiring am App-Service live mit dem
+  nächsten Deploy.
+- **Robustheit:** Exponential-Backoff um die Docs-API-Writes (429 bei Docs-API-Quota 60/min);
+  `rubicon-docs-job` gehärtet (2 GiB, kein Retry, Timeout 3600 s).
+- **Kosten:** Label `app=rubicon` auf allen RUBICON-Ressourcen (Kosten-Separierung im geteilten Projekt).
+
 **06.08.2026 — Serverseitige Doc-Erzeugung + Merge-Brücke:**
 - Reports (Woche/Monat/Quartal) werden jetzt **serverseitig chromefrei** erzeugt (Google
   Doc + PDF-Datei im Shared Drive); Cloud-Run-Job + Scheduler (Mo 06:00) live; Report-Links
@@ -153,9 +165,9 @@ im Detail: `DEPLOYMENT_GCP.md §9` (Reports) + `§10` (Merge-Brücke).
 | Report-Links im Tower | Dieters `doc_url` | `server_doc_url` (Shared Drive), modusabhängig; nur-lokale Alt-Reports ohne tote Links | ✅ live |
 | Struktur → Live-Daten | git / Re-Seed (überschreiben) | **Merge-Brücke**: Repo-Struktur + Volume-Live per Merge-by-Key, Backup, Konflikt-Meldung | ✅ Code (§10) |
 | Δ-Block (Wochen-Delta) | git-Vergleich `projekt.yaml` | GCS-Object-Version statt git | ⏳ Follow-up |
-| KI-Narrativ | lokale `claude`-CLI | AIXS-Plattform (konfigurierbares Modell/Prompt) | ⏳ Follow-up |
-| Traktanden/Entscheid/Briefing/Führungsrhythmus (feste Struktur) **+ AXS-Branding** | Chrome-HTML-PDF je Generator | **Weg 1 — Docs-REST-Vorlagen-Engine**: AXS-gebrandete Google-Doc-Vorlage je Typ + Merge, kein Chrome | 🔧 serverseitig verdrahtet (`gen_docs_server.py`, Dual-Mode); Job-Provisionierung offen (§12) |
-| Report/Protokoll (dynamisch, berechnetes Layout) | Chrome-HTML-PDF (lokal) | **Weg 2 — HTML→PDF via Gotenberg-Sidecar**: bestehendes `render_*`-HTML serverseitig gerendert | ⏳ geplant |
+| KI-Narrativ | lokale CLI | AIXS-Plattform (konfigurierbares Modell/Prompt) | ⏳ Follow-up |
+| Traktanden, Entscheid, Briefing, Führungsrhythmus (feste Struktur) **+ AXS-Branding** | Chrome-HTML-PDF je Generator | **Weg 1 — Docs-REST-Vorlagen-Engine**: AXS-gebrandete Google-Doc-Vorlage je Typ + Merge, kein Chrome | ✅ serverseitig live (`rubicon-docs-job`) |
+| Report/Protokoll (dynamisch, berechnetes Layout) | Chrome-HTML-PDF (lokal) | **Weg 2 — HTML→PDF via Gotenberg**: bestehendes `render_*`-HTML serverseitig gerendert | 🔧 Service `rubicon-gotenberg` deployed; `RUBICON_GOTENBERG_URL`+OIDC im Code/Config gewired, App-Wiring per nächstem Deploy |
 | Reminder / Mailversand | Gmail-Entwurf lokal (DRS sendet) | serverseitig via DWD `gmail.send`/`gmail.modify` als `rubicon@axs.aero` | ⏳ geplant (Scopes autorisiert) |
 | Kalender / Eskalation | simuliert / MCP-Bridge lokal | serverseitig via DWD `calendar.events` | ⏳ geplant (Scopes autorisiert) |
 
@@ -177,7 +189,7 @@ Nimm ihn, wenn: **feste Struktur**; Inhalt = Felder + Wiederhol-Tabellen + Bulle
 gewünscht ist. **Anleitung** (Vorlage bauen + rendern, API, Modifier, Fallstricke):
 [`docs/template-engine-anleitung.md`](docs/template-engine-anleitung.md).
 
-**Serverseitig verdrahtet (nicht mehr nur Konzept):** Der Treiber `scripts/gen_docs_server.py`
+**Serverseitig live:** Der Treiber `scripts/gen_docs_server.py`
 (`run(drive, docs, root)`) erzeugt für alle vier Typen je ein gebrandetes Google-Doc + PDF über die
 Engine und legt sie in die Shared-Ablage-Ordner. Er läuft **Dual-Mode** und nur im Server-Modus
 (DWD-Env `RUBICON_WORKSPACE_SA` + `RUBICON_IMPERSONATE_SUBJECT`) — Dieters lokale Generatoren
@@ -193,9 +205,9 @@ bleiben unverändert. Kernpunkte:
   Previews (Briefings + Führungsrhythmus) ins Volume (`RUBICON_DOCS_DIR`), damit die App
   serverseitig dieselben Artefakte/Previews bedient wie lokal.
 
-Job-Provisionierung (`rubicon-docs-job`) s. `DEPLOYMENT_GCP.md §12`.
+Serverseitig getrieben vom Cloud-Run-Job `rubicon-docs-job` (live), s. `DEPLOYMENT_GCP.md §12`.
 
-**Weg 2 — HTML→PDF via Gotenberg** (self-hosted Sidecar im Image, s. `DEPLOYMENT_GCP.md §11`)
+**Weg 2 — HTML→PDF via Gotenberg** (self-hosted, eigener privater Cloud-Run-Service `rubicon-gotenberg`, s. `DEPLOYMENT_GCP.md §11`)
 Das in Python erzeugte `render_*`-HTML wird an den Gotenberg-Container geschickt und als PDF
 zurückgegeben — **optisch identisch** zum lokalen Chrome-Pfad (`html_to_pdf`). Templating bleibt in
 Python. Dedizierte Doku (Code-Verhalten, betroffene Generatoren, Provisionierung):
@@ -208,10 +220,10 @@ bewiesenes HTML/CSS existiert; oder pixelgenaues Druck-Layout zählt.
 **Harte Regeln:**
 - Genau diese zwei Wege. Keine dritte Engine, **keine externen PDF-APIs** (DoRaptor/PDFShift o.ä.) —
   `protokolle_sensitiv` u.a. Personendaten dürfen den Tenant **nie** verlassen (DSGVO).
-- Der String-basierte Conditional/Operator-**DSL-Port** der Monorepo-Engines (inform_flights/
-  serienbrief) wurde **verworfen** (Overkill für strukturierte Google-Docs: kein Loop-Konstrukt,
-  Presence-only-Operatoren, bedingtes Weglassen ist ohnehin eine Code-Entscheidung — die
-  `doc_template.py` schon abbildet).
+- Der String-basierte Conditional/Operator-**DSL-Port** aus vergleichbaren Vorlagen-Engines wurde
+  **verworfen** (Overkill für strukturierte Google-Docs: kein Loop-Konstrukt, Presence-only-
+  Operatoren, bedingtes Weglassen ist ohnehin eine Code-Entscheidung — die `doc_template.py` schon
+  abbildet).
 
 **Dokumentierte Alternative zu Weg 2 — Jinja2 + WeasyPrint** (vorgemerkt, noch nicht gebaut)
 Reiner Python-Weg (browserless HTML→PDF), **sinnvoll ab dem Punkt, wo**: (a) die **Chromium-

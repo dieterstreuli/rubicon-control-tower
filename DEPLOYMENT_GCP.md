@@ -42,23 +42,23 @@ Weitere Personen freischalten = einfach Mitglied der Gruppe machen:
 
 ## 3 · Code-/Config-Änderungen für den Container
 
-- **`Dockerfile`** (neu): `node:20-slim`, `npm ci`, startet **Vite-Dev** (`--host 0.0.0.0 --port $PORT`).
+- **`Dockerfile`** (neu): `node:24-slim`, `npm ci`, startet **Vite-Dev** (`--host 0.0.0.0 --port $PORT`).
   `python3` + die Google-API-Client-Libs (`google-api-python-client`, `google-auth`) sind im Image
   (für die Renderer-Skripte, inkl. serverseitige Report-Erzeugung, s. §9). Chromium ist bewusst
-  NICHT drin (Image-Größe) → der Chromium-abhängige **HTML-PDF-Export für Protokolle/Briefings/
-  Entscheide/Traktanden bleibt vorerst lokal beim CoS**; Reports laufen bereits serverseitig
-  chromefrei über die Docs-API (§9).
+  NICHT drin (Image-Größe): Reports (§9) und die Fix-Struktur-Docs (Weg 1, §12) laufen serverseitig
+  chromefrei über die Docs-API; der dynamische HTML-PDF-Pfad (Report/Protokoll, Weg 2) rendert über
+  den **eigenen privaten Gotenberg-Service `rubicon-gotenberg`** (§11).
 - **`.dockerignore`** (neu): `node_modules`, `dist`, `.git`, `public`, …
 - **`vite.config.js`**: `server.allowedHosts: true` (DNS-Rebind-Check aus; Host variabel `*.run.app`/Custom-Domain; Schutz macht IAP).
 - **`plugins/rubicon-api.js`**: `OK_ORIGINS` um **Env-Override** `RUBICON_OK_ORIGINS` (Komma-separiert) ergänzt — Deploy-Origins ohne Code-Redeploy.
-- **Env am Service:** `RUBICON_OK_ORIGINS` = `https://rubicon.axs.aero` + beide run.app-URLs (Custom-Domain MUSS drin sein, sonst weist der Origin-Guard POSTs von `rubicon.axs.aero` ab); `RUBICON_PY=python3`; `PORT=8080`.
+- **Env am Service:** `RUBICON_OK_ORIGINS` = `https://rubicon.axs.aero` + beide run.app-URLs (Custom-Domain MUSS drin sein, sonst weist der Origin-Guard POSTs von `rubicon.axs.aero` ab); `RUBICON_PY=python3`; `PORT=8080`; `RUBICON_GOTENBERG_URL` (Gotenberg-Service-URL — per nächstem Deploy gesetzt, s. §11).
 - **Dokumenten-Ablage:** `RUBICON_DOCS_DIR=/app/src/data/_generated`
   (liegt mit auf dem GCS-Volume, s. §1) hat beim Ausliefern Vorrang vor der ins Image gebackenen
   `public`-Baseline (`resolveStaticPath` in `server.mjs`). Der Report-Job (s. §9) schreibt bereits
   serverseitig und **chromefrei** dorthin (Google Doc + Drive-`files.export`) — diese PDFs
-  überleben damit Neustart/Redeploy. Protokolle/Briefings/Entscheide/Traktanden laufen weiterhin
-  über den lokalen HTML-PDF-Pfad (Chromium fehlt im Image, s. §5) und werden bis zu ihrer eigenen
-  serverseitigen Migration weiterhin über die `public`-Baseline ausgeliefert.
+  überleben damit Neustart/Redeploy. Briefings/Entscheide/Traktanden/Führungsrhythmus schreibt der
+  Weg-1-Job `rubicon-docs-job` (§12) ebenso serverseitig dorthin; Protokolle rendern serverseitig über
+  den privaten Gotenberg-Service `rubicon-gotenberg` (§11).
 
 ## 4 · Reproduzieren / Verwalten
 
@@ -128,10 +128,10 @@ env $Q gcloud storage rsync -r --delete-unmatched-destination-objects \
     Drive-API (siehe Antwort-Analyse / README §Ausblick).
 - **Dev-Modus im Container:** faithful zum heutigen Mac-Betrieb (Runbook §4/5). Härtung = Write-API als
   kleiner Express-Server (~1 Tag), dann `vite build` + statisch.
-- **Kein HTML-PDF-Export im Container für Protokolle/Briefings/Entscheide/Traktanden**
-  (Chromium bewusst nicht im Image — Image-Größe; diese PDFs entstehen weiterhin außerhalb des
-  Containers) — bei Bedarf Headless-Chromium nachrüsten + AXS-Service-Account. Reports laufen
-  bereits serverseitig chromefrei über die Docs-API (s. §9).
+- **HTML-PDF ohne Chromium im Container (erledigt):** Fix-Struktur-Docs (Weg 1, §12) laufen
+  serverseitig chromefrei über die Docs-API; der dynamische HTML-PDF-Pfad (Report/Protokoll, Weg 2)
+  rendert über den eigenen privaten Gotenberg-Service `rubicon-gotenberg` (§11). Chromium bleibt
+  bewusst aus dem Image.
 - **Echter DRS-Vollstand live (30.07., erledigt):** Mock ersetzt, Bucket geseedet (§4a).
 - **Multi-Writer:** für die 2 Nutzer sicher, solange `max-instances=1` bleibt — ein Node-Prozess,
   Read→merge→`writeAtomic` (temp+rename) läuft synchron (einziges `await` = Body-Lesen, vor dem
@@ -230,8 +230,8 @@ Stand der Härtung der Datenschicht (data-at-rest + Zugriff).
 ## 9 · Serverseitige Report-Automation (Infrastruktur)
 
 Die Reports (Woche/Monat/Quartal) werden serverseitig als **Google Doc im Shared Drive**
-erzeugt und per **Drive-`files.export`** zu PDF gewandelt — **ohne Chrome**, geplant über einen
-Cloud-Run-Job. Der Code passt sich der Laufzeitumgebung an (**Dual-Mode**, s. „Migrations-Status"
+erzeugt und per **Drive-`files.export`** zu PDF gewandelt — **ohne Chrome**, über einen
+Cloud-Run-Job (live). Der Code passt sich der Laufzeitumgebung an (**Dual-Mode**, s. „Migrations-Status"
 im README): lokal unverändert (Chrome + User-OAuth), serverseitig nur wenn die DWD-Env-Variablen
 gesetzt sind. Der Web-Service setzt sie NICHT → dort ändert sich nichts.
 
@@ -248,19 +248,33 @@ gesetzt sind. Der Web-Service setzt sie NICHT → dort ändert sich nichts.
 In-House-Vorlage der keyless-DWD-Mechanik: `scripts/_tools/gdoc_pdf.py` (bzw. das Muster aus
 `_google_auth._dwd_credentials`). Kein statischer Key nötig (Metadata-ADC signiert per IAM-API).
 
-### 9.2 Shared Drive
+### 9.2 Shared Drive + Identitäten
 
-**„00 AXS - Rubicon"** (`0AK8sNCBforeMUk9PVA`, europe/Workspace) — `rubicon@axs.aero` ist Mitglied
-(content-manager genügt). Endprodukt-Ordner:
+**Shared Drive „00 AXS - Rubicon"** (`0AK8sNCBforeMUk9PVA`, europe/Workspace) — `rubicon@axs.aero` ist
+Mitglied (content-manager genügt). **8 Ordner im Root:**
 
 | Ordner | ID |
 |---|---|
+| Templates | — (AXS-Vorlagen, Weg 1) |
 | reports | `1hiuxVPBO3Hwd3I0g1lDTxKFAwk851Y0m` |
 | protokolle | `1MlvxkY4Ti8MdTwT3ODs7HM-7mF74lPHm` |
 | entscheide | `1wI2ggCw3erqeQ3HW2bcKxk4rg-zKo0rb` |
 | briefings | `1uopFGM23gaWQV_3CuHA3wRYT-Bei3VKa` |
 | traktanden | `1hQ_9DP-NlwDSHr-pSAw0B5hXHC37mAYY` |
+| fuehrungsrhythmus | `1pPACow-VB9UOZ8N2RDDqZGGExsnDznB1` |
 | pakete | `1gE8EgiNHAmPuKwDe4QHDCWbemCMMcHB_` |
+
+**Identitäten (alle):**
+
+| Identität | Zweck |
+|---|---|
+| `rubicon-workspace@aixs-260106.iam.gserviceaccount.com` | Workspace-Integration (keyless DWD; hält die Domain-Wide-Delegation, impersoniert `rubicon@axs.aero`) |
+| `rubicon-runtime@aixs-260106.iam.gserviceaccount.com` | Cloud-Run-Runtime (least-privilege; Identität von Service + Jobs; `roles/iam.serviceAccountTokenCreator` auf `rubicon-workspace`; `run.invoker` auf `rubicon-gotenberg`) |
+| `rubicon-deployer@aixs-260106.iam.gserviceaccount.com` | GitHub-Actions-Deployer (keyless via WIF) |
+| `rubicon-scheduler@aixs-260106.iam.gserviceaccount.com` | Cloud-Scheduler-Mini-SA (`run.jobs.run`) |
+| `rubicon-gotenberg@aixs-260106.iam.gserviceaccount.com` | Identität des privaten Gotenberg-Service (no-role) |
+| `rubicon@axs.aero` | Workspace-Service-User = DWD-Subject; Mitglied des Shared Drive |
+| `rubicon-app@axs.aero` | Zugriffs-/Editoren-Gruppe (s. §2) |
 
 ### 9.3 Cloud-Run-Job `rubicon-report-job`
 
@@ -276,6 +290,7 @@ gcloud run jobs create rubicon-report-job \
   --add-volume-mount=volume=data,mount-path=/app/src/data \
   --command=python3 --args=scripts/gen_report.py,--auto \
   --task-timeout=1800 --max-retries=1 \
+  --labels=app=rubicon \
   --set-env-vars="^#^RUBICON_PY=/usr/bin/python3#RUBICON_DOCS_DIR=/app/src/data/_generated#RUBICON_WORKSPACE_SA=rubicon-workspace@aixs-260106.iam.gserviceaccount.com#RUBICON_IMPERSONATE_SUBJECT=rubicon@axs.aero#RUBICON_DRIVE_REPORTS_FOLDER=1hiuxVPBO3Hwd3I0g1lDTxKFAwk851Y0m"
 # Delimiter MUSS ^#^ sein (nicht ^@^): die Werte enthalten @ (SA-/Subject-Emails) →
 # ^@^ würde mitten in den Email-Adressen splitten und die Env-Var kaputt setzen.
@@ -313,20 +328,21 @@ gcloud scheduler jobs create http rubicon-report-sched \
 
 | Element | Status |
 |---|---|
-| Shared Drive „00 AXS - Rubicon" + 6 Ordner + 373 Baseline-Dokumente | ✅ angelegt/befüllt |
+| Shared Drive „00 AXS - Rubicon" + 8 Ordner + 373 Baseline-Dokumente | ✅ angelegt/befüllt |
 | Service-User `rubicon@axs.aero` | ✅ angelegt |
 | SA `rubicon-workspace` + DWD-Freigabe (`drive`/`documents`/`spreadsheets`/`gmail.send`/`gmail.modify`/`calendar.events`) | ✅ angelegt/approved (Gmail/Calendar für spätere Features vorab autorisiert) |
 | `rubicon@axs.aero` = Mitglied des Shared Drive | ✅ |
-| Grant `rubicon-runtime` → `rubicon-workspace` (tokenCreator) | ⏳ beim Job-Anlegen (ersetzt das Test-Self-Binding) |
-| Cloud-Run-Job `rubicon-report-job` | ⏳ nach dem Push (Job nutzt das frische Image) |
-| SA `rubicon-scheduler` + Cloud Scheduler `rubicon-report-sched` | ⏳ nach dem Job |
+| Grant `rubicon-runtime` → `rubicon-workspace` (tokenCreator) | ✅ gesetzt |
+| Cloud-Run-Job `rubicon-report-job` | ✅ angelegt (Image-Loop in `deploy.yml`) |
+| SA `rubicon-scheduler` + Cloud Scheduler `rubicon-report-sched` | ✅ live (Mo 06:00) |
 
 **Noch nicht serverseitig** (Follow-ups, s. README-Migrations-Status): Δ-Block (via GCS-Object-Version
-statt git), KI-Narrativ (via AIXS-Plattform), die Generatoren protokoll/traktanden/entscheide.
-**Doc-Erzeugung folgt zwei verbindlichen Wegen** (entschieden 07.08.2026, s. `§11` + README
-„Doc-Erzeugung: genau zwei Wege"): **Weg 1** = Docs-REST-Vorlagen-Engine (feste, gebrandete Docs —
-Traktanden/Entscheid/Briefing/Führungsrhythmus); **Weg 2** = HTML→PDF via **Gotenberg-Sidecar** für die
-dynamischen Docs (Report/Protokoll). Die PDF-Quelle im Code ist dafür pluggbar gehalten.
+statt git) und KI-Narrativ (via AIXS-Plattform). Die Doc-Generatoren sind serverseitig abgedeckt —
+**zwei verbindliche Wege** (entschieden 07.08.2026, s. `§11` + README „Doc-Erzeugung: genau zwei
+Wege"): **Weg 1** = Docs-REST-Vorlagen-Engine (feste, gebrandete Docs —
+Traktanden/Entscheid/Briefing/Führungsrhythmus), live über `rubicon-docs-job` (§12); **Weg 2** =
+HTML→PDF via **Gotenberg** (eigener privater Cloud-Run-Service `rubicon-gotenberg`) für die dynamischen
+Docs (Report/Protokoll). Die PDF-Quelle im Code ist dafür pluggbar gehalten.
 
 ---
 
@@ -364,7 +380,8 @@ gcloud run jobs create rubicon-merge-job \
   --add-volume=name=data,type=cloud-storage,bucket=aixs-rubicon-tower-data \
   --add-volume-mount=volume=data,mount-path=/app/src/data \
   --command=python3 --args=scripts/merge_bridge.py \
-  --task-timeout=900 --max-retries=0
+  --task-timeout=900 --max-retries=0 \
+  --labels=app=rubicon
 # Test (Dry-Run, schreibt nichts):
 gcloud run jobs execute rubicon-merge-job --project=aixs-260106 --region=europe-west4 --wait
 ```
@@ -422,19 +439,22 @@ POST HTML (+ Assets als Multipart) an `/forms/chromium/convert/html` → PDF-Byt
 serverseitige Fassung von Dieters lokalem `html_to_pdf` — **identische Optik**, self-hosted → **kein
 PII-Abfluss**.
 
-Betriebsvarianten (eine wählen beim Bau des Spikes):
-- **Sidecar im selben Cloud-Run-Service** (Multi-Container): Gotenberg-Container neben dem RUBICON-
-  Container, erreichbar über `localhost:3000`. Ein Deploy-Unit, kein extra IAM. Empfohlen für den POC.
-- **Eigener interner Cloud-Run-Service** (`--no-allow-unauthenticated`, ID-Token-Auth): sauberere
-  Trennung/Skalierung, aber zweites Deploy-Unit + Service-zu-Service-Auth.
+**Betrieb (deployed):** Gotenberg läuft als **eigener privater Cloud-Run-Service `rubicon-gotenberg`**
+(Image `docker.io/gotenberg/gotenberg:8`, Port 3000, 2 GiB, scale-to-zero, `--no-allow-unauthenticated`,
+eigener no-role SA `rubicon-gotenberg`, Label `app=rubicon`). Der App-Service ruft ihn **Service-to-Service per
+OIDC-ID-Token** (SA `rubicon-runtime` hat `run.invoker` auf dem Gotenberg-Service); `RUBICON_GOTENBERG_URL`
+am App-Service zeigt auf die Service-URL (in `deploy.yml` gesetzt). Cold-Start (scale-to-zero) wird durch
+Retry/Backoff in `_render_via_gotenberg` abgefedert. *(Historischer Pivot: der zunächst geplante
+Multi-Container-Sidecar scheiterte an der EXPOSE-3000-Portkollision mit dem App-Port.)*
 
 Wiring (Code): die PDF-Quelle der Weg-2-Generatoren (`gen_report.py`, `gen_protokoll.py`) ist
 pluggbar — im Server-Modus (env **`RUBICON_GOTENBERG_URL`** gesetzt) geht der PDF-Schritt an Gotenberg
-statt an lokales Chrome; das HTML-Rendering (`render_*`) bleibt unverändert. Fonts (Arial-Ersatz) +
-das a×s-Logo werden als Assets mitgeschickt bzw. ins Gotenberg-Image gebacken (Determinismus).
+statt an lokales Chrome; das HTML-Rendering (`render_*`) bleibt unverändert. Das HTML ist
+self-contained (inline CSS, Logo als base64) — es braucht keine Asset-Uploads; Gotenberg läuft als
+reines Stock-Image (`docker.io/gotenberg/gotenberg:8`) ohne eigene Font-/Asset-Ergänzungen.
 
 **Dokumentierte Alternative zu Weg 2 — Jinja2 + WeasyPrint** (vorgemerkt, nicht gebaut)
-Reiner Python-Weg ohne Browser (kein Sidecar, Bibliothek im Hauptimage: `weasyprint` + System-Libs
+Reiner Python-Weg ohne Browser (kein separater Dienst, Bibliothek im Hauptimage: `weasyprint` + System-Libs
 Pango/Cairo/GDK-Pixbuf ~+100 MB). **Sinnvoll ab dem Punkt, wo** (a) die Chromium-Abhängigkeit raus
 soll (Image/Cold-Start/Browser-Pflege), (b) Bit-Determinismus/Print-Feinheiten (paged-media,
 Seitenzahlen) über Chrome-Pixeltreue gehen, oder (c) das Templating in echte Jinja2-Template-Dateien
@@ -453,19 +473,20 @@ Die RUBICON-HTMLs (`render_*`) sind self-contained (inline CSS + base64-Logo) �
 keine Asset-Uploads. **`preferCssPageSize=true` ist Pflicht**, sonst nutzt Gotenberg seine
 Default-Seitengröße statt des `@page`-A4 der Vorlagen.
 
-**Status:** Entscheidung dokumentiert; **Gotenberg-Container lokal E2E validiert** — Report (inkl.
-Ampel-Pill) + Protokoll (alle bedingten Sektionen) via echte Gotenberg-HTTP-API gerendert, optisch
-identisch zum Live-Stand. Offen: Sidecar in die Cloud-Run-Service-Definition + PDF-Quelle der Weg-2-
-Generatoren auf `RUBICON_GOTENBERG_URL` umbiegen.
+**Status:** **Service deployed; App-Wiring per nächstem Deploy.** Gotenberg läuft als eigener privater
+Service `rubicon-gotenberg` (OIDC). Die PDF-Quelle der Weg-2-Generatoren ist im Code/Config auf
+`RUBICON_GOTENBERG_URL` umgebogen (in `deploy.yml` hinterlegt) — der App-Service zieht die Variable
+erst mit dem nächsten Deploy. Lokal E2E validiert — Report (inkl. Ampel-Pill) + Protokoll (alle
+bedingten Sektionen) via echte Gotenberg-HTTP-API gerendert, optisch identisch zum Live-Stand.
 
 ---
 
 ## 12. Weg-1 Server-Job (`rubicon-docs-job`)
 
-> **Soll-Konfiguration.** Der serverseitige Weg-1-Treiber ist **im Code verdrahtet**
-> (`scripts/gen_docs_server.py`), der Cloud-Run-Job selbst ist aber **noch NICHT angelegt** — das ist
-> der nächste Umsetzungsschritt. Die `gcloud`-Zeilen unten sind **Vorlagen** (analog zu §9.3/§10),
-> **nicht ausführen**, bis die Ordner/IAM provisioniert sind.
+> **Angelegt + live.** Der serverseitige Weg-1-Treiber (`scripts/gen_docs_server.py`) ist deployed und
+> der Cloud-Run-Job `rubicon-docs-job` ist **angelegt**; ein **Live-Lauf ist bestätigt** (echte
+> gebrandete Docs + PDFs in der Shared-Ablage). Die `gcloud`-Zeilen unten dokumentieren die
+> Job-Konfiguration (analog §9.3/§10). Offen bleibt nur der Scheduler (§12.3).
 
 **Zweck:** `python3 scripts/gen_docs_server.py` serverseitig laufen lassen. Der Treiber erzeugt für
 Traktanden, Entscheide, Briefings und Führungsrhythmus je ein gebrandetes Google-Doc + PDF über die
@@ -501,11 +522,11 @@ Führungsrhythmus, ZOOM 2.0) gebraucht. Ist bereits für die Report-/Protokoll-P
 Image vorhanden — beim Job-Bau sicherstellen, dass es im Image bleibt. (Fehlt `fitz`, ist der
 PNG-Schritt non-fatal übersprungen; die PDFs entstehen trotzdem.)
 
-### 12.2 Job anlegen (Soll)
+### 12.2 Job-Konfiguration (angelegt)
 
 ```bash
-# SOLL — Job noch NICHT angelegt. Analog rubicon-report-job (§9.3): Command-Override auf
-# gen_docs_server.py, gleiches Image/Volume/SA, DWD-Env. NICHT ausführen, bis provisioniert.
+# Angelegt. Analog rubicon-report-job (§9.3): Command-Override auf gen_docs_server.py, gleiches
+# Image/Volume/SA, DWD-Env; gehärtet (2 GiB, kein Retry, Timeout 3600 s).
 gcloud run jobs create rubicon-docs-job \
   --project=aixs-260106 --region=europe-west4 \
   --image=<PIPELINE-IMAGE>:latest \
@@ -513,7 +534,8 @@ gcloud run jobs create rubicon-docs-job \
   --add-volume=name=data,type=cloud-storage,bucket=aixs-rubicon-tower-data \
   --add-volume-mount=volume=data,mount-path=/app/src/data \
   --command=python3 --args=scripts/gen_docs_server.py \
-  --task-timeout=1800 --max-retries=1 \
+  --memory=2Gi --task-timeout=3600 --max-retries=0 \
+  --labels=app=rubicon \
   --set-env-vars="^#^RUBICON_PY=/usr/bin/python3#RUBICON_DOCS_DIR=/app/src/data/_generated#RUBICON_WORKSPACE_SA=rubicon-workspace@aixs-260106.iam.gserviceaccount.com#RUBICON_IMPERSONATE_SUBJECT=rubicon@axs.aero#RUBICON_DRIVE_FR_FOLDER=1pPACow-VB9UOZ8N2RDDqZGGExsnDznB1"
 # Delimiter MUSS ^#^ sein (nicht ^@^): die Werte enthalten @ (SA-/Subject-Emails) — s. §9.3.
 # RUBICON_DRIVE_FR_FOLDER ist PFLICHT (sonst FR-Typ = ENV_MISSING). Traktanden/Entscheide/Briefings
@@ -551,17 +573,21 @@ abbilden.
 
 - **`rubicon-deployer`** braucht auf `rubicon-docs-job` `run.jobs.run`/`run.jobs.update` (act-as
   `rubicon-runtime`, wie bei `rubicon-report-job`/`rubicon-merge-job` schon vorhanden).
-- Den **`deploy.yml`-Loop** „Cloud-Run-Jobs auf neues Image heben" (§10) um `rubicon-docs-job`
-  erweitern, damit der Job bei jedem Deploy automatisch aufs frische Image gezogen wird.
+- Der **`deploy.yml`-Loop** „Cloud-Run-Jobs auf neues Image heben" (§10) ist um `rubicon-docs-job`
+  **erweitert (erledigt)** — der Job wird bei jedem Deploy automatisch aufs frische Image gezogen.
 
 ### 12.5 Status
 
 | Element | Status |
 |---|---|
-| Treiber `scripts/gen_docs_server.py` + Mapper (`_docmap.py`) + Materializer (`_tools/doc_materialize.py`) | ✅ im Code (Branch `feat/doc-template-engine`) |
-| `server_*`-Stores + additive UI-„Doc ↗"-Links (`api-core.js`/`src/lib/data.js` + Views) | ✅ im Code |
+| Treiber `scripts/gen_docs_server.py` + Mapper (`_docmap.py`) + Materializer (`_tools/doc_materialize.py`) | ✅ im Code / deployed |
+| `server_*`-Stores + additive UI-„Doc ↗"-Links (`api-core.js`/`src/lib/data.js` + Views) | ✅ im Code / deployed |
 | Template-IDs (`scripts/_tools/rubicon_templates.json`) | ✅ hinterlegt |
-| Führungsrhythmus-Ordner + `RUBICON_DRIVE_FR_FOLDER` | ⏳ Ordner bestimmen + Env setzen |
-| Cloud-Run-Job `rubicon-docs-job` | ⏳ anlegen (Soll, §12.2) |
-| Scheduler `rubicon-docs-sched` + Merge-Hook | ⏳ nach dem Job (§12.3) |
-| `deploy.yml`-Image-Loop um den Job erweitert | ⏳ (§12.4) |
+| Image mit Weg-1-/Gotenberg-Code deployed (Revision live) | ✅ |
+| Führungsrhythmus-Ordner (`1pPACow-…`) + `RUBICON_DRIVE_FR_FOLDER` | ✅ angelegt + gesetzt |
+| Cloud-Run-Job `rubicon-docs-job` (2 GiB, kein Retry, Timeout 3600 s) | ✅ angelegt |
+| Grant `rubicon-runtime` → `rubicon-workspace` (tokenCreator) | ✅ gesetzt |
+| Erster Live-Lauf (echte Docs/PDFs) | ✅ bestätigt — Docs-API-429 traten auf, `_exec_retry`-Backoff fing sie ab; Timeout bewusst auf 3600 s gesetzt (gedrosselter Vollauf über alle vier Typen dauert länger als der Standard-Timeout) |
+| Gotenberg-Service `rubicon-gotenberg` (privat, OIDC) | ✅ Service deployed; App-Wiring (`RUBICON_GOTENBERG_URL`) per nächstem Deploy |
+| `deploy.yml`-Image-Loop um `rubicon-docs-job` erweitert | ✅ |
+| Scheduler `rubicon-docs-sched` + Merge-Hook | ⏳ offen (§12.3) |

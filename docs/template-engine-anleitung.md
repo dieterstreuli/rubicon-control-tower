@@ -5,8 +5,7 @@ baut und serverseitig zu Doc/PDF rendert — **ohne Chrome**. Das ist **Weg 1** 
 Struktur); für dynamische Docs (Report/Protokoll) siehe README „Doc-Erzeugung: genau zwei Wege".
 
 Engine: [`scripts/_tools/doc_template.py`](../scripts/_tools/doc_template.py) · Tests:
-[`scripts/test_doc_template.py`](../scripts/test_doc_template.py) · Bausteine-Herkunft:
-[`docs/template-engine-bausteine.md`](template-engine-bausteine.md).
+[`scripts/test_doc_template.py`](../scripts/test_doc_template.py).
 
 ---
 

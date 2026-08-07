@@ -2,12 +2,13 @@
 
 Diese Doku beschreibt **Weg 2** der Doc-Erzeugung: die serverseitige HTML→PDF-Wandlung über einen
 selbst gehosteten **Gotenberg**-Dienst. Sie richtet sich an IT/Betrieb und deckt das Code-Verhalten,
-die betroffenen Generatoren, die noch offene Container-Provisionierung sowie das validierte
-Aufrufmuster ab.
+die betroffenen Generatoren, die Provisionierung (Service deployed, App-Wiring per nächstem Deploy)
+sowie das validierte Aufrufmuster ab.
 
-Der Renderer-Code ist fertig und lokal end-to-end validiert. Die Container-/Deploy-Provisionierung
-(Sidecar, Env-Variable, eine fehlende Python-Abhängigkeit) ist der **nächste, noch nicht ausgeführte
-Schritt** — sie ist unten als Soll klar markiert.
+Der Renderer-Code ist fertig und end-to-end validiert. Gotenberg läuft als **eigener privater
+Cloud-Run-Service `rubicon-gotenberg`**; der App-Service ruft ihn Service-to-Service per OIDC-ID-Token
+(`RUBICON_GOTENBERG_URL` im Code/Config hinterlegt). Der Service ist deployed; das App-Wiring greift
+mit dem nächsten Deploy.
 
 ---
 
@@ -27,7 +28,7 @@ README, Abschnitt „Doc-Erzeugung: genau zwei Wege"):
 **Warum Gotenberg statt Chrome im Container.** Der lokale Weg von Dieter rendert HTML mit einem
 headless Google Chrome. Das Container-Image enthält **bewusst keinen** Chromium (Image-Größe, Cold-
 Start, Browser-Pflege). [Gotenberg](https://gotenberg.dev) kapselt Chromium hinter einer zustandslosen
-HTTP-API und wird als eigener Dienst (Sidecar) betrieben. Ergebnis: **optisch identisches** Rendering
+HTTP-API und wird als **eigener privater Cloud-Run-Service `rubicon-gotenberg`** betrieben. Ergebnis: **optisch identisches** Rendering
 des vorhandenen, Chrome-getunten HTMLs, **self-hosted** → es verlässt keine PII den Mandanten. Eine
 dokumentierte, noch nicht gebaute Alternative (Jinja2 + WeasyPrint) ist in `DEPLOYMENT_GCP.md §11` und
 der README festgehalten.
@@ -61,6 +62,11 @@ Die Funktion **verzweigt intern nach Umgebung** — Signatur und alle Aufrufer b
 - **Antwort:** die PDF-Bytes werden nach `pdf_path` geschrieben (eine vorhandene Datei wird zuvor
   entfernt).
 - **`timeout`** (Default 60 s) wird an den HTTP-Request durchgereicht.
+- **Auth:** für den privaten Service wird ein **OIDC-ID-Token** vom Cloud-Run-Metadata-Server geholt
+  und als `Authorization: Bearer …`-Header mitgeschickt; lokal (kein Metadata-Server erreichbar)
+  läuft der Request ohne Token.
+- **Robustheit:** transiente Fehler (429/5xx, Cold-Start durch scale-to-zero, Netz-/Connection-Reset)
+  werden bis zu **3×** mit Exponential-Backoff wiederholt, bevor der Aufruf fehlschlägt.
 
 ### Voraussetzung & Fehlerfall
 
@@ -94,39 +100,41 @@ der Weg-1-Treiber `scripts/gen_docs_server.py` (Google-Docs-Export, kein Chrome/
 `gen_report.py` besitzt für den Server ebenfalls einen chromefreien §9-Server-Pfad (`gdoc_pdf`) und
 braucht Gotenberg nicht. Der einzige heute im Container getriggerte Bruch ohne Chrome ist damit
 **`gen_protokoll.py`** — mit gesetztem `RUBICON_GOTENBERG_URL` läuft dessen PDF-Schritt über den
-Sidecar.
+privaten Gotenberg-Service.
 
 ---
 
-## 4. Provisionierung (Soll — nächster Schritt)
+## 4. Provisionierung (Service deployed; App-Wiring per nächstem Deploy)
 
-> Der Renderer-Code ist fertig. Die folgenden Punkte sind die **noch offene** Container-/Deploy-
-> Provisionierung (Gordon-gegated); `Dockerfile`/`gcloud` sind hier **nicht** angefasst, nur
-> beschrieben.
+> Der Renderer-Code ist fertig. Der Gotenberg-**Service** `rubicon-gotenberg` ist deployed; das
+> **App-Wiring** (`RUBICON_GOTENBERG_URL` am App-Service) folgt mit dem nächsten Deploy.
+> Nachstehend der Ist-Aufbau.
 
-**a) Gotenberg-Sidecar in die Cloud-Run-Service-Definition.** Container `gotenberg/gotenberg:8` neben
-dem RUBICON-Container (Multi-Container / Same-Pod), erreichbar über `http://localhost:3000`. Dann am
-Service bzw. Job die Env-Variable setzen:
+**a) Gotenberg als eigener privater Cloud-Run-Service `rubicon-gotenberg`.** Image
+`docker.io/gotenberg/gotenberg:8`, Port 3000, 2 GiB, scale-to-zero, `--no-allow-unauthenticated`,
+eigener no-role SA `rubicon-gotenberg`. Der App-Service ruft ihn **Service-to-Service per
+OIDC-ID-Token** (SA `rubicon-runtime` hat `run.invoker` darauf). Am App-Service zeigt die Env-Variable
+auf die Service-URL (in `deploy.yml` gesetzt):
 
 ```
-RUBICON_GOTENBERG_URL=http://localhost:3000
+RUBICON_GOTENBERG_URL=https://rubicon-gotenberg-646221535662.europe-west4.run.app
 ```
 
-Damit greift automatisch der Server-Zweig in `html_to_pdf`. Betriebsvarianten (Sidecar vs. eigener
-interner Cloud-Run-Service) sind in `DEPLOYMENT_GCP.md §11` gegenübergestellt; für den POC ist der
-Sidecar empfohlen.
+Damit greift automatisch der Server-Zweig in `html_to_pdf`. Cold-Start (scale-to-zero) wird durch
+Retry/Backoff in `_render_via_gotenberg` abgefedert. *(Historischer Pivot: der zunächst geplante
+Multi-Container-Sidecar scheiterte an der EXPOSE-3000-Portkollision mit dem App-Port; Details in
+`DEPLOYMENT_GCP.md §11`.)*
 
-**b) Fehlende Python-Abhängigkeit `PyMuPDF` (`fitz`) im Image.** Das `Dockerfile` installiert
-`google-api-python-client` und `google-auth` manuell per `pip3`, aber **nicht** `PyMuPDF` — obwohl
-`scripts/requirements.txt` es listet. Ohne PyMuPDF scheitern im Container **`gen_protokoll.py`**
-(`import fitz`) **und** die Weg-1-PNG-Vorschauen (`_vol_png` in `gen_docs_server.py`). `PyMuPDF` ist
-deshalb in den `pip install`-Schritt des Dockerfiles aufzunehmen. Das ist die eigentliche **zweite**
-Container-Lücke neben dem fehlenden Chrome.
+**b) Python-Abhängigkeit `PyMuPDF` (`fitz`) im Image.** Das `Dockerfile` installiert
+`google-api-python-client`, `google-auth` **und `PyMuPDF`** per `pip3` (entsprechend
+`scripts/requirements.txt`). `fitz` ist im Image vorhanden — sowohl **`gen_protokoll.py`**
+(`import fitz`) als auch die Weg-1-PNG-Vorschauen (`_vol_png` in `gen_docs_server.py`) laufen ohne
+zusätzliche Abhängigkeitslücke.
 
-**c) Deploy-Reihenfolge & Verifikation.** Sidecar, Env-Variable und PyMuPDF **gemeinsam** ausrollen;
-danach eine **Protokoll-Erzeugung serverseitig** als Rauchtest (über `/api/protokoll/export`).
+**c) Verifikation.** Nach dem Rollout eine **Protokoll-Erzeugung serverseitig** als Rauchtest (über
+`/api/protokoll/export`).
 
-**d) Sicherheit / DSGVO.** Gotenberg ist **self-hosted** (Sidecar), **kein externer PDF-Dienst** → es
+**d) Sicherheit / DSGVO.** Gotenberg ist **self-hosted** (privater Service), **kein externer PDF-Dienst** → es
 verlässt keine PII den Mandanten. (Sensitive Protokolle sind vom Export ohnehin gesperrt — die Route
 `/api/protokoll/export` verweigert den Export für `protokolle_sensitiv`.)
 

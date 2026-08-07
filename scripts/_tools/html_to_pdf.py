@@ -79,27 +79,60 @@ def _multipart(boundary, fields, html_bytes):
     return buf.getvalue()
 
 
+def _gotenberg_id_token(audience):
+    """OIDC-ID-Token fuer den privaten Gotenberg-Service (Cloud-Run-Metadata-Server).
+    Lokal (kein Metadata-Server) -> None (dann ohne Auth, z.B. lokaler Docker-Gotenberg)."""
+    import urllib.request
+    url = ("http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/"
+           "default/identity?audience=" + audience)
+    try:
+        req = urllib.request.Request(url, headers={"Metadata-Flavor": "Google"})
+        with urllib.request.urlopen(req, timeout=5) as r:
+            return r.read().decode("utf-8").strip()
+    except Exception:  # noqa: BLE001 — kein Metadata-Server (lokal) o.ae.
+        return None
+
+
 def _render_via_gotenberg(base_url, html_path, pdf_path, landscape, timeout):
     """Serverseitige Fassung des lokalen Chrome-Renderers: POST self-contained HTML an einen
-    Gotenberg-Chromium-Endpoint, schreibt die PDF-Antwort nach pdf_path."""
-    import urllib.request
+    Gotenberg-Chromium-Endpoint, schreibt die PDF-Antwort nach pdf_path. Ruft den privaten
+    Service per OIDC-ID-Token auf (lokal ohne Token) und wiederholt transiente Fehler
+    (5xx/Cold-Start-503, Netz-/Connection-Reset) mit Exponential-Backoff (3 Versuche)."""
+    import time, random, urllib.request, urllib.error
     html_bytes = Path(html_path).read_bytes()
     boundary = f"----rubicon{uuid.uuid4().hex}"
     fields = [("preferCssPageSize", "true")]
     if landscape:
         fields.append(("landscape", "true"))
     body = _multipart(boundary, fields, html_bytes)
-    req = urllib.request.Request(
-        f"{base_url}/forms/chromium/convert/html", data=body, method="POST",
-        headers={"Content-Type": f"multipart/form-data; boundary={boundary}"})
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        pdf = resp.read()
-    if pdf[:4] != b"%PDF":
-        raise RuntimeError(f"Gotenberg lieferte kein PDF (head={pdf[:8]!r})")
-    if pdf_path.exists():
-        pdf_path.unlink()
-    pdf_path.write_bytes(pdf)
-    return pdf_path
+    headers = {"Content-Type": f"multipart/form-data; boundary={boundary}"}
+    tok = _gotenberg_id_token(base_url)
+    if tok:
+        headers["Authorization"] = f"Bearer {tok}"
+    last = None
+    for attempt in range(3):
+        try:
+            req = urllib.request.Request(f"{base_url}/forms/chromium/convert/html",
+                                         data=body, method="POST", headers=headers)
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                pdf = resp.read()
+            if pdf[:4] != b"%PDF":
+                raise RuntimeError(f"Gotenberg lieferte kein PDF (head={pdf[:8]!r})")
+            if pdf_path.exists():
+                pdf_path.unlink()
+            pdf_path.write_bytes(pdf)
+            return pdf_path
+        except urllib.error.HTTPError as ex:
+            last = ex
+            if ex.code == 429 or 500 <= ex.code < 600:   # transient -> retry
+                pass
+            else:
+                raise
+        except (urllib.error.URLError, ConnectionError, TimeoutError) as ex:  # Netz/Cold-Start
+            last = ex
+        if attempt < 2:
+            time.sleep(min(2 ** attempt + random.uniform(0, 0.5), 8))
+    raise RuntimeError(f"Gotenberg-Render nach 3 Versuchen fehlgeschlagen: {last}")
 
 
 if __name__ == "__main__":

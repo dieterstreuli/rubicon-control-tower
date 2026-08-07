@@ -109,16 +109,18 @@ def test_build_grid_normal_and_group_rows():
 
 
 class _DocsBullets:
-    """Fake: get() liefert ein Doc mit dem Anker-Paragraph; sammelt alle Requests."""
+    """Fake: get() liefert ein Doc (mit revisionId fuer den Riegel-Check) samt Anker-Paragraph;
+    sammelt Requests je Aufruf in `calls` und das writeControl parallel in `controls`."""
     def __init__(self, anchor, idx=5):
         self._anchor, self._idx = anchor, idx
-        self.calls = []
+        self.calls = []; self.controls = []
     def documents(self): return self
-    def get(self, documentId=None): return _Exec({"body": {"content": [
+    def get(self, documentId=None): return _Exec({"revisionId": "rev-b", "body": {"content": [
         {"startIndex": self._idx, "endIndex": self._idx + len(self._anchor) + 1,
          "paragraph": {"elements": [{"textRun": {"content": self._anchor + "\n"}}]}}]}})
     def batchUpdate(self, documentId=None, body=None):
-        self.calls.append(body["requests"]); return _Exec({})
+        self.calls.append(body["requests"]); self.controls.append(body.get("writeControl"))
+        return _Exec({})
 
 
 def test_insert_bullets_inserts_lists_and_removes_anchor():
@@ -139,6 +141,89 @@ def test_insert_bullets_empty_just_removes_anchor():
     flat = [r for call in docs.calls for r in call]
     assert all("insertText" not in r for r in flat)   # keine leere Liste eingefuegt
     assert flat and "replaceAllText" in flat[0]        # nur der Anker entfernt
+
+
+def test_insert_bullets_single_batch_and_defers_anchor():
+    # Buendelung: insertText + createParagraphBullets in EINEM batchUpdate (war 2 Round-Trips);
+    # remove_anchor=False laesst den Anker fuer den Treiber-Sweep stehen.
+    docs = _DocsBullets("{{BODY}}", idx=5)
+    dt.insert_bullets_at_anchor(docs, "D", "{{BODY}}", ["Alpha", "Beta"], remove_anchor=False)
+    assert len(docs.calls) == 1                        # genau EIN batchUpdate
+    reqs = docs.calls[0]
+    assert any("insertText" in r for r in reqs)
+    assert any("createParagraphBullets" in r for r in reqs)
+    assert not any("replaceAllText" in r for r in reqs)  # Anker deferred (kein Cleanup hier)
+    assert docs.controls[0] == {"requiredRevisionId": "rev-b"}  # nicht-idempotenter Insert unter Riegel
+
+
+# ── Tabellen-Pfad (get() liefert nacheinander: Anker-Doc -> Tabellen-Doc) ─────
+_ANCHOR_DOC = {"revisionId": "rev-0", "body": {"content": [
+    {"startIndex": 1, "paragraph": {"elements": [{"textRun": {"content": "{{TAB}}\n"}}]}}]}}
+_TABLE_DOC = {"revisionId": "rev-1", "body": {"content": [
+    {"startIndex": 1, "table": {"tableRows": [
+        {"tableCells": [{"content": [{"startIndex": 3, "paragraph": {"elements": []}}]},
+                        {"content": [{"startIndex": 5, "paragraph": {"elements": []}}]}]},
+        {"tableCells": [{"content": [{"startIndex": 7, "paragraph": {"elements": []}}]},
+                        {"content": [{"startIndex": 9, "paragraph": {"elements": []}}]}]},
+    ]}},
+    {"startIndex": 20, "paragraph": {"elements": [{"textRun": {"content": "{{TAB}}\n"}}]}}]}}
+
+
+class _DocsTable:
+    """Fake: get() liefert nacheinander die gecannten Doc-Zustaende; batchUpdate sammelt
+    Requests + writeControl je Aufruf."""
+    def __init__(self, gets):
+        self._gets, self._gi = list(gets), 0
+        self.calls = []   # [{"requests": [...], "writeControl": {...}|None}, ...]
+    def documents(self): return self
+    def get(self, documentId=None):
+        g = self._gets[min(self._gi, len(self._gets) - 1)]; self._gi += 1
+        return _Exec(g)
+    def batchUpdate(self, documentId=None, body=None):
+        self.calls.append({"requests": body["requests"], "writeControl": body.get("writeControl")})
+        return _Exec({})
+
+
+def test_insert_table_merges_fill_and_style_and_defers_anchor():
+    docs = _DocsTable([_ANCHOR_DOC, _TABLE_DOC])
+    dt.insert_table_at_anchor(docs, "D", "{{TAB}}", ["H1", "H2"], [["a", "b"]],
+                              col_widths_pt=[100, 100], remove_anchor=False)
+    # Batch 0 = insertTable (rev-0-Riegel); Batch 1 = Zellen-Fill + Spalten-Styling in EINEM
+    # rev-1-Batch (frueher separater Style-Batch). Kein Anker-Batch (deferred).
+    assert len(docs.calls) == 2
+    assert any("insertTable" in r for r in docs.calls[0]["requests"])
+    assert docs.calls[0]["writeControl"] == {"requiredRevisionId": "rev-0"}
+    b_fill = docs.calls[1]["requests"]
+    assert any("insertText" in r for r in b_fill)                    # Zellen gefuellt
+    assert any("updateTableColumnProperties" in r for r in b_fill)   # Styling IM Fill-Batch
+    assert docs.calls[1]["writeControl"] == {"requiredRevisionId": "rev-1"}
+    assert not any("replaceAllText" in r for c in docs.calls for r in c["requests"])  # deferred
+
+
+def test_insert_table_removes_anchor_when_requested():
+    docs = _DocsTable([_ANCHOR_DOC, _TABLE_DOC])
+    dt.insert_table_at_anchor(docs, "D", "{{TAB}}", ["H1", "H2"], [["a", "b"]], remove_anchor=True)
+    last = docs.calls[-1]["requests"]
+    assert len(last) == 1 and "replaceAllText" in last[0]
+    assert last[0]["replaceAllText"]["containsText"]["text"] == "{{TAB}}"
+
+
+def test_copy_fill_export_bundles_anchor_sweep():
+    # Treiber ruft insert_* mit remove_anchor=False und wischt danach ALLE Anker in EINEM
+    # Sweep-Batch. insert_* hier durch No-Ops ersetzt -> nur der Sweep bleibt beobachtbar.
+    orig_tab, orig_bul = dt.insert_table_at_anchor, dt.insert_bullets_at_anchor
+    dt.insert_table_at_anchor = lambda *a, **k: None
+    dt.insert_bullets_at_anchor = lambda *a, **k: None
+    try:
+        d = _Drive(); docs = _Docs(doc_text="{{AG}} {{BODY}} {{FLD}}\n")
+        dt._copy_fill_export(d, docs, "TPL", "F", "n", {"FLD": "x"},
+                             {"{{AG}}": {"header": ["H"], "rows": [["a"]]}},
+                             {"{{BODY}}": ["i1"]})
+        reqs = docs.batched["requests"]              # letzter batchUpdate = Sweep
+        toks = {r["replaceAllText"]["containsText"]["text"] for r in reqs if "replaceAllText" in r}
+        assert toks == {"{{AG}}", "{{BODY}}"}        # beide Anker in EINEM Sweep-Batch
+    finally:
+        dt.insert_table_at_anchor, dt.insert_bullets_at_anchor = orig_tab, orig_bul
 
 
 def test_apply_modifiers():
@@ -191,6 +276,34 @@ def test_all_text_walks_paragraphs_and_tables():
     assert "{{A}}" in t and "{{B}}" in t                # Tabellenzellen werden mitgescannt
 
 
+def test_exec_retry_backs_off_on_429():
+    """1. execute() wirft HttpError(429), 2. liefert einen Wert -> Rueckgabe + genau 2 Calls."""
+    import time
+    from googleapiclient.errors import HttpError
+
+    class _Resp(dict):
+        status = 429
+        reason = "Too Many Requests"
+
+    class _Req:
+        def __init__(self): self.n = 0
+        def execute(self):
+            self.n += 1
+            if self.n == 1:
+                raise HttpError(_Resp(), b"{}")
+            return {"ok": True}
+
+    req = _Req()
+    orig_sleep = time.sleep
+    time.sleep = lambda *a: None                        # Backoff nicht wirklich schlafen
+    try:
+        out = dt._exec_retry(req)
+    finally:
+        time.sleep = orig_sleep
+    assert out == {"ok": True}
+    assert req.n == 2                                   # 1x 429 (retry) + 1x Erfolg
+
+
 if __name__ == "__main__":
     test_build_replace_requests()
     test_render_copies_fills_exports_and_cleans()
@@ -200,8 +313,13 @@ if __name__ == "__main__":
     test_build_grid_normal_and_group_rows()
     test_insert_bullets_inserts_lists_and_removes_anchor()
     test_insert_bullets_empty_just_removes_anchor()
+    test_insert_bullets_single_batch_and_defers_anchor()
+    test_insert_table_merges_fill_and_style_and_defers_anchor()
+    test_insert_table_removes_anchor_when_requested()
+    test_copy_fill_export_bundles_anchor_sweep()
     test_apply_modifiers()
     test_build_replace_requests_scanning()
     test_scanning_skips_anchors()
     test_all_text_walks_paragraphs_and_tables()
-    print("doc_template: 12/12 gruen")
+    test_exec_retry_backs_off_on_429()
+    print("doc_template: 17/17 gruen")
