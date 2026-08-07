@@ -90,7 +90,7 @@ def test_projekt_merge_keeps_live_fields():
     inp = result['inputs'][0]
     assert inp['status'] == 'geliefert'               # Lieferstatus aus Volume
     assert inp['liefer_tasks'] == ['T-9']             # Task-Kopplung aus Volume
-    assert result['meta']['today'] == '2026-08-01'    # Steuerungsdatum aus Volume
+    assert result['meta']['today'] == '2026-01-01'    # Steuerungsdatum aus SEED (Repo-getrieben, nicht Volume)
     assert conflicts == []
 
 

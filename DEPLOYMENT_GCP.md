@@ -51,7 +51,7 @@ Weitere Personen freischalten = einfach Mitglied der Gruppe machen:
 - **`.dockerignore`** (neu): `node_modules`, `dist`, `.git`, `public`, …
 - **`vite.config.js`**: `server.allowedHosts: true` (DNS-Rebind-Check aus; Host variabel `*.run.app`/Custom-Domain; Schutz macht IAP).
 - **`plugins/rubicon-api.js`**: `OK_ORIGINS` um **Env-Override** `RUBICON_OK_ORIGINS` (Komma-separiert) ergänzt — Deploy-Origins ohne Code-Redeploy.
-- **Env am Service:** `RUBICON_OK_ORIGINS` = `https://rubicon.axs.aero` + beide run.app-URLs (Custom-Domain MUSS drin sein, sonst weist der Origin-Guard POSTs von `rubicon.axs.aero` ab); `RUBICON_PY=python3`; `PORT=8080`; `RUBICON_GOTENBERG_URL` (Gotenberg-Service-URL — per nächstem Deploy gesetzt, s. §11).
+- **Env am Service:** `RUBICON_OK_ORIGINS` = `https://rubicon.axs.aero` + beide run.app-URLs (Custom-Domain MUSS drin sein, sonst weist der Origin-Guard POSTs von `rubicon.axs.aero` ab); `RUBICON_PY=python3`; `PORT=8080`; `RUBICON_GOTENBERG_URL` (Gotenberg-Service-URL, **live gesetzt**, s. §11); **`RUBICON_WORKSPACE_SA` + `RUBICON_IMPERSONATE_SUBJECT=rubicon@axs.aero`** (keyless-DWD auch für den Service — nötig für server-seitige Drive/Docs-Aktionen der App: on-demand Protokoll-Export, Report-Generierung, Gemini-Notiz-Import; sonst fällt der Code auf eine lokale User-OAuth-Datei zurück, die es im Container nicht gibt). Delimiter der `--set-env-vars`-Kette ist `^;^` (nicht `^@^`), weil SA-Email/Subject ein `@` enthalten.
 - **Dokumenten-Ablage:** `RUBICON_DOCS_DIR=/app/src/data/_generated`
   (liegt mit auf dem GCS-Volume, s. §1) hat beim Ausliefern Vorrang vor der ins Image gebackenen
   `public`-Baseline (`resolveStaticPath` in `server.mjs`). Der Report-Job (s. §9) schreibt bereits
@@ -233,7 +233,8 @@ Die Reports (Woche/Monat/Quartal) werden serverseitig als **Google Doc im Shared
 erzeugt und per **Drive-`files.export`** zu PDF gewandelt — **ohne Chrome**, über einen
 Cloud-Run-Job (live). Der Code passt sich der Laufzeitumgebung an (**Dual-Mode**, s. „Migrations-Status"
 im README): lokal unverändert (Chrome + User-OAuth), serverseitig nur wenn die DWD-Env-Variablen
-gesetzt sind. Der Web-Service setzt sie NICHT → dort ändert sich nichts.
+gesetzt sind. **Diese Env tragen die Jobs UND — seit 07.08.2026 — der Web-Service** (für die
+on-demand Drive/Docs-Aktionen der App, s. §11); die Umschaltung erfolgt allein über die Env, kein Flag.
 
 ### 9.1 Identitäts-Kette (keyless Domain-Wide-Delegation)
 
@@ -242,8 +243,17 @@ gesetzt sind. Der Web-Service setzt sie NICHT → dort ändert sich nichts.
 | **Service-User** | `rubicon@axs.aero` (Workspace-Konto, OU `/nouser`, GAL-hidden, Business-Standard) | Identität, unter der Dokumente in Drive erzeugt werden (Autor) |
 | **Service Account** | `rubicon-workspace@aixs-260106` (Client-ID `112708550499414880483`) | impersoniert `rubicon@axs.aero` per **keyless DWD** (IAM-Credentials `signJwt`, kein JSON-Key) |
 | **DWD-Freigabe** | Admin-Konsole → API-Controls → Domain-Wide-Delegation: Client-ID oben + Scopes `…/auth/drive` + `…/auth/documents` | erlaubt dem SA das Handeln als der Service-User (braucht 2.-Admin-Approval) |
-| **Job-Prozess-SA** | `rubicon-runtime@aixs-260106` (hat Bucket-Zugriff) | führt den Job aus; DWD-Basis, signiert das JWT als `rubicon-workspace` |
+| **Prozess-SA** | `rubicon-runtime@aixs-260106` (hat Bucket-Zugriff) | Laufzeit-Identität von **Jobs UND Web-Service**; DWD-Basis, signiert das JWT als `rubicon-workspace` |
 | **Grant** | `rubicon-runtime` → `iam.serviceAccountTokenCreator` auf `rubicon-workspace` | erlaubt `rubicon-runtime` das `signJwt` als `rubicon-workspace` |
+
+**Rechte-Stand (07.08.2026) — was aktiviert wurde, ohne neue IAM-Bindings:** Der Web-Service läuft
+unter derselben SA `rubicon-runtime`; mit der neuen DWD-Env am Service (§0/§11) **nutzt jetzt auch der
+Service** die *bestehende* `serviceAccountTokenCreator`-Delegation (Zeile „Grant") und agiert
+server-seitig als `rubicon@axs.aero` — für die on-demand Drive/Docs-Aktionen der App. Ebenso ruft der
+Service den privaten Gotenberg über die *bestehende* `roles/run.invoker`-Bindung von `rubicon-runtime`
+auf `rubicon-gotenberg` (§11). **Es wurde in dieser Runde KEINE neue IAM-Bindung erteilt** — beide
+Grants existierten bereits (für die Jobs); neu ist allein die Aktivierung der Fähigkeit am Service via
+Env. Scope-Umfang unverändert: nur `…/auth/drive` + `…/auth/documents`.
 
 In-House-Vorlage der keyless-DWD-Mechanik: `scripts/_tools/gdoc_pdf.py` (bzw. das Muster aus
 `_google_auth._dwd_credentials`). Kein statischer Key nötig (Metadata-ADC signiert per IAM-API).
@@ -365,7 +375,13 @@ Mount-Punkts) = Repo-Struktur; das Volume `/app/src/data` = Live-SSOT.
 **Feld-Vertrag** (aus `build_projekt_yaml.py:242-266` + `api-core.js` `mergeTasks`):
 - `projekt.yaml`/Milestones: Struktur (`name/depends_on/gate/critical/phase/nachlauf`) aus Repo;
   Live (`progress/reported_slip_days/due/owner/progress_source/start`) aus Volume. Inputs:
-  `status`+`liefer_tasks` aus Volume. `meta.today`/`datenlieferungen_url` aus Volume erhalten.
+  `status`+`liefer_tasks` aus Volume.
+- **`meta` ist Repo-getrieben (Datenvertrag, geändert 07.08.2026):** der gesamte `meta`-Block —
+  insb. **`today` (Steuerungsdatum)** und `datenlieferungen_url` — kommt aus dem **Repo (SEED)** und
+  wird via `[publish-data]` live nachgezogen. Die App schreibt `meta` **nie** (nur Lesen), darum
+  gibt es keinen Live-Wert zu bewahren; ein früheres Volume-Preserve fror das Steuerungsdatum ein
+  (Repo-Update kam live nicht an). **Source-of-Truth = `projekt.yaml` im Repo:** Steuerungsdatum
+  fortschreiben = Wert dort ändern + Commit mit `[publish-data]` im Subject.
 - `tasks.json`: Repo (`text/owner/due/ms_id/source/origin`); Volume (`nr/status/erledigt_am/erledigt_von/created_at`).
   Volume-only Tasks (live erfasst) bleiben erhalten.
 - **Lösch-Politik = behalten + melden:** Milestone/Input im Volume mit Live-Daten, im Repo entfernt →
@@ -473,11 +489,12 @@ Die RUBICON-HTMLs (`render_*`) sind self-contained (inline CSS + base64-Logo) �
 keine Asset-Uploads. **`preferCssPageSize=true` ist Pflicht**, sonst nutzt Gotenberg seine
 Default-Seitengröße statt des `@page`-A4 der Vorlagen.
 
-**Status:** **Service deployed; App-Wiring per nächstem Deploy.** Gotenberg läuft als eigener privater
-Service `rubicon-gotenberg` (OIDC). Die PDF-Quelle der Weg-2-Generatoren ist im Code/Config auf
-`RUBICON_GOTENBERG_URL` umgebogen (in `deploy.yml` hinterlegt) — der App-Service zieht die Variable
-erst mit dem nächsten Deploy. Lokal E2E validiert — Report (inkl. Ampel-Pill) + Protokoll (alle
-bedingten Sektionen) via echte Gotenberg-HTTP-API gerendert, optisch identisch zum Live-Stand.
+**Status:** **Service + App-Wiring live.** Gotenberg läuft als eigener privater Service
+`rubicon-gotenberg` (OIDC). Die PDF-Quelle der Weg-2-Generatoren ist im Code auf `RUBICON_GOTENBERG_URL`
+umgebogen; die Variable ist am App-Service gesetzt (in `deploy.yml` hinterlegt), `html_to_pdf` verzweigt
+serverseitig auf Gotenberg. Lokal E2E validiert — Report (inkl. Ampel-Pill) + Protokoll (alle bedingten
+Sektionen) via echte Gotenberg-HTTP-API gerendert, optisch identisch zum Live-Stand. (Der vollständige
+on-demand Protokoll-Export über den Live-Service inkl. Google-Doc-Schritt: End-to-End-Verifikation offen.)
 
 ---
 
@@ -499,18 +516,19 @@ DWD-Env für den Server-Modus, Timeout 1800s.
 `traktanden_docs.json`, `briefings_docs.json`, `fuehrungsrhythmus_doc.json`). Dieters lokale Felder
 und lokale Doc-IDs bleiben unberührt und werden nie getrasht. Wie bei den anderen Jobs erkennt der
 Treiber den Server-Modus **allein** an der DWD-Env (`RUBICON_WORKSPACE_SA` +
-`RUBICON_IMPERSONATE_SUBJECT`); der Web-Service setzt sie NICHT → dort ändert sich nichts.
+`RUBICON_IMPERSONATE_SUBJECT`). Diese Env trägt der Job; seit 07.08.2026 auch der Web-Service (für
+seine eigenen on-demand Drive/Docs-Aktionen, s. §11) — an dieser Job-Invariante ändert das nichts.
 
 ### 12.1 Pflicht-/Konfig-Env
 
-- **`RUBICON_DRIVE_FR_FOLDER` (PFLICHT).** Für den Führungsrhythmus-Ordner gibt es **keinen Default**.
-  Fehlt die Variable, erzeugt der Treiber **kein** Führungsrhythmus-Doc und meldet den Typ als
-  **`ENV_MISSING`** (lauter Marker im `per_typ`-Log — **kein stiller Erfolg**). Ordner ist angelegt:
-  `fuehrungsrhythmus` = `1pPACow-VB9UOZ8N2RDDqZGGExsnDznB1` (Shared-Drive-Root `0AK8sNCBforeMUk9PVA`,
-  Geschwister zu `traktanden`/`entscheide`/`briefings`).
+- **`RUBICON_DRIVE_FR_FOLDER` (Default gesetzt).** Der Führungsrhythmus-Ordner hat — wie die anderen
+  drei — einen **Code-Default im Treiber**: `fuehrungsrhythmus` = `1pPACow-VB9UOZ8N2RDDqZGGExsnDznB1`
+  (Shared-Drive-Root `0AK8sNCBforeMUk9PVA`, Geschwister zu `traktanden`/`entscheide`/`briefings`); die
+  Env übersteuert ihn. Nur bei **explizit leerer** Variable meldet der Treiber den Typ als
+  **`ENV_MISSING`** (lauter Marker im `per_typ`-Log — kein stiller Erfolg).
 - **Ordner-Overrides (optional, Defaults im Treiber = die IDs aus §9.2):**
   `RUBICON_DRIVE_TRAKTANDEN_FOLDER`, `RUBICON_DRIVE_ENTSCHEIDE_FOLDER`,
-  `RUBICON_DRIVE_BRIEFINGS_FOLDER`.
+  `RUBICON_DRIVE_BRIEFINGS_FOLDER`, `RUBICON_DRIVE_FR_FOLDER`.
 - **Template-Override (optional):** `RUBICON_TEMPLATE_<TYP>` (Singular, z.B.
   `RUBICON_TEMPLATE_ENTSCHEIDE`) übersteuert die Template-ID aus
   `scripts/_tools/rubicon_templates.json`.
@@ -584,10 +602,13 @@ abbilden.
 | `server_*`-Stores + additive UI-„Doc ↗"-Links (`api-core.js`/`src/lib/data.js` + Views) | ✅ im Code / deployed |
 | Template-IDs (`scripts/_tools/rubicon_templates.json`) | ✅ hinterlegt |
 | Image mit Weg-1-/Gotenberg-Code deployed (Revision live) | ✅ |
-| Führungsrhythmus-Ordner (`1pPACow-…`) + `RUBICON_DRIVE_FR_FOLDER` | ✅ angelegt + gesetzt |
+| Führungsrhythmus-Ordner (`1pPACow-…`) — Code-Default + optionale Env `RUBICON_DRIVE_FR_FOLDER` | ✅ angelegt + Default gesetzt |
 | Cloud-Run-Job `rubicon-docs-job` (2 GiB, kein Retry, Timeout 3600 s) | ✅ angelegt |
 | Grant `rubicon-runtime` → `rubicon-workspace` (tokenCreator) | ✅ gesetzt |
-| Erster Live-Lauf (echte Docs/PDFs) | ✅ bestätigt — Docs-API-429 traten auf, `_exec_retry`-Backoff fing sie ab; Timeout bewusst auf 3600 s gesetzt (gedrosselter Vollauf über alle vier Typen dauert länger als der Standard-Timeout) |
-| Gotenberg-Service `rubicon-gotenberg` (privat, OIDC) | ✅ Service deployed; App-Wiring (`RUBICON_GOTENBERG_URL`) per nächstem Deploy |
+| Erster Live-Lauf (echte Docs/PDFs) | ✅ Entscheide/Traktanden/FR + Teil der Briefings gerendert; bei der Briefing-Masse trat 429-Sättigung auf (Backoff allein reicht nicht) → `batchUpdate`-Bündelung + Pacing (< 60/min) ergänzt; sauberer Vollauf nach Deploy ausstehend |
+| Doc-Pipeline-Robustheit: `batchUpdate`-Bündelung + Pacing (`doc_template.py`) | ✅ im Code (Tests) — greift ab nächstem Job-Deploy |
+| Gotenberg-Service `rubicon-gotenberg` (privat, OIDC) | ✅ Service live + App-Wiring live (`RUBICON_GOTENBERG_URL` am App-Service) |
+| Server-DWD am Web-Service (`RUBICON_WORKSPACE_SA` + `RUBICON_IMPERSONATE_SUBJECT`) | ✅ live — über den Live-Service bestätigt: Report-Generierung (Google-Doc erzeugt) + Gemini-Import (Auth statt lokaler-OAuth-Fehler). Protokoll-Export-E2E s. §11. Keine neue IAM-Bindung (§9.1) |
+| Datenvertrag `meta` Repo-getrieben (`merge_bridge.py`, §10) | ✅ im Code — greift ab nächstem Merge-Job-Deploy |
 | `deploy.yml`-Image-Loop um `rubicon-docs-job` erweitert | ✅ |
 | Scheduler `rubicon-docs-sched` + Merge-Hook | ⏳ offen (§12.3) |

@@ -60,14 +60,12 @@ def merge_projekt(seed, volume):
     conflicts = []
     result = copy.deepcopy(seed)
 
-    # 1. meta: aus SEED, aber manuell gepflegtes Steuerungsdatum + Datenlieferungs-URL
-    #    aus dem Volume erhalten, falls dort gesetzt.
-    vmeta = volume.get('meta') or {}
-    if vmeta.get('today') or vmeta.get('datenlieferungen_url'):
-        result.setdefault('meta', {})
-    for f in ('today', 'datenlieferungen_url'):
-        if vmeta.get(f):
-            result['meta'][f] = vmeta[f]
+    # 1. meta ist Repo-getrieben (Source-of-Truth = projekt.yaml, via [publish-data] live
+    #    nachgezogen): `today` (Steuerungsdatum) und `datenlieferungen_url` kommen aus dem SEED
+    #    und werden BEWUSST NICHT aus dem Volume bewahrt. Die App schreibt beide nie — ein
+    #    Volume-Preserve hätte sie eingefroren (nicht mehr fortschreibbar; genau das war der
+    #    Grund, warum ein Steuerungsdatum-Update im Repo live nicht ankam). `result` trägt die
+    #    SEED-meta bereits (deepcopy oben), darum hier nichts weiter zu tun.
 
     # Volume-Indizes (Milestone → sein Workstream-Code merken, für die Rück-Einsortierung)
     vol_ms = {}

@@ -37,6 +37,33 @@ def _exec_retry(request, tries=6):
             raise
 
 
+_WRITE_TIMES = []          # monotonic-Zeitstempel der letzten Docs-batchUpdate-Aufrufe
+_MAX_WRITES_PER_MIN = 55   # unter dem 60/min-Docs-Write-Limit (Puffer gegen Jitter)
+
+
+def _pace_write():
+    """Drosselt Docs-batchUpdate-Aufrufe proaktiv auf < 60/min (Docs-API-Write-Quota per user).
+    Blockt, bis im gleitenden 60-Sekunden-Fenster wieder < _MAX_WRITES_PER_MIN Writes liegen.
+    Backoff (_exec_retry) allein faengt eine DURCHGEHENDE 429-Saettigung bei grossen Laeufen
+    (z.B. ~30 Briefings) nicht auf — Pacing haelt die Rate von vornherein unter dem Limit.
+    Scope = PRO PROZESS: exakt richtig fuer den sequenziellen `rubicon-docs-job` (der Quota-
+    Verursacher, ein Prozess). Der Web-Service rendert on-demand je in einem eigenen Python-
+    Subprozess -> parallele Exporte teilen das per-user-60/min-Limit nicht koordiniert; wegen
+    der geringen on-demand-Last akzeptiert (der Batch-Job ist der relevante Fall)."""
+    import time
+    now = time.monotonic()
+    while _WRITE_TIMES and now - _WRITE_TIMES[0] >= 60.0:
+        _WRITE_TIMES.pop(0)
+    if len(_WRITE_TIMES) >= _MAX_WRITES_PER_MIN:
+        wait = 60.0 - (now - _WRITE_TIMES[0]) + 0.05
+        if wait > 0:
+            time.sleep(wait)
+        now = time.monotonic()
+        while _WRITE_TIMES and now - _WRITE_TIMES[0] >= 60.0:
+            _WRITE_TIMES.pop(0)
+    _WRITE_TIMES.append(time.monotonic())
+
+
 def build_replace_requests(values):
     """Pure: baut die batchUpdate-Requests fuer {{FELD}}->Wert. Ein replaceAllText je Feld
     (matchCase). None/fehlend -> leerer String (kein rohes 'None' im Dokument)."""
@@ -197,10 +224,12 @@ def _batch(docs, doc_id, requests, revision_id=None):
     """batchUpdate; mit `revision_id` -> writeControl.requiredRevisionId-Riegel: schreibt NUR,
     wenn der Doc-Kopf noch bei dieser Revision steht. Fuer NICHT-idempotente Ops (insertTable/
     insertText) — ein stale-Retry scheitert dann hart (400) statt Inhalte zu verdoppeln
-    (Lektion aus einer vergleichbaren Doc-Vorlagen-Engine). Idempotente Ops (replaceAllText/Styling) ohne Riegel."""
+    (Lektion aus einer vergleichbaren Doc-Vorlagen-Engine). Idempotente Ops (replaceAllText/Styling) ohne Riegel.
+    Zentrale Route ALLER Docs-batchUpdates -> `_pace_write` drosselt hier die 60/min-Write-Quota."""
     body = {"requests": requests}
     if revision_id:
         body["writeControl"] = {"requiredRevisionId": revision_id}
+    _pace_write()
     return _exec_retry(docs.documents().batchUpdate(documentId=doc_id, body=body))
 
 
@@ -335,15 +364,15 @@ def insert_table_at_anchor(docs, doc_id, anchor, header, rows, col_widths_pt=Non
                     fields = "bold,foregroundColor"
                 text_reqs += _cell_text_style_requests(trows[ri]["tableCells"][0], ts, fields)
         if text_reqs:
-            _exec_retry(docs.documents().batchUpdate(documentId=doc_id, body={"requests": text_reqs}))
+            _batch(docs, doc_id, text_reqs)
 
     # 4. Anker-Text entfernen (die Tabelle steht jetzt davor). Der Treiber (_copy_fill_export)
     #    buendelt alle Anker in EINEM Sweep am Ende (remove_anchor=False); ein Standalone-Aufruf
     #    raeumt selbst auf.
     if remove_anchor:
-        _exec_retry(docs.documents().batchUpdate(documentId=doc_id, body={"requests": [
+        _batch(docs, doc_id, [
             {"replaceAllText": {"containsText": {"text": anchor, "matchCase": True}, "replaceText": ""}}
-        ]}))
+        ])
     log.info("table inserted anchor=%s rows=%d cols=%d groups=%d doc_id=%s",
              anchor, n_rows, n_cols, len(group_rows), doc_id)
 
@@ -363,7 +392,7 @@ def insert_bullets_at_anchor(docs, doc_id, anchor, items, ordered=False, remove_
                                      "replaceText": ""}}
     if not items:
         if remove_anchor:
-            _exec_retry(docs.documents().batchUpdate(documentId=doc_id, body={"requests": [remove_req]}))
+            _batch(docs, doc_id, [remove_req])
         return
 
     doc = docs.documents().get(documentId=doc_id).execute()
@@ -386,6 +415,47 @@ def insert_bullets_at_anchor(docs, doc_id, anchor, items, ordered=False, remove_
         reqs.append(remove_req)
     _batch(docs, doc_id, reqs, rev)
     log.info("bullets inserted anchor=%s n=%d ordered=%s doc_id=%s", anchor, len(items), ordered, doc_id)
+
+
+def insert_bullets_at_anchors(docs, doc_id, specs, remove_anchor=False):
+    """Fuegt MEHRERE Bullet-Listen an ihren Ankern in EINEM batchUpdate ein (statt je Anker einem)
+    — deutlich weniger Docs-Writes bei bullet-lastigen Docs (z.B. Briefings mit 3 Ankern:
+    Leistung/Vorgehen/Risiken). `specs` = {anchor: {"items":[...], "ordered":bool}} ODER
+    {anchor: [items]}. EIN `get` -> alle Anker-Indizes; die (insertText+createParagraphBullets)-
+    Paare werden ABSTEIGEND nach Anker-Index in einen rev-gelockten Batch gelegt: hoehere Indizes
+    zuerst -> ein spaeterer (niedrigerer) insertText verschiebt die bereits erledigten hoeheren
+    Positionen nicht, und jede Bullet-Range [idx, idx+len(text)) trifft den eben eingefuegten Text.
+    Leere/fehlende Anker werden uebersprungen (der Treiber-Sweep raeumt sie). remove_anchor=True
+    haengt je Anker den Cleanup an denselben Batch; der Treiber setzt False (gebuendelter Sweep)."""
+    if not specs:
+        return
+    doc = docs.documents().get(documentId=doc_id).execute()
+    rev = _rev(doc)
+    entries = []  # (idx, anchor, text, ordered)
+    for anchor, spec in specs.items():
+        items = spec.get("items") if isinstance(spec, dict) else spec
+        ordered = spec.get("ordered", False) if isinstance(spec, dict) else False
+        items = [str(x) for x in (items or []) if str(x).strip()]
+        if not items:
+            continue
+        idx = _find_anchor_index(doc, anchor)
+        if idx is None:
+            raise ValueError(f"Anker {anchor} nicht im Dokument gefunden")
+        entries.append((idx, anchor, "\n".join(items) + "\n", ordered))
+    if not entries:
+        return
+    entries.sort(key=lambda e: e[0], reverse=True)   # absteigend: hoechster Index zuerst
+    reqs = []
+    for idx, anchor, text, ordered in entries:
+        preset = "NUMBERED_DECIMAL_ALPHA_ROMAN" if ordered else "BULLET_DISC_CIRCLE_SQUARE"
+        reqs.append({"insertText": {"location": {"index": idx}, "text": text}})
+        reqs.append({"createParagraphBullets": {"range": {"startIndex": idx, "endIndex": idx + len(text)},
+                                                 "bulletPreset": preset}})
+        if remove_anchor:
+            reqs.append({"replaceAllText": {"containsText": {"text": anchor, "matchCase": True},
+                                            "replaceText": ""}})
+    _batch(docs, doc_id, reqs, rev)
+    log.info("bullets(multi) inserted anchors=%d doc_id=%s", len(entries), doc_id)
 
 
 def _copy_fill_export(drive, docs, template_id, folder_id, name, values, tables, bullets):
@@ -412,7 +482,7 @@ def _copy_fill_export(drive, docs, template_id, folder_id, name, values, tables,
         doc = docs.documents().get(documentId=doc_id).execute()
         requests = build_replace_requests_scanning(_all_text(doc), values, skip=anchors)
         if requests:
-            _exec_retry(docs.documents().batchUpdate(documentId=doc_id, body={"requests": requests}))
+            _batch(docs, doc_id, requests)
         # 2b. Anker->Tabellen (Wiederhol-Gruppen, z.B. Traktanden-Agenda) einfuegen.
         # spec = {"header":[...], "rows":[[...]], "col_widths_pt":[...]?, "header_bg":{...}?}
         for anchor, spec in (tables or {}).items():
@@ -421,19 +491,17 @@ def _copy_fill_export(drive, docs, template_id, folder_id, name, values, tables,
                                    header_bg=spec.get("header_bg"),
                                    header_text_rgb=spec.get("header_text_rgb"),
                                    remove_anchor=False)
-        # 2c. Anker->Bullet-Listen (z.B. Briefing-Deliverables, FR-Grundsaetze).
-        for anchor, spec in (bullets or {}).items():
-            its = spec.get("items") if isinstance(spec, dict) else spec
-            ordered = spec.get("ordered", False) if isinstance(spec, dict) else False
-            insert_bullets_at_anchor(docs, doc_id, anchor, its, ordered=ordered, remove_anchor=False)
+        # 2c. Anker->Bullet-Listen (z.B. Briefing-Deliverables, FR-Grundsaetze) — ALLE Anker
+        #     dieses Docs in EINEM batchUpdate (Multi-Bullet), statt je Anker einem Round-Trip.
+        insert_bullets_at_anchors(docs, doc_id, bullets or {}, remove_anchor=False)
         # 2d. Alle Anker in EINEM batchUpdate entfernen statt je Tabelle/Liste einzeln —
         #     replaceAllText ist idempotent + textbasiert, darum Reihenfolge egal und
         #     buendelbar. Spart je Anker einen Round-Trip -> weniger Docs-Write-Quota-Last.
         if anchors:
-            _exec_retry(docs.documents().batchUpdate(documentId=doc_id, body={"requests": [
+            _batch(docs, doc_id, [
                 {"replaceAllText": {"containsText": {"text": a, "matchCase": True}, "replaceText": ""}}
                 for a in sorted(anchors)
-            ]}))
+            ])
         # 3. PDF exportieren + validieren.
         data = _exec_retry(drive.files().export(fileId=doc_id, mimeType=PDF_MIME))
         pdf = bytes(data) if not isinstance(data, (bytes, bytearray)) else bytes(data)

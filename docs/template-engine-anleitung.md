@@ -199,10 +199,10 @@ open("out.pdf", "wb").write(pdf)                 # %PDF, kein Chrome
 - **Harte Regel:** der Server fasst **NUR `server_*`-Felder** an. Lokale Felder bleiben; und die
   **Alt-String-Doc-IDs** in `traktanden_docs.json` (Dieters lokale Traktanden-Docs) werden **NIE
   getrasht** — beim Traktanden-Lauf ist das Trash-Ziel ausschließlich das vorherige *Server*-Doc.
-- **Pflicht-Env:** `RUBICON_DRIVE_FR_FOLDER` (kein Default) — fehlt sie, wird **kein**
-  Führungsrhythmus-Doc erzeugt und der Typ als **`ENV_MISSING`** gemeldet (kein stiller Erfolg). Die
-  anderen Ordner haben Defaults, sind aber per `RUBICON_DRIVE_{TRAKTANDEN,ENTSCHEIDE,BRIEFINGS}_FOLDER`
-  übersteuerbar. Infrastruktur/Job: `DEPLOYMENT_GCP.md §12`.
+- **Ordner-Env (alle vier mit Code-Default):** `RUBICON_DRIVE_{TRAKTANDEN,ENTSCHEIDE,BRIEFINGS,FR}_FOLDER`
+  übersteuern die Defaults im Treiber. Nur wenn `RUBICON_DRIVE_FR_FOLDER` **explizit leer** gesetzt ist,
+  wird **kein** Führungsrhythmus-Doc erzeugt und der Typ als **`ENV_MISSING`** gemeldet (kein stiller
+  Erfolg). Infrastruktur/Job: `DEPLOYMENT_GCP.md §12`.
 
 ### Store-Form (welcher Store trägt was)
 

@@ -2,13 +2,15 @@
 
 Diese Doku beschreibt **Weg 2** der Doc-Erzeugung: die serverseitige HTML→PDF-Wandlung über einen
 selbst gehosteten **Gotenberg**-Dienst. Sie richtet sich an IT/Betrieb und deckt das Code-Verhalten,
-die betroffenen Generatoren, die Provisionierung (Service deployed, App-Wiring per nächstem Deploy)
-sowie das validierte Aufrufmuster ab.
+die betroffenen Generatoren, die Provisionierung (Service deployed, App-Wiring live) sowie das
+validierte Aufrufmuster ab.
 
 Der Renderer-Code ist fertig und end-to-end validiert. Gotenberg läuft als **eigener privater
 Cloud-Run-Service `rubicon-gotenberg`**; der App-Service ruft ihn Service-to-Service per OIDC-ID-Token
-(`RUBICON_GOTENBERG_URL` im Code/Config hinterlegt). Der Service ist deployed; das App-Wiring greift
-mit dem nächsten Deploy.
+auf. Service **und** App-Wiring sind **live**: `RUBICON_GOTENBERG_URL` ist am App-Service gesetzt,
+`html_to_pdf` verzweigt serverseitig auf Gotenberg. Hinweis: der on-demand Protokoll-Export erzeugt
+neben dem (Gotenberg-)PDF auch ein Google-Doc — dessen Drive-Schritt braucht die Server-DWD am Service
+(`RUBICON_WORKSPACE_SA` + `RUBICON_IMPERSONATE_SUBJECT`, ebenfalls gesetzt; s. `DEPLOYMENT_GCP.md §9.1`).
 
 ---
 
@@ -104,11 +106,10 @@ privaten Gotenberg-Service.
 
 ---
 
-## 4. Provisionierung (Service deployed; App-Wiring per nächstem Deploy)
+## 4. Provisionierung (Service + App-Wiring live)
 
-> Der Renderer-Code ist fertig. Der Gotenberg-**Service** `rubicon-gotenberg` ist deployed; das
-> **App-Wiring** (`RUBICON_GOTENBERG_URL` am App-Service) folgt mit dem nächsten Deploy.
-> Nachstehend der Ist-Aufbau.
+> Der Gotenberg-**Service** `rubicon-gotenberg` ist deployed und das **App-Wiring** ist **live**
+> (`RUBICON_GOTENBERG_URL` am App-Service gesetzt). Nachstehend der Ist-Aufbau.
 
 **a) Gotenberg als eigener privater Cloud-Run-Service `rubicon-gotenberg`.** Image
 `docker.io/gotenberg/gotenberg:8`, Port 3000, 2 GiB, scale-to-zero, `--no-allow-unauthenticated`,

@@ -156,6 +156,60 @@ def test_insert_bullets_single_batch_and_defers_anchor():
     assert docs.controls[0] == {"requiredRevisionId": "rev-b"}  # nicht-idempotenter Insert unter Riegel
 
 
+class _DocsMultiBullets:
+    """get() liefert EIN Doc mit mehreren Anker-Paragraphen (anchor->startIndex); sammelt Batches."""
+    def __init__(self, anchors_idx):
+        self._a = anchors_idx
+        self.calls = []; self.controls = []
+    def documents(self): return self
+    def get(self, documentId=None):
+        content = [{"startIndex": idx, "endIndex": idx + len(a) + 1,
+                    "paragraph": {"elements": [{"textRun": {"content": a + "\n"}}]}}
+                   for a, idx in self._a.items()]
+        return _Exec({"revisionId": "rev-m", "body": {"content": content}})
+    def batchUpdate(self, documentId=None, body=None):
+        self.calls.append(body["requests"]); self.controls.append(body.get("writeControl"))
+        return _Exec({})
+
+
+def test_insert_bullets_multi_one_batch_descending():
+    # Mehrere Bullet-Anker in EINEM Batch, (insertText+bullets)-Paare ABSTEIGEND nach Index.
+    docs = _DocsMultiBullets({"{{A}}": 10, "{{B}}": 50})
+    dt.insert_bullets_at_anchors(docs, "D",
+                                 {"{{A}}": ["a1", "a2"], "{{B}}": {"items": ["b1"], "ordered": True}},
+                                 remove_anchor=False)
+    assert len(docs.calls) == 1                          # EIN batchUpdate fuer beide Anker
+    reqs = docs.calls[0]
+    inserts = [r for r in reqs if "insertText" in r]
+    assert [r["insertText"]["location"]["index"] for r in inserts] == [50, 10]  # absteigend
+    assert len([r for r in reqs if "createParagraphBullets" in r]) == 2
+    # Ordered-Flag von B respektiert (NUMBERED preset), A disc (BULLET preset).
+    presets = [r["createParagraphBullets"]["bulletPreset"] for r in reqs if "createParagraphBullets" in r]
+    assert presets[0].startswith("NUMBERED")            # B (idx 50) zuerst, ordered=True
+    assert presets[1].startswith("BULLET")              # A (idx 10), ordered=False
+    assert not any("replaceAllText" in r for r in reqs)  # Anker deferred
+    assert docs.controls[0] == {"requiredRevisionId": "rev-m"}  # rev-Riegel
+
+
+def test_pace_write_throttles_over_limit():
+    # Pacing: unter _MAX_WRITES_PER_MIN kein Sleep; der erste darueber muss drosseln.
+    import time as _t
+    dt._WRITE_TIMES.clear()
+    clock = [0.0]; slept = []
+    orig_mono, orig_sleep = _t.monotonic, _t.sleep
+    _t.monotonic = lambda: clock[0]
+    _t.sleep = lambda s: (slept.append(s), clock.__setitem__(0, clock[0] + s))
+    try:
+        for _ in range(dt._MAX_WRITES_PER_MIN):
+            dt._pace_write()
+        assert slept == []                              # Fenster voll, aber noch nicht drueber
+        dt._pace_write()                                # einer zu viel -> Drosselung
+        assert slept and slept[0] > 0
+    finally:
+        _t.monotonic, _t.sleep = orig_mono, orig_sleep
+        dt._WRITE_TIMES.clear()
+
+
 # ── Tabellen-Pfad (get() liefert nacheinander: Anker-Doc -> Tabellen-Doc) ─────
 _ANCHOR_DOC = {"revisionId": "rev-0", "body": {"content": [
     {"startIndex": 1, "paragraph": {"elements": [{"textRun": {"content": "{{TAB}}\n"}}]}}]}}
@@ -211,9 +265,9 @@ def test_insert_table_removes_anchor_when_requested():
 def test_copy_fill_export_bundles_anchor_sweep():
     # Treiber ruft insert_* mit remove_anchor=False und wischt danach ALLE Anker in EINEM
     # Sweep-Batch. insert_* hier durch No-Ops ersetzt -> nur der Sweep bleibt beobachtbar.
-    orig_tab, orig_bul = dt.insert_table_at_anchor, dt.insert_bullets_at_anchor
+    orig_tab, orig_bul = dt.insert_table_at_anchor, dt.insert_bullets_at_anchors
     dt.insert_table_at_anchor = lambda *a, **k: None
-    dt.insert_bullets_at_anchor = lambda *a, **k: None
+    dt.insert_bullets_at_anchors = lambda *a, **k: None   # Treiber nutzt die Multi-Variante
     try:
         d = _Drive(); docs = _Docs(doc_text="{{AG}} {{BODY}} {{FLD}}\n")
         dt._copy_fill_export(d, docs, "TPL", "F", "n", {"FLD": "x"},
@@ -223,7 +277,7 @@ def test_copy_fill_export_bundles_anchor_sweep():
         toks = {r["replaceAllText"]["containsText"]["text"] for r in reqs if "replaceAllText" in r}
         assert toks == {"{{AG}}", "{{BODY}}"}        # beide Anker in EINEM Sweep-Batch
     finally:
-        dt.insert_table_at_anchor, dt.insert_bullets_at_anchor = orig_tab, orig_bul
+        dt.insert_table_at_anchor, dt.insert_bullets_at_anchors = orig_tab, orig_bul
 
 
 def test_apply_modifiers():
@@ -314,6 +368,8 @@ if __name__ == "__main__":
     test_insert_bullets_inserts_lists_and_removes_anchor()
     test_insert_bullets_empty_just_removes_anchor()
     test_insert_bullets_single_batch_and_defers_anchor()
+    test_insert_bullets_multi_one_batch_descending()
+    test_pace_write_throttles_over_limit()
     test_insert_table_merges_fill_and_style_and_defers_anchor()
     test_insert_table_removes_anchor_when_requested()
     test_copy_fill_export_bundles_anchor_sweep()
@@ -322,4 +378,4 @@ if __name__ == "__main__":
     test_scanning_skips_anchors()
     test_all_text_walks_paragraphs_and_tables()
     test_exec_retry_backs_off_on_429()
-    print("doc_template: 17/17 gruen")
+    print("doc_template: 19/19 gruen")

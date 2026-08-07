@@ -26,7 +26,7 @@ FOLDERS = {
     "traktanden": os.environ.get("RUBICON_DRIVE_TRAKTANDEN_FOLDER", "1hQ_9DP-NlwDSHr-pSAw0B5hXHC37mAYY"),
     "entscheide": os.environ.get("RUBICON_DRIVE_ENTSCHEIDE_FOLDER", "1wI2ggCw3erqeQ3HW2bcKxk4rg-zKo0rb"),
     "briefings": os.environ.get("RUBICON_DRIVE_BRIEFINGS_FOLDER", "1uopFGM23gaWQV_3CuHA3wRYT-Bei3VKa"),
-    "fuehrungsrhythmus": os.environ.get("RUBICON_DRIVE_FR_FOLDER", ""),
+    "fuehrungsrhythmus": os.environ.get("RUBICON_DRIVE_FR_FOLDER", "1pPACow-VB9UOZ8N2RDDqZGGExsnDznB1"),
 }
 
 

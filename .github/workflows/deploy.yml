@@ -67,6 +67,12 @@ jobs:
       # Container mit Port). Der App-Service ruft ihn Service-to-Service per OIDC-ID-Token auf
       # (rubicon-runtime hat run.invoker auf rubicon-gotenberg); RUBICON_GOTENBERG_URL zeigt darauf,
       # sodass `html_to_pdf` serverseitig ueber Gotenberg statt ueber (lokalen) Chrome rendert.
+      #
+      # RUBICON_WORKSPACE_SA + RUBICON_IMPERSONATE_SUBJECT schalten die keyless-DWD auch fuer den
+      # SERVICE frei (bisher nur die Jobs): server-seitige Drive/Docs-Aktionen der App (on-demand
+      # Protokoll-Export -> Google-Doc, Gemini-Notiz-Import) impersonieren rubicon@axs.aero statt
+      # auf eine lokale User-OAuth-Datei zu fallen (die es im Container nicht gibt). Delimiter ist
+      # `^;^` statt `^@^`, weil die SA-Email/der Subject ein `@` enthalten (waere sonst Trenner).
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy "${SERVICE}" \
@@ -77,7 +83,7 @@ jobs:
             --add-volume=name=data,type=cloud-storage,bucket="${BUCKET}" \
             --add-volume-mount=volume=data,mount-path=/app/src/data \
             --labels=app=rubicon \
-            --set-env-vars="^@^RUBICON_OK_ORIGINS=https://rubicon.axs.aero,https://rubicon-tower-646221535662.europe-west4.run.app@RUBICON_PY=/usr/bin/python3@RUBICON_DOCS_DIR=/app/src/data/_generated@RUBICON_GOTENBERG_URL=https://rubicon-gotenberg-646221535662.europe-west4.run.app"
+            --set-env-vars="^;^RUBICON_OK_ORIGINS=https://rubicon.axs.aero,https://rubicon-tower-646221535662.europe-west4.run.app;RUBICON_PY=/usr/bin/python3;RUBICON_DOCS_DIR=/app/src/data/_generated;RUBICON_GOTENBERG_URL=https://rubicon-gotenberg-646221535662.europe-west4.run.app;RUBICON_WORKSPACE_SA=rubicon-workspace@aixs-260106.iam.gserviceaccount.com;RUBICON_IMPERSONATE_SUBJECT=rubicon@axs.aero"
 
       # Die Cloud-Run-JOBS (report + merge + rubicon-docs-job) pinnen ihren Image-Digest beim
       # update — die Service-Deploy oben aktualisiert sie NICHT. Ohne diesen Schritt laufen die

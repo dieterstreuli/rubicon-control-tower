@@ -118,12 +118,25 @@ Betriebsregeln (für alle Beteiligten):
   als Cloud-Run-Job **`rubicon-docs-job`** (Dual-Mode, fasst nur `server_*`-Felder an). Additive
   „Doc ↗"-Drive-Links im Tower; PDF + Seite-1-PNG ins Volume.
 - **Weg 2 — dynamische HTML→PDF (Report/Protokoll):** Gotenberg-Service **`rubicon-gotenberg`** ist
-  deployed; im Code/Config auf **OIDC-ID-Token**-Aufruf gewired, `html_to_pdf` verzweigt auf
-  `RUBICON_GOTENBERG_URL` (lokal unverändert Chrome) — App-Wiring am App-Service live mit dem
-  nächsten Deploy.
+  deployed; App-Wiring **live** (`RUBICON_GOTENBERG_URL` am App-Service, Aufruf per **OIDC-ID-Token**),
+  `html_to_pdf` verzweigt serverseitig auf Gotenberg (lokal unverändert Chrome).
 - **Robustheit:** Exponential-Backoff um die Docs-API-Writes (429 bei Docs-API-Quota 60/min);
   `rubicon-docs-job` gehärtet (2 GiB, kein Retry, Timeout 3600 s).
 - **Kosten:** Label `app=rubicon` auf allen RUBICON-Ressourcen (Kosten-Separierung im geteilten Projekt).
+
+**07.08.2026 — Server-DWD, Doc-Pipeline-Robustheit, Daten­vertrag:**
+- **Server-DWD am Web-Service:** die App agiert server-seitig als `rubicon@axs.aero` (Env
+  `RUBICON_WORKSPACE_SA` + `RUBICON_IMPERSONATE_SUBJECT`) — nötig für on-demand Protokoll-Export,
+  Report-Generierung und Gemini-Notiz-Import (fielen sonst auf eine lokale User-OAuth-Datei zurück,
+  die im Container fehlt). **Keine neue IAM-Bindung** — die bestehende `rubicon-runtime`-Delegation
+  wird nur am Service aktiviert (`DEPLOYMENT_GCP.md §9.1`).
+- **Doc-Pipeline-Robustheit:** `batchUpdate`-Bündelung (Tabellen-Fill+Style in einem Batch;
+  Bullet-Anker eines Docs in **einem** Batch; ein Anker-Sweep) **+ Pacing** (< 60 Docs-Writes/min)
+  gegen die 429-Sättigung bei großen Läufen (viele Briefings).
+- **Datenvertrag `meta` Repo-getrieben:** das Steuerungsdatum (`meta.today`) + `datenlieferungen_url`
+  kommen jetzt aus dem **Repo** (`projekt.yaml`, via `[publish-data]` live) statt aus dem Volume
+  bewahrt — vorher ließ sich das Steuerungsdatum live nicht fortschreiben (`DEPLOYMENT_GCP.md §10`).
+- **FR-Ordner-Default:** der Führungsrhythmus-Ordner hat wie die anderen drei einen Code-Default.
 
 **06.08.2026 — Serverseitige Doc-Erzeugung + Merge-Brücke:**
 - Reports (Woche/Monat/Quartal) werden jetzt **serverseitig chromefrei** erzeugt (Google
@@ -150,9 +163,10 @@ Betriebsregeln (für alle Beteiligten):
 Der Tower läuft **unverändert lokal** (`npm run dev`) UND serverseitig — dasselbe Image, dieselbe
 Codebasis. Die Anpassung an die Umgebung ist **automatisch über Env-Variablen (kein Flag):** lokal
 (Env unset) = wie bisher (Chrome-PDF, User-OAuth, `public/`, git-Historie); serverseitig = GCS-Volume
-+ Google Drive via Service-Account-Impersonation. Zwei Env-Signale: der **Job** erkennt den
-Server-Modus an der **DWD-Env** (`RUBICON_WORKSPACE_SA` + `RUBICON_IMPERSONATE_SUBJECT`) für die
-Doc-Erzeugung; **Service/App** an **`RUBICON_DOCS_DIR`** (steuert u.a. die Report-Links im Tower). So
++ Google Drive via Service-Account-Impersonation. Env-Signale: die **DWD-Env** (`RUBICON_WORKSPACE_SA`
++ `RUBICON_IMPERSONATE_SUBJECT`) schaltet den Server-Modus (Drive/Docs als `rubicon@axs.aero`) — sie
+trägt der **Job** und (seit 07.08.) auch der **Web-Service** (für on-demand Drive/Docs-Aktionen);
+**`RUBICON_DOCS_DIR`** steuert zusätzlich am Service u.a. die Report-Links im Tower. So
 lässt sich lokal **1:1 weiterarbeiten**, bis alle Funktionen serverseitig migriert sind. Server-Infra
 im Detail: `DEPLOYMENT_GCP.md §9` (Reports) + `§10` (Merge-Brücke).
 
@@ -167,7 +181,7 @@ im Detail: `DEPLOYMENT_GCP.md §9` (Reports) + `§10` (Merge-Brücke).
 | Δ-Block (Wochen-Delta) | git-Vergleich `projekt.yaml` | GCS-Object-Version statt git | ⏳ Follow-up |
 | KI-Narrativ | lokale CLI | AIXS-Plattform (konfigurierbares Modell/Prompt) | ⏳ Follow-up |
 | Traktanden, Entscheid, Briefing, Führungsrhythmus (feste Struktur) **+ AXS-Branding** | Chrome-HTML-PDF je Generator | **Weg 1 — Docs-REST-Vorlagen-Engine**: AXS-gebrandete Google-Doc-Vorlage je Typ + Merge, kein Chrome | ✅ serverseitig live (`rubicon-docs-job`) |
-| Report/Protokoll (dynamisch, berechnetes Layout) | Chrome-HTML-PDF (lokal) | **Weg 2 — HTML→PDF via Gotenberg**: bestehendes `render_*`-HTML serverseitig gerendert | 🔧 Service `rubicon-gotenberg` deployed; `RUBICON_GOTENBERG_URL`+OIDC im Code/Config gewired, App-Wiring per nächstem Deploy |
+| Report/Protokoll (dynamisch, berechnetes Layout) | Chrome-HTML-PDF (lokal) | **Weg 2 — HTML→PDF via Gotenberg**: bestehendes `render_*`-HTML serverseitig gerendert | ✅ Service `rubicon-gotenberg` live + App-Wiring aktiv (`RUBICON_GOTENBERG_URL`/OIDC am App-Service); Server-Protokoll-Export-PDF läuft über Gotenberg (End-to-End-Verifikation ausstehend) |
 | Reminder / Mailversand | Gmail-Entwurf lokal (DRS sendet) | serverseitig via DWD `gmail.send`/`gmail.modify` als `rubicon@axs.aero` | ⏳ geplant (Scopes autorisiert) |
 | Kalender / Eskalation | simuliert / MCP-Bridge lokal | serverseitig via DWD `calendar.events` | ⏳ geplant (Scopes autorisiert) |
 
