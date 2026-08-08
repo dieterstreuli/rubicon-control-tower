@@ -2221,7 +2221,7 @@ workstreams:
         name: 'Overhead-Zahlengrundlage final: per-Kopf-OPEX + aktualisierte Gruppenfunktionsliste + Elysium-Letztstand; von VIE getragener Overhead in EUR beziffert (Schlüssel 9,8% AXS / 20,5% AAS)'
         owner: Thomas Pajor
         start: '2026-07-28'
-        due: '2026-08-04'
+        due: '2026-08-14'
         date_assumed: true
         phase: Phase 0
         gate: null
@@ -2986,5 +2986,5 @@ inputs:
   - id: IN-17
     owner: Thomas Pajor
     item: VIE-Overhead in EUR + aktualisierte Gruppenfunktionsliste + Elysium-Letztstand (Basis für den Restrukturierungs-Business-Case; per-Kopf-OPEX)
-    due: '2026-08-04'
+    due: '2026-08-14'
     status: offen
