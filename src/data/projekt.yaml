@@ -42,7 +42,7 @@ workstreams:
     ziel: 'Klare Verantwortung statt Doppelstrukturen: ein P&L-Owner (Gewinn-und-Verlust-Rechnung) je Einheit, GL auf 6 bereinigt, Organigramm v2 in Kraft — und EINE Finance-Linie statt zwei (AT/DE).'
     milestones:
       - id: WS1-01
-        name: Systemlandkarte + Zielsystem-Entscheid je Ops-Bereich (konsolidieren vs. KI-Ersatz)
+        name: 'Systemlandkarte je Ops-Bereich erstellt und Entscheid getroffen, welches System künftig führt (zusammenlegen oder durch KI ersetzen). Quelle ist das von Matthei angelegte Sheet https://docs.google.com/spreadsheets/d/1MdR-7P1T6qDbLEh7AOpLlaz4Iidg9VXCi0m1apI3MUM — wird bis Monatsende durch Operations und Finance befüllt, Entscheid danach möglich (Matthei 08.08.)'
         owner: Florian Matthei
         start: '2026-08-14'
         due: '2026-09-07'
@@ -350,7 +350,7 @@ workstreams:
         nachlauf: false
         progress_source: tasks
       - id: WS2-10
-        name: Shift-Huddle-Pilot 2 Stationen (1 CH + 1 DE; VIE erst nach BVD-Entscheid)
+        name: 'Einheitlicher Standard für Schichtübergabe und tägliche Betriebsbesprechung ist definiert und pilotiert — aufbauend auf dem, was in Düsseldorf und Berlin bereits läuft (morgendlicher Daily Performance Call zu Verspätungen und Krankenstand; Schichtberichte in APHIS). Pilot je eine Station in der Schweiz und in Deutschland; Wien erst nach dem Lizenzentscheid. ⚠️ Vorschlag Matthei 08.08.: statt Pilot direkt einheitlich für ALLE Stationen ausrollen (Daily Performance Call am Folgetag je Station) — Entscheid offen'
         owner: Florian Matthei
         start: '2026-10-30'
         due: '2027-01-31'
@@ -786,7 +786,7 @@ workstreams:
     name: Operational Excellence / Stabilisierung
     owner: Cüneyt Gökcöl
     support: Matthei (Delivery/Ops-Lead), Pajor, Charisius, Petric
-    ziel: 'Ein stabiler, messbarer Betrieb: Ops-Scorecard je Station monatlich befüllt, Qualitäts- und Pünktlichkeitskennzahlen im Reporting — und die Standorte sind gesichert.'
+    ziel: 'Die BESTEHENDE KPI-Systematik der AXS (Quality Assurance Manual GQU-MAN-016 und KPI-Definition GQU-SOP-025 mit Zielwerten wie Pünktlichkeit D+0 über 96,46% oder erste Gepäckzustellung über 80%) wird nicht neu erfunden, sondern automatisiert und in die Führung verankert: Der AXS KPI-Tracker wird ohne Handarbeit befüllt, monatlich im Monthly Business Review besprochen und je Station mit einer Massnahmenliste hinterlegt. Dazu kommen die Standort-Sicherung und ein belastbarer Nachweis der Servicequalität. (Neufassung nach Owner-Review Matthei 08.08.2026: der Strom war zu generisch und plante Vorhandenes nach.)'
     milestones:
       - id: OE-01
         name: 'Der Datenzugang ist erteilt (Betriebssystem EPG-GHS sowie die Auswertungsplattform Looker mit den Personalzahlen) — andernfalls Eskalation an den Chairman; übergangsweise wird mit den Rohdaten der Verspätungscodes gearbeitet'
@@ -803,7 +803,8 @@ workstreams:
         nachlauf: false
         progress_source: tasks
       - id: OE-02
-        name: 'OE-Kickoff: Scorecard-Design 5–6 Kennzahlen (KPIs) je Station gerahmt; «Top-3 ungeregelte Prozesse» von CGO benannt'
+        name: 'Der Rahmen steht: Die bestehende KPI-Definition (GQU-SOP-025) gilt als verbindliche Kennzahlen-Basis je Station — geprüft ist nur noch, ob einzelne Kennzahlen ergänzt oder gestrichen werden. Zusätzlich sind die «Top-3 ungeregelten Prozesse» vom CEO benannt'
+
         owner: Cüneyt Gökcöl
         start: '2026-08-31'
         due: '2026-09-30'
@@ -816,7 +817,8 @@ workstreams:
         nachlauf: false
         progress_source: tasks
       - id: OE-03
-        name: 'Ein Auszug der Betriebskennzahlen liegt für die drei Pilotstationen vor: Vorfelddienste Düsseldorf, Wien und München'
+        name: 'Der aktuelle Stand der Betriebskennzahlen aus dem bestehenden AXS KPI-Tracker liegt für die drei Pilotstationen vor: Vorfelddienste Düsseldorf, Wien und München'
+
         owner: Florian Matthei
         start: '2026-09-15'
         due: '2026-10-31'
@@ -830,7 +832,8 @@ workstreams:
         nachlauf: false
         progress_source: tasks
       - id: OE-04
-        name: 'Ops-Excellence-Scorecard v1.0 definiert: Zielwerte je Station, aggregiert (mitbestimmungskonform)'
+        name: 'Die Zielwerte je Station sind aus der bestehenden KPI-Definition (GQU-SOP-025) abgeleitet und bestätigt — stationsscharf, in aggregierter Form (mitbestimmungskonform). Kein neues Scorecard-Werkzeug, sondern verbindliche Zielwerte auf der vorhandenen Systematik'
+
         owner: Florian Matthei
         start: '2026-11-06'
         due: '2026-11-30'
@@ -843,7 +846,7 @@ workstreams:
         nachlauf: false
         progress_source: tasks
       - id: OE-05
-        name: Scorecard monatlich produktiv Top-6 Verluststationen im Ops-Performance-Review
+        name: 'Die Kennzahlen der sechs verlustreichsten Stationen werden monatlich im Monthly Business Review besprochen — je Station mit einer operativen und einer finanziellen Massnahmenliste'
         owner: Florian Matthei
         start: '2026-11-16'
         due: '2026-11-30'
@@ -856,7 +859,8 @@ workstreams:
         nachlauf: false
         progress_source: tasks
       - id: OE-06
-        name: 'Scorecard-Baseline alle ~15 Stationen erhoben und eingefroren (G7-Referenz: SLA (vereinbarte Servicequalität) ≥ Baseline)'
+        name: 'Für alle rund 15 Stationen ist der Ausgangsstand der Kennzahlen erhoben und eingefroren; er dient als Referenz für den Zielnachweis (Servicequalität mindestens auf Ausgangsniveau)'
+
         owner: Florian Matthei
         start: '2026-11-30'
         due: '2026-12-31'
@@ -869,7 +873,8 @@ workstreams:
         nachlauf: false
         progress_source: tasks
       - id: OE-07
-        name: 'Schutzschirm für die vereinbarte Servicequalität (SLA) ist live: Frühwarn-Trigger + Auto-Eskalation je Station (SGHA Annex B §9, VIE priorisiert)'
+        name: 'Die Messung der Servicequalität ist erstmals definiert und läuft: In der KPI-Definition steht dazu bis heute «tbd». Es entsteht ein Tracker je Airline mit den branchenüblichen Kernwerten (Pünktlichkeit, erste und letzte Gepäckzustellung, Reklamationen); die Einhaltung wird monatlich über die bestehenden Looker-Reports geprüft, Eskalationsschwellen sind definiert und das Ergebnis geht ins Monthly Business Review'
+
         owner: Florian Matthei
         start: '2026-12-15'
         due: '2026-12-31'
@@ -882,10 +887,10 @@ workstreams:
         nachlauf: false
         progress_source: tasks
       - id: OE-08
-        name: Ops-Analytics als AI@AXS-Use-Case an WS6 übergeben (Scorecard-Daten als früher Anwendungsfall)
+        name: 'Die Übermittlung der bestehenden Betriebsreports in den KPI-Tracker ist mit KI automatisiert — die monatliche Handarbeit entfällt (vorgezogen auf Vorschlag Matthei 08.08.)'
         owner: Florian Matthei
-        start: '2027-01-15'
-        due: '2027-02-28'
+        start: '2026-10-01'
+        due: '2026-12-31'
         date_assumed: true
         phase: Phase 2
         gate: null
@@ -895,7 +900,8 @@ workstreams:
         nachlauf: false
         progress_source: tasks
       - id: OE-09
-        name: 'Scorecard flächendeckend: alle ~15 Stationen monatlich produktiv'
+        name: 'Der automatisierte KPI-Tracker läuft für alle rund 15 Stationen monatlich produktiv und ist fester Bestandteil des Monthly Business Review'
+
         owner: Florian Matthei
         start: '2027-01-15'
         due: '2027-03-31'
@@ -2266,9 +2272,7 @@ workstreams:
           - WS7-01
         nachlauf: false
       - id: WS7-06
-        name: >-
-          VIE-Abwicklungsplan startbereit (Contingency Szenario B: kein Beschwerde-Aufschub) — Personal (Kündigungsfristen 3+ Monate), Kunden-Übergabe, Assets/Verträge; Auslösung nur bei VIE-Ende
-          25.10.2026
+        name: 'VIE-Abwicklungsplan startbereit (Szenario B: kein Beschwerde-Aufschub) — Personal (Kündigungsfristen 3+ Monate), Kunden-Übergabe, Verträge und Anlagen; Auslösung nur bei VIE-Ende 25.10.2026. Der Plan liegt bereits vor als Sheet «VIE Moving Forward» https://docs.google.com/spreadsheets/d/1T1mMPdLkjgC52rW2PWhBw6bJXOLkIsNsH0402MP25Ls (Matthei; enthält AVRAG-Schritte inkl. AMS-Meldung und Kündigungen, die rechtlichen Schritte gegen den Bescheid, den Plan für reinen Passagierbetrieb sowie Übersichten zu Mitarbeitenden und Verträgen). ⚠️ Offen (Matthei 08.08.): Wird dort oder in RUBICON getrackt? Keine Doppelsysteme'
         owner: Florian Matthei
         start: '2026-07-28'
         due: '2026-08-21'

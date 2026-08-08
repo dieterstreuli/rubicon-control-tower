@@ -811,7 +811,7 @@
       "kriterium": "SLA-Performance-Messung je Kunde gegen konkrete SGHA-/Annex-B-Vereinbarung mit Ampelstatus und beziffertem Penalty-Exposure in der Heatmap",
       "messbar_an": "SLA-Erfüllungs-Report je Top-Kunde (Ist vs. Vertrags-Grenzwert) im Monats-/Quartalsrhythmus; Heatmap-SLA-Spalte datengestützt",
       "status": "fehlt",
-      "evidenz": "SLA-Spalte bewusst GRAU (DRS 11.06.: Proxy unzureichend); SLA-Klauseln nur 25% extrahiert (deep-Nachlese 210); Annex-B-Kündigungsrecht dokumentiert, keine AXS-Messung",
+      "evidenz": "Bestaetigt durch KPI-Definition GQU-SOP-025(8): SLA Compliance ist mit Zielwert 95% definiert, die Messmethode steht dort ausdruecklich als «tbd» https://docs.google.com/document/d/1ZzdNvYWfCi7fEunZayhjYG2jtemSTZNg0sBnQ5h2tZo — genau diese Luecke schliesst OE-07 (Matthei 08.08.)",
       "naechster_schritt": "SLA-/Penalty-Klauseln der Top-5-Kunden aus Annex B extrahieren; AHM-730 als Datenquelle anbinden (EPG/GHS klären)",
       "owner": null,
       "ms_refs": [
@@ -822,6 +822,11 @@
           "am": "2026-08-04",
           "status": "fehlt",
           "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        },
+        {
+          "am": "2026-08-08",
+          "status": "fehlt",
+          "quelle": "Owner-Review Matthei"
         }
       ]
     },
@@ -936,7 +941,7 @@
       "kriterium": "Safety-/Compliance-Nachweis auf Branchenstandard: SMS nach ICAO Annex 19 / AHM 610, ISAGO-Audit-Readiness je Station, Safety-KPIs im Reporting",
       "messbar_an": "ISAGO-/SMS-Status je Station dokumentiert; Safety-KPIs im Monats-/Quartalsreporting",
       "status": "gelebt",
-      "evidenz": "DRS-Auskunft 04.08.2026: SMS/ISAGO-Readiness je Station + Safety-KPIs im Reporting gelebt — ARTEFAKT-NACHWEIS (Zertifikate/SMS-Doku) noch zu verlinken",
+      "evidenz": "AXS Quality Assurance Manual GQU-MAN-016(1) https://drive.google.com/file/d/1RTGj4XXXNdsls8-_ipXyYeUAIXWxsVcI/view + KPI-Definition GQU-SOP-025(8) mit Safety-Indikatoren (reaktiv/proaktiv/Verletzungen, Zielwerte je 100/1000 Turnarounds) https://docs.google.com/document/d/1ZzdNvYWfCi7fEunZayhjYG2jtemSTZNg0sBnQ5h2tZo — Quelle Matthei 08.08.2026",
       "naechster_schritt": "ISAGO-/SMS-Status je Station bei Cüneyt/QM abfragen und als Referenz ablegen",
       "owner": null,
       "ms_refs": [
@@ -952,6 +957,11 @@
           "am": "2026-08-04",
           "status": "gelebt",
           "quelle": "DRS-Klärung «unbekannt»-Status (Chairman-Auskunft)"
+        },
+        {
+          "am": "2026-08-08",
+          "status": "gelebt",
+          "quelle": "Owner-Review Matthei"
         }
       ]
     },
