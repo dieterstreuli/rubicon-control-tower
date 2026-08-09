@@ -210,6 +210,28 @@ def _write_atomic(path, text):
         raise
 
 
+# Retention der Wochen-Delta-Snapshots: deckt das maximale Delta-Fenster (90 Tage, s. gen_delta)
+# + Puffer; aeltere werden beim naechsten Snapshot-Schreiben entfernt.
+_SNAPSHOT_RETENTION_DAYS = 120
+
+
+def _prune_snapshots(hist):
+    """Snapshots aelter als _SNAPSHOT_RETENTION_DAYS entfernen. Vergleich auf dem Datums-Prefix des
+    Dateinamens (projekt-<YYYYMMDD>...Z.yaml) gegen die Cutoff-YYYYMMDD — string-lexikographisch
+    korrekt bei fixer Breite. Non-fatal: Prune ist Aufraeumen, nie publish-kritisch."""
+    try:
+        cutoff = (dt.datetime.utcnow() - dt.timedelta(days=_SNAPSHOT_RETENTION_DAYS)).strftime('%Y%m%d')
+        removed = 0
+        for f in os.listdir(hist):
+            if f.startswith('projekt-') and f.endswith('.yaml') and f[8:16] < cutoff:  # f = 'projekt-YYYYMMDD...'
+                os.remove(os.path.join(hist, f))
+                removed += 1
+        if removed:
+            log.info('projekt.yaml-Snapshots gepruned: %d (aelter als %d Tage)', removed, _SNAPSHOT_RETENTION_DAYS)
+    except Exception as ex:  # noqa: BLE001 — Aufraeumen darf nie kippen
+        log.warning('Snapshot-Prune fehlgeschlagen: %s', ex)
+
+
 def _write_snapshot(data_dir, yaml_text):
     """Nach dem projekt.yaml-Publish einen datierten Snapshot in <data_dir>/history/ ablegen —
     die Server-Historie fuer den Wochen-Delta (git steht serverseitig nicht zur Verfuegung, s.
@@ -230,6 +252,7 @@ def _write_snapshot(data_dir, yaml_text):
             path = os.path.join(hist, f'projekt-{t.strftime("%Y%m%dT%H%M%SZ")}.yaml')
         _write_atomic(path, yaml_text)
         log.info('projekt.yaml-Snapshot geschrieben: history/%s', os.path.basename(path))
+        _prune_snapshots(hist)   # Retention: Alt-Snapshots (> Fenster + Puffer) entfernen
     except Exception as ex:  # noqa: BLE001 — Snapshot ist Beiwerk, nie publish-kritisch
         log.warning('Snapshot-Schreiben fehlgeschlagen (Publish unberuehrt): %s', ex)
 

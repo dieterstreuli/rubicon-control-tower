@@ -289,6 +289,29 @@ def test_snapshot_not_on_dryrun():
         _cleanup(seed, data)
 
 
+# ── 13. Retention: Alt-Snapshots (> 120 Tage) werden beim Schreiben gepruned, Neuere bleiben ──
+def test_snapshot_retention_prune():
+    from types import SimpleNamespace
+    import datetime as _rdt
+    seed, data = _mkdirs()
+    fixed = _rdt.datetime(2026, 8, 9, 12, 0, 0)                     # Cutoff = 2026-04-11
+    orig = mb.dt
+    mb.dt = SimpleNamespace(datetime=SimpleNamespace(utcnow=lambda: fixed), timedelta=_rdt.timedelta)
+    try:
+        hist = os.path.join(data, 'history')
+        os.makedirs(hist)
+        _write(hist, 'projekt-20250101T000000Z.yaml', None, raw='alt\n')      # >120 Tage -> weg
+        _write(hist, 'projekt-20260601T000000Z.yaml', None, raw='mittel\n')   # innerhalb -> bleibt
+        mb._write_snapshot(data, 'neu\n')                          # schreibt 2026-08-09 + pruned
+        files = sorted(f for f in os.listdir(hist) if f.startswith('projekt-'))
+        assert 'projekt-20250101T000000Z.yaml' not in files        # gepruned
+        assert 'projekt-20260601T000000Z.yaml' in files            # behalten
+        assert any(f.startswith('projekt-20260809') for f in files)  # neuer Snapshot da
+    finally:
+        mb.dt = orig
+        _cleanup(seed, data)
+
+
 TESTS = [
     test_stammdaten_overwrite,
     test_transaktion_untouched,
@@ -302,6 +325,7 @@ TESTS = [
     test_snapshot_written_on_apply,
     test_snapshot_dedup,
     test_snapshot_not_on_dryrun,
+    test_snapshot_retention_prune,
 ]
 
 

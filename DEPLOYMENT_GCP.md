@@ -413,8 +413,9 @@ gcloud storage cp "/tmp/hist/projekt-*.yaml" gs://aixs-rubicon-tower-data/histor
 Nur `projekt.yaml`-Versionen (dieselbe Datenklasse wie die live liegende Datei) — **nicht** das ganze
 `.git` (DSGVO: die Repo-Historie trägt Personendaten und gehört nie ins Volume/Image). Der `history/`-
 Prefix ist per gcsfuse-`ImplicitDirs` (Laufzeit-Config bestätigt) sichtbar; `gen_delta._snapshots` globt
-ohne `is_dir`-Gate → robust auch ohne Verzeichnis-Platzhalter. **Retention (Follow-up):** ein Snapshot je
-Publish wächst langsam; ein Lifecycle-/Prune-Schritt (z.B. nur die letzten ~120 Tage behalten) steht aus.
+ohne `is_dir`-Gate → robust auch ohne Verzeichnis-Platzhalter. **Retention:** `merge_bridge._prune_snapshots`
+entfernt bei jedem Snapshot-Schreiben Einträge älter als `_SNAPSHOT_RETENTION_DAYS` (=120, deckt das
+90-Tage-Max-Delta-Fenster + Puffer) → `history/` wächst nicht unbegrenzt.
 
 **Job anlegen** (analog `rubicon-report-job`, gleicher SA/Volume/Image; Default = Dry-Run):
 ```bash
