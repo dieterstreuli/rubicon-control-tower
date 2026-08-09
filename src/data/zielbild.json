@@ -712,8 +712,8 @@
       "domaene": "OPS",
       "kriterium": "Monatliche Ops-Scorecard je Station: Turns/Flights, PAX konsolidiert auf Konzernebene, verknüpft mit Finanz-KPIs (Revenue per Turn/PAX)",
       "messbar_an": "Monatlich befülltes Konzern-Artefakt Turns/PAX/Revenue-per-Turn je Station × Monat, in der Monatsanalyse referenziert",
-      "status": "fehlt",
-      "evidenz": "Skelett (Q3/2026+); Datenquellen fragmentiert, Verknüpfung mit Financials fehlt komplett",
+      "status": "im_aufbau",
+      "evidenz": "AXS KPI Tracker 2026 v13 https://docs.google.com/spreadsheets/d/1ECBNpbmOv2V81VyUCfhXpnsGSMnZOwaDvRrezhefWbQ — monatliche Tabs Jan-Dez + YTD, 13 Stationen, Flights je Station und Monat befuellt (Jun/Jul verifiziert 09.08.). ABER: keine Verknuepfung mit Financials (kein Revenue-per-Turn), Gepaeckdaten nur von 4 der 12 Stationen (Rest #DIV/0!), Economics-Block komplett leer",
       "naechster_schritt": "Zugang zum Looker-Studio-Ops-Reporting erschliessen (Sheet-/BigQuery-Export oder Scheduled Delivery)",
       "owner": null,
       "ms_refs": [
@@ -725,6 +725,11 @@
           "am": "2026-08-04",
           "status": "fehlt",
           "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        },
+        {
+          "am": "2026-08-09",
+          "status": "im_aufbau",
+          "quelle": "KPI-Tracker-Auswertung nach Freigabe Matthei"
         }
       ]
     },
@@ -811,7 +816,7 @@
       "kriterium": "SLA-Performance-Messung je Kunde gegen konkrete SGHA-/Annex-B-Vereinbarung mit Ampelstatus und beziffertem Penalty-Exposure in der Heatmap",
       "messbar_an": "SLA-Erfüllungs-Report je Top-Kunde (Ist vs. Vertrags-Grenzwert) im Monats-/Quartalsrhythmus; Heatmap-SLA-Spalte datengestützt",
       "status": "fehlt",
-      "evidenz": "Bestaetigt durch KPI-Definition GQU-SOP-025(8): SLA Compliance ist mit Zielwert 95% definiert, die Messmethode steht dort ausdruecklich als «tbd» https://docs.google.com/document/d/1ZzdNvYWfCi7fEunZayhjYG2jtemSTZNg0sBnQ5h2tZo — genau diese Luecke schliesst OE-07 (Matthei 08.08.)",
+      "evidenz": "Doppelt belegt: KPI-Definition GQU-SOP-025(8) fuehrt SLA Compliance mit Ziel 95%, Messmethode ausdruecklich «tbd» — und im KPI Tracker https://docs.google.com/spreadsheets/d/1ECBNpbmOv2V81VyUCfhXpnsGSMnZOwaDvRrezhefWbQ ist die SLA-Zeile in ALLEN Stationen und Monaten leer (nur Zielwert). Es gibt keine SLA-Messung. Genau das schliesst OE-07",
       "naechster_schritt": "SLA-/Penalty-Klauseln der Top-5-Kunden aus Annex B extrahieren; AHM-730 als Datenquelle anbinden (EPG/GHS klären)",
       "owner": null,
       "ms_refs": [
@@ -827,6 +832,11 @@
           "am": "2026-08-08",
           "status": "fehlt",
           "quelle": "Owner-Review Matthei"
+        },
+        {
+          "am": "2026-08-09",
+          "status": "fehlt",
+          "quelle": "KPI-Tracker-Auswertung 09.08."
         }
       ]
     },
@@ -856,7 +866,7 @@
       "kriterium": "FTE-/Headcount-Datenbasis + Produktivitätssteuerung je Station: monatliche Tabelle FTE × Station (Headcount, Ein-/Austritte) verknüpft mit Personalkosten; Turns/FTE und Revenue/FTE mit Cross-Station-Benchmark",
       "messbar_an": "Monatliche FTE-Tabelle + Produktivitäts-Ranking (Flights/FTE, Revenue/FTE) über alle Stationen",
       "status": "fehlt",
-      "evidenz": "FTE-Projekt Skelett, Looker-Quelle seit 23.04. bei Rohde angefragt, kein Fortschritt; Rohdaten (Flights, FTE, Revenue) liegen aber in den Monthly-PDFs",
+      "evidenz": "Struktur existiert, Daten fehlen: Im KPI Tracker https://docs.google.com/spreadsheets/d/1ECBNpbmOv2V81VyUCfhXpnsGSMnZOwaDvRrezhefWbQ sind die Zeilen Shift Occupancy, RMP/SOR/PAX/OPS-Stunden je Flug und Krankenstand angelegt (Quelle «Aims» benannt, Owner Ops/HR Directors) — aber in ALLEN Monaten und Stationen leer. Der Economics-Block ist unbefuellt",
       "naechster_schritt": "Scheduled-CSV-Export aus Looker bei Rohde mit Zieldatum bestellen; parallel Flights/FTE + Revenue/FTE einmalig aus vorhandenen PDFs rechnen",
       "owner": null,
       "ms_refs": [
@@ -867,6 +877,11 @@
           "am": "2026-08-04",
           "status": "fehlt",
           "quelle": "Katalog V1 (7-Domänen-Analyse, Memory-basiert)"
+        },
+        {
+          "am": "2026-08-09",
+          "status": "fehlt",
+          "quelle": "KPI-Tracker-Auswertung 09.08."
         }
       ]
     },

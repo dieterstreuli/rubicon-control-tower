@@ -42,7 +42,8 @@ workstreams:
     ziel: 'Klare Verantwortung statt Doppelstrukturen: ein P&L-Owner (Gewinn-und-Verlust-Rechnung) je Einheit, GL auf 6 bereinigt, Organigramm v2 in Kraft — und EINE Finance-Linie statt zwei (AT/DE).'
     milestones:
       - id: WS1-01
-        name: 'Systemlandkarte je Ops-Bereich erstellt und Entscheid getroffen, welches System künftig führt (zusammenlegen oder durch KI ersetzen). Quelle ist das von Matthei angelegte Sheet https://docs.google.com/spreadsheets/d/1MdR-7P1T6qDbLEh7AOpLlaz4Iidg9VXCi0m1apI3MUM — wird bis Monatsende durch Operations und Finance befüllt, Entscheid danach möglich (Matthei 08.08.)'
+        name: 'Systemlandkarte je Ops-Bereich vollständig und Entscheid getroffen, welches System künftig führt (zusammenlegen oder durch KI ersetzen). Quelle ist das Sheet «AXS OPS Systeme» von Matthei https://docs.google.com/spreadsheets/d/1MdR-7P1T6qDbLEh7AOpLlaz4Iidg9VXCi0m1apI3MUM — ⚠️ RISIKO (Stand 09.08.): Dort stehen erst 10 Systeme, überwiegend Trainings- und Informationssysteme, die Liste endet mit «etc.»; die operativen Kernsysteme (u.a. Aims als Quelle der Stundendaten, EPG-GHS) fehlen. Matthei liefert die vollständige Befüllung durch Operations und Finance bis Monatsende — sonst ist der Entscheid am 07.09. nicht möglich'
+
         owner: Florian Matthei
         start: '2026-08-14'
         due: '2026-09-07'
@@ -1846,7 +1847,8 @@ workstreams:
         depends_on: []
         progress_source: tasks
       - id: WS5-02
-        name: 'Mitarbeiter-Plattform: Eine günstigere Alternative zu Beekeeper ist auf Gesamtkosten geprüft; Laufzeit und Kündigungsfrist des bestehenden Beekeeper-Vertrags sind bekannt'
+        name: 'Mitarbeiter-Plattform: Der Konzern betreibt heute ZWEI parallele Informationsplattformen — Beekeeper (AAS) und Airnet (AHS). Für beide sind Laufzeit, Kündigungsfrist und Kosten erhoben; eine gemeinsame günstigere Alternative ist auf Gesamtkosten geprüft. (Doppelstruktur aus der Systemlandkarte Matthei sichtbar geworden, 09.08.; dort bei beiden «Kosten nicht bekannt».)'
+
 
         owner: Amélie Charisius
         start: '2026-08-31'
@@ -1943,7 +1945,8 @@ workstreams:
         depends_on: []
         progress_source: tasks
       - id: WS5-09
-        name: 'Die Geschäftsleitung hat über die Mitarbeiter-Plattform entschieden (gewählte Lösung gegenüber Beekeeper); das Genehmigungsverfahren mit dem Konzernbetriebsrat ist eingeleitet'
+        name: 'Die Geschäftsleitung hat über die Mitarbeiter-Plattform entschieden — die gewählte Lösung ersetzt BEIDE Bestandssysteme, Beekeeper (AAS) und Airnet (AHS); das Genehmigungsverfahren mit dem Konzernbetriebsrat ist eingeleitet'
+
         owner: Amélie Charisius
         start: '2026-11-13'
         due: '2026-12-31'
