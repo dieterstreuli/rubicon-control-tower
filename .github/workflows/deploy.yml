@@ -83,20 +83,31 @@ jobs:
             --add-volume=name=data,type=cloud-storage,bucket="${BUCKET}" \
             --add-volume-mount=volume=data,mount-path=/app/src/data \
             --labels=app=rubicon \
-            --set-env-vars="^;^RUBICON_OK_ORIGINS=https://rubicon.axs.aero,https://rubicon-tower-646221535662.europe-west4.run.app;RUBICON_PY=/usr/bin/python3;RUBICON_DOCS_DIR=/app/src/data/_generated;RUBICON_GOTENBERG_URL=https://rubicon-gotenberg-646221535662.europe-west4.run.app;RUBICON_WORKSPACE_SA=rubicon-workspace@aixs-260106.iam.gserviceaccount.com;RUBICON_IMPERSONATE_SUBJECT=rubicon@axs.aero"
+            --set-env-vars="^;^RUBICON_OK_ORIGINS=https://rubicon.axs.aero,https://rubicon-tower-646221535662.europe-west4.run.app;RUBICON_PY=/usr/bin/python3;RUBICON_DOCS_DIR=/app/src/data/_generated;RUBICON_GOTENBERG_URL=https://rubicon-gotenberg-646221535662.europe-west4.run.app;RUBICON_WORKSPACE_SA=rubicon-workspace@aixs-260106.iam.gserviceaccount.com;RUBICON_IMPERSONATE_SUBJECT=rubicon@axs.aero;RUBICON_AI_PROVIDER=anthropic;RUBICON_AI_MODEL=claude-sonnet-5;RUBICON_AI_REGION=eu;RUBICON_AI_MAX_TOKENS=4096"
 
       # Die Cloud-Run-JOBS (report + merge + rubicon-docs-job) pinnen ihren Image-Digest beim
       # update — die Service-Deploy oben aktualisiert sie NICHT. Ohne diesen Schritt laufen die
       # geplanten Report-Laeufe (Scheduler Mo 06:00) UND die Merge-Bruecke auf altem Code. Conditional:
       # ueberspringt sauber je Job, falls (noch) keiner existiert. Laeuft als rubicon-deployer
       # (act-as rubicon-runtime).
+      # Der report-job traegt zusaetzlich die AI-ENV fuers serverseitige KI-Narrativ
+      # (gen_report.ki_block -> ai_client, DEPLOYMENT_GCP.md §9.6). --update-env-vars
+      # MERGT (die bestehenden, per ^#^ gesetzten Job-Vars bleiben erhalten);
+      # Delimiter ^;^, weil kuenftige Werte @/, enthalten koennen.
       - name: Cloud-Run-Jobs auf neues Image heben
         run: |
           for JOB in rubicon-report-job rubicon-merge-job rubicon-docs-job; do
             if gcloud run jobs describe "$JOB" --project="${PROJECT_ID}" --region="${REGION}" >/dev/null 2>&1; then
-              gcloud run jobs update "$JOB" \
-                --project="${PROJECT_ID}" --region="${REGION}" \
-                --image="${IMAGE}:${GITHUB_SHA}"
+              if [ "$JOB" = "rubicon-report-job" ]; then
+                gcloud run jobs update "$JOB" \
+                  --project="${PROJECT_ID}" --region="${REGION}" \
+                  --image="${IMAGE}:${GITHUB_SHA}" \
+                  --update-env-vars="^;^RUBICON_AI_PROVIDER=anthropic;RUBICON_AI_MODEL=claude-sonnet-5;RUBICON_AI_REGION=eu;RUBICON_AI_MAX_TOKENS=4096"
+              else
+                gcloud run jobs update "$JOB" \
+                  --project="${PROJECT_ID}" --region="${REGION}" \
+                  --image="${IMAGE}:${GITHUB_SHA}"
+              fi
             else
               echo "$JOB nicht gefunden — Job-Image-Update uebersprungen"
             fi

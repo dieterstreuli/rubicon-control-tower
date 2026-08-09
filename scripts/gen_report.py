@@ -54,6 +54,7 @@ sys.path.insert(0, __file__.rsplit('/', 1)[0] + '/_tools')   # vendored Fallback
 sys.path.insert(0, '/Users/dieterstreuli/Chief/Tools')  # Original gewinnt auf dem DRS-Mac
 from html_to_pdf import html_to_pdf  # noqa: E402
 from _lib import atomic_write as _atomic_write, docs_dir  # noqa: E402
+import ai_client  # noqa: E402 — KI-Modell-Fassade (lokale CLI / Vertex), s. _tools/ai_client.py
 
 MD2GDOC = '/Users/dieterstreuli/Chief/Tools/md_to_gdoc.py'
 import os as _os
@@ -343,7 +344,7 @@ def main():
             if i:
                 time.sleep(2)  # Chrome-Instanzen sauber trennen
             try:
-                res.append(generate(lvl, per))
+                res.append(generate(lvl, per, ki=(lvl == 'woche')))
             except Exception as ex:  # noqa: BLE001
                 log.exception("report failed level=%s periode=%s", lvl, per)
                 res.append({'ok': False, 'level': lvl, 'error': str(ex)})
@@ -353,7 +354,16 @@ def main():
 
 
 # ---------- Δ-Woche (K3) + KI-Entwurf (K5) ----------
-CLAUDE_BIN = os.environ.get('RUBICON_CLAUDE', '/Users/dieterstreuli/.local/bin/claude')
+# Die frühere lokale-CLI-Binary-Konstante lebt jetzt in _tools/ai_client.py (Dispatch lokale CLI / Vertex).
+# Inline-Fallback des Prompt-Templates — kanonisch: scripts/prompts/ki_narrativ.txt.
+KI_PROMPT_FALLBACK = (
+    'Du bist Programm-Analyst des AXS-Transformationsprogramms RUBICON. Antworte NUR mit einem JSON-Objekt:\n'
+    '{"narrativ": "<5-8 Sätze Management-Zusammenfassung der Woche — was geschah, was es fürs Programm bedeutet; nüchtern, deutsch>",\n'
+    ' "begruendungen": {"<ms_id>": "<2 Sätze: warum gefährdet/verzögert + welche Gegenmassnahme naheliegt>"}}\n'
+    'HARTE REGELN: Nutze AUSSCHLIESSLICH die folgenden Fakten — nichts erfinden, keine Zahlen ausserhalb der Daten. '
+    'Wenn die Fakten für eine Begründung nicht reichen: "Datenlage unzureichend — beim Owner nachfassen." '
+    'Kein Lob, kein Alarmismus.\n'
+)
 
 
 def render_delta_html(d):
@@ -398,17 +408,9 @@ def ki_block(level, doc, now):
         if level == 'woche':
             import gen_delta
             facts['delta'] = gen_delta.compute(7)
-        prompt = (
-            'Du bist Programm-Analyst des AXS-Transformationsprogramms RUBICON. Antworte NUR mit einem JSON-Objekt:\n'
-            '{"narrativ": "<5-8 Sätze Management-Zusammenfassung der Woche — was geschah, was es fürs Programm bedeutet; nüchtern, deutsch>",\n'
-            ' "begruendungen": {"<ms_id>": "<2 Sätze: warum gefährdet/verzögert + welche Gegenmassnahme naheliegt>"}}\n'
-            'HARTE REGELN: Nutze AUSSCHLIESSLICH die folgenden Fakten — nichts erfinden, keine Zahlen ausserhalb der Daten. '
-            'Wenn die Fakten für eine Begründung nicht reichen: "Datenlage unzureichend — beim Owner nachfassen." '
-            'Kein Lob, kein Alarmismus.\n\nFAKTEN:\n' + json.dumps(facts, ensure_ascii=False)
-        )
-        r = subprocess.run([CLAUDE_BIN, '-p', '--model', 'claude-sonnet-4-6'], input=prompt,
-                           capture_output=True, text=True, timeout=240)
-        out = r.stdout.strip()
+        template = ai_client.load_prompt(KI_PROMPT_FALLBACK)
+        prompt = template.rstrip('\n') + '\n\nFAKTEN:\n' + json.dumps(facts, ensure_ascii=False)
+        out = ai_client.generate(prompt)
         m = re.search(r'\{[\s\S]*\}', out)
         data = json.loads(m.group(0)) if m else {}
         parts = ['<h2 style="color:#b07d2c">🤖 KI-Entwurf — ungeprüft, Freigabe durch CoS/DRS</h2>']

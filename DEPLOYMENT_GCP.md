@@ -283,6 +283,7 @@ Mitglied (content-manager genügt). **8 Ordner im Root:**
 | `rubicon-deployer@aixs-260106.iam.gserviceaccount.com` | GitHub-Actions-Deployer (keyless via WIF) |
 | `rubicon-scheduler@aixs-260106.iam.gserviceaccount.com` | Cloud-Scheduler-Mini-SA (`run.jobs.run`) |
 | `rubicon-gotenberg@aixs-260106.iam.gserviceaccount.com` | Identität des privaten Gotenberg-Service (no-role) |
+| `rubicon-ai@aixs-260106.iam.gserviceaccount.com` | Vertex-AI-Inferenz fürs KI-Narrativ (`roles/aiplatform.user` auf dem Projekt; wird von `rubicon-runtime` per `iam.serviceAccountTokenCreator` impersoniert — §9.6) |
 | `rubicon@axs.aero` | Workspace-Service-User = DWD-Subject; Mitglied des Shared Drive |
 | `rubicon-app@axs.aero` | Zugriffs-/Editoren-Gruppe (s. §2) |
 
@@ -345,9 +346,108 @@ gcloud scheduler jobs create http rubicon-report-sched \
 | Grant `rubicon-runtime` → `rubicon-workspace` (tokenCreator) | ✅ gesetzt |
 | Cloud-Run-Job `rubicon-report-job` | ✅ angelegt (Image-Loop in `deploy.yml`) |
 | SA `rubicon-scheduler` + Cloud Scheduler `rubicon-report-sched` | ✅ live (Mo 06:00) |
+| SA `rubicon-ai@` + Grants (`aiplatform.user`, `tokenCreator` für `rubicon-runtime`) | ✅ angelegt + verifiziert (09.08.2026); Vertex-Smoke als `rubicon-ai@` erfolgreich (`claude-sonnet-5` @ `eu` = Prod-Pfad **und** `gemini-3.6-flash` @ `eu` = Gemini-Zweig). KI-Narrativ selbst geht mit dem nächsten Deploy live |
+
+### 9.6 KI-Narrativ serverseitig (Vertex AI, dual-mode)
+
+Der KI-Entwurf-Block des Reports (`gen_report.ki_block`) ruft sein Modell über die Fassade
+`scripts/_tools/ai_client.py`. Lokal (alle `RUBICON_AI_*` unset) läuft unverändert die `claude`-CLI;
+serverseitig dispatcht `RUBICON_AI_PROVIDER` auf **Vertex AI im Projekt `aixs-260106`** über den
+**eu-Multi-Region-Endpoint** (`eu-aiplatform.googleapis.com` — Inferenz in der EEA, kein öffentlicher
+Anthropic-/Google-Endpoint). Die Ausgabe bleibt als ENTWURF markiert und human-gated (CoS/DRS);
+Fehler sind non-fatal (Platzhalter im Report).
+
+**Env (Service `rubicon-tower` UND Job `rubicon-report-job` — beide führen `gen_report.py` aus):**
+
+| Variable | Wert (live) | Bedeutung |
+|---|---|---|
+| `RUBICON_AI_PROVIDER` | `anthropic` | `google` = Vertex Gemini, `anthropic` = Vertex Claude; unset = lokale CLI |
+| `RUBICON_AI_MODEL` | `claude-sonnet-5` | Pflicht im Vertex-Modus (auf Vertex gelten für aktuelle Modellgenerationen die nackten first-party-IDs); klare `ValueError` → Platzhalter, wenn unset |
+| `RUBICON_AI_REGION` | `eu` | Default `eu` (Multi-Region, EEA). Bei `RUBICON_AI_PROVIDER=google` die Region zum Gemini-Modell wählen: Flash-3.x @ `eu`, `gemini-2.5-flash` @ `europe-west*`; s. Abschnitt „Modellwahl & Gemini-Schaltbarkeit" |
+| `RUBICON_AI_PROJECT` | — (Default `aixs-260106`) | GCP-Projekt der Inferenz |
+| `RUBICON_AI_MAX_TOKENS` | `4096` | nur Claude-Zweig |
+| `RUBICON_AI_PROMPT_FILE` | — (Default `scripts/prompts/ki_narrativ.txt`) | Prompt-Template; fehlt die Datei → Inline-Fallback |
+
+**IAM (einmalig, Operator):** SA `rubicon-ai@aixs-260106` anlegen (nur Vertex-Zweck);
+Grant `roles/aiplatform.user` auf `aixs-260106` für `rubicon-ai@`; Grant
+`roles/iam.serviceAccountTokenCreator` **auf `rubicon-ai@`** für `rubicon-runtime@` (Impersonation
+für den Vertex-Call — neue Bindung, zusätzlich zur bestehenden Runtime→Workspace-Delegation aus §9.1).
+Service Accounts tragen keine Labels; `app=rubicon` greift auf den Cloud-Run-Ressourcen.
+
+**Dependencies (Image):** `google-genai` (Vertex Gemini, eu/Flash-3.x) + `anthropic[vertex]` (Vertex Claude) — pip-Zeile im `Dockerfile`.
+
+**Smoke nach Deploy (Operator; erst danach gilt „live"):**
+
+```bash
+# 1) Direkter ai_client-Smoke gegen den echten eu-Endpoint (rubicon-runtime -> rubicon-ai@).
+#    Args-Delimiter ^|^, weil der Python-One-Liner Kommas enthaelt. Kein Volume noetig.
+gcloud run jobs create rubicon-ai-smoke \
+  --project=aixs-260106 --region=europe-west4 \
+  --image=europe-west4-docker.pkg.dev/aixs-260106/rubicon/rubicon-tower:latest \
+  --service-account=rubicon-runtime@aixs-260106.iam.gserviceaccount.com \
+  --command=python3 \
+  --args="^|^-c|import sys; sys.path.insert(0, '/app/scripts/_tools'); import ai_client; print('SMOKE:', ai_client.generate('Antworte nur mit OK.')[:200])" \
+  --task-timeout=600 --max-retries=0 --labels=app=rubicon \
+  --set-env-vars="^;^RUBICON_AI_PROVIDER=anthropic;RUBICON_AI_MODEL=claude-sonnet-5;RUBICON_AI_REGION=eu"
+gcloud run jobs execute rubicon-ai-smoke --project=aixs-260106 --region=europe-west4 --wait
+
+# 1b) Gemini-Zweig (google-genai-SDK) gegen den eu-Endpoint bestaetigen — belegt die
+#     DSGVO-Konformitaet der Flash-3.x-Familie @ eu (gemini-2.5-flash dagegen @ europe-west*).
+gcloud run jobs update rubicon-ai-smoke --project=aixs-260106 --region=europe-west4 \
+  --update-env-vars="^;^RUBICON_AI_PROVIDER=google;RUBICON_AI_MODEL=gemini-3.6-flash;RUBICON_AI_REGION=eu"
+gcloud run jobs execute rubicon-ai-smoke --project=aixs-260106 --region=europe-west4 --wait
+# Logs pruefen (je erwartet "SMOKE: OK..."), danach Wegwerf-Job loeschen:
+gcloud run jobs delete rubicon-ai-smoke --project=aixs-260106 --region=europe-west4 --quiet
+
+# 2) End-to-End: regulaeren Report-Job laufen lassen (traegt die AI-ENV seit deploy.yml)
+#    und im erzeugten Wochen-Report pruefen, dass der Block "🤖 KI-Entwurf" ein Narrativ
+#    traegt statt "KI-Entwurf nicht verfügbar (…)".
+gcloud run jobs execute rubicon-report-job --project=aixs-260106 --region=europe-west4 --wait
+```
+
+**Model Armor:** bewusst nicht eingesetzt (Prompt = ausschließlich interne, kuratierte
+Programm-Fakten; Owner-PII gewollt; Ausgabe human-gated). Die `ai_client.generate`-Naht bleibt so,
+dass ein Sanitize-Hook später additiv einhängbar wäre, falls je externer/User-Text einfließt.
+
+**Logging (Entscheidung 09.08.2026):** die Vertex-**Audit-Logs** (`ADMIN_READ`/`DATA_READ`/`DATA_WRITE`)
+sind aktiv — Aufrufe und Operationen sind nachvollziehbar. **Request/Response-Content-Logging** (Prompt +
+Modellantwort nach BigQuery) ist **bewusst nicht** eingerichtet: der Prompt trägt Owner-PII, die Ausgabe
+ist human-gated, und die Audit-Logs decken den Nachweisbedarf ab (Datensparsamkeit). Bei künftigem Bedarf
+(Antwort-Qualitäts-Auditing) additiv nachrüstbar als **EU-Region-BigQuery-Dataset** mit Retention- und
+Zugriffskonzept.
+
+**Modellwahl & Gemini-Schaltbarkeit (Entscheidung 09.08.2026):**
+
+- **Prod-Narrativ: `claude-sonnet-5` @ `eu`** (Provider `anthropic`) — verdrahtet, mit dem nächsten Deploy
+  live. Ein Smoke als `rubicon-ai@` gegen den eu-Multi-Region-Endpoint (EEA) bestätigt den Aufruf; der
+  Claude-Zweig selbst blieb dafür unverändert, das Prompt-Template ist auf diese Modellfamilie abgestimmt.
+  Right-sized für die Aufgabe (Wochen-Narrativ + Ampel-Begründungen aus kuratierten Programm-Fakten);
+  `claude-opus-5` @ `eu` wäre die stärkere, aber spürbar teurere Alternative.
+- **Gemini ist schaltbar (`enabled`), nicht Standard.** Der Gemini-Zweig nutzt die **`google-genai`-SDK**
+  (nicht mehr die alte `vertexai`) — damit tragen der `eu`-Endpoint und die **Flash-3.x-Familie
+  DSGVO-konform** (per Smoke bestätigt: `gemini-3.6-flash` @ `eu`). Umschalten ist reine ENV-Sache
+  (`RUBICON_AI_PROVIDER=google` + `RUBICON_AI_MODEL` + `RUBICON_AI_REGION`). **Region muss zum Modell
+  passen:** Flash-3.x @ `eu`; die ältere Generation `gemini-2.5-flash` @ `europe-west1`/`europe-west4`
+  (dort ist `eu` = 404, umgekehrt sind die Flash-3.x-Modelle in `europe-west*` = 404). `global` ist nicht
+  EEA-garantiert und für die Residenz-Vorgabe ausgeschlossen.
+
+**Preisunterschiede** (Vertex, USD je 1 Mio. Tokens Input / Output, Stand 09.08.2026):
+
+| Modell | Region (EEA) | Input | Output | Rolle |
+|---|---|---|---|---|
+| `claude-sonnet-5` | `eu` | $2.20 | $11.00 | **Prod** (Launch-Preis bis 31.08.2026; danach $3.30 / $16.50) |
+| `claude-opus-5` | `eu` | $5.00 | $25.00 | stärkere, teurere Alternative (Referenz) |
+| `gemini-2.5-flash` | `europe-west*` | $0.30 | $2.50 | günstigste Alternative |
+| `gemini-3.6-flash` | `eu` | — | — | schaltbar; Preis per Model Garden (Region `eu`) |
+
+Praktisch ist der Kostenunterschied für diesen Anwendungsfall zweitrangig: ein Wochen-Report-Narrativ sind
+wenige tausend Tokens → **Cent-Bereich pro Lauf** in jeder Variante. Ausschlaggebend für Sonnet 5 waren
+Ausgabequalität und das auf die Modellfamilie getunte Prompt-Template — nicht der Token-Preis. Gemini 2.5
+Flash bleibt mit ~7× (Input) / ≈4× (Output) niedrigeren Tokenkosten die günstigste Rückfalloption, falls
+Kosten je relevant werden.
 
 **Noch nicht serverseitig** (Follow-ups, s. README-Migrations-Status): Δ-Block (via GCS-Object-Version
-statt git) und KI-Narrativ (via AIXS-Plattform). Die Doc-Generatoren sind serverseitig abgedeckt —
+statt git). Die Doc-Generatoren sind serverseitig abgedeckt —
 **zwei verbindliche Wege** (entschieden 07.08.2026, s. `§11` + README „Doc-Erzeugung: genau zwei
 Wege"): **Weg 1** = Docs-REST-Vorlagen-Engine (feste, gebrandete Docs —
 Traktanden/Entscheid/Briefing/Führungsrhythmus), live über `rubicon-docs-job` (§12); **Weg 2** =

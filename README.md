@@ -112,6 +112,25 @@ Betriebsregeln (für alle Beteiligten):
 
 ## Changelog (IT / Didit)
 
+**09.08.2026 — KI-Narrativ serverseitig (Vertex AI, dual-mode):**
+- Der **KI-Entwurf-Block** des Wochen-Reports (Narrativ + Ampel-Begründungen) lief bisher nur lokal
+  über die `claude`-CLI — serverseitig fehlte das Binary, der Report zeigte den Platzhalter. Neu:
+  **Fassade `scripts/_tools/ai_client.py`** — Provider per Env (`RUBICON_AI_PROVIDER`: unset = lokale
+  CLI wie bisher; `google` = Vertex Gemini; `anthropic` = Vertex Claude), Modell/Region/Projekt per
+  `RUBICON_AI_MODEL`/`_REGION`/`_PROJECT`. Vertex-Aufrufe laufen im Projekt `aixs-260106` über den
+  **eu-Multi-Region-Endpoint** (Inferenz in der EEA) als dedizierter SA **`rubicon-ai@`**
+  (impersoniert von `rubicon-runtime`). Details: `DEPLOYMENT_GCP.md §9.6`.
+- Das **Prompt-Template** liegt jetzt als Repo-Datei (`scripts/prompts/ki_narrativ.txt`, Override via
+  `RUBICON_AI_PROMPT_FILE`, Inline-Fallback) — Tuning ohne Code-Änderung. Der lokale Pfad bleibt
+  byte-identisch; Ampel/Zahlen bleiben deterministisch, der KI-Block ist weiterhin als ENTWURF
+  markiert und non-fatal (Fehler → Platzhalter).
+- **Modellwahl + Gemini-SDK:** serverseitig ist das Narrativ auf **`claude-sonnet-5` @ `eu`** (EEA)
+  verdrahtet — mit dem nächsten Deploy live, per Vertex-Smoke bestätigt; das Prompt-Template ist auf diese
+  Modellfamilie abgestimmt. **Gemini bleibt schaltbar** (reine ENV-Umschaltung) und läuft jetzt über die
+  **`google-genai`-SDK**, womit die **Flash-3.x-Familie @ `eu` DSGVO-konform** wird (`gemini-3.6-flash`
+  @ `eu` per Smoke bestätigt; die ältere `gemini-2.5-flash` @ `europe-west*`). Entscheidung, Konsequenzen
+  und Preisunterschiede: `DEPLOYMENT_GCP.md §9.6`, Abschnitt „Modellwahl & Gemini-Schaltbarkeit".
+
 **09.08.2026 — Wochen-Delta serverseitig (git → datierte Snapshots):**
 - Der **Δ-Block** (`/api/delta`, „was hat sich in N Tagen geändert") verglich den heutigen
   `projekt.yaml`-Stand mit dem git-Stand von vor N Tagen. Serverseitig steht git nicht zur Verfügung
@@ -191,9 +210,9 @@ im Detail: `DEPLOYMENT_GCP.md §9` (Reports) + `§10` (Merge-Brücke).
 | Report-Links im Tower | Dieters `doc_url` | `server_doc_url` (Shared Drive), modusabhängig; nur-lokale Alt-Reports ohne tote Links | ✅ live |
 | Struktur → Live-Daten | git / Re-Seed (überschreiben) | **Merge-Brücke**: Repo-Struktur + Volume-Live per Merge-by-Key, Backup, Konflikt-Meldung | ✅ Code (§10) |
 | Δ-Block (Wochen-Delta) | git-Vergleich `projekt.yaml` | **datierte `projekt.yaml`-Snapshots** (`history/`, aus git backfilled + je Publish fortgeschrieben) | ✅ Code — serverseitig ab Deploy + Backfill |
-| KI-Narrativ | lokale CLI | AIXS-Plattform (konfigurierbares Modell/Prompt) | ⏳ Follow-up |
+| KI-Narrativ | lokale CLI (`claude`, unverändert) | **Vertex AI** in `aixs-260106` via `ai_client`-Fassade (Provider `google`/`anthropic`, Modell/Region/Prompt per Env, SA `rubicon-ai@`) | ✅ Code + Deploy-Wiring — serverseitig **live erst nach Deploy + Cloud-Smoke** (`DEPLOYMENT_GCP.md §9.6`) |
 | Traktanden, Entscheid, Briefing, Führungsrhythmus (feste Struktur) **+ AXS-Branding** | Chrome-HTML-PDF je Generator | **Weg 1 — Docs-REST-Vorlagen-Engine**: AXS-gebrandete Google-Doc-Vorlage je Typ + Merge, kein Chrome | ✅ serverseitig live (`rubicon-docs-job`) |
-| Report/Protokoll (dynamisch, berechnetes Layout) | Chrome-HTML-PDF (lokal) | **Weg 2 — HTML→PDF via Gotenberg**: bestehendes `render_*`-HTML serverseitig gerendert | ✅ Service `rubicon-gotenberg` live + App-Wiring aktiv (`RUBICON_GOTENBERG_URL`/OIDC am App-Service); Server-Protokoll-Export-PDF läuft über Gotenberg (End-to-End-Verifikation ausstehend) |
+| Report/Protokoll (dynamisch, berechnetes Layout) | Chrome-HTML-PDF (lokal) | **Weg 2 — HTML→PDF via Gotenberg**: bestehendes `render_*`-HTML serverseitig gerendert | ✅ Service `rubicon-gotenberg` live + App-Wiring aktiv (`RUBICON_GOTENBERG_URL`/OIDC am App-Service); Server-Protokoll-Export-PDF läuft über Gotenberg |
 | Reminder / Mailversand | Gmail-Entwurf lokal (DRS sendet) | serverseitig via DWD `gmail.send`/`gmail.modify` als `rubicon@axs.aero` | ⏳ geplant (Scopes autorisiert) |
 | Kalender / Eskalation | simuliert / MCP-Bridge lokal | serverseitig via DWD `calendar.events` | ⏳ geplant (Scopes autorisiert) |
 

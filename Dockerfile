@@ -14,8 +14,11 @@ FROM node:24-slim
 # Chromium ist BEWUSST nicht enthalten (Image-Groesse): der HTML->PDF-Pfad laeuft
 # serverseitig ueber den eigenen privaten Gotenberg-Service "rubicon-gotenberg"
 # (RUBICON_GOTENBERG_URL, OIDC), nicht lokales Chrome.
+# google-genai (Vertex Gemini, eu-Endpoint inkl. Flash-3.x) + anthropic[vertex]
+# (Claude on Vertex): KI-Narrativ serverseitig (scripts/_tools/ai_client.py, §9.6).
 RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-yaml python3-pip \
     && pip3 install --no-cache-dir --break-system-packages google-api-python-client google-auth PyMuPDF \
+       google-genai 'anthropic[vertex]' \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
