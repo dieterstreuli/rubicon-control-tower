@@ -797,7 +797,13 @@ export function createApi(rootDir) {
     if (!route) return false
     if (req.method !== route.method) return false
 
-    const json = (code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
+    const json = (code, obj) => {
+      // Beobachtbarkeit (09.08.2026): jede 5xx-Antwort hinterlässt eine Server-Logzeile
+      // (Methode + Pfad + Grund) — sonst steht im Cloud-Run-Log nur der nackte
+      // Request-Status ohne Ursache (Fund: /api/ask-500 loggte nichts).
+      if (code >= 500) console.error(`[api] ${req.method} ${url} -> ${code}: ${obj && obj.error != null ? String(obj.error).slice(0, 500) : ''}`)
+      res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj))
+    }
     if (route.opts.guard !== false && !guard(req, res)) return true
     try {
       const body = route.method === 'POST' ? JSON.parse((await readBody(req)) || '{}') : {}
@@ -805,7 +811,10 @@ export function createApi(rootDir) {
       const out = await route.handler({ body, req, res, json, fail })
       if (out !== undefined) json(200, out)
     } catch (err) {
-      json(err && err.status ? err.status : 500, { ok: false, error: String((err && err.message) || err) })
+      const code = err && err.status ? err.status : 500
+      // Unbehandelte Server-Fehler zusätzlich mit Stack (validierende fail(4xx) bleiben leise).
+      if (code >= 500 && err && err.stack) console.error(`[api] ${req.method} ${url} — unbehandelt:`, err.stack)
+      json(code, { ok: false, error: String((err && err.message) || err) })
     }
     return true
   }

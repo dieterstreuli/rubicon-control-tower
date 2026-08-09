@@ -20,13 +20,34 @@ const screen = (inner) => root.render(
   </div>
 )
 
+// Cold-Start-Absicherung (09.08.2026): der Service darf im Leerlauf auf 0 skalieren
+// (kein minScale). Der erste Load nach Ruhe zahlt dann den Kaltstart — dabei kann
+// /api/state kurz 5xx liefern, netzwerkseitig abbrechen oder der Volume-Read noch
+// nicht bereit sein (ok:false). Deshalb ENDLICHER Retry mit ansteigender Wartezeit
+// (kein Endlos-Retry, Spec §5), bevor der Fehler-Screen kommt. 4xx (z. B. 403 Auth)
+// werden NICHT wiederholt — die heilt kein Warten.
+async function fetchState(attempt = 0) {
+  const MAX = 4
+  let retriable = true
+  try {
+    const res = await fetch('/api/state')
+    if (!res.ok) { retriable = res.status >= 500; throw new Error('HTTP ' + res.status) }
+    const state = await res.json()
+    if (!state.ok) throw new Error(state.error || 'unbekannter Fehler')
+    return state
+  } catch (e) {
+    if (!retriable || attempt >= MAX - 1) throw e
+    const waitMs = 600 * (attempt + 1)   // 600 / 1200 / 1800 ms — deckt das Kaltstart-Fenster
+    screen(<div>RUBICON — Daten werden geladen… (Versuch {attempt + 2}/{MAX})</div>)
+    await new Promise(r => setTimeout(r, waitMs))
+    return fetchState(attempt + 1)
+  }
+}
+
 async function bootstrap() {
   screen(<div>RUBICON — Daten werden geladen…</div>)
   try {
-    const res = await fetch('/api/state')
-    if (!res.ok) throw new Error('HTTP ' + res.status)
-    const state = await res.json()
-    if (!state.ok) throw new Error(state.error || 'unbekannter Fehler')
+    const state = await fetchState()
     initData(state)
     const { default: App } = await import('./App.jsx')
     root.render(

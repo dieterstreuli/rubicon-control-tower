@@ -112,6 +112,16 @@ Betriebsregeln (für alle Beteiligten):
 
 ## Changelog (IT / Didit)
 
+**09.08.2026 — Robustheit: Cold-Start-Absicherung + Server-Fehler-Logs:**
+- **Erst-Load abgesichert:** der App-Service skaliert im Leerlauf bewusst auf 0 (kein Dauerbetrieb); der
+  erste Aufruf nach Ruhe zahlt einen Kaltstart, bei dem `GET /api/state` kurz 5xx liefern oder
+  netzwerkseitig abbrechen kann. Neu holt der Bootstrap den Zustand mit **endlichem Retry** (4 Versuche,
+  ansteigende Wartezeit) — der Erst-Load heilt sich selbst, statt sofort den Fehler-Screen zu zeigen.
+  4xx (z. B. Auth) failen weiterhin sofort; der manuelle „Erneut versuchen"-Screen bleibt letzter Fallback.
+- **Beobachtbarkeit:** jede serverseitige 5xx-Antwort hinterlässt jetzt eine Logzeile (Methode, Pfad,
+  Grund; unbehandelte Fehler zusätzlich mit Stack) — vorher stand im Log nur der nackte Request-Status
+  ohne Ursache.
+
 **09.08.2026 — KI-Narrativ serverseitig (Vertex AI, dual-mode):**
 - Der **KI-Entwurf-Block** des Wochen-Reports (Narrativ + Ampel-Begründungen) lief bisher nur lokal
   über die `claude`-CLI — serverseitig fehlte das Binary, der Report zeigte den Platzhalter. Neu:
