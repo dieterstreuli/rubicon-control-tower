@@ -214,7 +214,7 @@ workstreams:
         nachlauf: false
         progress_source: tasks
       - id: WS1-14
-        name: 'Nachlauf: Entity-Portfolio-Bereinigung inkl. ZRH-Vollzug (Art. 335f–k OR)'
+        name: 'Nachlauf: Das Gesellschafts-Portfolio ist bereinigt; in Zürich ist der Vollzug abgeschlossen — einschliesslich der Massenentlassungsanzeige nach dem Konsultationsverfahren (Art. 335f–k OR)'
         owner: Amélie Charisius
         start: '2027-03-31'
         due: '2027-06-30'
@@ -928,7 +928,7 @@ workstreams:
         nachlauf: false
         progress_source: tasks
       - id: OE-11
-        name: 'Nachlauf: Personenbezogene Betriebskennzahlen und Massnahmen zur Schichtbesetzung sind umgesetzt — auf Basis einer Betriebsvereinbarung, wie sie das Mitbestimmungsrecht verlangt (Deutschland §87 BetrVG, Österreich §96 ArbVG)'
+        name: 'Nachlauf: Personenbezogene Betriebskennzahlen und Massnahmen zur Schichtbesetzung sind umgesetzt — auf Basis einer Betriebsvereinbarung, wie sie das Mitbestimmungsrecht bei personenbezogenen Kontroll- und Leistungsdaten verlangt (Deutschland §87 BetrVG, Österreich §96 ArbVG)'
 
         owner: Amélie Charisius
         start: '2027-01-29'
@@ -1464,9 +1464,10 @@ workstreams:
         nachlauf: false
         quarter: Q1/27
         prio: P1
-        kpi: Standardklausel freigegeben + in Vorlage; 100% neuer Renewal-Drafts ab Q1/2027 mit Indexierung oder dokumentierter Ausnahme
+        kpi: Die unter M36 rechtlich freigegebene Standardklausel ist in der Vertragsvorlage verankert; 100% neuer Renewal-Drafts ab Q1/2027 mit Indexierung oder dokumentierter Ausnahme
         depends_on:
           - M17
+          - M36
         progress_source: tasks
       - id: M23
         name: Prospect-Trichter von 21 auf mind. 60 Leads verbreitern
@@ -1688,7 +1689,7 @@ workstreams:
         nachlauf: false
         quarter: Q3/26
         prio: P1
-        kpi: Rechtlich freigegebene, länderkonforme Standard-Indexierungsklausel liegt vor
+        kpi: Rechtlich freigegebene, länderkonforme Standard-Indexierungsklausel liegt vor — Vorleistung für M22 (Verankerung als Renewal-Standard) und M32 (Durchsetzung an der Cliff-2027-Wand)
         depends_on: []
         progress_source: tasks
       - id: M37
