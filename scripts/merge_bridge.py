@@ -13,6 +13,7 @@ berichtet. Kein Backup, keine Validierung (macht der Workflow drumherum); dieses
 mergt nur und meldet. Reine Datei-Logik, keine Google-API-Calls.
 """
 import copy
+import datetime as dt
 import json
 import logging
 import os
@@ -209,6 +210,30 @@ def _write_atomic(path, text):
         raise
 
 
+def _write_snapshot(data_dir, yaml_text):
+    """Nach dem projekt.yaml-Publish einen datierten Snapshot in <data_dir>/history/ ablegen —
+    die Server-Historie fuer den Wochen-Delta (git steht serverseitig nicht zur Verfuegung, s.
+    gen_delta._old_projekt). Dedupe: identisch zum neuesten Snapshot -> kein neuer (No-Op-Publish
+    erzeugt keinen Muell). Non-fatal: ein Snapshot-Fehler darf den Publish nie kippen."""
+    try:
+        hist = os.path.join(data_dir, 'history')
+        os.makedirs(hist, exist_ok=True)
+        existing = sorted(f for f in os.listdir(hist)
+                          if f.startswith('projekt-') and f.endswith('.yaml'))
+        if existing and _read_text(os.path.join(hist, existing[-1])) == yaml_text:
+            log.info('projekt.yaml unveraendert zum neuesten Snapshot — kein neuer Snapshot')
+            return
+        t = dt.datetime.utcnow()
+        path = os.path.join(hist, f'projekt-{t.strftime("%Y%m%dT%H%M%SZ")}.yaml')
+        while os.path.exists(path):       # gleiche Sekunde, anderer Inhalt -> +1s, nie ueberschreiben
+            t += dt.timedelta(seconds=1)
+            path = os.path.join(hist, f'projekt-{t.strftime("%Y%m%dT%H%M%SZ")}.yaml')
+        _write_atomic(path, yaml_text)
+        log.info('projekt.yaml-Snapshot geschrieben: history/%s', os.path.basename(path))
+    except Exception as ex:  # noqa: BLE001 — Snapshot ist Beiwerk, nie publish-kritisch
+        log.warning('Snapshot-Schreiben fehlgeschlagen (Publish unberuehrt): %s', ex)
+
+
 def _copy_atomic(src, dst):
     """Roher Byte-Kopie SEED → DATA (Inhalt 1:1), atomar via Temp + os.replace."""
     with open(src, 'rb') as f:
@@ -303,8 +328,10 @@ def run(seed_dir, data_dir, mode):
         for n in stamm:
             _copy_atomic(os.path.join(seed_dir, n), os.path.join(data_dir, n))
         if projekt_plan is not None:
-            _write_atomic(projekt_plan[0], yaml.safe_dump(projekt_plan[1], allow_unicode=True,
-                                                          sort_keys=False, default_flow_style=False))
+            projekt_yaml = yaml.safe_dump(projekt_plan[1], allow_unicode=True,
+                                          sort_keys=False, default_flow_style=False)
+            _write_atomic(projekt_plan[0], projekt_yaml)
+            _write_snapshot(data_dir, projekt_yaml)   # Server-Historie fuer den Wochen-Delta
         if tasks_plan is not None:
             _write_atomic(tasks_plan[0], json.dumps(tasks_plan[1], ensure_ascii=False, indent=2))
 

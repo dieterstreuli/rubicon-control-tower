@@ -112,6 +112,19 @@ Betriebsregeln (für alle Beteiligten):
 
 ## Changelog (IT / Didit)
 
+**09.08.2026 — Wochen-Delta serverseitig (git → datierte Snapshots):**
+- Der **Δ-Block** (`/api/delta`, „was hat sich in N Tagen geändert") verglich den heutigen
+  `projekt.yaml`-Stand mit dem git-Stand von vor N Tagen. Serverseitig steht git nicht zur Verfügung
+  (schlankes Image ohne git-Binary, `.git` bewusst nicht im Container) → der Aufruf lief auf einen
+  Fehler (HTTP 500). Neu: **dual-mode** — serverseitig aus **datierten `projekt.yaml`-Snapshots**
+  (`history/projekt-<ts>.yaml` im Volume), lokal unverändert aus der git-Historie.
+- Die **Merge-Brücke** legt bei jedem `[publish-data]`-Publish einen Snapshot des frisch gemergten
+  `projekt.yaml` ab (Dedupe bei unverändert, nie publish-kritisch). Beim Rollout wird die vorhandene
+  git-Historie **einmalig als Snapshots nachgezogen** (Backfill) → volle Delta-Tiefe ab Deploy.
+  Vorrang hat, wo verfügbar, weiterhin git (lokal) — Snapshots greifen nur serverseitig (kein git).
+- Robustheit: der git-Aufruf fängt jetzt ein fehlendes Binary sauber ab (kein 500 mehr, Rückfall auf
+  reine Store-Ereignisse), statt den Endpoint zu reißen.
+
 **07.08.2026 — Serverseitige Doc-Erzeugung (zwei Wege), Server-DWD, Robustheit & Datenvertrag:**
 - **Weg 1 — feste, gebrandete Fix-Struktur-Dokumente live:** Traktanden/Entscheide/Briefings/
   Führungsrhythmus entstehen serverseitig über die Docs-Vorlagen-Engine als Google-Doc + PDF; Treiber
@@ -177,7 +190,7 @@ im Detail: `DEPLOYMENT_GCP.md §9` (Reports) + `§10` (Merge-Brücke).
 | Report-Trigger | launchd-Cron (Mac) | Cloud Scheduler → Cloud-Run-Job (Mo 06:00) | ✅ live |
 | Report-Links im Tower | Dieters `doc_url` | `server_doc_url` (Shared Drive), modusabhängig; nur-lokale Alt-Reports ohne tote Links | ✅ live |
 | Struktur → Live-Daten | git / Re-Seed (überschreiben) | **Merge-Brücke**: Repo-Struktur + Volume-Live per Merge-by-Key, Backup, Konflikt-Meldung | ✅ Code (§10) |
-| Δ-Block (Wochen-Delta) | git-Vergleich `projekt.yaml` | GCS-Object-Version statt git | ⏳ Follow-up |
+| Δ-Block (Wochen-Delta) | git-Vergleich `projekt.yaml` | **datierte `projekt.yaml`-Snapshots** (`history/`, aus git backfilled + je Publish fortgeschrieben) | ✅ Code — serverseitig ab Deploy + Backfill |
 | KI-Narrativ | lokale CLI | AIXS-Plattform (konfigurierbares Modell/Prompt) | ⏳ Follow-up |
 | Traktanden, Entscheid, Briefing, Führungsrhythmus (feste Struktur) **+ AXS-Branding** | Chrome-HTML-PDF je Generator | **Weg 1 — Docs-REST-Vorlagen-Engine**: AXS-gebrandete Google-Doc-Vorlage je Typ + Merge, kein Chrome | ✅ serverseitig live (`rubicon-docs-job`) |
 | Report/Protokoll (dynamisch, berechnetes Layout) | Chrome-HTML-PDF (lokal) | **Weg 2 — HTML→PDF via Gotenberg**: bestehendes `render_*`-HTML serverseitig gerendert | ✅ Service `rubicon-gotenberg` live + App-Wiring aktiv (`RUBICON_GOTENBERG_URL`/OIDC am App-Service); Server-Protokoll-Export-PDF läuft über Gotenberg (End-to-End-Verifikation ausstehend) |

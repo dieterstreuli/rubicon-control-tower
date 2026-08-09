@@ -229,6 +229,66 @@ def test_new_doc_indexes_are_transaktion():
     assert "briefings.json" in mb.STAMMDATEN and "fuehrungsrhythmus.json" in mb.STAMMDATEN
 
 
+# ── 10. Snapshot: Apply schreibt history/projekt-<ts>.yaml == geschriebenes projekt.yaml ─────
+def test_snapshot_written_on_apply():
+    seed, data = _mkdirs()
+    try:
+        import yaml
+        clean = _projekt(milestones=[{'id': 'M1', 'name': 'a', 'progress': 0}])
+        raw = yaml.safe_dump(clean, allow_unicode=True, sort_keys=False)
+        _write(seed, 'projekt.yaml', None, raw=raw)
+        _write(data, 'projekt.yaml', None, raw=raw)
+        mb.run(seed, data, 'apply')
+        hist = os.path.join(data, 'history')
+        snaps = [f for f in os.listdir(hist) if f.startswith('projekt-') and f.endswith('.yaml')]
+        assert len(snaps) == 1
+        assert yaml.safe_load(_read(hist, snaps[0])) == yaml.safe_load(_read(data, 'projekt.yaml'))
+    finally:
+        _cleanup(seed, data)
+
+
+# ── 11. Snapshot-Dedupe: identischer Inhalt -> kein neuer; anderer -> neuer ───────────────────
+def test_snapshot_dedup():
+    from types import SimpleNamespace
+    import datetime as _rdt
+    seed, data = _mkdirs()
+    orig = mb.dt
+    n = {'i': 0}
+
+    def _utcnow():
+        n['i'] += 1
+        return _rdt.datetime(2026, 1, 1, 0, 0, n['i'])     # streng steigende ts, kein Kollisions-Overwrite
+
+    mb.dt = SimpleNamespace(datetime=SimpleNamespace(utcnow=_utcnow))
+    try:
+        hist = os.path.join(data, 'history')
+        mb._write_snapshot(data, 'AAA\n')
+        mb._write_snapshot(data, 'AAA\n')                  # identisch zum neuesten -> Dedupe
+        assert len([f for f in os.listdir(hist) if f.startswith('projekt-')]) == 1
+        mb._write_snapshot(data, 'BBB\n')                  # anderer Inhalt -> neuer Snapshot
+        files = sorted(f for f in os.listdir(hist) if f.startswith('projekt-'))
+        assert len(files) == 2
+        assert _read(hist, files[-1]) == 'BBB\n'
+    finally:
+        mb.dt = orig
+        _cleanup(seed, data)
+
+
+# ── 12. Dry-Run schreibt KEINEN Snapshot (write=False) ───────────────────────────────────────
+def test_snapshot_not_on_dryrun():
+    seed, data = _mkdirs()
+    try:
+        import yaml
+        clean = _projekt(milestones=[{'id': 'M1', 'name': 'a', 'progress': 0}])
+        raw = yaml.safe_dump(clean, allow_unicode=True, sort_keys=False)
+        _write(seed, 'projekt.yaml', None, raw=raw)
+        _write(data, 'projekt.yaml', None, raw=raw)
+        mb.run(seed, data, 'dry-run')
+        assert not os.path.isdir(os.path.join(data, 'history'))    # kein Snapshot bei Vorschau
+    finally:
+        _cleanup(seed, data)
+
+
 TESTS = [
     test_stammdaten_overwrite,
     test_transaktion_untouched,
@@ -239,6 +299,9 @@ TESTS = [
     test_auto_applies_when_clean,
     test_auto_holds_on_conflict,
     test_new_doc_indexes_are_transaktion,
+    test_snapshot_written_on_apply,
+    test_snapshot_dedup,
+    test_snapshot_not_on_dryrun,
 ]
 
 

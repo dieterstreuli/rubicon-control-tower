@@ -9,3 +9,7 @@ src/data/protokolle_sensitiv.json
 dist/
 scripts/_briefing_html/
 scripts/_trakt_html/
+
+# Wochen-Delta-Snapshots: serverseitige Historie (Volume). Lokal von merge_bridge --apply erzeugt
+# und traegt projekt.yaml-Personendaten -> NIE ins Git (lokal gilt ohnehin die git-Historie).
+src/data/history/

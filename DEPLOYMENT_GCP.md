@@ -387,6 +387,35 @@ Mount-Punkts) = Repo-Struktur; das Volume `/app/src/data` = Live-SSOT.
 - **Lösch-Politik = behalten + melden:** Milestone/Input im Volume mit Live-Daten, im Repo entfernt →
   bleibt erhalten + wird als Konflikt gemeldet (nie stiller Verlust).
 
+**Wochen-Delta-Historie (`projekt.yaml`-Snapshots):** Der Δ-Block (`/api/delta`, `scripts/gen_delta.py`)
+vergleicht den heutigen `projekt.yaml`-Stand mit dem Stand von vor N Tagen. **Lokal** liefert das die
+git-Historie; **serverseitig gibt es kein git** (schlankes Image, `.git` bewusst nicht im Container) →
+stattdessen **datierte Snapshots** unter `/app/src/data/history/projekt-<YYYYMMDDThhmmssZ>.yaml`
+(= Volume-Prefix `history/`). Die Merge-Brücke schreibt nach jedem angewandten `projekt.yaml`-Publish
+einen Snapshot (`merge_bridge._write_snapshot`, Dedupe bei unverändert, kollisionssicher, non-fatal).
+`gen_delta` wählt die Quelle automatisch (kein Flag): **git hat Vorrang, wo verfügbar** (lokal),
+serverseitig (kein git) der **jüngste gültige** Snapshot ≤ Fenstergrenze (formwidrige/defekte werden
+übersprungen), sonst nur Store-Ereignisse. So verdrängt eine lokal versehentlich angelegte `history/`
+nie die reiche git-Historie. **Einmaliger Backfill** der bestehenden git-Historie in den `history/`-Prefix
+gibt der Funktion ab Deploy volle Tiefe:
+```bash
+# je Commit, der src/data/projekt.yaml berührte: Inhalt RE-SERIALISIERT (wie der Merge-Output, damit der
+# erste Live-Publish sauber dedupt) -> history/projekt-<commit-UTC>.yaml -> Bucket
+mkdir -p /tmp/hist
+git -C <repo> log --follow --format='%H %cI' -- src/data/projekt.yaml | while read rev iso; do
+  ts=$(python3 -c "import sys,datetime;print(datetime.datetime.fromisoformat(sys.argv[1]).astimezone(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ'))" "$iso")
+  git -C <repo> show "$rev:src/data/projekt.yaml" \
+    | python3 -c "import sys,yaml;yaml.safe_dump(yaml.safe_load(sys.stdin),sys.stdout,allow_unicode=True,sort_keys=False,default_flow_style=False)" \
+    > "/tmp/hist/projekt-$ts.yaml"
+done
+gcloud storage cp "/tmp/hist/projekt-*.yaml" gs://aixs-rubicon-tower-data/history/
+```
+Nur `projekt.yaml`-Versionen (dieselbe Datenklasse wie die live liegende Datei) — **nicht** das ganze
+`.git` (DSGVO: die Repo-Historie trägt Personendaten und gehört nie ins Volume/Image). Der `history/`-
+Prefix ist per gcsfuse-`ImplicitDirs` (Laufzeit-Config bestätigt) sichtbar; `gen_delta._snapshots` globt
+ohne `is_dir`-Gate → robust auch ohne Verzeichnis-Platzhalter. **Retention (Follow-up):** ein Snapshot je
+Publish wächst langsam; ein Lifecycle-/Prune-Schritt (z.B. nur die letzten ~120 Tage behalten) steht aus.
+
 **Job anlegen** (analog `rubicon-report-job`, gleicher SA/Volume/Image; Default = Dry-Run):
 ```bash
 gcloud run jobs create rubicon-merge-job \
