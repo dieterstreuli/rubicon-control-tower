@@ -112,47 +112,35 @@ Betriebsregeln (für alle Beteiligten):
 
 ## Changelog (IT / Didit)
 
-**09.08.2026 — Robustheit: Cold-Start-Absicherung + Server-Fehler-Logs:**
-- **Erst-Load abgesichert:** der App-Service skaliert im Leerlauf bewusst auf 0 (kein Dauerbetrieb); der
-  erste Aufruf nach Ruhe zahlt einen Kaltstart, bei dem `GET /api/state` kurz 5xx liefern oder
-  netzwerkseitig abbrechen kann. Neu holt der Bootstrap den Zustand mit **endlichem Retry** (4 Versuche,
-  ansteigende Wartezeit) — der Erst-Load heilt sich selbst, statt sofort den Fehler-Screen zu zeigen.
-  4xx (z. B. Auth) failen weiterhin sofort; der manuelle „Erneut versuchen"-Screen bleibt letzter Fallback.
+**09.08.2026 — Serverseitige KI (Vertex), Wochen-Delta & Robustheit (dual-mode):**
+- **KI-Narrativ serverseitig (Vertex AI):** der **KI-Entwurf-Block** des Wochen-Reports (Narrativ +
+  Ampel-Begründungen) lief bisher nur lokal über die `claude`-CLI — serverseitig fehlte das Binary, der
+  Report zeigte den Platzhalter. Neu: **Fassade `scripts/_tools/ai_client.py`** — Provider per Env
+  (`RUBICON_AI_PROVIDER`: unset = lokale CLI wie bisher; `google` = Vertex Gemini; `anthropic` = Vertex
+  Claude), Modell/Region/Projekt per `RUBICON_AI_MODEL`/`_REGION`/`_PROJECT`. Vertex-Aufrufe laufen im
+  Projekt `aixs-260106` über den **eu-Multi-Region-Endpoint** (Inferenz in der EEA) als dedizierter SA
+  **`rubicon-ai@`** (impersoniert von `rubicon-runtime`). Prompt-Template als Repo-Datei
+  (`scripts/prompts/ki_narrativ.txt`, Override via `RUBICON_AI_PROMPT_FILE`) — Tuning ohne Code-Änderung.
+  Lokaler Pfad byte-identisch; Ampel/Zahlen deterministisch; KI-Block bleibt ENTWURF + non-fatal. Details:
+  `DEPLOYMENT_GCP.md §9.6`.
+- **Modellwahl + Gemini-SDK:** Prod-Narrativ auf **`claude-sonnet-5` @ `eu`** (EEA, per Vertex-Smoke
+  bestätigt); Prompt auf diese Modellfamilie abgestimmt. **Gemini bleibt schaltbar** (reine ENV-Umschaltung)
+  und läuft über die **`google-genai`-SDK** → **Flash-3.x @ `eu` DSGVO-konform** (`gemini-3.6-flash` @ `eu`
+  smoke-bestätigt; die ältere `gemini-2.5-flash` @ `europe-west*`). Entscheidung, Konsequenzen und
+  Preisunterschiede: `DEPLOYMENT_GCP.md §9.6`, Abschnitt „Modellwahl & Gemini-Schaltbarkeit".
+- **Wochen-Delta serverseitig (git → datierte Snapshots):** der **Δ-Block** (`/api/delta`, „was hat sich in
+  N Tagen geändert") verglich den heutigen `projekt.yaml`-Stand mit dem git-Stand von vor N Tagen —
+  serverseitig steht git nicht zur Verfügung (schlankes Image, `.git` bewusst nicht im Container) → HTTP 500.
+  Neu: **dual-mode** — serverseitig aus datierten `projekt.yaml`-Snapshots (`history/projekt-<ts>.yaml` im
+  Volume), lokal unverändert aus der git-Historie. Die **Merge-Brücke** legt bei jedem
+  `[publish-data]`-Publish einen Snapshot ab (Dedupe); beim Rollout wird die git-Historie einmalig als
+  Snapshots nachgezogen (Backfill). Der git-Aufruf fängt ein fehlendes Binary sauber ab (kein 500 mehr).
+- **Cold-Start-Absicherung:** der App-Service skaliert im Leerlauf bewusst auf 0; der erste Aufruf nach
+  Ruhe zahlt einen Kaltstart, bei dem `GET /api/state` kurz 5xx liefern oder netzwerkseitig abbrechen kann.
+  Neu holt der Bootstrap den Zustand mit **endlichem Retry** (4 Versuche, ansteigende Wartezeit) — der
+  Erst-Load heilt sich selbst; 4xx (z. B. Auth) failen weiterhin sofort, „Erneut versuchen" bleibt Fallback.
 - **Beobachtbarkeit:** jede serverseitige 5xx-Antwort hinterlässt jetzt eine Logzeile (Methode, Pfad,
-  Grund; unbehandelte Fehler zusätzlich mit Stack) — vorher stand im Log nur der nackte Request-Status
-  ohne Ursache.
-
-**09.08.2026 — KI-Narrativ serverseitig (Vertex AI, dual-mode):**
-- Der **KI-Entwurf-Block** des Wochen-Reports (Narrativ + Ampel-Begründungen) lief bisher nur lokal
-  über die `claude`-CLI — serverseitig fehlte das Binary, der Report zeigte den Platzhalter. Neu:
-  **Fassade `scripts/_tools/ai_client.py`** — Provider per Env (`RUBICON_AI_PROVIDER`: unset = lokale
-  CLI wie bisher; `google` = Vertex Gemini; `anthropic` = Vertex Claude), Modell/Region/Projekt per
-  `RUBICON_AI_MODEL`/`_REGION`/`_PROJECT`. Vertex-Aufrufe laufen im Projekt `aixs-260106` über den
-  **eu-Multi-Region-Endpoint** (Inferenz in der EEA) als dedizierter SA **`rubicon-ai@`**
-  (impersoniert von `rubicon-runtime`). Details: `DEPLOYMENT_GCP.md §9.6`.
-- Das **Prompt-Template** liegt jetzt als Repo-Datei (`scripts/prompts/ki_narrativ.txt`, Override via
-  `RUBICON_AI_PROMPT_FILE`, Inline-Fallback) — Tuning ohne Code-Änderung. Der lokale Pfad bleibt
-  byte-identisch; Ampel/Zahlen bleiben deterministisch, der KI-Block ist weiterhin als ENTWURF
-  markiert und non-fatal (Fehler → Platzhalter).
-- **Modellwahl + Gemini-SDK:** serverseitig ist das Narrativ auf **`claude-sonnet-5` @ `eu`** (EEA)
-  verdrahtet — mit dem nächsten Deploy live, per Vertex-Smoke bestätigt; das Prompt-Template ist auf diese
-  Modellfamilie abgestimmt. **Gemini bleibt schaltbar** (reine ENV-Umschaltung) und läuft jetzt über die
-  **`google-genai`-SDK**, womit die **Flash-3.x-Familie @ `eu` DSGVO-konform** wird (`gemini-3.6-flash`
-  @ `eu` per Smoke bestätigt; die ältere `gemini-2.5-flash` @ `europe-west*`). Entscheidung, Konsequenzen
-  und Preisunterschiede: `DEPLOYMENT_GCP.md §9.6`, Abschnitt „Modellwahl & Gemini-Schaltbarkeit".
-
-**09.08.2026 — Wochen-Delta serverseitig (git → datierte Snapshots):**
-- Der **Δ-Block** (`/api/delta`, „was hat sich in N Tagen geändert") verglich den heutigen
-  `projekt.yaml`-Stand mit dem git-Stand von vor N Tagen. Serverseitig steht git nicht zur Verfügung
-  (schlankes Image ohne git-Binary, `.git` bewusst nicht im Container) → der Aufruf lief auf einen
-  Fehler (HTTP 500). Neu: **dual-mode** — serverseitig aus **datierten `projekt.yaml`-Snapshots**
-  (`history/projekt-<ts>.yaml` im Volume), lokal unverändert aus der git-Historie.
-- Die **Merge-Brücke** legt bei jedem `[publish-data]`-Publish einen Snapshot des frisch gemergten
-  `projekt.yaml` ab (Dedupe bei unverändert, nie publish-kritisch). Beim Rollout wird die vorhandene
-  git-Historie **einmalig als Snapshots nachgezogen** (Backfill) → volle Delta-Tiefe ab Deploy.
-  Vorrang hat, wo verfügbar, weiterhin git (lokal) — Snapshots greifen nur serverseitig (kein git).
-- Robustheit: der git-Aufruf fängt jetzt ein fehlendes Binary sauber ab (kein 500 mehr, Rückfall auf
-  reine Store-Ereignisse), statt den Endpoint zu reißen.
+  Grund; unbehandelte Fehler zusätzlich mit Stack) — vorher nur der nackte Request-Status ohne Ursache.
 
 **07.08.2026 — Serverseitige Doc-Erzeugung (zwei Wege), Server-DWD, Robustheit & Datenvertrag:**
 - **Weg 1 — feste, gebrandete Fix-Struktur-Dokumente live:** Traktanden/Entscheide/Briefings/
