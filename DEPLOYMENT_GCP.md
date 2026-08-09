@@ -438,7 +438,7 @@ Zugriffskonzept.
 | `claude-sonnet-5` | `eu` | $2.20 | $11.00 | **Prod** (Launch-Preis bis 31.08.2026; danach $3.30 / $16.50) |
 | `claude-opus-5` | `eu` | $5.00 | $25.00 | stärkere, teurere Alternative (Referenz) |
 | `gemini-2.5-flash` | `europe-west*` | $0.30 | $2.50 | günstigste Alternative |
-| `gemini-3.6-flash` | `eu` | — | — | schaltbar; Preis per Model Garden (Region `eu`) |
+| `gemini-3.6-flash` | `eu` | $1.50 | $7.50 | schaltbar; Standard-Tier (on-demand), gleicher Satz ≤/>200K |
 
 Praktisch ist der Kostenunterschied für diesen Anwendungsfall zweitrangig: ein Wochen-Report-Narrativ sind
 wenige tausend Tokens → **Cent-Bereich pro Lauf** in jeder Variante. Ausschlaggebend für Sonnet 5 waren
@@ -713,7 +713,7 @@ gcloud run jobs create rubicon-docs-job \
 gcloud run jobs execute rubicon-docs-job --project=aixs-260106 --region=europe-west4 --wait
 ```
 
-### 12.3 Scheduler `rubicon-docs-sched` + Merge-Hook (Soll)
+### 12.3 Merge-Hook (erledigt) + Scheduler `rubicon-docs-sched` (optional)
 
 Wöchentlicher Trigger **nach** dem Report-Lauf (§9.4 läuft Mo 06:00), über denselben least-privilege
 Mini-SA `rubicon-scheduler` (nur `run.jobs.run`):
@@ -732,9 +732,11 @@ gcloud scheduler jobs create http rubicon-docs-sched \
   --oauth-service-account-email=rubicon-scheduler@aixs-260106.iam.gserviceaccount.com
 ```
 
-Zusätzlich als **Hook im Merge-Flow**: nach einem erfolgreichen `[publish-data]`-Publish (§10) — wenn
-neue/geänderte Struktur live ist — den Doc-Job anstoßen, damit die gebrandeten Docs den frischen Stand
-abbilden.
+**Merge-Hook — erledigt + live:** nach einem erfolgreichen `[publish-data]`-Apply/Auto (§10) stößt der
+Merge-Workflow den Doc-Job **sequenziell + inkrementell** an (`.github/workflows/merge-data.yml`, Schritt
+„Docs-Job ausfuehren (nach Merge-Apply, inkrementell)"; Content-Hash-Gating → No-Op ohne Änderung), damit
+die gebrandeten Docs zum frisch publizierten Datenstand passen. Der separate Wochen-Scheduler oben ist damit
+**optional** — der Hook deckt den Regelfall; der Scheduler nur für reine Zeit-Trigger ohne Datenpublish.
 
 ### 12.4 IAM + Pipeline
 
@@ -760,4 +762,5 @@ abbilden.
 | Server-DWD am Web-Service (`RUBICON_WORKSPACE_SA` + `RUBICON_IMPERSONATE_SUBJECT`) | ✅ live — über den Live-Service bestätigt: Report-Generierung (Google-Doc erzeugt) + Gemini-Import (Auth statt lokaler-OAuth-Fehler). Protokoll-Export-E2E s. §11. Keine neue IAM-Bindung (§9.1) |
 | Datenvertrag `meta` Repo-getrieben (`merge_bridge.py`, §10) | ✅ im Code — greift ab nächstem Merge-Job-Deploy |
 | `deploy.yml`-Image-Loop um `rubicon-docs-job` erweitert | ✅ |
-| Scheduler `rubicon-docs-sched` + Merge-Hook | ⏳ offen (§12.3) |
+| Merge-Hook: Docs-Job nach `[publish-data]`-Apply | ✅ live (`merge-data.yml`, inkrementell + hash-gated) |
+| Scheduler `rubicon-docs-sched` (wöchentlich, zusätzlich) | ⏳ optional — nicht eingerichtet; Merge-Hook deckt den Regelfall (§12.3) |
