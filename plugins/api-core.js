@@ -22,6 +22,12 @@ const PY_BIN = process.env.RUBICON_PY || '/Library/Frameworks/Python.framework/V
 // unset (lokal) -> byte-identischer Rückfall auf die claude-CLI; anthropic (Server) -> Vertex.
 // RUBICON-CUTOVER: der lokale CLI-Rückfall lebt in ai_client und entfällt beim Web-only-Switch.
 const AI_ASK = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'scripts', 'ai_ask.py')
+// Effektives KI-Modell für die UI-Kennzeichnung — spiegelt die Dispatch-Logik von
+// scripts/_tools/ai_client.py: ohne RUBICON_AI_PROVIDER die lokale CLI (claude-sonnet-4-6),
+// sonst das per RUBICON_AI_MODEL gewählte Vertex-Modell.
+export function aiModelLabel(env = process.env) {
+  return env.RUBICON_AI_PROVIDER ? (env.RUBICON_AI_MODEL || 'unbekannt') : 'claude-sonnet-4-6'
+}
 // Server-Modus = laeuft am DEPLOYTEN Service (RUBICON_DOCS_DIR ist dort gesetzt; lokal bei
 // Dieter nicht). Steuert im UI, ob Report-Links auf die Server-Google-Docs (server_doc_url)
 // oder auf Dieters lokale doc_url zeigen. NICHT die DWD-Env (RUBICON_WORKSPACE_SA/-SUBJECT):
@@ -352,6 +358,7 @@ export function createApi(rootDir) {
           entscheide: db.entscheide.read(),
           reminder_log: db.reminderLog.read(),
           zielbild: db.zielbild.read(),
+          report_comments: db.kommentare.read(),
         })
       })
       // POST /api/sitzung — eine erfasste Sitzung speichern + Milestones aktualisieren
@@ -658,7 +665,7 @@ export function createApi(rootDir) {
               owner: owners.includes(x.owner) ? x.owner : null,
               due: /^\d{4}-\d{2}-\d{2}$/.test(x.due || '') ? x.due : null,
             }))
-            return json(200, { ok: true, ms_id: body.ms_id, vorschlaege: clean })
+            return json(200, { ok: true, ms_id: body.ms_id, vorschlaege: clean, modell: aiModelLabel() })
           })
       })
 
@@ -682,7 +689,7 @@ export function createApi(rootDir) {
             + `ENTSCHEIDE:\n${JSON.stringify(ents)}`
           runClaude(prompt, (err, out) => {
             if (err && !out) return json(500, { ok: false, error: String(err.message || err) })
-            return json(200, { ok: true, antwort: (out || '').trim() })
+            return json(200, { ok: true, antwort: (out || '').trim(), modell: aiModelLabel() })
           })
       })
 

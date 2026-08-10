@@ -153,7 +153,7 @@ async function main() {
   {
     const STATE_KEYS = ['identity', 'projekt_yaml', 'tasks', 'domain', 'briefings', 'fuehrungsrhythmus',
       'traktanden_docs', 'briefings_docs', 'fuehrungsrhythmus_doc', 'protokolle', 'traktanden',
-      'reports_index', 'entscheide', 'reminder_log', 'zielbild', 'server']
+      'reports_index', 'entscheide', 'reminder_log', 'zielbild', 'report_comments', 'server']
     const { status, json } = await call('/api/state', { method: 'GET' })
     const keys = Object.keys(json || {}).filter(k => k !== 'ok').sort()
     const keysOk = JSON.stringify(keys) === JSON.stringify([...STATE_KEYS].sort())
@@ -163,7 +163,7 @@ async function main() {
       && !JSON.stringify(json ?? {}).includes('protokolle_sensitiv')
     const checks = [
       ['state: GET → 200 + ok:true', status === 200 && json?.ok === true],
-      ['state: genau die 15 Client-Stores (nicht mehr, nicht weniger)', keysOk],
+      ['state: genau die 16 Client-Stores (nicht mehr, nicht weniger)', keysOk],
       ['state: projekt_yaml ist roher, js-yaml-parsebarer String', typeof json?.projekt_yaml === 'string' && yamlOk],
       ['state: protokolle_sensitiv in keiner Form enthalten', sensFrei],
     ]

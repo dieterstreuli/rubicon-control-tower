@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { T } from '../lib/theme.js'
-import { reloadKeepScroll, REPORTS, SERVER } from '../lib/data.js'
+import { reloadKeepScroll, REPORTS, REPORT_COMMENTS, SERVER } from '../lib/data.js'
 import { LVL_AUSWAHL, LVL_COLOR, LVL_LABEL } from '../lib/domain.js'
 import { BarChart3, FileText, Lock } from 'lucide-react'
 
@@ -10,16 +10,24 @@ export function ReportsView({ canEdit, role, me, today }) {
   const reports = REPORTS.reports || []
   const qOf = (d) => `${d.slice(0, 4)}-Q${Math.ceil(parseInt(d.slice(5, 7), 10) / 3)}`
   const defP = (lvl) => lvl === 'woche' ? today : lvl === 'monat' ? today.slice(0, 7) : qOf(today)
+  const komKey = (l, p) => `${l}:${p}:programm`
   const [level, setLevel] = useState('vr')
   const [period, setPeriod] = useState(defP('vr'))
-  const [comment, setComment] = useState('')
+  const [comment, setComment] = useState(() => REPORT_COMMENTS[komKey('vr', defP('vr'))] || '')
   const [ki, setKi] = useState(false)   // K5 (01.08.): KI-Entwurf mitgenerieren
   const [busy, setBusy] = useState(false)
-  const changeLevel = (l) => { setLevel(l); setPeriod(defP(l)); setComment('') }
+  const changeLevel = (l) => { const p = defP(l); setLevel(l); setPeriod(p); setComment(REPORT_COMMENTS[komKey(l, p)] || '') }
+  const changePeriod = (p) => { setPeriod(p); setComment(REPORT_COMMENTS[komKey(level, p)] || '') }
   const gen = async () => {
     setBusy(true)
     try {
-      if (comment.trim()) await fetch('/api/report/comment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: `${level}:${period}:programm`, text: comment.trim(), role, me }) })
+      const t = comment.trim()
+      const kkey = komKey(level, period)
+      const cr = await fetch('/api/report/comment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: kkey, text: t, role, me }) })
+      const cj = await cr.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
+      if (!cj.ok) { alert('Kommentar speichern fehlgeschlagen: ' + (cj.error || 'unbekannt')); setBusy(false); return }
+      // In-Memory-Store nachziehen, damit ein späterer Lauf nicht den Bootstrap-Stand zurückschreibt
+      if (t) REPORT_COMMENTS[kkey] = t; else delete REPORT_COMMENTS[kkey]
       const r = await fetch('/api/report/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ level, period, ki, role, me }) })
       const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
       if (j.ok) { sessionStorage.setItem('rubicon_tab', 'reports'); reloadKeepScroll() }
@@ -43,10 +51,10 @@ export function ReportsView({ canEdit, role, me, today }) {
             </select>
           </label>
           <label className="flex flex-col gap-1 text-[12px]"><span style={{ color: T.inkDim }}>Periode</span>
-            {level === 'woche' && <input type="date" value={period} onChange={e => setPeriod(e.target.value)} className="rounded border px-2 py-1" style={{ ...inp, fontFamily: T.mono }} />}
-            {level === 'monat' && <input type="month" value={period} onChange={e => setPeriod(e.target.value)} className="rounded border px-2 py-1" style={{ ...inp, fontFamily: T.mono }} />}
+            {level === 'woche' && <input type="date" value={period} onChange={e => changePeriod(e.target.value)} className="rounded border px-2 py-1" style={{ ...inp, fontFamily: T.mono }} />}
+            {level === 'monat' && <input type="month" value={period} onChange={e => changePeriod(e.target.value)} className="rounded border px-2 py-1" style={{ ...inp, fontFamily: T.mono }} />}
             {level === 'vr' && (
-              <select value={period} onChange={e => setPeriod(e.target.value)} className="rounded border px-2 py-1" style={inp}>
+              <select value={period} onChange={e => changePeriod(e.target.value)} className="rounded border px-2 py-1" style={inp}>
                 {['2026-Q3', '2026-Q4', '2027-Q1', '2027-Q2'].map(q => <option key={q} value={q} style={{ color: '#111' }}>{q}</option>)}
               </select>
             )}

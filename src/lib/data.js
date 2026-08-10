@@ -23,6 +23,7 @@ export let REPORTS = { reports: [] }             // reports_index.json
 export let ENTS = { seq: 0, entscheide: [] }     // entscheide.json
 export let REMLOG = { reminders: [] }            // reminder_log.json
 export let ZBSTORE = { zielbild: [] }            // zielbild.json
+export let REPORT_COMMENTS = {}                  // report_comments.json
 export let SERVER = false                        // Server-Modus (DWD-Env gesetzt): Drive- statt Volume-/Dieter-Links
 export let IDENTITY = null                        // Stufe 1: erkannte IAP-Identität {email, person, rollen, isKnown, viaIap}
 
@@ -49,6 +50,7 @@ export function initData(state) {
   ENTS = state.entscheide || { seq: 0, entscheide: [] }
   REMLOG = state.reminder_log || { reminders: [] }
   ZBSTORE = state.zielbild || { zielbild: [] }
+  REPORT_COMMENTS = state.report_comments || {}
   SERVER = !!state.server
   IDENTITY = state.identity || null
 

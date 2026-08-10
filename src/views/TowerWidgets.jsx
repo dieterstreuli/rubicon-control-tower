@@ -195,15 +195,16 @@ export function FragDieDaten() {
   const [frage, setFrage] = useState('')
   const [busy, setBusy] = useState(false)
   const [antwort, setAntwort] = useState(null)
+  const [modell, setModell] = useState(null)
   const [err, setErr] = useState(null)
   const ask = async () => {
     const f = frage.trim()
     if (!f || busy) return
-    setBusy(true); setErr(null); setAntwort(null)
+    setBusy(true); setErr(null); setAntwort(null); setModell(null)
     try {
       const r = await fetch('/api/ask', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ frage: f }) })
       const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
-      if (j.ok) setAntwort(j.antwort)
+      if (j.ok) { setAntwort(j.antwort); setModell(j.modell || null) }
       else setErr(j.error || 'unbekannt')
     } catch (e2) { setErr(String(e2)) }
     setBusy(false)
@@ -228,7 +229,7 @@ export function FragDieDaten() {
         <div className="mt-2 rounded border p-3 text-[12px] whitespace-pre-wrap" style={{ borderColor: T.brass + '44', background: T.panelSoft + '55', color: T.ink }}>
           {antwort}
           <div className="mt-2 pt-1.5 border-t text-[10px]" style={{ borderColor: T.line, color: T.inkFaint }}>
-            KI-Antwort (Sonnet) auf Basis des Plattform-Stands — bei Entscheidungsrelevanz im Tower/Register gegenprüfen.
+            KI-Antwort{modell ? ` (${modell})` : ''} auf Basis des Plattform-Stands — bei Entscheidungsrelevanz im Tower/Register gegenprüfen.
           </div>
         </div>
       )}

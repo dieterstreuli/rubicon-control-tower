@@ -136,6 +136,11 @@ Betriebsregeln (für alle Beteiligten):
 - **Rollen-Härtung (nur unter IAP):** das Handeln ist an die eigene Identität gebunden — ein Owner handelt nur im
   eigenen Namen; die Report-/Protokoll-Aktionen (Report erzeugen, Kommentar, Protokoll-Export) sind serverseitig
   rollen-gegated. Ohne IAP bleibt das bisherige freie Verhalten.
+- **„Frag die Daten" zeigt das echte KI-Modell:** die Antwort weist jetzt das tatsächlich genutzte Modell aus
+  (serverseitig das Vertex-Modell, lokal die CLI) statt eines festen Textes — bleibt auch bei einem Modellwechsel ehrlich.
+- **Report-Kommentar sichtbar & löschbar:** das Programm-/Chairman-Statement-Feld lädt einen bereits gespeicherten
+  Kommentar (sichtbar + editierbar) und leert ihn auf Wunsch (leeres Feld löscht den Eintrag serverseitig) — so
+  bleiben keine unsichtbaren Alt-Kommentare mehr stehen.
 
 **09.08.2026 — Serverseitige KI (Vertex), Wochen-Delta & Robustheit (dual-mode):**
 - **KI-Narrativ serverseitig (Vertex AI):** der **KI-Entwurf-Block** des Wochen-Reports (Narrativ +
