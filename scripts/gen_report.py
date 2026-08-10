@@ -236,11 +236,11 @@ def generate(level, period, ki=False):
         except Exception as ex:  # noqa: BLE001 — Report bleibt auch ohne Δ nutzbar
             body = f'<p class="muted">Δ-Woche nicht verfügbar ({e(str(ex)[:100])})</p>' + body
 
-    # K5/K3 (01.08.): optionaler KI-Block — Narrativ (nur Woche) + 2-Satz-Begründung
+    # K5/K3 (01.08.): optionaler KI-Block — Narrativ (alle Ebenen) + 2-Satz-Begründung
     # je gefährdetem/verzögertem MS. IMMER als ENTWURF gekennzeichnet; die Ampel
-    # selbst bleibt deterministisch. Fehler sind non-fatal.
+    # selbst bleibt deterministisch. Fehler/Leerfall werden sichtbar gemacht (nie still).
     if ki:
-        body += ki_block(level, doc, now)
+        body += ki_block(level, doc, now, label)
 
     html_doc = f"""<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">{CSS}</head><body>
 <div class="logo"><img src="data:image/png;base64,{LOGO}"></div>
@@ -344,7 +344,8 @@ def main():
             if i:
                 time.sleep(2)  # Chrome-Instanzen sauber trennen
             try:
-                res.append(generate(lvl, per, ki=(lvl == 'woche')))
+                # K5 (10.08.): KI-Entwurf jetzt in JEDEM Auto-Report (nicht nur Woche)
+                res.append(generate(lvl, per, ki=True))
             except Exception as ex:  # noqa: BLE001
                 log.exception("report failed level=%s periode=%s", lvl, per)
                 res.append({'ok': False, 'level': lvl, 'error': str(ex)})
@@ -358,7 +359,7 @@ def main():
 # Inline-Fallback des Prompt-Templates — kanonisch: scripts/prompts/ki_narrativ.txt.
 KI_PROMPT_FALLBACK = (
     'Du bist Programm-Analyst des AXS-Transformationsprogramms RUBICON. Antworte NUR mit einem JSON-Objekt:\n'
-    '{"narrativ": "<5-8 Sätze Management-Zusammenfassung der Woche — was geschah, was es fürs Programm bedeutet; nüchtern, deutsch>",\n'
+    '{"narrativ": "<5-8 Sätze Management-Zusammenfassung des Berichtszeitraums (siehe FAKTEN.zeitraum) — was geschah, was es fürs Programm bedeutet; nüchtern, deutsch>",\n'
     ' "begruendungen": {"<ms_id>": "<2 Sätze: warum gefährdet/verzögert + welche Gegenmassnahme naheliegt>"}}\n'
     'HARTE REGELN: Nutze AUSSCHLIESSLICH die folgenden Fakten — nichts erfinden, keine Zahlen ausserhalb der Daten. '
     'Wenn die Fakten für eine Begründung nicht reichen: "Datenlage unzureichend — beim Owner nachfassen." '
@@ -386,9 +387,14 @@ def render_delta_html(d):
     return ''.join(parts)
 
 
-def ki_block(level, doc, now):
-    """KI-ENTWURF: Narrativ (woche) + Ampel-Begründungen. Fakten-gebunden — der
-    Prompt erhält NUR Daten aus der Plattform; Ausgabe klar als Entwurf markiert."""
+_ZEITRAUM_WORT = {'woche': 'Woche', 'monat': 'Monat', 'vr': 'Quartal'}
+
+
+def ki_block(level, doc, now, label):
+    """KI-ENTWURF: Narrativ + Ampel-Begründungen für den Berichtszeitraum. Fakten-
+    gebunden — der Prompt erhält NUR Plattform-Daten; Ausgabe klar als Entwurf
+    markiert. Fehler/Leerfall werden sichtbar gemacht (nie stilles Verschwinden)."""
+    header = '<h2 style="color:#b07d2c">🤖 KI-Entwurf — ungeprüft, Freigabe durch CoS/DRS</h2>'
     try:
         allms = [m for w in doc['workstreams'] for m in w['milestones']]
         problems = [m for m in allms if status_of(m, now) in ('delayed', 'atRisk')][:12]
@@ -397,6 +403,7 @@ def ki_block(level, doc, now):
         if bp.exists():
             briefings = json.loads(bp.read_text())
         facts = {
+            'zeitraum': f'{_ZEITRAUM_WORT.get(level, level)} {label}',
             'stichtag': doc['meta'].get('today'),
             'problem_ms': [{
                 'id': m['id'], 'name': m.get('name'), 'owner': m.get('owner'), 'due': m.get('due'),
@@ -413,19 +420,22 @@ def ki_block(level, doc, now):
         out = ai_client.generate(prompt)
         m = re.search(r'\{[\s\S]*\}', out)
         data = json.loads(m.group(0)) if m else {}
-        parts = ['<h2 style="color:#b07d2c">🤖 KI-Entwurf — ungeprüft, Freigabe durch CoS/DRS</h2>']
-        if level == 'woche' and data.get('narrativ'):
+        parts = [header]
+        if data.get('narrativ'):
             parts.append(f'<p>{e(data["narrativ"])}</p>')
         beg = data.get('begruendungen') or {}
         if beg:
             rows = ''.join(f'<tr><td>{e(k)}</td><td>{e(v)}</td></tr>' for k, v in beg.items())
             parts.append(f'<h3>Ampel-Begründungen (Entwurf)</h3><table><tr><th>MS</th><th>Warum + Gegenmassnahme</th></tr>{rows}</table>')
         if len(parts) == 1:
-            return ''
-        parts.append('<p class="muted">Automatisch entworfen (Claude Sonnet) auf Basis der Plattform-Daten — Ampel und Zahlen bleiben deterministisch; dieser Block ist Interpretation und wird vor Verteilung geprüft.</p>')
+            # Modell lieferte nichts Verwertbares — sichtbar machen statt still verwerfen.
+            log.warning('ki_block: leere Modellausgabe level=%s period=%s', level, label)
+            parts.append('<p class="muted">Keine KI-Ausgabe für diesen Zeitraum (keine Auffälligkeiten oder leere Modellantwort) — bei Bedarf erneut erzeugen.</p>')
+        parts.append('<p class="muted">Automatisch entworfen auf Basis der Plattform-Daten — Ampel und Zahlen bleiben deterministisch; dieser Block ist Interpretation und wird vor Verteilung geprüft.</p>')
         return ''.join(parts)
-    except Exception as ex:  # noqa: BLE001
-        return f'<p class="muted">KI-Entwurf nicht verfügbar ({e(str(ex)[:120])})</p>'
+    except Exception as ex:  # noqa: BLE001 — sichtbar machen statt still ''
+        log.warning('ki_block fehlgeschlagen level=%s period=%s: %s', level, label, ex)
+        return f'{header}<p class="muted">KI-Entwurf nicht verfügbar: {e(str(ex)[:200])}. Ampel und Zahlen bleiben deterministisch; bitte erneut erzeugen.</p>'
 
 
 # ---------- Templates ----------

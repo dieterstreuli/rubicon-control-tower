@@ -254,7 +254,7 @@ def test_ki_block_uses_generate_and_builds_html():
         return '{"begruendungen": {"WS1-01": "Verzug wegen X. Gegenmassnahme Y."}}'
     ai_client.generate = fake_generate
     try:
-        html_out = gr.ki_block('monat', _ki_doc(), dt.date(2026, 8, 9))
+        html_out = gr.ki_block('monat', _ki_doc(), dt.date(2026, 8, 9), 'August 2026')
         assert 'KI-Entwurf' in html_out
         assert 'WS1-01' in html_out and 'Gegenmassnahme Y.' in html_out
         assert 'Freigabe durch CoS/DRS' in html_out
@@ -273,7 +273,7 @@ def test_ki_block_prompt_from_template():
         return '{}'
     ai_client.generate = fake_generate
     try:
-        gr.ki_block('monat', _ki_doc(), dt.date(2026, 8, 9))
+        gr.ki_block('monat', _ki_doc(), dt.date(2026, 8, 9), 'August 2026')
         p = seen['prompt']
         assert p.startswith('Du bist Programm-Analyst des AXS-Transformationsprogramms RUBICON.')
         assert 'Kein Lob, kein Alarmismus.\n\nFAKTEN:\n' in p     # exakt wie der alte Inline-Prompt
@@ -293,17 +293,17 @@ def test_ki_block_error_placeholder():
         raise RuntimeError('vertex kaputt')
     ai_client.generate = fake_generate
     try:
-        html_out = gr.ki_block('monat', _ki_doc(), dt.date(2026, 8, 9))
+        html_out = gr.ki_block('monat', _ki_doc(), dt.date(2026, 8, 9), 'August 2026')
         assert 'KI-Entwurf nicht verfügbar' in html_out
         assert 'vertex kaputt' in html_out
     finally:
         ai_client.generate = orig
 
 
-# ── 14. --auto weist ki NUR dem Wochen-Report zu (Fix 1) ─────────────────────
+# ── 14. --auto weist ki JEDEM Report zu (alle Ebenen) ────────────────────────
 #      main() ohne echte Report-Generierung: gr.generate wird durch einen Spy
 #      ersetzt, der (level, ki) sammelt; gr.time.sleep + gr.DATA gemockt.
-def test_auto_assigns_ki_only_to_woche():
+def test_auto_assigns_ki_to_all_levels():
     import gen_report as gr
 
     orig_generate = gr.generate
@@ -337,8 +337,8 @@ def test_auto_assigns_ki_only_to_woche():
         shutil.rmtree(d, ignore_errors=True)
 
     assert ('woche', True) in calls
-    assert ('monat', False) in calls
-    assert ('vr', False) in calls
+    assert ('monat', True) in calls
+    assert ('vr', True) in calls
 
 
 # ── 15. _ai_credentials: Impersonation-Verdrahtung (Source-ADC -> rubicon-ai@) ─
@@ -425,7 +425,7 @@ TESTS = [
     test_ki_block_uses_generate_and_builds_html,
     test_ki_block_prompt_from_template,
     test_ki_block_error_placeholder,
-    test_auto_assigns_ki_only_to_woche,
+    test_auto_assigns_ki_to_all_levels,
     test_ai_credentials_impersonation_wiring,
     test_local_cli_nonzero_exit_raises,
 ]

@@ -14,7 +14,7 @@ export function ReportsView({ canEdit, role, me, today }) {
   const [level, setLevel] = useState('vr')
   const [period, setPeriod] = useState(defP('vr'))
   const [comment, setComment] = useState(() => REPORT_COMMENTS[komKey('vr', defP('vr'))] || '')
-  const [ki, setKi] = useState(false)   // K5 (01.08.): KI-Entwurf mitgenerieren
+  const [ki, setKi] = useState(true)   // K5 (01.08./10.08.): KI-Entwurf mitgenerieren, per Default an
   const [busy, setBusy] = useState(false)
   const changeLevel = (l) => { const p = defP(l); setLevel(l); setPeriod(p); setComment(REPORT_COMMENTS[komKey(l, p)] || '') }
   const changePeriod = (p) => { setPeriod(p); setComment(REPORT_COMMENTS[komKey(level, p)] || '') }
@@ -64,7 +64,7 @@ export function ReportsView({ canEdit, role, me, today }) {
           </label>
           {canEdit && (
             <label className="flex items-center gap-1.5 pb-2 text-[11.5px] cursor-pointer" style={{ color: ki ? T.brass : T.inkDim }}
-              title="Ergänzt den Report um einen klar markierten KI-ENTWURF: Wochen-Narrativ + 2-Satz-Begründung je gefährdetem/verzögertem Meilenstein. Ampel & Zahlen bleiben deterministisch; du gibst vor Verteilung frei.">
+              title="Ergänzt den Report um einen klar markierten KI-ENTWURF: Narrativ zum Berichtszeitraum + 2-Satz-Begründung je gefährdetem/verzögertem Meilenstein. Ampel & Zahlen bleiben deterministisch; du gibst vor Verteilung frei.">
               <input type="checkbox" checked={ki} onChange={e => setKi(e.target.checked)} /> 🤖 KI-Entwurf (Narrativ + Ampel-Begründungen)
             </label>
           )}

@@ -427,7 +427,7 @@ Zugriffskonzept.
 - **Prod-Narrativ: `claude-sonnet-5` @ `eu`** (Provider `anthropic`) — verdrahtet, mit dem nächsten Deploy
   live. Ein Smoke als `rubicon-ai@` gegen den eu-Multi-Region-Endpoint (EEA) bestätigt den Aufruf; der
   Claude-Zweig selbst blieb dafür unverändert, das Prompt-Template ist auf diese Modellfamilie abgestimmt.
-  Right-sized für die Aufgabe (Wochen-Narrativ + Ampel-Begründungen aus kuratierten Programm-Fakten);
+  Right-sized für die Aufgabe (Report-Narrativ + Ampel-Begründungen aus kuratierten Programm-Fakten);
   `claude-opus-5` @ `eu` wäre die stärkere, aber spürbar teurere Alternative.
 - **Gemini ist schaltbar (`enabled`), nicht Standard.** Der Gemini-Zweig nutzt die **`google-genai`-SDK**
   (nicht mehr die alte `vertexai`) — damit tragen der `eu`-Endpoint und die **Flash-3.x-Familie

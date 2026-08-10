@@ -141,6 +141,12 @@ Betriebsregeln (für alle Beteiligten):
 - **Report-Kommentar sichtbar & löschbar:** das Programm-/Chairman-Statement-Feld lädt einen bereits gespeicherten
   Kommentar (sichtbar + editierbar) und leert ihn auf Wunsch (leeres Feld löscht den Eintrag serverseitig) — so
   bleiben keine unsichtbaren Alt-Kommentare mehr stehen.
+- **KI-Entwurf in jedem Report:** der KI-Entwurf (Narrativ + Ampel-Begründungen) wird nun für **alle Ebenen**
+  (Woche/Monat/Quartal) erzeugt — der Narrativ war bisher auf den Wochen-Report beschränkt. Die automatischen
+  Reports enthalten ihn durchgehend; im UI ist die KI-Checkbox per Default aktiv (für einen schnellen Report ohne
+  KI abwählbar).
+- **KI-Entwurf scheitert nicht mehr stumm:** ein Modell-Fehler oder eine leere Antwort erscheint jetzt als klar
+  markierte Notiz im Report (statt spurlos zu verschwinden) — bei Fehlern mit Grund, bei leerer Antwort als Hinweis.
 
 **09.08.2026 — Serverseitige KI (Vertex), Wochen-Delta & Robustheit (dual-mode):**
 - **KI-Narrativ serverseitig (Vertex AI):** der **KI-Entwurf-Block** des Wochen-Reports (Narrativ +
