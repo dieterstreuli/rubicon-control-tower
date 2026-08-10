@@ -49,6 +49,10 @@ export default function App() {
   // freie Wahl ohne hartkodierten Namen.
   const [me, setMe] = useState(() => (viaIap && IDENTITY.person) || '')
   const allowedRoles = (viaIap && IDENTITY.rollen && IDENTITY.rollen.length) ? IDENTITY.rollen : ROLES
+  // Klick auf die angezeigte Identität öffnet das Willkommens-Panel erneut: Session-Flag
+  // löschen + Panel via key neu mounten (liest das jetzt leere Flag → wird wieder angezeigt).
+  const [welcomeNonce, setWelcomeNonce] = useState(0)
+  const reopenWelcome = () => { sessionStorage.removeItem('rubicon_welcome_seen'); setWelcomeNonce(n => n + 1) }
   const [theme, setTheme] = useState(() => { const m = initialTheme(); applyTheme(m); return m })
   const toggleTheme = () => { const next = theme === 'dark' ? 'light' : 'dark'; applyTheme(next); setTheme(next) }
   // IA-Konsolidierung 01.08. (B0): 5 Tabs. Alte Tab-IDs (inputs/intro/streams/
@@ -357,15 +361,17 @@ export default function App() {
             <b style={{ color: info.c }}>Aktive Rolle: {info.t}</b>
             <span style={{ color: T.inkDim }}>· {info.d}</span>
             {viaIap && (
-              <span style={{ marginLeft: 'auto', color: T.inkFaint, fontFamily: T.mono, fontSize: '10.5px' }}>
+              <button type="button" onClick={reopenWelcome} title="Willkommen erneut anzeigen"
+                style={{ marginLeft: 'auto', color: T.inkFaint, fontFamily: T.mono, fontSize: '10.5px',
+                  background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}>
                 Angemeldet als {IDENTITY.person} · {IDENTITY.email}{!IDENTITY.isKnown && ' — unbekannt, nur lesend'}
-              </span>
+              </button>
             )}
           </div>
         )
       })()}
 
-      <WelcomePanel />
+      <WelcomePanel key={welcomeNonce} />
 
       <main className="p-4 md:p-6 space-y-5">
         {driftDays > 2 && (

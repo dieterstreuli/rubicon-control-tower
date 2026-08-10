@@ -121,7 +121,8 @@ Betriebsregeln (für alle Beteiligten):
   geteilten Betrieb bleibt das bisherige **freie Verhalten** (freie Rollen-/Personenwahl, keine Server-Durchsetzung)
   — kein Header-Spoofing, kein stiller Fail-open.
 - **UI:** Rolle/Person aus der Identität, Rollen-Auswahl auf die erlaubten beschränkt, „Angemeldet als …" + einmalige
-  Begrüßung mit Funktionsübersicht; der bisher fest vorbelegte Owner-Name entfällt.
+  Begrüßung mit Funktionsübersicht; der bisher fest vorbelegte Owner-Name entfällt. Ein Klick auf die „Angemeldet
+  als …"-Anzeige öffnet die Begrüßung jederzeit erneut.
 - **Betrieb:** `identity_map.json` als Stammdaten der Merge-Brücke (SEED überschreibt Volume, `DEPLOYMENT_GCP.md §10`).
   Erster Schritt der Migration in den eigenen Web-/Nutzerkontext — Gesamtplan: `docs/web-context-migration-plan.md`.
 - **Robustheit (Deploy):** eine während eines Deploys offene Seite lud bisher den alten, nun umbenannten Asset-Chunk
