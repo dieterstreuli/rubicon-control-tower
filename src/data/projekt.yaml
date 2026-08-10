@@ -2222,7 +2222,7 @@ workstreams:
         depends_on: []
         nachlauf: false
       - id: WS7-02
-        name: 'Overhead-Zahlengrundlage final: per-Kopf-OPEX + aktualisierte Gruppenfunktionsliste + Elysium-Letztstand; von VIE getragener Overhead in EUR beziffert (Schlüssel 9,8% AXS / 20,5% AAS)'
+        name: 'Overhead-Zahlengrundlage final: per-Kopf-OPEX + aktualisierte Gruppenfunktionsliste + Elysium-Letztstand; von VIE getragener Overhead in EUR beziffert (Schlüssel 9,8% AXS / 20,5% AAS) ZWISCHENSTAND 10.08.2026 — Pajor hat mit AXS_OPEX_FC_V2_2026-07-31 (Elysium 4.0) alle 6 geforderten Punkte geliefert (Elysium-Markierung je Kopf, Austrittsdaten, Recharge Key und OPEX je Zeile, Fuehrungsebene mit Entity und Gross pY, FX CHF/EUR; Auswertung Elysium_2026_Folie1 mit 74 Koepfen 2026 und Saving 4''443''205). NICHT final ist allein der Datenstand vom 31.07. — die Holding-Kostenbasis haengt an Simon Lei, dessen aktueller FC 2027 erst Ende KW33 kommt. Der Milestone ist damit NICHT durch Pajor blockiert.'
         owner: Thomas Pajor
         start: '2026-07-28'
         due: '2026-08-14'
@@ -2230,7 +2230,7 @@ workstreams:
         phase: Phase 0
         gate: null
         critical: false
-        progress: 0
+        progress: 60
         depends_on: []
         nachlauf: false
       - id: WS7-03
@@ -2995,6 +2995,6 @@ inputs:
       - WS6-02-H02
   - id: IN-17
     owner: Thomas Pajor
-    item: VIE-Overhead in EUR + aktualisierte Gruppenfunktionsliste + Elysium-Letztstand (Basis für den Restrukturierungs-Business-Case; per-Kopf-OPEX)
+    item: 'VIE-Overhead in EUR + aktualisierte Gruppenfunktionsliste + Elysium-Letztstand (Basis für den Restrukturierungs-Business-Case; per-Kopf-OPEX) ZWISCHENSTAND 10.08.2026 — Pajor hat mit AXS_OPEX_FC_V2_2026-07-31 (Elysium 4.0) alle 6 geforderten Punkte geliefert (Elysium-Markierung je Kopf, Austrittsdaten, Recharge Key und OPEX je Zeile, Fuehrungsebene mit Entity und Gross pY, FX CHF/EUR; Auswertung Elysium_2026_Folie1 mit 74 Koepfen 2026 und Saving 4''443''205). NICHT final ist allein der Datenstand vom 31.07. — die Holding-Kostenbasis haengt an Simon Lei, dessen aktueller FC 2027 erst Ende KW33 kommt. Der Milestone ist damit NICHT durch Pajor blockiert.'
     due: '2026-08-14'
     status: offen
