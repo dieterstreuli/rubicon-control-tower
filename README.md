@@ -112,6 +112,26 @@ Betriebsregeln (für alle Beteiligten):
 
 ## Changelog (IT / Didit)
 
+**10.08.2026 — Reporte serverseitig auf die gebrandete Vorlagen-Engine (Weg 1), einheitliche Vorlagen-Basis:**
+- Die serverseitige Report-Erzeugung (Woche/Monat/Quartal) läuft jetzt über die **AXS-gebrandete
+  Vorlagen-Engine (Weg 1)** statt über den früheren Markdown→Doc-Zwischenweg. Ergebnis: ein einheitlich
+  gebrandetes Google-Doc + PDF mit **Logo im Header auf jeder Seite**, **Seitenzahlen** und dynamischer
+  Fusszeile. Der **KI-Entwurf** (Narrativ + Ampel-Begründungen) steht damit erstmals **im Doc selbst** —
+  vorher landete er nur im lokalen PDF-Pfad. Ampel/Zahlen bleiben deterministisch; der KI-Block bleibt
+  klar als ungeprüfter Entwurf markiert.
+- **Vollständigkeit gewahrt:** die Reporte enthalten alle bisherigen Inhalte (VR: Kennzahlen inkl.
+  Kern-Ende-Projektion, Sequenz-Gates, Entscheidungsbedarf mit Quelle, Top-Risiken; Monat: Bewegungen,
+  Fortschritts-Meldungen und Kommentare je Strom, überfällige Commitments; Woche: Δ-Fenster + Ampel-
+  Wechsel/Fortschritt/erledigte Handlungen/Entscheide, Aktivität je Strom) — erweitert um Branding,
+  Seitenzahlen und den KI-Block. Es geht kein Inhalt verloren.
+- **Einheitliche Basis für alle Vorlagen:** eine gemeinsame „Report-Basis" (Marke + Seitenzahlen +
+  dynamische `{{FOOTER}}`-Fusszeile) wird kopiert und je Typ nur der Rumpf gefüllt. Die vier bestehenden
+  Fix-Struktur-Vorlagen (Traktanden/Entscheid/Briefing/Führungsrhythmus) laufen jetzt auf **derselben
+  Basis** (Logo jede Seite + Seitenzahlen + dynamische Fusszeile). Vorlagen-Bau reproduzierbar unter
+  `scripts/templates_build/` (inkl. Anker-Manifest); IDs in `scripts/_tools/rubicon_templates.json`.
+- **Dual-Mode unverändert:** der Server fasst nur `server_*`-Felder an; Dieters lokaler Report-Pfad
+  (HTML→PDF + eigenes Doc) bleibt vollständig unberührt.
+
 **10.08.2026 — Identitäts-Erkennung, Begrüßung & serverseitiges Rollen-Gate (nur unter IAP):**
 - Die App erkennt jetzt den per **Google IAP** angemeldeten Nutzer serverseitig (Header → Person/Rollen über
   `src/data/identity_map.json`) und liefert die Identität in `GET /api/state`. **Schreib-Aktionen** werden
@@ -262,7 +282,10 @@ Doc-Typ wählt beim Design **einen** davon.
 Eine AXS-gebrandete **Google-Doc-Vorlage** je Typ wird serverseitig gefüllt: `drive.files.copy` →
 `documents.batchUpdate` (`replaceAllText` für Platzhalter, Anker→Tabelle für Wiederhol-Gruppen,
 `createParagraphBullets` für Listen) → `drive.files.export(pdf)`. **Kein Chrome.**
-→ **Traktanden, Entscheid, Briefing, Führungsrhythmus.**
+→ **Traktanden, Entscheid, Briefing, Führungsrhythmus** sowie die **Reporte (Woche/Monat/Quartal)
+serverseitig** (seit 10.08.2026 — löst den früheren Markdown→Doc-Zwischenweg für Reporte ab; der
+KI-Entwurf steht damit im Doc selbst). Alle Vorlagen teilen **eine gebrandete Basis** (Logo je Seite +
+Seitenzahlen + dynamische `{{FOOTER}}`-Fusszeile); reproduzierbar unter `scripts/templates_build/`.
 Nimm ihn, wenn: **feste Struktur**; Inhalt = Felder + Wiederhol-Tabellen + Bullets; Branding soll
 **ohne Code** in Google Docs editierbar sein (WYSIWYG); ein lebendes Google Doc als Nebenprodukt
 gewünscht ist. **Anleitung** (Vorlage bauen + rendern, API, Modifier, Fallstricke):
@@ -291,7 +314,8 @@ Das in Python erzeugte `render_*`-HTML wird an den Gotenberg-Container geschickt
 zurückgegeben — **optisch identisch** zum lokalen Chrome-Pfad (`html_to_pdf`). Templating bleibt in
 Python. Dedizierte Doku (Code-Verhalten, betroffene Generatoren, Provisionierung):
 [`docs/gotenberg-html-pdf.md`](docs/gotenberg-html-pdf.md).
-→ **Report, Protokoll.**
+→ **Protokoll** (sowie Dieters **lokaler** Report-Pfad; der **serverseitige** Report läuft seit
+10.08.2026 über Weg 1, s.o.).
 Nimm ihn, wenn: **berechnetes/bedingtes Layout** über einfache Sektionen hinaus (farbige Ampel-Pills,
 Inline-Balken, Narrativ-Prosa, git-Delta, KI-Entwürfe, Level-Varianten VR/Monat/Woche); oder schon
 bewiesenes HTML/CSS existiert; oder pixelgenaues Druck-Layout zählt.

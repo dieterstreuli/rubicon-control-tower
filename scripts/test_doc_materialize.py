@@ -3,7 +3,14 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "_to
 import doc_materialize as dm
 
 def test_template_id_from_config():
-    assert dm.template_id("traktanden") == "1CfqQ4ZSdwXvuB1LysheQnJraEssIfBjoDgZ2_KZtXsQ"
+    # Gegen die Config pruefen (nicht gegen eine hartkodierte ID) — IDs aendern sich bei
+    # Vorlagen-Rebuild. Zusaetzlich: die Report-Typen (woche/monat/vr) sind registriert.
+    import json
+    from pathlib import Path
+    cfg = json.loads((Path(dm.__file__).parent / "rubicon_templates.json").read_text())
+    assert dm.template_id("traktanden") == cfg["traktanden"]
+    for typ in ("woche", "monat", "vr", "entscheide", "briefings", "fuehrungsrhythmus"):
+        assert dm.template_id(typ) == cfg[typ] and cfg[typ]
 
 def test_template_id_env_override(monkeypatch=None):
     os.environ["RUBICON_TEMPLATE_ENTSCHEIDE"] = "OVERRIDE-1"

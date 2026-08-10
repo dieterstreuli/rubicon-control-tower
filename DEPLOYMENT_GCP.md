@@ -236,6 +236,14 @@ im README): lokal unverändert (Chrome + User-OAuth), serverseitig nur wenn die 
 gesetzt sind. **Diese Env tragen die Jobs UND — seit 07.08.2026 — der Web-Service** (für die
 on-demand Drive/Docs-Aktionen der App, s. §11); die Umschaltung erfolgt allein über die Env, kein Flag.
 
+**Report-Doc = gebrandete Vorlage (seit 10.08.2026):** der Job baut das Report-Doc jetzt über die
+Vorlagen-Engine (Weg 1, `doc_template`/`doc_materialize`) statt aus Markdown — **dieselbe Job-
+Infrastruktur/Env, nur der Doc-Aufbau wechselt**. Die Report-Vorlagen-IDs (`woche`/`monat`/`vr`) stehen
+in `scripts/_tools/rubicon_templates.json`; alle Vorlagen (Report + Fix-Struktur) teilen die gebrandete
+„Report-Basis" (Logo je Seite + Seitenzahlen + dynamische `{{FOOTER}}`-Fusszeile). Der KI-Entwurf steht
+damit im Doc selbst. Ein neuer Job-Lauf **nach dem Deploy** rendert die Reporte gebrandet neu (das
+template_id-inklusive Hash-Gating erzwingt den Re-Render). Dieters lokaler Report-Pfad bleibt unberührt.
+
 ### 9.1 Identitäts-Kette (keyless Domain-Wide-Delegation)
 
 | Element | Wert | Zweck |

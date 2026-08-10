@@ -150,7 +150,11 @@ def apply_modifiers(raw, mods, values):
 
 def _all_text(doc):
     """Gesamter Textinhalt eines Docs (Body-Paragraphen + Tabellenzellen, rekursiv) fuer das
-    Token-Scanning."""
+    Token-Scanning — INKL. Header-/Footer-Segmente. `replaceAllText` wirkt segment-uebergreifend;
+    der Scan muss darum auch Header/Footer sehen, sonst bleibt ein dort platziertes {{FOOTER}}
+    (dynamische Fusszeile) unersetzt. Seitenzahl-Autofelder (autoText) haben keinen textRun und
+    werden ignoriert. Tabellen-/Bullet-ANKER liegen ausschliesslich im Body (_find_anchor_index
+    scannt nur den Body) — Header/Footer tragen nur reine {{FELD}}-Werte, keine Anker."""
     out = []
 
     def walk(elements):
@@ -167,6 +171,9 @@ def _all_text(doc):
                     for cell in row.get("tableCells", []):
                         walk(cell.get("content", []))
     walk(doc.get("body", {}).get("content", []))
+    for _seg in ("headers", "footers"):
+        for _s in (doc.get(_seg) or {}).values():
+            walk(_s.get("content", []))
     return "".join(out)
 
 
@@ -283,7 +290,8 @@ def _cell_text_style_requests(cell, text_style, fields):
 
 
 def insert_table_at_anchor(docs, doc_id, anchor, header, rows, col_widths_pt=None,
-                           header_bg=None, header_text_rgb=None, remove_anchor=True):
+                           header_bg=None, header_text_rgb=None, cell_text_rgb=None,
+                           remove_anchor=True):
     """Ersetzt den Anker `{{...}}` durch eine echte Docs-Tabelle: erste Zeile = header,
     danach je Eintrag eine Datenzeile. rows = Liste; ein Eintrag ist eine Liste (Zellen
     als Strings) ODER ein dict {"group": label, "bg": rgb?, "text_rgb": rgb?} fuer eine
@@ -349,7 +357,7 @@ def insert_table_at_anchor(docs, doc_id, anchor, header, rows, col_widths_pt=Non
     #     moeglich, weil der Zelltext eben erst eingefuegt wurde; Styling verschiebt keine
     #     Indizes, darum ein frisches get.
     hdr_rgb = header_text_rgb or ({"red": 1, "green": 1, "blue": 1} if header_bg else None)
-    if hdr_rgb is not None or group_rows:
+    if hdr_rgb is not None or group_rows or cell_text_rgb:
         doc = docs.documents().get(documentId=doc_id).execute()
         table_el = _find_table_at(doc, idx)
         text_reqs = []
@@ -369,6 +377,16 @@ def insert_table_at_anchor(docs, doc_id, anchor, header, rows, col_widths_pt=Non
                     ts["foregroundColor"] = {"color": {"rgbColor": meta["text_rgb"]}}
                     fields = "bold,foregroundColor"
                 text_reqs += _cell_text_style_requests(trows[ri]["tableCells"][0], ts, fields)
+            # Per-Zell-Textfarbe (z.B. Ampel-Codierung). Schluessel: (Daten-Zeilen-Index 0-basiert,
+            # Spalten-Index) -> rgbColor. Daten-Zeilen = Body-Zeilen ohne Kopf/Gruppen-Baender.
+            if cell_text_rgb:
+                data_idx = [i for i in range(1, len(trows)) if i not in group_rows]
+                for (dr, c), rgb in cell_text_rgb.items():
+                    if dr < len(data_idx) and c < len(trows[data_idx[dr]]["tableCells"]):
+                        text_reqs += _cell_text_style_requests(
+                            trows[data_idx[dr]]["tableCells"][c],
+                            {"bold": True, "foregroundColor": {"color": {"rgbColor": rgb}}},
+                            "bold,foregroundColor")
         if text_reqs:
             _batch(docs, doc_id, text_reqs)
 
@@ -496,6 +514,7 @@ def _copy_fill_export(drive, docs, template_id, folder_id, name, values, tables,
                                    col_widths_pt=spec.get("col_widths_pt"),
                                    header_bg=spec.get("header_bg"),
                                    header_text_rgb=spec.get("header_text_rgb"),
+                                   cell_text_rgb=spec.get("cell_text_rgb"),
                                    remove_anchor=False)
         # 2c. Anker->Bullet-Listen (z.B. Briefing-Deliverables, FR-Grundsaetze) — ALLE Anker
         #     dieses Docs in EINEM batchUpdate (Multi-Bullet), statt je Anker einem Round-Trip.
@@ -547,7 +566,19 @@ def render_pdf_from_template(drive, docs, template_id, folder_id, name, values,
 
 
 def render_doc_and_pdf(drive, docs, template_id, folder_id, name, values, tables=None, bullets=None):
-    """Wie render_pdf_from_template, aber das gebrandete Doc BLEIBT (Weg-1-Endprodukt)."""
-    doc_id, pdf = _copy_fill_export(drive, docs, template_id, folder_id, name, values, tables, bullets)
+    """Wie render_pdf_from_template, aber das gebrandete Doc BLEIBT (Weg-1-Endprodukt).
+    NUR im Erfolgsfall behalten: bricht das Fuellen mittendrin ab, traegt die Exception die
+    `doc_id` des halbfertigen Kopie-Docs (raw {{...}} sichtbar) -> trashen, nicht im geteilten
+    Reports-/Docs-Ordner liegen lassen (on-demand-Render, fuer alle im Ordner sichtbar)."""
+    try:
+        doc_id, pdf = _copy_fill_export(drive, docs, template_id, folder_id, name, values, tables, bullets)
+    except Exception as ex:  # noqa: BLE001
+        did = getattr(ex, "doc_id", None)
+        if did:
+            try:
+                drive.files().delete(fileId=did, supportsAllDrives=True).execute()
+            except Exception as ce:  # noqa: BLE001 — Cleanup-Fehler darf den Original-Fehler nicht verdecken
+                log.warning("cleanup delete doc_id=%s fehlgeschlagen: %s", did, ce)
+        raise
     log.info("doc rendered+kept doc_id=%s bytes=%d", doc_id, len(pdf))
     return doc_id, pdf

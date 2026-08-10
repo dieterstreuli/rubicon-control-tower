@@ -219,41 +219,12 @@ def generate(level, period, ki=False):
     def kom(scope):
         return comments.get(f'{ckey}:{scope}', '')
 
-    if level == 'vr':
-        body = render_vr(doc, meta, now, inper, label, kom)
-        title = f"VR-Report — {label}"
-    elif level == 'monat':
-        body = render_monat(doc, meta, now, inper, start, end, label, kom)
-        title = f"Monats-Report — {label}"
-    else:
-        body = render_woche(doc, meta, now, inper, start, end, label, kom)
-        title = f"Wochen-Report — {label}"
-        # K3 (01.08.): deterministischer Δ-Block («Was hat sich geändert?») aus
-        # git-Historie + Stores — reine Fakten, vorangestellt.
-        try:
-            import gen_delta
-            body = render_delta_html(gen_delta.compute(7)) + body
-        except Exception as ex:  # noqa: BLE001 — Report bleibt auch ohne Δ nutzbar
-            body = f'<p class="muted">Δ-Woche nicht verfügbar ({e(str(ex)[:100])})</p>' + body
-
-    # K5/K3 (01.08.): optionaler KI-Block — Narrativ (alle Ebenen) + 2-Satz-Begründung
-    # je gefährdetem/verzögertem MS. IMMER als ENTWURF gekennzeichnet; die Ampel
-    # selbst bleibt deterministisch. Fehler/Leerfall werden sichtbar gemacht (nie still).
-    if ki:
-        body += ki_block(level, doc, now, label)
-
-    html_doc = f"""<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">{CSS}</head><body>
-<div class="logo"><img src="data:image/png;base64,{LOGO}"></div>
-<h1>{e(title)}</h1>
-<div class="sub">Projekt RUBICON («Alea iacta est.») · Programm-Ampel {pill(prog_ampel)} · Stand {STAMP} · automatisch aus der RUBICON-Plattform verdichtet</div>
-{body}
-<div class="foot">Automatisch generiert aus projekt.yaml + protokolle.json — verdichtete Sicht, kein manuelles Zusammentragen. Live-Detail: RUBICON Control Tower. Vertraulich ExBoD/VR.</div>
-</body></html>"""
+    title = {'vr': f'VR-Report — {label}', 'monat': f'Monats-Report — {label}',
+             'woche': f'Wochen-Report — {label}'}[level]
 
     OUT.mkdir(parents=True, exist_ok=True)
     slug = f'{level}-{period}'.replace('/', '-')
     pdf_rel = f'/reports/{slug}.pdf'
-    md = build_md(title, label, prog_ampel, level, doc, meta, now, inper, start, end, kom)
     idx = json.loads((DATA / 'reports_index.json').read_text())
     prev = next((r for r in idx['reports'] if r['id'] == slug), None)
     # Dual-Mode: die doc_id ist umgebungsspezifisch. Der Server fuehrt eigene Felder
@@ -264,49 +235,56 @@ def generate(level, period, ki=False):
     pdf_file_id = prev.get('server_pdf_id') if prev else None
 
     if server:
+        # Server (Web-App): gebrandete Template-Engine (Weg 1). report_spec -> {{ANKER}} füllen,
+        # gebrandetes Doc BLEIBT + PDF. Ersetzt den frueheren MD->Doc-Weg (build_md/gdoc_pdf) fuer
+        # Reporte. Der KI-Entwurf (Narrativ/Begruendungen) steckt jetzt IM Doc (report_spec), nicht
+        # mehr nur im lokalen HTML. materialize legt je Lauf ein neues Doc an und trasht das vorige
+        # (selbstheilend gegen stale/geloeschte prev-IDs — trash+upload sind non-fatal).
         from googleapiclient.discovery import build
-        from googleapiclient.errors import HttpError
         from _google_auth import load_credentials
         sys.path.insert(0, str(Path(__file__).parent / '_tools'))
-        import gdoc_pdf
+        import doc_materialize as dm
         creds = load_credentials()
         _t0 = time.monotonic()
         drive = build('drive', 'v3', credentials=creds)
         docs = build('docs', 'v1', credentials=creds)
-        if not doc_id:
-            doc_id = gdoc_pdf.create_gdoc_in_folder(drive, title, _reports_folder())
-        try:
-            gdoc_pdf.build_doc_body(docs, doc_id, md)
-        except HttpError as ex:
-            # server_doc_id nicht erreichbar (geloescht, oder Alt-Seed zeigt noch auf ein
-            # FREMDES Doc, z.B. Dieters lokale Docs) -> eigenes Doc im Shared-Ordner neu
-            # anlegen und fortfahren. Selbstheilend, auch gegen kuenftige Re-Seeds.
-            status = getattr(getattr(ex, 'resp', None), 'status', None)
-            if status in (403, 404):
-                log.warning("server doc_id=%s not accessible (%s) — creating fresh server doc",
-                            doc_id, status)
-                doc_id = gdoc_pdf.create_gdoc_in_folder(drive, title, _reports_folder())
-                gdoc_pdf.build_doc_body(docs, doc_id, md)
-            else:
-                raise
-        pdf = gdoc_pdf.export_gdoc_pdf(drive, doc_id)
+        spec = report_spec(level, doc, meta, now, inper, start, end, label, prog_ampel, kom, ki=ki)
+        r = dm.materialize(drive, docs, template_id=dm.template_id(level), name=title,
+                           folder_id=_reports_folder(), values=spec['values'],
+                           tables=spec.get('tables'), bullets=spec.get('bullets'),
+                           prev_doc_id=doc_id, prev_pdf_id=pdf_file_id)
+        pdf = r['pdf_bytes']
+        doc_id = r['doc_id']
+        # materialize-Upload ist non-fatal -> pdf_id kann None sein; validen alten Wert NICHT
+        # mit None ueberschreiben (sonst geht der Link auf das eingefrorene Drive-PDF verloren).
+        pdf_file_id = r['pdf_id'] or pdf_file_id
         (OUT / f'{slug}.pdf').write_bytes(pdf)
-        # PDF zusaetzlich als eingefrorene Datei in die Shared-Ablage (neben dem editierbaren
-        # Doc) — update-in-place ueber server_pdf_id; Self-Heal wenn die Datei-ID stale ist.
-        try:
-            pdf_file_id = gdoc_pdf.upload_pdf_to_folder(drive, f'{title}.pdf', _reports_folder(), pdf, pdf_file_id)
-        except HttpError as ex:
-            status = getattr(getattr(ex, 'resp', None), 'status', None)
-            if status in (403, 404):
-                log.warning("server pdf file_id=%s not accessible (%s) — creating fresh pdf",
-                            pdf_file_id, status)
-                pdf_file_id = gdoc_pdf.upload_pdf_to_folder(drive, f'{title}.pdf', _reports_folder(), pdf, None)
-            else:
-                raise
         log.info("server report slug=%s doc_id=%s pdf_id=%s pdf_bytes=%d total_ms=%d",
                  slug, doc_id, pdf_file_id, len(pdf), int((time.monotonic() - _t0) * 1000))
     else:
-        # --- lokaler Pfad UNVERAENDERT (heutiges html_to_pdf + md_to_gdoc-Subprocess) ---
+        # --- lokaler Pfad (Dieter, Mac) UNVERAENDERT: HTML->Chrome-PDF + md_to_gdoc-Subprocess ---
+        if level == 'vr':
+            body = render_vr(doc, meta, now, inper, label, kom)
+        elif level == 'monat':
+            body = render_monat(doc, meta, now, inper, start, end, label, kom)
+        else:
+            body = render_woche(doc, meta, now, inper, start, end, label, kom)
+            # K3: deterministischer Δ-Block («Was hat sich geändert?») vorangestellt.
+            try:
+                import gen_delta
+                body = render_delta_html(gen_delta.compute(7)) + body
+            except Exception as ex:  # noqa: BLE001 — Report bleibt auch ohne Δ nutzbar
+                body = f'<p class="muted">Δ-Woche nicht verfügbar ({e(str(ex)[:100])})</p>' + body
+        if ki:
+            body += ki_block(level, doc, now, label)
+        html_doc = f"""<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">{CSS}</head><body>
+<div class="logo"><img src="data:image/png;base64,{LOGO}"></div>
+<h1>{e(title)}</h1>
+<div class="sub">Projekt RUBICON («Alea iacta est.») · Programm-Ampel {pill(prog_ampel)} · Stand {STAMP} · automatisch aus der RUBICON-Plattform verdichtet</div>
+{body}
+<div class="foot">Automatisch generiert aus projekt.yaml + protokolle.json — verdichtete Sicht, kein manuelles Zusammentragen. Live-Detail: RUBICON Control Tower. Vertraulich ExBoD/VR.</div>
+</body></html>"""
+        md = build_md(title, label, prog_ampel, level, doc, meta, now, inper, start, end, kom)
         hp = Path(tempfile.mktemp(suffix='.html'))
         hp.write_text(html_doc)
         html_to_pdf(str(hp), str(OUT / f'{slug}.pdf'))
@@ -390,11 +368,11 @@ def render_delta_html(d):
 _ZEITRAUM_WORT = {'woche': 'Woche', 'monat': 'Monat', 'vr': 'Quartal'}
 
 
-def ki_block(level, doc, now, label):
-    """KI-ENTWURF: Narrativ + Ampel-Begründungen für den Berichtszeitraum. Fakten-
-    gebunden — der Prompt erhält NUR Plattform-Daten; Ausgabe klar als Entwurf
-    markiert. Fehler/Leerfall werden sichtbar gemacht (nie stilles Verschwinden)."""
-    header = '<h2 style="color:#b07d2c">🤖 KI-Entwurf — ungeprüft, Freigabe durch CoS/DRS</h2>'
+def ki_data(level, doc, now, label):
+    """KI-ENTWURF strukturiert: {'narrativ': str, 'begruendungen': {ms_id: text}, 'error': bool}.
+    Fakten-gebunden — der Prompt erhält NUR Plattform-Daten. Fehler/Leerfall werden als
+    narrativ-Hinweis SICHTBAR gemacht (nie stilles Verschwinden). EINE Fassade für beide
+    Ausgabewege: HTML (ki_block, lokal) und Template-Werte (report_spec, Server)."""
     try:
         allms = [m for w in doc['workstreams'] for m in w['milestones']]
         problems = [m for m in allms if status_of(m, now) in ('delayed', 'atRisk')][:12]
@@ -420,22 +398,217 @@ def ki_block(level, doc, now, label):
         out = ai_client.generate(prompt)
         m = re.search(r'\{[\s\S]*\}', out)
         data = json.loads(m.group(0)) if m else {}
-        parts = [header]
-        if data.get('narrativ'):
-            parts.append(f'<p>{e(data["narrativ"])}</p>')
-        beg = data.get('begruendungen') or {}
-        if beg:
-            rows = ''.join(f'<tr><td>{e(k)}</td><td>{e(v)}</td></tr>' for k, v in beg.items())
-            parts.append(f'<h3>Ampel-Begründungen (Entwurf)</h3><table><tr><th>MS</th><th>Warum + Gegenmassnahme</th></tr>{rows}</table>')
-        if len(parts) == 1:
-            # Modell lieferte nichts Verwertbares — sichtbar machen statt still verwerfen.
-            log.warning('ki_block: leere Modellausgabe level=%s period=%s', level, label)
-            parts.append('<p class="muted">Keine KI-Ausgabe für diesen Zeitraum (keine Auffälligkeiten oder leere Modellantwort) — bei Bedarf erneut erzeugen.</p>')
+        # Modellausgabe ist UNTRUSTED: der Prompt fordert ein Objekt, garantiert es aber nicht.
+        # Hart auf {narrativ:str, begruendungen:{str:str}} normalisieren, sonst wirft ein späteres
+        # .items() beim Konsumenten (report_spec/ki_block) — AUSSERHALB dieses try.
+        data = data if isinstance(data, dict) else {}
+        narrativ = str(data.get('narrativ') or '')
+        raw_beg = data.get('begruendungen')
+        beg = {str(k): str(v) for k, v in raw_beg.items()} if isinstance(raw_beg, dict) else {}
+        if not narrativ and not beg:
+            log.warning('ki_data: leere Modellausgabe level=%s period=%s', level, label)
+            narrativ = ('Keine KI-Ausgabe für diesen Zeitraum (keine Auffälligkeiten oder leere '
+                        'Modellantwort) — bei Bedarf erneut erzeugen.')
+        return {'narrativ': narrativ, 'begruendungen': beg, 'error': False}
+    except Exception as ex:  # noqa: BLE001 — sichtbar machen statt still leer
+        log.warning('ki_data fehlgeschlagen level=%s period=%s: %s', level, label, ex)
+        return {'narrativ': f'KI-Entwurf nicht verfügbar: {str(ex)[:200]}. Ampel und Zahlen bleiben '
+                            'deterministisch; bitte erneut erzeugen.',
+                'begruendungen': {}, 'error': True}
+
+
+def ki_block(level, doc, now, label):
+    """HTML-Fassung des KI-Entwurfs (lokaler Pfad). Nutzt ki_data (eine Quelle, EIN Modell-Call)."""
+    header = '<h2 style="color:#b07d2c">🤖 KI-Entwurf — ungeprüft, Freigabe durch CoS/DRS</h2>'
+    d = ki_data(level, doc, now, label)
+    parts = [header]
+    if d['narrativ']:
+        parts.append(f'<p>{e(d["narrativ"])}</p>')
+    if d['begruendungen']:
+        rows = ''.join(f'<tr><td>{e(k)}</td><td>{e(v)}</td></tr>' for k, v in d['begruendungen'].items())
+        parts.append(f'<h3>Ampel-Begründungen (Entwurf)</h3><table><tr><th>MS</th><th>Warum + Gegenmassnahme</th></tr>{rows}</table>')
+    if not d['error']:
         parts.append('<p class="muted">Automatisch entworfen auf Basis der Plattform-Daten — Ampel und Zahlen bleiben deterministisch; dieser Block ist Interpretation und wird vor Verteilung geprüft.</p>')
-        return ''.join(parts)
-    except Exception as ex:  # noqa: BLE001 — sichtbar machen statt still ''
-        log.warning('ki_block fehlgeschlagen level=%s period=%s: %s', level, label, ex)
-        return f'{header}<p class="muted">KI-Entwurf nicht verfügbar: {e(str(ex)[:200])}. Ampel und Zahlen bleiben deterministisch; bitte erneut erzeugen.</p>'
+    return ''.join(parts)
+
+
+# ---------- report_spec: report-Daten -> Template-Engine (Weg 1, Server) ----------
+# Server rendert die Reporte jetzt aus den gebrandeten {{ANKER}}-Vorlagen (woche/monat/vr) statt
+# via MD->Doc. Die Anker-Namen MÜSSEN 1:1 zu build_type_from_base.py passen. Ampel-Farbe/-Label
+# kommen aus der Domänen-SSOT (SIG/SIG_LBL). Spaltenbreiten: Portrait nutzbar ~495pt (Ränder 50),
+# Landscape entfällt hier (Reporte sind Portrait) -> jede Tabellensumme <= 490pt.
+NAVY = {'red': 0x1E / 255, 'green': 0x3E / 255, 'blue': 0x58 / 255}
+REPORT_FOOTER = ('Automatisch aus der RUBICON-Plattform verdichtet  ·  Ampel und Zahlen '
+                 'deterministisch  ·  Live-Detail: RUBICON Control Tower  ·  Vertraulich — ExBoD / VR')
+PROJEKT_SUB = 'Projekt RUBICON («Alea iacta est.»)'
+
+
+def _hex_rgb(h):
+    h = h.lstrip('#')
+    return {'red': int(h[0:2], 16) / 255, 'green': int(h[2:4], 16) / 255, 'blue': int(h[4:6], 16) / 255}
+
+
+def _s(v, default='—'):
+    """None-sichere String-Koerzierung fuers Doc (kein rohes 'None'/'+None T' im Management-Report)."""
+    return default if v is None else str(v)
+
+
+def _tbl(header, rows, widths):
+    return {'header': header, 'rows': rows, 'col_widths_pt': widths, 'header_bg': NAVY}
+
+
+def report_spec(level, doc, meta, now, inper, start, end, label, prog_ampel, kom, ki=True):
+    """report-Daten -> {name, values, tables, bullets} für die Report-Vorlage (Weg 1).
+    Deterministisch (Ampel/Zahlen) + optionaler KI-Entwurf (Narrativ/Begründungen)."""
+    allms = [m for w in doc['workstreams'] for m in w['milestones']]
+    title = {'vr': f'VR-Report — {label}', 'monat': f'Monats-Report — {label}',
+             'woche': f'Wochen-Report — {label}'}[level]
+    kd = ki_data(level, doc, now, label) if ki else {
+        'narrativ': 'KI-Entwurf für diesen Lauf deaktiviert.', 'begruendungen': {}}
+    values = {'TITEL': label, 'UNTERTITEL': PROJEKT_SUB, 'PROGRAMM_AMPEL': SIG_LBL.get(prog_ampel, prog_ampel),
+              'STAND': STAMP, 'FOOTER': REPORT_FOOTER, 'KI_NARRATIV': kd['narrativ']}
+    tables, bullets = {}, {}
+    beg_rows = [[k, v] for k, v in (kd['begruendungen'] or {}).items()] or [['—', '—']]
+    tables['{{KI_BEGRUENDUNGEN}}'] = _tbl(['Meilenstein', 'Warum gefährdet + Gegenmassnahme'], beg_rows, [90, 400])
+
+    def phasen_table():
+        rows = []
+        for ph in PHASEN:
+            ms = [m for m in allms if m.get('phase') == ph]
+            if not ms:
+                continue
+            done = sum(1 for m in ms if status_of(m, now) == 'done')
+            rows.append([ph, f'{done} / {len(ms)}', f'{round(done / len(ms) * 100)} %'])
+        return _tbl(['Phase', 'Erledigt', 'Anteil'], rows, [290, 105, 90])
+
+    def ws_table():
+        rows, ctr = [], {}
+        for i, ws in enumerate(doc['workstreams']):
+            st = ws_ampel(ws, now)
+            done = sum(1 for m in ws['milestones'] if status_of(m, now) == 'done')
+            rows.append([ws['code'], ws['name'], SIG_LBL.get(st, st), f'{done} / {len(ws["milestones"])}'])
+            ctr[(i, 2)] = _hex_rgb(SIG.get(st, '#6b7480'))
+        return dict(_tbl(['WS', 'Bezeichnung', 'Ampel', 'Erledigt'], rows, [38, 322, 75, 55]), cell_text_rgb=ctr)
+
+    def commitments_table(overdue_mark=False):
+        com = [x for p in inper for x in p.get('eintraege', []) if x.get('typ') == 'commitment']
+        def _bis(x):
+            d = de(x.get('bis'))
+            od = pdate(x.get('bis'))
+            return f'{d} ⚠' if (overdue_mark and od and now and od < now) else d
+        rows = [[_s(x.get('text')), _s(x.get('owner')), _bis(x)] for x in com] or [['keine', '—', '—']]
+        return _tbl(['Commitment', 'Owner', 'bis'], rows, [300, 105, 85])
+
+    # Alle Sektionen bilden 1:1 den alten HTML-Report ab (render_vr/monat/woche + render_delta_html) —
+    # nichts weglassen (Gordon 2026-08-10: „nur erweitern, nicht weniger"). Zusatz: Basis-Chrome + KI im Doc.
+    if level == 'vr':
+        base = pdate(meta.get('baseline_end'))
+        crit = [m for m in allms if m.get('critical') and not m.get('nachlauf') and status_of(m, now) == 'delayed']
+        slip = max([max((now - pdate(m['due'])).days if pdate(m.get('due')) else 0, m.get('reported_slip_days') or 0)
+                    for m in crit], default=0)
+        proj = base + dt.timedelta(days=slip) if base else None
+        endline = de(base) + (f' → {de(proj)} (+{slip} T)' if slip else ' · auf Basislinie')
+        tables['{{KENNZAHLEN}}'] = _tbl(['Kern-Ende', 'Hard Edge', 'Meilensteine'],
+                                        [[endline, de(meta.get('hard_edge')), str(len(allms))]], [210, 160, 120])
+        values['CHAIRMAN_STATEMENT'] = kom('programm') or '—'
+        tables['{{PHASEN_TABELLE}}'] = phasen_table()
+        gate_due = {}
+        for m in allms:
+            g = m.get('gate')
+            if g:
+                d = m.get('due')
+                if g not in gate_due or (d and str(d) < str(gate_due[g])):
+                    gate_due[g] = d
+        grows = [[_s(g), de(d)] for g, d in sorted(gate_due.items())] or [['—', '—']]
+        tables['{{GATES_TABELLE}}'] = _tbl(['Gate', 'Termin'], grows, [140, 350])
+        vrent = [dict(x, _m=p.get('meeting_name')) for p in inper for x in p.get('eintraege', [])
+                 if x.get('typ') == 'entscheid' and x.get('status') == 'offen' and x.get('ebene') == 'VR']
+        erows = [[_s(x.get('text')), _s(x.get('_m'), '')] for x in vrent] or [['keine VR-Entscheide offen im Quartal', '']]
+        tables['{{ENTSCHEIDUNGSBEDARF_TABELLE}}'] = _tbl(['Entscheid', 'Quelle'], erows, [360, 130])
+        blk = [x for p in inper for x in p.get('eintraege', []) if x.get('typ') == 'blocker']
+        brows = [[_s(x.get('ms_id')), _s(x.get('text')), f'+{_s(x.get("slip"), "0")} T'] for x in blk] or [['—', 'keine offenen Blocker erfasst', '—']]
+        tables['{{RISIKEN_TABELLE}}'] = _tbl(['MS', 'Risiko', 'Verzug'], brows, [70, 350, 70])
+        tables['{{WS_TABELLE}}'] = ws_table()
+    elif level == 'monat':
+        values['KOMMENTAR'] = kom('programm') or '—'
+        tables['{{PHASEN_TABELLE}}'] = phasen_table()
+        tables['{{WS_TABELLE}}'] = ws_table()
+        bew = []
+        for ws in doc['workstreams']:
+            erreicht, faellig, ueber = _ms_buckets(ws, now, start, end)
+            bew.append([ws['code'], ', '.join(m['id'] for m in erreicht) or '—',
+                        ', '.join(f'{m["id"]} ({de(m["due"])})' for m in faellig[:8]) or '—',
+                        ', '.join(m['id'] for m in ueber[:8]) or '—'])
+        tables['{{BEWEGUNGEN}}'] = _tbl(['WS', 'Erreicht', 'Fällig (Monat)', 'Überfällig'], bew, [40, 130, 165, 155])
+        frows = []
+        for ws in doc['workstreams']:
+            pref = ws['code'] + '-'
+            fort = [x for p in inper for x in p.get('eintraege', []) if x.get('typ') == 'fortschritt' and str(x.get('ms_id', '')).startswith(pref)]
+            if fort:
+                frows.append([ws['code'], ', '.join(f'{_s(x.get("ms_id"))} → {_s(x.get("wert"))} %' for x in fort[:8])])
+        tables['{{FORTSCHRITT_TABELLE}}'] = _tbl(['WS', 'Fortschritts-Meldungen'], frows or [['—', 'keine Fortschritts-Meldungen im Monat']], [50, 440])
+        krows = [[ws['code'], _s(kom(ws['code']))] for ws in doc['workstreams'] if kom(ws['code'])]
+        tables['{{WS_KOMMENTARE}}'] = _tbl(['WS', 'Kommentar'], krows or [['—', 'keine Kommentare erfasst']], [50, 440])
+        tables['{{COMMITMENTS_TABELLE}}'] = commitments_table(overdue_mark=True)
+        ent = [x for p in inper for x in p.get('eintraege', [])
+               if x.get('typ') == 'entscheid' and x.get('status') == 'offen']
+        erows = [[_s(x.get('text')) + (' [VR]' if x.get('ebene') == 'VR' else ''), 'offen'] for x in ent] or [['keine', '—']]
+        tables['{{OFFENE_ENTSCHEIDE}}'] = _tbl(['Entscheid', 'Status'], erows, [405, 85])
+    else:  # woche
+        values['KOMMENTAR'] = kom('programm') or '—'
+        def _pct(v):
+            return '—' if v is None else f'{v} %'
+        # Δ-Block darf den Report nicht kippen (Store-Read kann werfen) — wie der lokale Pfad.
+        try:
+            import gen_delta
+            dl = gen_delta.compute(7)
+        except Exception as ex:  # noqa: BLE001 — Report bleibt auch ohne Δ nutzbar
+            log.warning('report_spec Δ-Woche nicht verfügbar: %s', ex)
+            dl = None
+        # Δ-Bezugsfenster sichtbar machen (compute(7) = letzte 7 Tage ab Lauf, NICHT die Report-KW).
+        fw = (dl or {}).get('fenster') or {}
+        values['DELTA_FENSTER'] = (f"Fenster: {de(fw.get('von'))} – {de(fw.get('bis'))}"
+                                   if fw else 'Fenster nicht verfügbar')
+        if dl is None:
+            note = 'Δ nicht verfügbar'
+            tables['{{DELTA_AMPEL}}'] = _tbl(['MS', 'Meilenstein', 'Wechsel'], [['—', note, '—']], [70, 250, 170])
+            tables['{{DELTA_FORTSCHRITT}}'] = _tbl(['MS', 'Meilenstein', 'Δ'], [['—', note, '—']], [70, 250, 170])
+            tables['{{DELTA_ERLEDIGT}}'] = _tbl(['Nr', 'Handlung', 'Owner', 'am'], [['—', note, '—', '—']], [40, 280, 90, 80])
+            tables['{{DELTA_ENTSCHEIDE}}'] = _tbl(['ID', 'Titel', 'Status'], [['—', note, '—']], [70, 320, 100])
+        else:
+            arow = [[_s(x.get('id')), _s(x.get('name')), f'{SIG_LBL.get(x.get("von"), x.get("von"))} → {SIG_LBL.get(x.get("zu"), x.get("zu"))}'] for x in dl.get('ampel', [])[:10]]
+            frow = [[_s(x.get('id')), _s(x.get('name')), f'{_pct(x.get("von"))} → {_pct(x.get("zu"))}'] for x in dl.get('fortschritt', [])[:12]]
+            erl = dl.get('erledigt', [])
+            erow = [[_s(x.get('nr')), _s(x.get('text')), _s(x.get('owner')), de(x.get('am'))] for x in erl[:15]]
+            if len(erl) > 15:  # Gesamtzahl bei Kappung nicht verschlucken (alt: „Erledigte Handlungen (N)")
+                erow.append(['—', f'… und {len(erl) - 15} weitere', '—', '—'])
+            enrow = [[_s(x.get('id')), _s(x.get('titel')), _s(x.get('status'))] for x in dl.get('entscheide', [])]
+            tables['{{DELTA_AMPEL}}'] = _tbl(['MS', 'Meilenstein', 'Wechsel'], arow or [['—', 'keine Ampel-Wechsel', '—']], [70, 250, 170])
+            tables['{{DELTA_FORTSCHRITT}}'] = _tbl(['MS', 'Meilenstein', 'Δ'], frow or [['—', 'keine Fortschritts-Änderungen', '—']], [70, 250, 170])
+            tables['{{DELTA_ERLEDIGT}}'] = _tbl(['Nr', 'Handlung', 'Owner', 'am'], erow or [['—', 'keine erledigten Handlungen', '—', '—']], [40, 280, 90, 80])
+            tables['{{DELTA_ENTSCHEIDE}}'] = _tbl(['ID', 'Titel', 'Status'], enrow or [['—', 'keine Entscheide bewegt', '—']], [70, 320, 100])
+        arows, actr, i = [], {}, 0
+        for ws in doc['workstreams']:
+            pref = ws['code'] + '-'
+            fort = [x for p in inper for x in p.get('eintraege', []) if x.get('typ') == 'fortschritt' and str(x.get('ms_id', '')).startswith(pref)]
+            blk = [x for p in inper for x in p.get('eintraege', []) if x.get('typ') == 'blocker' and str(x.get('ms_id', '')).startswith(pref)]
+            if not (fort or blk):
+                continue
+            acts = [f'{_s(x.get("ms_id"))} → {_s(x.get("wert"))} % · {_s(x.get("text"))}' for x in fort]
+            acts += [f'{_s(x.get("ms_id"))} +{_s(x.get("slip"), "0")} T · {_s(x.get("text"))}' for x in blk]
+            st = ws_ampel(ws, now)
+            arows.append([f'{ws["code"]} — {ws["name"]}', SIG_LBL.get(st, st), ' · '.join(acts)])
+            actr[(i, 1)] = _hex_rgb(SIG.get(st, '#6b7480'))
+            i += 1
+        tables['{{AKTIVITAET_TABELLE}}'] = dict(
+            _tbl(['Arbeitsstrom', 'Ampel', 'Aktivität der Woche'],
+                 arows or [['—', '—', 'keine Fortschritts-/Blocker-Meldungen in dieser Woche']], [150, 70, 270]),
+            cell_text_rgb=actr)
+        tables['{{COMMITMENTS_TABELLE}}'] = commitments_table()
+        ent = [x for p in inper for x in p.get('eintraege', []) if x.get('typ') == 'entscheid']
+        erows = [[_s(x.get('text')) + (' [VR]' if x.get('ebene') == 'VR' else ''), _s(x.get('status'))] for x in ent] or [['keine', '—']]
+        tables['{{ENTSCHEIDE_TABELLE}}'] = _tbl(['Entscheid', 'Status'], erows, [405, 85])
+    return {'name': title, 'values': values, 'tables': tables, 'bullets': bullets}
 
 
 # ---------- Templates ----------

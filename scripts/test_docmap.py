@@ -33,7 +33,24 @@ def test_traktanden_spec():
     assert s["name"] == "steuerungsrunde.pdf"
     assert s["tables"]["{{BODY_TRAKTANDEN}}"]["rows"] == [["1", "R", "H"]]
 
+def test_all_specs_carry_footer():
+    # Dynamische Fusszeile: jeder Fix-Struktur-Typ liefert einen FOOTER-Wert (sonst fuellt der
+    # Engine-Scan {{FOOTER}} leer). Die 4 Texte sind zentral in dmap.FOOTER hinterlegt.
+    e = dmap.entscheid_spec({"id": "E-1"})
+    b = dmap.briefing_spec({"id": "M01"}, {}, "WS4 — X")
+    fr = dmap.fr_spec({"titel": "T", "untertitel": "U", "gruppen": []})
+    t = dmap.traktanden_spec({"meeting_id": "x", "traktanden": []})
+    for s, key in [(e, "entscheide"), (b, "briefings"), (fr, "fuehrungsrhythmus"), (t, "traktanden")]:
+        assert s["values"]["FOOTER"] == dmap.FOOTER[key] and dmap.FOOTER[key]
+
+def test_fr_columns_fit_landscape():
+    # Landscape-A4 auf der Basis (Raender 50pt): nutzbar 741.89pt -> Spaltensumme MUSS darunter
+    # bleiben, sonst ragt die Tabelle ueber den Seitenrand.
+    fr = dmap.fr_spec({"titel": "T", "untertitel": "U", "gruppen": []})
+    assert sum(fr["tables"]["{{BODY_RHYTHMUS}}"]["col_widths_pt"]) <= 741
+
 if __name__ == "__main__":
     test_entscheid_spec(); test_briefing_spec_strips_vorgehen_numbers()
     test_fr_spec_has_group_bands(); test_traktanden_spec()
-    print("docmap: 4/4 gruen")
+    test_all_specs_carry_footer(); test_fr_columns_fit_landscape()
+    print("docmap: 6/6 gruen")
