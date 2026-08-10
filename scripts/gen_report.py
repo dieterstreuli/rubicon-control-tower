@@ -60,7 +60,11 @@ MD2GDOC = '/Users/dieterstreuli/Chief/Tools/md_to_gdoc.py'
 import os as _os
 if not _os.path.exists(MD2GDOC):
     MD2GDOC = __file__.rsplit('/', 1)[0] + '/_tools/md_to_gdoc.py'  # vendored (Portabilität)
-PARENT = '1n8FcDCa8T5vYzME5zXrMpmt0i70pKXt5'  # Drive: RUBICON — Reports
+PARENT = '1hiuxVPBO3Hwd3I0g1lDTxKFAwk851Y0m'  # Drive: RUBICON — Reports (Shared Drive „00 AXS - Rubicon", s. DEPLOYMENT_GCP §9.2).
+# Fallback-Default MUSS auf den gueltigen Reports-Ordner zeigen: die Vorlagen-Engine (materialize) KOPIERT
+# je Lauf in diesen Ordner — anders als der fruehere MD->Doc-Weg, der ein bestehendes Doc wiederverwendete.
+# Der on-demand-Report des Web-Service hat RUBICON_DRIVE_REPORTS_FOLDER nicht zwingend gesetzt und fiel sonst
+# auf einen stale/404-Ordner zurueck (File not found beim copy). Der Job setzt die Env zusaetzlich (gleicher Wert).
 DATA = ROOT / 'src' / 'data'
 OUT = Path(docs_dir('reports', ROOT))
 LOGO = (ROOT / 'scripts' / 'axs_logo.png.b64').read_text().strip()

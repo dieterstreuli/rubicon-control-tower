@@ -112,13 +112,16 @@ Betriebsregeln (für alle Beteiligten):
 
 ## Changelog (IT / Didit)
 
-**10.08.2026 — Reporte serverseitig auf die gebrandete Vorlagen-Engine (Weg 1), einheitliche Vorlagen-Basis:**
-- Die serverseitige Report-Erzeugung (Woche/Monat/Quartal) läuft jetzt über die **AXS-gebrandete
-  Vorlagen-Engine (Weg 1)** statt über den früheren Markdown→Doc-Zwischenweg. Ergebnis: ein einheitlich
-  gebrandetes Google-Doc + PDF mit **Logo im Header auf jeder Seite**, **Seitenzahlen** und dynamischer
-  Fusszeile. Der **KI-Entwurf** (Narrativ + Ampel-Begründungen) steht damit erstmals **im Doc selbst** —
-  vorher landete er nur im lokalen PDF-Pfad. Ampel/Zahlen bleiben deterministisch; der KI-Block bleibt
-  klar als ungeprüfter Entwurf markiert.
+**10.08.2026 — Reporte auf die gebrandete Vorlagen-Engine; Identität, IAP-Rollen-Gate & serverseitige KI:**
+
+_Reporte & Vorlagen (Weg 1):_
+- **Reporte serverseitig auf die Vorlagen-Engine:** die serverseitige Report-Erzeugung (Woche/Monat/Quartal)
+  läuft jetzt über die **AXS-gebrandete Vorlagen-Engine (Weg 1)** statt über den früheren Markdown→Doc-
+  Zwischenweg — ein einheitlich gebrandetes Google-Doc + PDF mit **Logo im Header auf jeder Seite**,
+  **Seitenzahlen** und dynamischer Fusszeile. Der **KI-Entwurf** (Narrativ + Ampel-Begründungen) steht damit
+  erstmals **im Doc selbst** (vorher nur im lokalen PDF-Pfad) und wird für **alle Ebenen** erzeugt (bisher nur
+  Woche); im UI ist die KI-Checkbox per Default aktiv (für einen schnellen Report ohne KI abwählbar).
+  Ampel/Zahlen bleiben deterministisch; der KI-Block ist klar als ungeprüfter Entwurf markiert.
 - **Vollständigkeit gewahrt:** die Reporte enthalten alle bisherigen Inhalte (VR: Kennzahlen inkl.
   Kern-Ende-Projektion, Sequenz-Gates, Entscheidungsbedarf mit Quelle, Top-Risiken; Monat: Bewegungen,
   Fortschritts-Meldungen und Kommentare je Strom, überfällige Commitments; Woche: Δ-Fenster + Ampel-
@@ -127,15 +130,19 @@ Betriebsregeln (für alle Beteiligten):
 - **Einheitliche Basis für alle Vorlagen:** eine gemeinsame „Report-Basis" (Marke + Seitenzahlen +
   dynamische `{{FOOTER}}`-Fusszeile) wird kopiert und je Typ nur der Rumpf gefüllt. Die vier bestehenden
   Fix-Struktur-Vorlagen (Traktanden/Entscheid/Briefing/Führungsrhythmus) laufen jetzt auf **derselben
-  Basis** (Logo jede Seite + Seitenzahlen + dynamische Fusszeile). Vorlagen-Bau reproduzierbar unter
-  `scripts/templates_build/` (inkl. Anker-Manifest); IDs in `scripts/_tools/rubicon_templates.json`.
+  Basis**. Vorlagen-Bau reproduzierbar unter `scripts/templates_build/` (inkl. Anker-Manifest); IDs in
+  `scripts/_tools/rubicon_templates.json`.
+- **Report-Kommentar sichtbar & löschbar:** das Programm-/Chairman-Statement-Feld lädt einen bereits
+  gespeicherten Kommentar (sichtbar + editierbar) und leert ihn auf Wunsch (leeres Feld löscht den Eintrag
+  serverseitig) — so bleiben keine unsichtbaren Alt-Kommentare mehr stehen.
 - **Dual-Mode unverändert:** der Server fasst nur `server_*`-Felder an; Dieters lokaler Report-Pfad
   (HTML→PDF + eigenes Doc) bleibt vollständig unberührt.
 
-**10.08.2026 — Identitäts-Erkennung, Begrüßung & serverseitiges Rollen-Gate (nur unter IAP):**
-- Die App erkennt jetzt den per **Google IAP** angemeldeten Nutzer serverseitig (Header → Person/Rollen über
-  `src/data/identity_map.json`) und liefert die Identität in `GET /api/state`. **Schreib-Aktionen** werden
-  serverseitig rollen-gegated (die gewählte Rolle muss zur Identität passen); **Lesen bleibt voll transparent**.
+_Identität, IAP-Rollen-Gate & serverseitige KI:_
+- **Identität + Rollen-Gate (nur unter IAP):** die App erkennt den per **Google IAP** angemeldeten Nutzer
+  serverseitig (Header → Person/Rollen über `src/data/identity_map.json`, geliefert in `GET /api/state`).
+  **Schreib-Aktionen** (inkl. Report erzeugen, Kommentar, Protokoll-Export) sind an die Identität gebunden und
+  rollen-gegated — ein Owner handelt nur im eigenen Namen; **Lesen bleibt voll transparent**.
 - **Nur bei echtem IAP-Login:** die Durchsetzung greift ausschließlich, wenn der Service als hinter-IAP markiert ist
   (`RUBICON_IAP_ACTIVE=1`, nur am App-Service) **und** ein gültiger IAP-Header vorliegt. Im lokalen bzw. via Tailnet
   geteilten Betrieb bleibt das bisherige **freie Verhalten** (freie Rollen-/Personenwahl, keine Server-Durchsetzung)
@@ -145,26 +152,15 @@ Betriebsregeln (für alle Beteiligten):
   als …"-Anzeige öffnet die Begrüßung jederzeit erneut.
 - **Betrieb:** `identity_map.json` als Stammdaten der Merge-Brücke (SEED überschreibt Volume, `DEPLOYMENT_GCP.md §10`).
   Erster Schritt der Migration in den eigenen Web-/Nutzerkontext — Gesamtplan: `docs/web-context-migration-plan.md`.
+- **„Frag die Daten" & KI-Zerlegung serverseitig:** beide Funktionen laufen jetzt serverseitig über die zentrale
+  Modell-Fassade (**Vertex AI, EU**) statt eines lokal installierten Programms (behebt einen Serverfehler bei
+  „Frag die Daten"; keine neuen Rechte — derselbe Pfad wie das KI-Narrativ; lokal unverändert). Die Antwort weist
+  zudem das **tatsächlich genutzte Modell** aus (serverseitig Vertex, lokal die CLI) statt eines festen Textes —
+  bleibt auch bei einem Modellwechsel ehrlich.
 - **Robustheit (Deploy):** eine während eines Deploys offene Seite lud bisher den alten, nun umbenannten Asset-Chunk
   → „Daten konnten nicht geladen werden: Failed to fetch dynamically imported module". Neu erkennt der Bootstrap den
   Chunk-Load-Fehler und lädt **genau einmal** hart neu (frisches `index.html` mit den neuen Chunk-Namen; gegen
   Endlos-Schleife per `sessionStorage` abgesichert) — der Erst-Load nach einem Deploy heilt sich damit selbst.
-- **„Frag die Daten" & KI-Zerlegung serverseitig:** beide Funktionen laufen jetzt serverseitig über die zentrale
-  Modell-Fassade (**Vertex AI, EU**) statt eines lokal installierten Programms — das behebt einen Serverfehler bei
-  „Frag die Daten". Es sind keine neuen Rechte nötig (derselbe Pfad wie das KI-Narrativ); lokal bleibt der Betrieb
-  unverändert.
-- **Rollen-Härtung (nur unter IAP):** das Handeln ist an die eigene Identität gebunden — ein Owner handelt nur im
-  eigenen Namen; die Report-/Protokoll-Aktionen (Report erzeugen, Kommentar, Protokoll-Export) sind serverseitig
-  rollen-gegated. Ohne IAP bleibt das bisherige freie Verhalten.
-- **„Frag die Daten" zeigt das echte KI-Modell:** die Antwort weist jetzt das tatsächlich genutzte Modell aus
-  (serverseitig das Vertex-Modell, lokal die CLI) statt eines festen Textes — bleibt auch bei einem Modellwechsel ehrlich.
-- **Report-Kommentar sichtbar & löschbar:** das Programm-/Chairman-Statement-Feld lädt einen bereits gespeicherten
-  Kommentar (sichtbar + editierbar) und leert ihn auf Wunsch (leeres Feld löscht den Eintrag serverseitig) — so
-  bleiben keine unsichtbaren Alt-Kommentare mehr stehen.
-- **KI-Entwurf in jedem Report:** der KI-Entwurf (Narrativ + Ampel-Begründungen) wird nun für **alle Ebenen**
-  (Woche/Monat/Quartal) erzeugt — der Narrativ war bisher auf den Wochen-Report beschränkt. Die automatischen
-  Reports enthalten ihn durchgehend; im UI ist die KI-Checkbox per Default aktiv (für einen schnellen Report ohne
-  KI abwählbar).
 - **KI-Entwurf scheitert nicht mehr stumm:** ein Modell-Fehler oder eine leere Antwort erscheint jetzt als klar
   markierte Notiz im Report (statt spurlos zu verschwinden) — bei Fehlern mit Grund, bei leerer Antwort als Hinweis.
 
