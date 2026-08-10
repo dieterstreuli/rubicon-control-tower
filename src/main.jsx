@@ -44,20 +44,35 @@ async function fetchState(attempt = 0) {
   }
 }
 
+// Vite: nach einem Deploy tragen die Asset-Chunks neue Hash-Namen; eine bereits offene Seite
+// importiert den ALTEN Chunk → "Failed to fetch dynamically imported module". Ein einmaliger
+// harter Reload holt frisches index.html mit den neuen Chunk-Namen (Endlos-Schleife per
+// sessionStorage verhindert).
+function isChunkLoadError(e) {
+  const m = String((e && (e.message || e.name)) || e)
+  return /dynamically imported module|Importing a module script failed|ChunkLoadError|error loading dynamically/i.test(m)
+}
+
 async function bootstrap() {
   screen(<div>RUBICON — Daten werden geladen…</div>)
   try {
     const state = await fetchState()
     initData(state)
     const { default: App } = await import('./App.jsx')
+    sessionStorage.removeItem('rubicon_chunk_reload')   // erfolgreich geladen → Reload-Sperre lösen
     root.render(
       <React.StrictMode>
         <App />
       </React.StrictMode>
     )
   } catch (e) {
-    // Kein leerer/halb-gerenderter Zustand, kein Auto-Endlos-Retry (Spec §5) —
-    // klare Meldung + manueller Retry.
+    // Chunk-Load-Fehler nach Deploy (veralteter Asset-Hash): genau EINMAL hart neu laden.
+    if (isChunkLoadError(e) && !sessionStorage.getItem('rubicon_chunk_reload')) {
+      sessionStorage.setItem('rubicon_chunk_reload', '1')
+      window.location.reload()
+      return
+    }
+    // Sonst kein Auto-Endlos-Retry (Spec §5) — klare Meldung + manueller Retry.
     screen(
       <div style={{ textAlign: 'center', maxWidth: 480, padding: 16 }}>
         <div style={{ color: '#f43f5e', marginBottom: 12 }}>

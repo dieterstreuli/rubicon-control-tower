@@ -124,6 +124,10 @@ Betriebsregeln (für alle Beteiligten):
   Begrüßung mit Funktionsübersicht; der bisher fest vorbelegte Owner-Name entfällt.
 - **Betrieb:** `identity_map.json` als Stammdaten der Merge-Brücke (SEED überschreibt Volume, `DEPLOYMENT_GCP.md §10`).
   Erster Schritt der Migration in den eigenen Web-/Nutzerkontext — Gesamtplan: `docs/web-context-migration-plan.md`.
+- **Robustheit (Deploy):** eine während eines Deploys offene Seite lud bisher den alten, nun umbenannten Asset-Chunk
+  → „Daten konnten nicht geladen werden: Failed to fetch dynamically imported module". Neu erkennt der Bootstrap den
+  Chunk-Load-Fehler und lädt **genau einmal** hart neu (frisches `index.html` mit den neuen Chunk-Namen; gegen
+  Endlos-Schleife per `sessionStorage` abgesichert) — der Erst-Load nach einem Deploy heilt sich damit selbst.
 
 **09.08.2026 — Serverseitige KI (Vertex), Wochen-Delta & Robustheit (dual-mode):**
 - **KI-Narrativ serverseitig (Vertex AI):** der **KI-Entwurf-Block** des Wochen-Reports (Narrativ +
