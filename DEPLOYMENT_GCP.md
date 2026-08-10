@@ -468,7 +468,7 @@ zieht Struktur nach, **ohne** Live-Daten zu zerstören.
 Mount-Punkts) = Repo-Struktur; das Volume `/app/src/data` = Live-SSOT.
 
 **Datei-Klassen** (`scripts/merge_bridge.py`):
-- **Stammdaten** (Repo überschreibt): `domain/schema/briefings/fuehrungsrhythmus/traktanden/kontakte/gemini_meetings.json`
+- **Stammdaten** (Repo überschreibt): `domain/schema/briefings/fuehrungsrhythmus/traktanden/kontakte/gemini_meetings/identity_map.json`
 - **Transaktion** (Volume unberührt): `protokolle/protokolle_sensitiv/entscheide/reminder_log/report_comments/zielbild.json` **+ `reports_index.json`/`traktanden_docs.json`** (tragen job-geschriebene `server_doc_id`/`server_pdf_id` → Repo-Überschreiben würde die wipen)
 - **Misch** (Merge-by-Key, Schlüssel `id`): `projekt.yaml`, `tasks.json`
 

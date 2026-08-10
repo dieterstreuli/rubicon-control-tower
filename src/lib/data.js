@@ -24,6 +24,7 @@ export let ENTS = { seq: 0, entscheide: [] }     // entscheide.json
 export let REMLOG = { reminders: [] }            // reminder_log.json
 export let ZBSTORE = { zielbild: [] }            // zielbild.json
 export let SERVER = false                        // Server-Modus (DWD-Env gesetzt): Drive- statt Volume-/Dieter-Links
+export let IDENTITY = null                        // Stufe 1: erkannte IAP-Identität {email, person, rollen, isKnown, viaIap}
 
 // ── Abgeleitete Werte (in initData berechnet) ──
 export let BASE = { meta: {}, workstreams: [], inputs: [] }
@@ -49,6 +50,7 @@ export function initData(state) {
   REMLOG = state.reminder_log || { reminders: [] }
   ZBSTORE = state.zielbild || { zielbild: [] }
   SERVER = !!state.server
+  IDENTITY = state.identity || null
 
   const res = loadProject(state.projekt_yaml || '')
   BASE = res.data

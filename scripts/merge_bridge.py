@@ -28,8 +28,11 @@ log = logging.getLogger("rubicon.merge")
 
 # ── Datei-Klassifikation ─────────────────────────────────────────────────────
 # STAMMDATEN: aus dem Repo gepflegte Struktur/Definitionen — SEED überschreibt Volume.
+# identity_map.json: Prod-Absicherung (C1, 10.08.2026) — ohne diesen Eintrag verdeckt das
+# GCS-Volume die ins Image gebackene Map (db.identity.read() = {}), womit JEDER IAP-Nutzer als
+# unbekannter Teilnehmer aufgelöst wird -> Write-Lockout.
 STAMMDATEN = ['domain.json', 'schema.json', 'briefings.json', 'fuehrungsrhythmus.json',
-              'traktanden.json', 'kontakte.json', 'gemini_meetings.json']
+              'traktanden.json', 'kontakte.json', 'gemini_meetings.json', 'identity_map.json']
 # TRANSAKTION: job-/app-geschriebene Live-Daten — Volume bleibt unberührt. reports_index.json,
 # traktanden_docs.json, briefings_docs.json und fuehrungsrhythmus_doc.json stehen hier, WEIL sie
 # job-geschriebene server_doc_id/server_pdf_id tragen; ein Repo-Überschreiben würde diese wipen.

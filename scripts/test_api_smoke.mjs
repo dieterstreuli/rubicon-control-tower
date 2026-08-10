@@ -148,7 +148,7 @@ async function main() {
 
   // ── 9 · Runtime-State (Block A, 05.08.): /api/state = Client-Bootstrap-Nutzlast ──
   {
-    const STATE_KEYS = ['projekt_yaml', 'tasks', 'domain', 'briefings', 'fuehrungsrhythmus',
+    const STATE_KEYS = ['identity', 'projekt_yaml', 'tasks', 'domain', 'briefings', 'fuehrungsrhythmus',
       'traktanden_docs', 'briefings_docs', 'fuehrungsrhythmus_doc', 'protokolle', 'traktanden',
       'reports_index', 'entscheide', 'reminder_log', 'zielbild', 'server']
     const { status, json } = await call('/api/state', { method: 'GET' })

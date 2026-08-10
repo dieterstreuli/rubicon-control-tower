@@ -15,6 +15,7 @@ import { fileURLToPath } from 'node:url'
 import { execFile, spawn } from 'node:child_process'
 import yaml from 'js-yaml'
 import { can, requireCan } from '../src/lib/permissions.js'   // Q4: EINE Rechte-Matrix für UI + Server
+import { resolveIdentity, identityRoleDenied } from './identity.js'
 
 const PY_BIN = process.env.RUBICON_PY || '/Library/Frameworks/Python.framework/Versions/3.14/bin/python3'  // Portabilität: env-Override (MIGRATION.md)
 const CLAUDE_BIN = process.env.RUBICON_CLAUDE || '/Users/dieterstreuli/.local/bin/claude'  // K4/K7: KI-Aufrufe (headless, Sonnet)
@@ -144,6 +145,21 @@ export function createApi(rootDir) {
     traktanden: jsonStore('traktanden.json', { agendas: [] }),
     reportsIndex: jsonStore('reports_index.json', { reports: [] }),
     reminderLog: jsonStore('reminder_log.json', { reminders: [] }),
+    identity: jsonStore('identity_map.json', {}),
+  }
+
+  // Stufe 1 (Write-Gate, 10.08.2026): die vom Client gesendete Rolle MUSS in den per
+  // IAP-Identität erlaubten Rollen liegen — schließt «jeder Gruppen-Nutzer kann sich zu CoS
+  // machen». Härtung 10.08.2026: NUR bei echtem IAP-Login durchgesetzt (id.viaIap, s. identity.js
+  // identityRoleDenied) — Dieters lokaler Betrieb wird via Tailnet OHNE IAP geteilt; der
+  // Dev-Fallback ist dort keine echte Identität, sondern nur ein Platzhalter. viaIap wiederum
+  // verlangt zusätzlich RUBICON_IAP_ACTIVE (nur am Cloud-Run-Service gesetzt) — ohne das Flag
+  // bleibt das alte freie Verhalten (Client-Rolle wird vertraut), auch mit mitgeschicktem Header.
+  function requireIdentityRole(req, role, fail) {
+    const id = resolveIdentity(req.headers, db.identity.read(), process.env.RUBICON_DEV_IDENTITY, process.env.RUBICON_IAP_ACTIVE === '1')
+    if (identityRoleDenied(id, role)) {
+      fail(403, `Rolle «${role || '?'}» ist für ${id.email} nicht freigegeben (erlaubt: ${id.rollen.join(', ')})`)
+    }
   }
   // ── Entscheids-Register (16.07., Säule 3 der Entscheidungsordnung INS-001 Anhang B) ──
   // Jeder Entscheid trägt eine dauerhafte Register-ID «E-<Jahr>-###» (monoton via seq,
@@ -306,11 +322,12 @@ export function createApi(rootDir) {
       // NIEMALS protokolle_sensitiv (bleibt loopback-only via /api/protokoll/sensitiv).
       // guard:false wie /api/delta: same-origin-GET hinter IAP; IAP ist das Zugangstor.
       // Naht für Block B: hier wird die Nutzlast später rollen-gescopt.
-      ep('/api/state', { method: 'GET', guard: false }, ({ json, res }) => {
+      ep('/api/state', { method: 'GET', guard: false }, ({ json, res, req }) => {
         res.setHeader('Cache-Control', 'no-store')
         return json(200, {
           ok: true,
           server: IS_SERVER,
+          identity: resolveIdentity(req.headers, db.identity.read(), process.env.RUBICON_DEV_IDENTITY, process.env.RUBICON_IAP_ACTIVE === '1'),
           projekt_yaml: fs.existsSync(db.projekt.path) ? fs.readFileSync(db.projekt.path, 'utf8') : '',
           tasks: db.tasks.read(),
           domain: db.domain.read(),
@@ -328,11 +345,12 @@ export function createApi(rootDir) {
         })
       })
       // POST /api/sitzung — eine erfasste Sitzung speichern + Milestones aktualisieren
-      ep('/api/sitzung', {}, async ({ body, json, fail }) => {
+      ep('/api/sitzung', {}, async ({ body, req, json, fail }) => {
           if (!body.meeting_id || !body.datum) return json(400, { ok: false, error: 'meeting_id und datum sind Pflicht' })
 
           // Rollen-Gate (Audit #3): nur CoS/Owner dürfen schreiben
           const role = body.role, me = body.me
+          requireIdentityRole(req, role, fail)
           requireCan(fail, role, me, 'sitzung.erfassen')
 
           // 1) Protokoll-Datensatz anhängen (neueste zuerst) — kollisionssichere ID (Audit #22).
@@ -445,8 +463,9 @@ export function createApi(rootDir) {
       // DRS 01.08.). Gleiche Gates wie /api/sitzung: CoS alles, Owner nur eigene
       // (MS-Owner oder WS-Owner); task-getriebene MS sind GESPERRT (Fortschritt
       // wird verdient). Journal = git-Historie (Δ-Woche zeigt die Änderung).
-      ep('/api/ms/progress', {}, async ({ body, json, fail }) => {
+      ep('/api/ms/progress', {}, async ({ body, req, json, fail }) => {
           const { role, me } = body
+          requireIdentityRole(req, role, fail)
           requireCan(fail, role, me, 'ms.melden')
           if (!body.ms_id) return json(400, { ok: false, error: 'ms_id fehlt' })
           const hasProg = typeof body.progress === 'number'
@@ -475,7 +494,8 @@ export function createApi(rootDir) {
       // POST /api/task/upsert — Handlungen (Tasks) anlegen/aktualisieren (nur CoS).
       // Optional body.activate_ms: schaltet den Milestone auf progress_source:'tasks'
       // («treibend») — bewusst expliziter Akt NACH menschlicher Freigabe der Zerlegung.
-      ep('/api/task/upsert', {}, async ({ body, json, fail }) => {
+      ep('/api/task/upsert', {}, async ({ body, req, json, fail }) => {
+          requireIdentityRole(req, body.role, fail)
           requireCan(fail, body.role, body.me, 'task.anlegen')
           const incoming = Array.isArray(body.tasks) ? body.tasks : []
           for (const t of incoming) {
@@ -502,9 +522,10 @@ export function createApi(rootDir) {
 
       // POST /api/task/status — Handlung abhaken/wiedereröffnen {id, status} → Roll-up.
       // CoS immer; Owner nur eigene Handlungen (analog Audit #3 in /api/sitzung).
-      ep('/api/task/status', {}, async ({ body, json, fail }) => {
+      ep('/api/task/status', {}, async ({ body, req, json, fail }) => {
           if (!body.id || !['offen', 'erledigt'].includes(body.status)) return json(400, { ok: false, error: 'id und status (offen|erledigt) sind Pflicht' })
           const role = body.role, me = body.me
+          requireIdentityRole(req, role, fail)
           requireCan(fail, role, me, 'task.abhaken')
           const tstore = db.tasks.read()
           const t = tstore.tasks.find(x => x.id === body.id)
@@ -543,7 +564,8 @@ export function createApi(rootDir) {
       // aus der Durchsetzungs-Queue (je Owner gebündelt, 7-Tage-Bremse, persistentes
       // Log in reminder_log.json). NIE Versand — DRS sendet. Nur CoS.
       // Eskalation/Kalender bleiben bewusst simuliert (Führungssignale, nie automatisch).
-      ep('/api/reminder/draft', {}, async ({ body, json, fail }) => {
+      ep('/api/reminder/draft', {}, async ({ body, req, json, fail }) => {
+          requireIdentityRole(req, body.role, fail)
           requireCan(fail, body.role, body.me, 'reminder.entwerfen')
           const args = [path.join(root, 'scripts', 'gen_reminder_mail.py')]
           if (body.scope === 'alle') args.push('--alle')
@@ -574,7 +596,8 @@ export function createApi(rootDir) {
       // via import_gemini_doc.py --api. post:false = Dry-Run-VORSCHAU (nichts geschrieben);
       // post:true = Übernahme über den regulären /api/sitzung-Pfad. Menschliche Freigabe =
       // der Übernehmen-Klick NACH der Vorschau (gleiches Gate wie CLI --post). CoS/Owner.
-      ep('/api/gemini/import', {}, async ({ body, json, fail }) => {
+      ep('/api/gemini/import', {}, async ({ body, req, json, fail }) => {
+          requireIdentityRole(req, body.role, fail)
           requireCan(fail, body.role, body.me, 'sitzung.erfassen')
           if (!body.meeting_id) return json(400, { ok: false, error: 'meeting_id fehlt' })
           const args = [path.join(root, 'scripts', 'import_gemini_doc.py')]
@@ -597,7 +620,8 @@ export function createApi(rootDir) {
       // POST /api/task/suggest — K4 (01.08.): KI-Zerlegungsvorschlag für einen Milestone.
       // Liefert NUR Entwürfe (nichts wird gespeichert) — Übernahme läuft über den
       // bestehenden /api/task/upsert nach menschlicher Prüfung im UI. Nur CoS.
-      ep('/api/task/suggest', {}, async ({ body, json, fail }) => {
+      ep('/api/task/suggest', {}, async ({ body, req, json, fail }) => {
+          requireIdentityRole(req, body.role, fail)
           requireCan(fail, body.role, body.me, 'ki.nutzen')
           if (!body.ms_id) return json(400, { ok: false, error: 'ms_id fehlt' })
           const doc = db.projekt.read()
@@ -655,8 +679,9 @@ export function createApi(rootDir) {
       // POST /api/entscheid/upsert — Entscheid im Register anlegen/aktualisieren.
       // CoS immer; Owner darf als Antragsteller eigene Entscheide erfassen (analog Audit #3).
       // Lifecycle (status/kommunikation) wird hier NICHT verändert — nur via /api/entscheid/status.
-      ep('/api/entscheid/upsert', {}, async ({ body, json, fail }) => {
+      ep('/api/entscheid/upsert', {}, async ({ body, req, json, fail }) => {
           const role = body.role, me = body.me
+          requireIdentityRole(req, role, fail)
           requireCan(fail, role, me, 'entscheid.erfassen')
           const incoming = Array.isArray(body.entscheide) ? body.entscheide : []
           for (const e of incoming) {
@@ -672,9 +697,10 @@ export function createApi(rootDir) {
       // POST /api/entscheid/status — Status-Übergang im 5-Stufen-Modell {id, status, an?}.
       // CoS immer; Owner nur eigene (antragsteller === me). Übergang zu «kommuniziert»
       // setzt den Kommunikations-Stempel {an, am}; «entschieden» stempelt das Entscheid-Datum.
-      ep('/api/entscheid/status', {}, async ({ body, json, fail }) => {
+      ep('/api/entscheid/status', {}, async ({ body, req, json, fail }) => {
           if (!body.id || !ENT_FLOW.includes(body.status)) return json(400, { ok: false, error: `id und status (${ENT_FLOW.join('|')}) sind Pflicht` })
           const role = body.role, me = body.me
+          requireIdentityRole(req, role, fail)
           requireCan(fail, role, me, 'entscheid.fortschreiben')
           const estore = db.entscheide.read()
           const e = estore.entscheide.find(x => x.id === body.id)
@@ -710,11 +736,12 @@ export function createApi(rootDir) {
       // (04.08., «AXS-Datengehirn»). Datenehrlichkeit hart: Upgrade auf «vorhanden»/
       // «gelebt» NUR mit Evidenz (Artefakt-/Quellen-Link) — sonst 400. Jede Änderung
       // wird in status_historie protokolliert (revisionssicher, kein Lösch-Endpoint).
-      ep('/api/zielbild/status', {}, async ({ body, json, fail }) => {
+      ep('/api/zielbild/status', {}, async ({ body, req, json, fail }) => {
           const ZB = DOMAIN.zielbild || {}
           const FLOW = ZB.reihenfolge || []
           if (!body.id || !FLOW.includes(body.status))
             return json(400, { ok: false, error: `id und status (${FLOW.join('|')}) sind Pflicht` })
+          requireIdentityRole(req, body.role, fail)
           requireCan(fail, body.role, body.me, 'zielbild.fortschreiben')
           const store = db.zielbild.read()
           const z = store.zielbild.find(x => x.id === body.id)

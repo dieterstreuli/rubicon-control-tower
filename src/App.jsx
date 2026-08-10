@@ -9,8 +9,9 @@ import {
   ClipboardList, Plus, Trash2, Save, Sun, Moon, BarChart3, Circle, Scale,
 } from 'lucide-react'
 import { T, STATUS_META, ROLES, applyTheme, initialTheme } from './lib/theme.js'
-import { BASE, ISSUES, NOW, ALL_TASKS, MS_META, tasksFor, tnr, taskOverdue, RADAR, reloadKeepScroll, BRIEFINGS, FR, PROTO, AGENDAS, REPORTS, ENTS, REMLOG } from './lib/data.js'
+import { BASE, ISSUES, NOW, ALL_TASKS, MS_META, tasksFor, tnr, taskOverdue, RADAR, reloadKeepScroll, BRIEFINGS, FR, PROTO, AGENDAS, REPORTS, ENTS, REMLOG, IDENTITY } from './lib/data.js'
 import { Pill, Bar, Kpi, PhaseTag, phaseColor, phaseShort, FR_COL, MsPicker } from './components/ui.jsx'
+import { WelcomePanel } from './components/WelcomePanel.jsx'
 import { DeltaWoche, FragDieDaten, ZielbildCard } from './views/TowerWidgets.jsx'
 import { FuehrungsrhythmusCard, IntroView } from './views/IntroView.jsx'
 import { AGENDA_BY_ID, ErfassungView, FR_MEETINGS, GeminiImport, ProtokolleView } from './views/SitzungenView.jsx'
@@ -38,8 +39,16 @@ const inputProgramme = (i) => [...new Set((i.liefer_tasks || []).map(tid => {
 }).filter(Boolean))]
 
 export default function App() {
-  const [role, setRole] = useState('CoS')
-  const [me, setMe] = useState('Andreas Fritthum') // aktive Identität in Rolle «Owner» (volle Namen, 13.07.)
+  // Härtung 10.08.2026: Identitäts-Logik NUR bei echtem IAP-Login (viaIap) anwenden. Ohne IAP
+  // (Dieters lokaler Betrieb, via Tailnet geteilt — kein x-goog-authenticated-user-email-Header)
+  // gilt das alte freie Verhalten: freies Rollen-Dropdown, freie me-Wahl, kein hartkodierter Name.
+  // Sonst würde jeder Tailnet-Nutzer als der Dev-Fallback (z.B. «Dieter Streuli») erkannt.
+  const viaIap = !!(IDENTITY && IDENTITY.viaIap)
+  const [role, setRole] = useState(() => (viaIap && IDENTITY.rollen && IDENTITY.rollen[0]) || 'CoS')
+  // «me» = Owner-Person: bei echtem IAP-Login aus der Identität; ohne IAP (lokal/Tailnet)
+  // freie Wahl ohne hartkodierten Namen.
+  const [me, setMe] = useState(() => (viaIap && IDENTITY.person) || '')
+  const allowedRoles = (viaIap && IDENTITY.rollen && IDENTITY.rollen.length) ? IDENTITY.rollen : ROLES
   const [theme, setTheme] = useState(() => { const m = initialTheme(); applyTheme(m); return m })
   const toggleTheme = () => { const next = theme === 'dark' ? 'light' : 'dark'; applyTheme(next); setTheme(next) }
   // IA-Konsolidierung 01.08. (B0): 5 Tabs. Alte Tab-IDs (inputs/intro/streams/
@@ -299,12 +308,13 @@ export default function App() {
             <select value={role} onChange={e => setRole(e.target.value)}
               className="text-[12px] rounded px-2 py-1 border bg-transparent"
               style={{ borderColor: T.line, color: T.ink, background: T.panelSoft }}>
-              {ROLES.map(r => <option key={r} value={r} style={{ color: '#111' }}>Rolle: {r}</option>)}
+              {allowedRoles.map(r => <option key={r} value={r} style={{ color: '#111' }}>Rolle: {r}</option>)}
             </select>
             {role === 'Owner' && (
               <select value={me} onChange={e => setMe(e.target.value)}
                 className="text-[12px] rounded px-2 py-1 border bg-transparent"
                 style={{ borderColor: T.line, color: T.ink, background: T.panelSoft }}>
+                <option value="" style={{ color: '#111' }}>— wählen —</option>
                 {(BASE.meta.owners || []).map(o => <option key={o} value={o} style={{ color: '#111' }}>{o}</option>)}
               </select>
             )}
@@ -346,9 +356,16 @@ export default function App() {
               : <Lock size={13} style={{ color: info.c }} />}
             <b style={{ color: info.c }}>Aktive Rolle: {info.t}</b>
             <span style={{ color: T.inkDim }}>· {info.d}</span>
+            {viaIap && (
+              <span style={{ marginLeft: 'auto', color: T.inkFaint, fontFamily: T.mono, fontSize: '10.5px' }}>
+                Angemeldet als {IDENTITY.person} · {IDENTITY.email}{!IDENTITY.isKnown && ' — unbekannt, nur lesend'}
+              </span>
+            )}
           </div>
         )
       })()}
+
+      <WelcomePanel />
 
       <main className="p-4 md:p-6 space-y-5">
         {driftDays > 2 && (

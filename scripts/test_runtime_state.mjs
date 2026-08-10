@@ -42,6 +42,7 @@ const state = {
   entscheide: j('entscheide.json'),
   reminder_log: j('reminder_log.json'),
   zielbild: j('zielbild.json'),
+  identity: { email: 'd.streuli@axs.aero', person: 'Dieter Streuli', rollen: ['CoS', 'Owner'], isKnown: true },
 }
 
 // ── 1 · loadProject(rawYaml) ──
@@ -76,6 +77,13 @@ const _mid = Object.keys(d.TRAKT_DOCS)[0]
 check('traktDocUrl: bekannte ID → /edit-URL', !_mid || (d.traktDocUrl(_mid) || '').endsWith('/edit'))
 check('traktDocUrl: unbekannt → null', d.traktDocUrl('__none__') === null)
 check('initData: tasksFor liest das Live-Binding', d.tasksFor(d.ALL_TASKS[0]?.ms_id).length > 0)
+check('initData: IDENTITY aus der Nutzlast (Stufe 1)', d.IDENTITY === state.identity)
+
+// Dual-Mode: alter Server ohne identity-Feld → IDENTITY fällt auf null zurück
+const { identity: _identity, ...stateNoIdentity } = state
+d.initData(stateNoIdentity)
+check('initData: ohne identity im Payload → IDENTITY === null', d.IDENTITY === null)
+d.initData(state) // Live-Bindings für die folgenden Prüfungen wieder auf den vollen Testzustand setzen
 
 // ── 3 · domain.js / theme.js — Domänen-SSOT POST-init aus data.js ──
 // Import bewusst erst NACH initData (oben) — exakt wie im Browser, wo App.jsx

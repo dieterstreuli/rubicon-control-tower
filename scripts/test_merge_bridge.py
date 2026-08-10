@@ -229,6 +229,23 @@ def test_new_doc_indexes_are_transaktion():
     assert "briefings.json" in mb.STAMMDATEN and "fuehrungsrhythmus.json" in mb.STAMMDATEN
 
 
+# ── 9b. identity_map.json ist STAMMDATEN (C1, 10.08.2026): Prod-Volume darf die im
+# Image gepflegte Map nicht verdecken -> SEED überschreibt Volume, wie domain.json ──
+def test_identity_map_is_stammdaten():
+    import merge_bridge as mb
+    assert "identity_map.json" in mb.STAMMDATEN
+    seed, data = _mkdirs()
+    try:
+        _write(seed, 'identity_map.json', {'d.streuli@axs.aero': {'person': 'Dieter Streuli', 'rollen': ['CoS']}})
+        _write(data, 'identity_map.json', {})   # Volume "verdeckt" leer, wie im Prod-GCS-Fall
+        mb.run(seed, data, 'apply')
+        assert json.loads(_read(data, 'identity_map.json')) == {
+            'd.streuli@axs.aero': {'person': 'Dieter Streuli', 'rollen': ['CoS']}
+        }
+    finally:
+        _cleanup(seed, data)
+
+
 # ── 10. Snapshot: Apply schreibt history/projekt-<ts>.yaml == geschriebenes projekt.yaml ─────
 def test_snapshot_written_on_apply():
     seed, data = _mkdirs()
@@ -322,6 +339,7 @@ TESTS = [
     test_auto_applies_when_clean,
     test_auto_holds_on_conflict,
     test_new_doc_indexes_are_transaktion,
+    test_identity_map_is_stammdaten,
     test_snapshot_written_on_apply,
     test_snapshot_dedup,
     test_snapshot_not_on_dryrun,
