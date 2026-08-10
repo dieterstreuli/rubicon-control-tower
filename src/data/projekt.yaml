@@ -2327,15 +2327,21 @@ workstreams:
         nachlauf: false
         support: Grassner/Saxinger + Mertinz (KWR)
       - id: WS7-10
-        name: 'Betriebsübergang: schriftliche Bestätigung beim Ministerium (BMIMI) angefordert'
+        name: 'Betriebsübergang: schriftliche Bestätigung des BMIMI liegt vor. Im Teams-Call
+          mit dem BMIMI (Oliver Frank) am 10.08.2026 angefordert — der Milestone gilt erst
+          als erfüllt, wenn die Bestätigung SCHRIFTLICH vorliegt. Grund: Mertinz'' stärkstes
+          AVRAG-Argument ist die Aussage des Ministeriums selbst, dass die Arbeitsverhältnisse
+          "im Zuge eines Betriebsübergangs" übernommen werden; bisher nur über Medienberichte
+          belegt. Schriftlich wird daraus ein verwertbares Beweismittel — relevant vor der
+          Beschwerdefrist ~21.08.2026.'
         owner: Andreas Fritthum
         start: '2026-07-31'
-        due: '2026-08-07'
+        due: '2026-08-21'
         date_assumed: false
         phase: Phase 0
         gate: null
         critical: false
-        progress: 0
+        progress: 25
         depends_on: []
         nachlauf: false
         support: Mertinz (KWR)
