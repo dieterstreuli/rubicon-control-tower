@@ -405,7 +405,7 @@ export default function App() {
         {tab === 'entscheide' && <EntscheideView role={role} me={me} today={BASE.meta.today} />}
 
         {/* ══ REPORTS ══ */}
-        {tab === 'reports' && <ReportsView canEdit={canEdit} today={BASE.meta.today} />}
+        {tab === 'reports' && <ReportsView canEdit={canEdit} role={role} me={me} today={BASE.meta.today} />}
 
         {/* ══ 1 · KONTROLLTURM ══ */}
         {tab === 'tower' && (<>

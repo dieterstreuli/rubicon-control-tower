@@ -386,6 +386,31 @@ def test_ai_credentials_impersonation_wiring():
         _restore_env(saved)
 
 
+# ── 16. Nicht-Null-Exit ohne stdout -> RuntimeError mit stderr (Fix #1) ───────
+def test_local_cli_nonzero_exit_raises():
+    saved = _clean_env()
+
+    class R:  # minimaler CompletedProcess-Stand-in mit Fehler-Exit
+        returncode = 1
+        stdout = ''
+        stderr = 'error: not logged in\n'
+
+    def fake_run(cmd, **kw):
+        return R()
+
+    orig = ai_client.subprocess.run
+    ai_client.subprocess.run = fake_run
+    try:
+        try:
+            ai_client.generate('hi prompt')
+            raise AssertionError('RuntimeError erwartet')
+        except RuntimeError as ex:
+            assert str(ex) == 'error: not logged in'
+    finally:
+        ai_client.subprocess.run = orig
+        _restore_env(saved)
+
+
 TESTS = [
     test_config_defaults,
     test_config_overrides,
@@ -402,6 +427,7 @@ TESTS = [
     test_ki_block_error_placeholder,
     test_auto_assigns_ki_only_to_woche,
     test_ai_credentials_impersonation_wiring,
+    test_local_cli_nonzero_exit_raises,
 ]
 
 

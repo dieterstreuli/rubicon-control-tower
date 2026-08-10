@@ -43,6 +43,12 @@ def _local_cli(prompt, timeout):
     """Bisheriger lokaler Weg — Aufruf unveraendert zu gen_report vor dem Umbau."""
     r = subprocess.run([CLAUDE_BIN, '-p', '--model', 'claude-sonnet-4-6'], input=prompt,
                        capture_output=True, text=True, timeout=timeout)
+    # Nicht-Null-Exit ohne stdout: den Grund (stderr) als Fehler sichtbar machen, statt still ''
+    # zurueckzugeben. Sonst erschiene ein CLI-Fehler (z.B. abgelaufene Anmeldung, die nur auf
+    # stderr landet) als leere Antwort. Aufrufer behandeln die Exception: Node runClaude -> 500
+    # (+ AUTH_RE-Retry, da auch err.message geprueft wird); gen_report.ki_block faengt sie non-fatal ab.
+    if r.returncode != 0 and not r.stdout.strip():
+        raise RuntimeError((r.stderr.strip() or f'exit {r.returncode}')[-300:])
     return r.stdout.strip()
 
 

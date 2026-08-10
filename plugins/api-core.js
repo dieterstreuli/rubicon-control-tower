@@ -15,10 +15,13 @@ import { fileURLToPath } from 'node:url'
 import { execFile, spawn } from 'node:child_process'
 import yaml from 'js-yaml'
 import { can, requireCan } from '../src/lib/permissions.js'   // Q4: EINE Rechte-Matrix für UI + Server
-import { resolveIdentity, identityRoleDenied } from './identity.js'
+import { resolveIdentity, identityRoleDenied, ownerMeDenied } from './identity.js'
 
 const PY_BIN = process.env.RUBICON_PY || '/Library/Frameworks/Python.framework/Versions/3.14/bin/python3'  // Portabilität: env-Override (MIGRATION.md)
-const CLAUDE_BIN = process.env.RUBICON_CLAUDE || '/Users/dieterstreuli/.local/bin/claude'  // K4/K7: KI-Aufrufe (headless, Sonnet)
+// KI-Naht: Node shellt die Python-Modell-Fassade (ai_ask.py -> _tools/ai_client.py). Provider
+// unset (lokal) -> byte-identischer Rückfall auf die claude-CLI; anthropic (Server) -> Vertex.
+// RUBICON-CUTOVER: der lokale CLI-Rückfall lebt in ai_client und entfällt beim Web-only-Switch.
+const AI_ASK = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'scripts', 'ai_ask.py')
 // Server-Modus = laeuft am DEPLOYTEN Service (RUBICON_DOCS_DIR ist dort gesetzt; lokal bei
 // Dieter nicht). Steuert im UI, ob Report-Links auf die Server-Google-Docs (server_doc_url)
 // oder auf Dieters lokale doc_url zeigen. NICHT die DWD-Env (RUBICON_WORKSPACE_SA/-SUBJECT):
@@ -26,16 +29,18 @@ const CLAUDE_BIN = process.env.RUBICON_CLAUDE || '/Users/dieterstreuli/.local/bi
 // /api/state reicht das Flag an die SPA (src/lib/data.js SERVER).
 const IS_SERVER = !!process.env.RUBICON_DOCS_DIR
 
-// K4/K7 (01.08.): headless-Claude-Aufruf — Prompt via stdin (Grössen-sicher),
-// Sonnet, hartes Timeout. Reine Text-Antwort; JSON extrahiert der Aufrufer.
+// K4/K7 (01.08.): headless-KI-Aufruf — Prompt via stdin (Grössen-sicher),
+// hartes Timeout. Reine Text-Antwort; JSON extrahiert der Aufrufer. Der Node-
+// Prozess kennt kein Modell mehr — die Wahl (lokale CLI vs. Vertex) trifft
+// ai_client anhand RUBICON_AI_PROVIDER (s. AI_ASK oben).
 // Auth-Härtung 01.08.: «OAuth session expired» entsteht, wenn parallel eine
-// interaktive Claude-Session das Token rotiert — einmalige Wiederholung nach
+// interaktive CLI-Session das Token rotiert — einmalige Wiederholung nach
 // kurzer Pause behebt das fast immer (frisches Token liegt dann im Keychain).
+// Betrifft nur den lokalen CLI-Zweig; Vertex löst AUTH_RE nie aus.
 function runClaudeOnce(prompt, cb, timeoutMs) {
   let done = false
   const fin = (err, out, errS) => { if (!done) { done = true; cb(err, out, errS) } }
-  const p = spawn(CLAUDE_BIN, ['-p', '--model', 'claude-sonnet-4-6'],
-    { stdio: ['pipe', 'pipe', 'pipe'], env: { ...process.env, HOME: process.env.HOME || '/Users/dieterstreuli' } })
+  const p = spawn(PY_BIN, [AI_ASK], { stdio: ['pipe', 'pipe', 'pipe'], env: { ...process.env } })
   let out = '', errS = ''
   const to = setTimeout(() => { p.kill('SIGKILL'); fin(new Error(`Timeout nach ${timeoutMs / 1000}s`), out, errS) }, timeoutMs)
   p.stdout.on('data', d => { out += d })
@@ -48,6 +53,7 @@ function runClaudeOnce(prompt, cb, timeoutMs) {
 function runClaude(prompt, cb, timeoutMs = 240000) {
   // ACHTUNG: der Auth-Fehler kommt teils mit Exit 0 über STDOUT — deshalb Text
   // in stdout UND stderr prüfen, sonst landet er als «Antwort» im UI (Fund 01.08.).
+  // Der Retry unten nützt nur dem lokalen CLI-Pfad (ai_client ohne Provider).
   const AUTH_RE = /oauth session expired|failed to authenticate|could not be refreshed|please run \/login/i
   runClaudeOnce(prompt, (err, out, errS) => {
     if (AUTH_RE.test((out || '') + (errS || '') + String(err?.message || ''))) {
@@ -155,11 +161,15 @@ export function createApi(rootDir) {
   // Dev-Fallback ist dort keine echte Identität, sondern nur ein Platzhalter. viaIap wiederum
   // verlangt zusätzlich RUBICON_IAP_ACTIVE (nur am Cloud-Run-Service gesetzt) — ohne das Flag
   // bleibt das alte freie Verhalten (Client-Rolle wird vertraut), auch mit mitgeschicktem Header.
-  function requireIdentityRole(req, role, fail) {
+  function requireIdentityRole(req, role, fail, me) {
     const id = resolveIdentity(req.headers, db.identity.read(), process.env.RUBICON_DEV_IDENTITY, process.env.RUBICON_IAP_ACTIVE === '1')
     if (identityRoleDenied(id, role)) {
       fail(403, `Rolle «${role || '?'}» ist für ${id.email} nicht freigegeben (erlaubt: ${id.rollen.join(', ')})`)
     }
+    // I2 (10.08.): unter echtem IAP-Login ist die freie «me»-Wahl an die verifizierte
+    // Identität gebunden — ein Owner darf nur im eigenen Namen handeln.
+    if (ownerMeDenied(id, role, me))
+      fail(403, `Owner «${id.person}» darf nicht im Namen von «${me}» handeln`)
   }
   // ── Entscheids-Register (16.07., Säule 3 der Entscheidungsordnung INS-001 Anhang B) ──
   // Jeder Entscheid trägt eine dauerhafte Register-ID «E-<Jahr>-###» (monoton via seq,
@@ -350,7 +360,7 @@ export function createApi(rootDir) {
 
           // Rollen-Gate (Audit #3): nur CoS/Owner dürfen schreiben
           const role = body.role, me = body.me
-          requireIdentityRole(req, role, fail)
+          requireIdentityRole(req, role, fail, me)
           requireCan(fail, role, me, 'sitzung.erfassen')
 
           // 1) Protokoll-Datensatz anhängen (neueste zuerst) — kollisionssichere ID (Audit #22).
@@ -465,7 +475,7 @@ export function createApi(rootDir) {
       // wird verdient). Journal = git-Historie (Δ-Woche zeigt die Änderung).
       ep('/api/ms/progress', {}, async ({ body, req, json, fail }) => {
           const { role, me } = body
-          requireIdentityRole(req, role, fail)
+          requireIdentityRole(req, role, fail, me)
           requireCan(fail, role, me, 'ms.melden')
           if (!body.ms_id) return json(400, { ok: false, error: 'ms_id fehlt' })
           const hasProg = typeof body.progress === 'number'
@@ -495,7 +505,7 @@ export function createApi(rootDir) {
       // Optional body.activate_ms: schaltet den Milestone auf progress_source:'tasks'
       // («treibend») — bewusst expliziter Akt NACH menschlicher Freigabe der Zerlegung.
       ep('/api/task/upsert', {}, async ({ body, req, json, fail }) => {
-          requireIdentityRole(req, body.role, fail)
+          requireIdentityRole(req, body.role, fail, body.me)
           requireCan(fail, body.role, body.me, 'task.anlegen')
           const incoming = Array.isArray(body.tasks) ? body.tasks : []
           for (const t of incoming) {
@@ -525,7 +535,7 @@ export function createApi(rootDir) {
       ep('/api/task/status', {}, async ({ body, req, json, fail }) => {
           if (!body.id || !['offen', 'erledigt'].includes(body.status)) return json(400, { ok: false, error: 'id und status (offen|erledigt) sind Pflicht' })
           const role = body.role, me = body.me
-          requireIdentityRole(req, role, fail)
+          requireIdentityRole(req, role, fail, me)
           requireCan(fail, role, me, 'task.abhaken')
           const tstore = db.tasks.read()
           const t = tstore.tasks.find(x => x.id === body.id)
@@ -565,7 +575,7 @@ export function createApi(rootDir) {
       // Log in reminder_log.json). NIE Versand — DRS sendet. Nur CoS.
       // Eskalation/Kalender bleiben bewusst simuliert (Führungssignale, nie automatisch).
       ep('/api/reminder/draft', {}, async ({ body, req, json, fail }) => {
-          requireIdentityRole(req, body.role, fail)
+          requireIdentityRole(req, body.role, fail, body.me)
           requireCan(fail, body.role, body.me, 'reminder.entwerfen')
           const args = [path.join(root, 'scripts', 'gen_reminder_mail.py')]
           if (body.scope === 'alle') args.push('--alle')
@@ -597,7 +607,7 @@ export function createApi(rootDir) {
       // post:true = Übernahme über den regulären /api/sitzung-Pfad. Menschliche Freigabe =
       // der Übernehmen-Klick NACH der Vorschau (gleiches Gate wie CLI --post). CoS/Owner.
       ep('/api/gemini/import', {}, async ({ body, req, json, fail }) => {
-          requireIdentityRole(req, body.role, fail)
+          requireIdentityRole(req, body.role, fail, body.me)
           requireCan(fail, body.role, body.me, 'sitzung.erfassen')
           if (!body.meeting_id) return json(400, { ok: false, error: 'meeting_id fehlt' })
           const args = [path.join(root, 'scripts', 'import_gemini_doc.py')]
@@ -621,7 +631,7 @@ export function createApi(rootDir) {
       // Liefert NUR Entwürfe (nichts wird gespeichert) — Übernahme läuft über den
       // bestehenden /api/task/upsert nach menschlicher Prüfung im UI. Nur CoS.
       ep('/api/task/suggest', {}, async ({ body, req, json, fail }) => {
-          requireIdentityRole(req, body.role, fail)
+          requireIdentityRole(req, body.role, fail, body.me)
           requireCan(fail, body.role, body.me, 'ki.nutzen')
           if (!body.ms_id) return json(400, { ok: false, error: 'ms_id fehlt' })
           const doc = db.projekt.read()
@@ -681,7 +691,7 @@ export function createApi(rootDir) {
       // Lifecycle (status/kommunikation) wird hier NICHT verändert — nur via /api/entscheid/status.
       ep('/api/entscheid/upsert', {}, async ({ body, req, json, fail }) => {
           const role = body.role, me = body.me
-          requireIdentityRole(req, role, fail)
+          requireIdentityRole(req, role, fail, me)
           requireCan(fail, role, me, 'entscheid.erfassen')
           const incoming = Array.isArray(body.entscheide) ? body.entscheide : []
           for (const e of incoming) {
@@ -700,7 +710,7 @@ export function createApi(rootDir) {
       ep('/api/entscheid/status', {}, async ({ body, req, json, fail }) => {
           if (!body.id || !ENT_FLOW.includes(body.status)) return json(400, { ok: false, error: `id und status (${ENT_FLOW.join('|')}) sind Pflicht` })
           const role = body.role, me = body.me
-          requireIdentityRole(req, role, fail)
+          requireIdentityRole(req, role, fail, me)
           requireCan(fail, role, me, 'entscheid.fortschreiben')
           const estore = db.entscheide.read()
           const e = estore.entscheide.find(x => x.id === body.id)
@@ -741,7 +751,7 @@ export function createApi(rootDir) {
           const FLOW = ZB.reihenfolge || []
           if (!body.id || !FLOW.includes(body.status))
             return json(400, { ok: false, error: `id und status (${FLOW.join('|')}) sind Pflicht` })
-          requireIdentityRole(req, body.role, fail)
+          requireIdentityRole(req, body.role, fail, body.me)
           requireCan(fail, body.role, body.me, 'zielbild.fortschreiben')
           const store = db.zielbild.read()
           const z = store.zielbild.find(x => x.id === body.id)
@@ -769,7 +779,9 @@ export function createApi(rootDir) {
       })
 
       // POST /api/protokoll/export — Protokoll als PDF + Google Doc rendern (shellt Python)
-      ep('/api/protokoll/export', {}, async ({ body, json, fail }) => {
+      ep('/api/protokoll/export', {}, async ({ body, req, json, fail }) => {
+          requireIdentityRole(req, body.role, fail, body.me)
+          requireCan(fail, body.role, body.me, 'report.erzeugen')
           if (!body.id) return json(400, { ok: false, error: 'id fehlt' })
           // Sensitiv (#6): kein Export — PDF läge im servierten public/, das Doc im
           // geteilten Drive. Sensitive Protokolle bleiben ausschliesslich im lokalen Store.
@@ -784,7 +796,9 @@ export function createApi(rootDir) {
       })
 
       // POST /api/report/generate — verdichteten Report rendern (shellt gen_report.py)
-      ep('/api/report/generate', {}, async ({ body, json, fail }) => {
+      ep('/api/report/generate', {}, async ({ body, req, json, fail }) => {
+          requireIdentityRole(req, body.role, fail, body.me)
+          requireCan(fail, body.role, body.me, 'report.erzeugen')
           if (!body.level || !body.period) return json(400, { ok: false, error: 'level und period sind Pflicht' })
           const rargs = [path.join(root, 'scripts', 'gen_report.py'), body.level, body.period]
           if (body.ki) rargs.push('--ki')   // K5: KI-Entwurf (Narrativ + Ampel-Begründungen) — dauert länger
@@ -797,7 +811,9 @@ export function createApi(rootDir) {
       })
 
       // POST /api/report/comment — optionalen Freitext-Kommentar speichern {key, text}
-      ep('/api/report/comment', {}, async ({ body, json, fail }) => {
+      ep('/api/report/comment', {}, async ({ body, req, json, fail }) => {
+          requireIdentityRole(req, body.role, fail, body.me)
+          requireCan(fail, body.role, body.me, 'report.erzeugen')
           if (!body.key) return json(400, { ok: false, error: 'key fehlt' })
           const kstore = db.kommentare.read()
           if (body.text) kstore[body.key] = body.text; else delete kstore[body.key]

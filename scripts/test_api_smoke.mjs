@@ -136,9 +136,12 @@ async function main() {
   await expect('ask: Frage zu lang → 400', '/api/ask', { body: { frage: 'x'.repeat(501) } }, 400)
 
   // ── 7 · Reports & Protokoll-Export ──
-  await expect('report/generate: level/period fehlen → 400', '/api/report/generate', { body: {} }, 400)
-  await expect('report/comment: key fehlt → 400', '/api/report/comment', { body: { text: 'x' } }, 400)
-  await expect('protokoll/export: id fehlt → 400', '/api/protokoll/export', { body: {} }, 400)
+  await expect('report/generate: lesende Rolle → 403', '/api/report/generate', { body: { ...LESEND, level: 'woche', period: '2026-08-01' } }, 403)
+  await expect('report/generate: level/period fehlen → 400', '/api/report/generate', { body: { ...CoS } }, 400)
+  await expect('report/comment: lesende Rolle → 403', '/api/report/comment', { body: { ...LESEND, key: 'woche:2026-08-01:programm', text: 'x' } }, 403)
+  await expect('report/comment: key fehlt → 400', '/api/report/comment', { body: { ...CoS, text: 'x' } }, 400)
+  await expect('protokoll/export: lesende Rolle → 403', '/api/protokoll/export', { body: { ...LESEND, id: 'p-irgendwas' } }, 403)
+  await expect('protokoll/export: id fehlt → 400', '/api/protokoll/export', { body: { ...CoS } }, 400)
 
   // ── 8 · Read-only + Sensitiv-Sperre ──
   await expect('delta: GET liefert Daten → 200', '/api/delta?days=7', { method: 'GET' }, 200)

@@ -37,3 +37,9 @@ export function resolveIdentity(headers, map, devFallback, iapActive) {
 export function identityRoleDenied(identity, role) {
   return !!(identity && identity.viaIap) && !identity.rollen.includes(role)
 }
+
+/** Unter echtem IAP-Login darf ein Owner nur im eigenen Namen (me === identity.person)
+ *  handeln. Ohne IAP (viaIap false) oder für andere Rollen: NIE blockieren. me===undefined ⇒ No-op. */
+export function ownerMeDenied(identity, role, me) {
+  return !!(identity && identity.viaIap) && role === 'Owner' && me !== undefined && me !== identity.person
+}

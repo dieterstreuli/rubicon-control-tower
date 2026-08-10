@@ -6,7 +6,7 @@ import { BarChart3, FileText, Lock } from 'lucide-react'
 
 // ── REPORTS — verdichtete Standard-Reports (Woche/Monat/Quartal), auto-generiert
 // aus projekt.yaml + protokolle.json via /api/report/generate. Kein Neu-Erfassen.
-export function ReportsView({ canEdit, today }) {
+export function ReportsView({ canEdit, role, me, today }) {
   const reports = REPORTS.reports || []
   const qOf = (d) => `${d.slice(0, 4)}-Q${Math.ceil(parseInt(d.slice(5, 7), 10) / 3)}`
   const defP = (lvl) => lvl === 'woche' ? today : lvl === 'monat' ? today.slice(0, 7) : qOf(today)
@@ -19,8 +19,8 @@ export function ReportsView({ canEdit, today }) {
   const gen = async () => {
     setBusy(true)
     try {
-      if (comment.trim()) await fetch('/api/report/comment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: `${level}:${period}:programm`, text: comment.trim() }) })
-      const r = await fetch('/api/report/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ level, period, ki }) })
+      if (comment.trim()) await fetch('/api/report/comment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: `${level}:${period}:programm`, text: comment.trim(), role, me }) })
+      const r = await fetch('/api/report/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ level, period, ki, role, me }) })
       const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
       if (j.ok) { sessionStorage.setItem('rubicon_tab', 'reports'); reloadKeepScroll() }
       else { alert('Report fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(false) }

@@ -129,6 +129,13 @@ Betriebsregeln (für alle Beteiligten):
   → „Daten konnten nicht geladen werden: Failed to fetch dynamically imported module". Neu erkennt der Bootstrap den
   Chunk-Load-Fehler und lädt **genau einmal** hart neu (frisches `index.html` mit den neuen Chunk-Namen; gegen
   Endlos-Schleife per `sessionStorage` abgesichert) — der Erst-Load nach einem Deploy heilt sich damit selbst.
+- **„Frag die Daten" & KI-Zerlegung serverseitig:** beide Funktionen laufen jetzt serverseitig über die zentrale
+  Modell-Fassade (**Vertex AI, EU**) statt eines lokal installierten Programms — das behebt einen Serverfehler bei
+  „Frag die Daten". Es sind keine neuen Rechte nötig (derselbe Pfad wie das KI-Narrativ); lokal bleibt der Betrieb
+  unverändert.
+- **Rollen-Härtung (nur unter IAP):** das Handeln ist an die eigene Identität gebunden — ein Owner handelt nur im
+  eigenen Namen; die Report-/Protokoll-Aktionen (Report erzeugen, Kommentar, Protokoll-Export) sind serverseitig
+  rollen-gegated. Ohne IAP bleibt das bisherige freie Verhalten.
 
 **09.08.2026 — Serverseitige KI (Vertex), Wochen-Delta & Robustheit (dual-mode):**
 - **KI-Narrativ serverseitig (Vertex AI):** der **KI-Entwurf-Block** des Wochen-Reports (Narrativ +

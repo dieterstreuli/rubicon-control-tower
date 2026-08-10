@@ -309,7 +309,7 @@ export function ProtokolleView({ role, me }) {
   const exportP = async (id) => {
     setBusy(id)
     try {
-      const r = await fetch('/api/protokoll/export', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) })
+      const r = await fetch('/api/protokoll/export', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, role, me }) })
       const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
       if (j.ok) { sessionStorage.setItem('rubicon_tab', 'protokolle'); reloadKeepScroll() }
       else { alert('Export fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(null) }
@@ -405,12 +405,16 @@ export function ProtokolleView({ role, me }) {
                   <span className="flex items-center gap-1.5">
                     <a href={p.export.pdf} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.brass, color: T.brass }}><FileText size={10} /> PDF</a>
                     {p.export.doc_url && <a href={p.export.doc_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.blue, color: T.blue }}><FileText size={10} /> Doc</a>}
-                    <button onClick={() => exportP(p.id)} disabled={busy === p.id} className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.line, color: T.inkFaint }} title="neu erzeugen">{busy === p.id ? '…' : '↻'}</button>
+                    {can(role, me, 'report.erzeugen') && (
+                      <button onClick={() => exportP(p.id)} disabled={busy === p.id} className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.line, color: T.inkFaint }} title="neu erzeugen">{busy === p.id ? '…' : '↻'}</button>
+                    )}
                   </span>
-                ) : (
+                ) : can(role, me, 'report.erzeugen') ? (
                   <button onClick={() => exportP(p.id)} disabled={busy === p.id} className="inline-flex items-center gap-1 px-2 py-1 rounded border text-[10px]" style={{ borderColor: T.brass, color: T.brass }}>
                     <FileText size={10} /> {busy === p.id ? 'erzeugt… (~15s)' : 'Protokoll erzeugen (PDF + Doc)'}
                   </button>
+                ) : (
+                  <span className="text-[10px]" style={{ color: T.inkFaint }}>noch kein Export</span>
                 )}
               </div>
               <div className="mt-1.5 space-y-1">

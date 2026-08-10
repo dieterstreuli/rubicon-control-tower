@@ -357,6 +357,12 @@ serverseitig dispatcht `RUBICON_AI_PROVIDER` auf **Vertex AI im Projekt `aixs-26
 Anthropic-/Google-Endpoint). Die Ausgabe bleibt als ENTWURF markiert und human-gated (CoS/DRS);
 Fehler sind non-fatal (Platzhalter im Report).
 
+Seit 10.08.2026 nutzen auch die beiden Node-KI-Endpoints `/api/ask` („Frag die Daten") und
+`/api/task/suggest` dieselbe Fassade: der App-Server shellt dafür `scripts/ai_ask.py` (Prompt via stdin),
+das `ai_client.generate` aufruft. Serverseitig läuft das über denselben Vertex-Pfad wie das KI-Narrativ
+(SA `rubicon-ai@`, `claude-sonnet-5` @ `eu`) — **keine neuen Grants**; die AI-Env trägt der App-Service
+bereits (Tabelle unten). Lokal (alle `RUBICON_AI_*` unset) fällt es byte-identisch auf die frühere CLI zurück.
+
 **Env (Service `rubicon-tower` UND Job `rubicon-report-job` — beide führen `gen_report.py` aus):**
 
 | Variable | Wert (live) | Bedeutung |

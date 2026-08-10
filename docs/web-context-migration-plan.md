@@ -89,6 +89,11 @@ g.suchomski → erkannt + begrüßt (Testrolle). Kein Self-Assign CoS mehr mögl
 **Ziel:** `/api/ask` „Frag die Daten" + `/api/task/suggest` laufen ohne lokales Binary. Behebt den geparkten
 ENOENT-Bug.
 
+**Status: ERLEDIGT (10.08.2026).** Umgesetzt: neuer Wrapper `scripts/ai_ask.py` (Prompt via stdin → `ai_client.generate`
+→ stdout); `runClaudeOnce` shellt statt des lokalen Binaries `PY_BIN scripts/ai_ask.py`; `CLAUDE_BIN`- und
+`HOME`-Default aus dem Node entfernt. Dual-Mode gewahrt (lokal ohne `RUBICON_AI_PROVIDER` = alte CLI; Server = Vertex
+`claude-sonnet-5` @ `eu`). Zusammen mit I2/M1 (unten) via Live-Smoke bestätigt (40/40).
+
 **Dateien:** `plugins/api-core.js` (`runClaude`/`runClaudeOnce`, `CLAUDE_BIN`, `/api/ask`, `/api/task/suggest`);
 `scripts/_tools/ai_client.py` (Bridge-Einstieg); `Dockerfile` (falls Node-Vertex-Client).
 
@@ -97,20 +102,20 @@ ENOENT-Bug.
 dual-mode (lokal ohne `RUBICON_AI_PROVIDER` = alte CLI). `CLAUDE_BIN`/`HOME`-Default auf Dieters Pfad entfernen; im
 Server-Modus (`IS_SERVER`) **nie** ein lokales Binary spawnen.
 
-**Zusatz:** `/api/ask` bekommt ein **Rollen-Gate** (`requireCan(…, 'ki.nutzen')`) wie `/api/task/suggest`; erwägen, den
-Prompt-Kontext zu begrenzen (heute ganzes `projekt.yaml`+tasks+entscheide ungefiltert).
+**Entscheidung `/api/ask` (10.08.2026):** `/api/ask` bleibt **bewusst ungegated** (rein lesende NL-Abfrage; passt zur
+Stufe-1-Entscheidung „Read voll transparent"). Nur der KI-Backend-Umbau greift hier. `/api/task/suggest` bleibt wie
+gehabt `ki.nutzen`-gegated. Die Prompt-Kontext-Begrenzung bleibt eine spätere, optionale Optimierung.
 
-**Akzeptanz:** „Frag die Daten" + KI-Zerlegung antworten serverseitig (Vertex), kein ENOENT; Rollen-Gate greift;
-lokal unverändert.
+**Akzeptanz (erfüllt):** „Frag die Daten" + KI-Zerlegung antworten serverseitig (Vertex), kein ENOENT; lokal
+unverändert; Rollen-Härtung (I2/M1) greift und ist per Live-Smoke belegt (40/40).
 
-**Vorgemerkt aus dem Stufe-1-Review (bewusst dorthin verschoben, heute latent/kein aktueller Nutzer betroffen):**
-- **`me`-Identitätsbindung (Server):** das Write-Gate prüft heute nur die Rolle, nicht `body.me` gegen
-  `identity.person`. Ein IAP-Owner könnte `me` auf einen fremden Owner setzen und dessen Objekte
-  abhaken/fortschreiben (Owner-Scope). Scharf, sobald der erste reine Owner in die `identity_map` kommt →
-  dann bei `role==='Owner'` serverseitig `me === identity.person` erzwingen.
-- **Rollen-Gate für Report-/Kommentar-Endpoints:** `/api/report/generate`, `/api/protokoll/export`,
-  `/api/report/comment` haben (vorbestehend) kein `requireCan`/`requireIdentityRole` → ein „nur lesend"-IAP-Nutzer
-  kann Kommentare schreiben / Doc-Gen auslösen. Beim Multi-User-Scharfschalten mit `report.erzeugen`/Guard nachziehen.
+**Vorgemerkt aus dem Stufe-1-Review — in Stufe 2 umgesetzt (10.08.2026):**
+- **I2 · `me`-Identitätsbindung (Server) — ERLEDIGT:** `requireIdentityRole` bindet unter echtem IAP-Login bei
+  `role==='Owner'` die freie `me`-Wahl an `identity.person` (`ownerMeDenied` in `plugins/identity.js`); ohne IAP oder
+  für andere Rollen No-op. So kann ein IAP-Owner nicht mehr unter fremdem Namen handeln.
+- **M1 · Rollen-Gate für Report-/Protokoll-Endpoints — ERLEDIGT:** `/api/report/generate`, `/api/protokoll/export`,
+  `/api/report/comment` sind jetzt `requireIdentityRole` + `requireCan(…, 'report.erzeugen')`-gegated (Frontend reicht
+  `role`/`me` mit). Ohne IAP freies Verhalten; unter IAP greift das Gate (Smoke: „nur lesend" → 403).
 
 ---
 
@@ -203,6 +208,9 @@ wir Stufen umsetzen (jede belassene lokale Bindung wird hier + im Code getaggt).
 - **`plugins/api-core.js:20`** — `CLAUDE_BIN` Default `/Users/dieterstreuli/.local/bin/claude` → in Stufe 2 entfernt
   (Node-KI auf Vertex). **`:37`** `HOME`-Fallback `/Users/dieterstreuli` ebenso.
 - **`plugins/api-core.js:19`** — `PY_BIN` macOS-Framework-Default (Env-Override greift; Default beim Switch entfernen).
+- **`scripts/ai_ask.py` + `scripts/_tools/ai_client.py:_local_cli` / `RUBICON_CLAUDE`-Default** — der lokale
+  CLI-Rückfall der Modell-Fassade (Node shellt `ai_ask.py` → `ai_client.generate`, das ohne `RUBICON_AI_PROVIDER` die
+  `claude`-CLI ruft). Beim Web-only-Switch entfällt der CLI-Zweig; nur der Vertex-Pfad bleibt.
 - **`scripts/_tools/_google_auth.py:15-21,69-94,101-104`** — lokaler User-OAuth-Fallback: `CREDS_DIR ~/.config/google-mcp`,
   `ACCOUNTS`-Registry, `_load_user_credentials()`, der `return _load_user_credentials(account)`-Else-Zweig. Beim Switch:
   DWD-Pfad wird alleinig, lokaler Zweig raus.
