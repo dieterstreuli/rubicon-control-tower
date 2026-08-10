@@ -112,6 +112,19 @@ Betriebsregeln (für alle Beteiligten):
 
 ## Changelog (IT / Didit)
 
+**10.08.2026 — Identitäts-Erkennung, Begrüßung & serverseitiges Rollen-Gate (nur unter IAP):**
+- Die App erkennt jetzt den per **Google IAP** angemeldeten Nutzer serverseitig (Header → Person/Rollen über
+  `src/data/identity_map.json`) und liefert die Identität in `GET /api/state`. **Schreib-Aktionen** werden
+  serverseitig rollen-gegated (die gewählte Rolle muss zur Identität passen); **Lesen bleibt voll transparent**.
+- **Nur bei echtem IAP-Login:** die Durchsetzung greift ausschließlich, wenn der Service als hinter-IAP markiert ist
+  (`RUBICON_IAP_ACTIVE=1`, nur am App-Service) **und** ein gültiger IAP-Header vorliegt. Im lokalen bzw. via Tailnet
+  geteilten Betrieb bleibt das bisherige **freie Verhalten** (freie Rollen-/Personenwahl, keine Server-Durchsetzung)
+  — kein Header-Spoofing, kein stiller Fail-open.
+- **UI:** Rolle/Person aus der Identität, Rollen-Auswahl auf die erlaubten beschränkt, „Angemeldet als …" + einmalige
+  Begrüßung mit Funktionsübersicht; der bisher fest vorbelegte Owner-Name entfällt.
+- **Betrieb:** `identity_map.json` als Stammdaten der Merge-Brücke (SEED überschreibt Volume, `DEPLOYMENT_GCP.md §10`).
+  Erster Schritt der Migration in den eigenen Web-/Nutzerkontext — Gesamtplan: `docs/web-context-migration-plan.md`.
+
 **09.08.2026 — Serverseitige KI (Vertex), Wochen-Delta & Robustheit (dual-mode):**
 - **KI-Narrativ serverseitig (Vertex AI):** der **KI-Entwurf-Block** des Wochen-Reports (Narrativ +
   Ampel-Begründungen) lief bisher nur lokal über die `claude`-CLI — serverseitig fehlte das Binary, der
