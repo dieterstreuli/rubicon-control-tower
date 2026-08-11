@@ -36,7 +36,12 @@ def _model():
 
 
 def _max_tokens():
-    return int(os.environ.get('RUBICON_AI_MAX_TOKENS') or 1024)
+    # 8192 statt frueher 1024: die Claude-5-Familie denkt (thinking-Bloecke) VOR dem Text und
+    # zaehlt das Thinking gegen max_tokens. Beim Wochen-Report verbraucht das Thinking ~2.8k
+    # Tokens; mit einem knappen Budget wird die Text-Antwort (das JSON-Narrativ) mitten im
+    # String abgeschnitten (stop_reason=max_tokens) und laesst sich nicht mehr parsen -> leerer
+    # KI-Entwurf. 8192 laesst Thinking + volles Narrativ + Begruendungen bequem Platz.
+    return int(os.environ.get('RUBICON_AI_MAX_TOKENS') or 8192)
 
 
 def _local_cli(prompt, timeout):
@@ -91,10 +96,19 @@ def _vertex_claude(prompt):
     from anthropic import AnthropicVertex
     client = AnthropicVertex(region=_region(), project_id=_project(),
                              credentials=_ai_credentials())
+    budget = _max_tokens()
     message = client.messages.create(
-        model=_model(), max_tokens=_max_tokens(),
+        model=_model(), max_tokens=budget,
         messages=[{'role': 'user', 'content': prompt}],
     )
+    # Abgeschnittene Antwort (Budget im Thinking+Text erschoepft) NICHT still zurueckgeben: der
+    # Text ist dann unvollstaendiges JSON, der Aufrufer parst nichts und faellt auf die
+    # irrefuehrende «keine Auffaelligkeiten»-Meldung zurueck. Sichtbar als Fehler melden, damit
+    # die Ursache (zu kleines max_tokens) im UI erscheint statt sich als «leer» zu tarnen.
+    if message.stop_reason == 'max_tokens':
+        raise RuntimeError(
+            f'Modellausgabe bei max_tokens={budget} abgeschnitten (stop_reason=max_tokens) — '
+            'Budget erhoehen (RUBICON_AI_MAX_TOKENS).')
     return _claude_text(message)
 
 

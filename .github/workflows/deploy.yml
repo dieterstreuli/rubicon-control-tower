@@ -87,7 +87,7 @@ jobs:
             --add-volume=name=data,type=cloud-storage,bucket="${BUCKET}" \
             --add-volume-mount=volume=data,mount-path=/app/src/data \
             --labels=app=rubicon \
-            --set-env-vars="^;^RUBICON_OK_ORIGINS=https://rubicon.axs.aero,https://rubicon-tower-646221535662.europe-west4.run.app;RUBICON_PY=/usr/bin/python3;RUBICON_DOCS_DIR=/app/src/data/_generated;RUBICON_GOTENBERG_URL=https://rubicon-gotenberg-646221535662.europe-west4.run.app;RUBICON_WORKSPACE_SA=rubicon-workspace@aixs-260106.iam.gserviceaccount.com;RUBICON_IMPERSONATE_SUBJECT=rubicon@axs.aero;RUBICON_AI_PROVIDER=anthropic;RUBICON_AI_MODEL=claude-sonnet-5;RUBICON_AI_REGION=eu;RUBICON_AI_MAX_TOKENS=4096;RUBICON_IAP_ACTIVE=1"
+            --set-env-vars="^;^RUBICON_OK_ORIGINS=https://rubicon.axs.aero,https://rubicon-tower-646221535662.europe-west4.run.app;RUBICON_PY=/usr/bin/python3;RUBICON_DOCS_DIR=/app/src/data/_generated;RUBICON_GOTENBERG_URL=https://rubicon-gotenberg-646221535662.europe-west4.run.app;RUBICON_WORKSPACE_SA=rubicon-workspace@aixs-260106.iam.gserviceaccount.com;RUBICON_IMPERSONATE_SUBJECT=rubicon@axs.aero;RUBICON_AI_PROVIDER=anthropic;RUBICON_AI_MODEL=claude-sonnet-5;RUBICON_AI_REGION=eu;RUBICON_AI_MAX_TOKENS=8192;RUBICON_IAP_ACTIVE=1"
 
       # Die Cloud-Run-JOBS (report + merge + rubicon-docs-job) pinnen ihren Image-Digest beim
       # update — die Service-Deploy oben aktualisiert sie NICHT. Ohne diesen Schritt laufen die
@@ -106,7 +106,7 @@ jobs:
                 gcloud run jobs update "$JOB" \
                   --project="${PROJECT_ID}" --region="${REGION}" \
                   --image="${IMAGE}:${GITHUB_SHA}" \
-                  --update-env-vars="^;^RUBICON_AI_PROVIDER=anthropic;RUBICON_AI_MODEL=claude-sonnet-5;RUBICON_AI_REGION=eu;RUBICON_AI_MAX_TOKENS=4096"
+                  --update-env-vars="^;^RUBICON_AI_PROVIDER=anthropic;RUBICON_AI_MODEL=claude-sonnet-5;RUBICON_AI_REGION=eu;RUBICON_AI_MAX_TOKENS=8192"
               else
                 gcloud run jobs update "$JOB" \
                   --project="${PROJECT_ID}" --region="${REGION}" \

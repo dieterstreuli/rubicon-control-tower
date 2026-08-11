@@ -35,7 +35,7 @@ def test_config_defaults():
     try:
         assert ai_client._project() == 'aixs-260106'
         assert ai_client._region() == 'eu'
-        assert ai_client._max_tokens() == 1024
+        assert ai_client._max_tokens() == 8192
     finally:
         _restore_env(saved)
 
@@ -189,7 +189,8 @@ def test_vertex_claude_branch_lazy_import():
 
         def _create(self, **kw):
             rec['create'] = kw
-            return types.SimpleNamespace(content=[types.SimpleNamespace(type='text', text='claude-antwort')])
+            return types.SimpleNamespace(stop_reason='end_turn',
+                content=[types.SimpleNamespace(type='text', text='claude-antwort')])
     anthropic_mod.AnthropicVertex = FakeVertex
     orig_cred = ai_client._ai_credentials
     ai_client._ai_credentials = lambda: 'FAKE-CREDS'
@@ -411,6 +412,42 @@ def test_local_cli_nonzero_exit_raises():
         _restore_env(saved)
 
 
+def test_vertex_claude_max_tokens_raises():
+    # stop_reason='max_tokens' = Antwort abgeschnitten (Thinking+Text ueber Budget). Der Text ist
+    # dann unvollstaendiges JSON -> darf NICHT still zurueckgegeben werden (sonst irrefuehrender
+    # «keine Auffaelligkeiten»-Fallback beim Aufrufer), sondern als klarer Fehler.
+    saved = _clean_env()
+    os.environ['RUBICON_AI_MODEL'] = 'claude-sonnet-5'
+    os.environ['RUBICON_AI_MAX_TOKENS'] = '4096'
+    anthropic_mod = types.ModuleType('anthropic')
+
+    class FakeVertex:
+        def __init__(self, **kw):
+            self.messages = types.SimpleNamespace(create=self._create)
+
+        def _create(self, **kw):
+            return types.SimpleNamespace(stop_reason='max_tokens',
+                content=[types.SimpleNamespace(type='text', text='{"narrativ":"abgeschnit')])
+    anthropic_mod.AnthropicVertex = FakeVertex
+    orig_cred = ai_client._ai_credentials
+    ai_client._ai_credentials = lambda: 'FAKE-CREDS'
+    had_real = sys.modules.get('anthropic')
+    sys.modules['anthropic'] = anthropic_mod
+    try:
+        try:
+            ai_client._vertex_claude('prompt')
+            raise AssertionError('RuntimeError erwartet')
+        except RuntimeError as ex:
+            assert 'max_tokens=4096' in str(ex) and 'abgeschnitten' in str(ex)
+    finally:
+        ai_client._ai_credentials = orig_cred
+        if had_real is not None:
+            sys.modules['anthropic'] = had_real
+        else:
+            del sys.modules['anthropic']
+        _restore_env(saved)
+
+
 def test_claude_text_skips_thinking_blocks():
     # Claude-5-Familie liefert ThinkingBlock (kein .text) VOR dem TextBlock — nur Text verketten,
     # nicht blind message.content[0].text (sonst 'ThinkingBlock' object has no attribute 'text').
@@ -426,6 +463,7 @@ def test_claude_text_skips_thinking_blocks():
 
 TESTS = [
     test_claude_text_skips_thinking_blocks,
+    test_vertex_claude_max_tokens_raises,
     test_config_defaults,
     test_config_overrides,
     test_model_required_raises,

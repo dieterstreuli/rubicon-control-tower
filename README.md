@@ -112,6 +112,15 @@ Betriebsregeln (für alle Beteiligten):
 
 ## Changelog (IT / Didit)
 
+**11.08.2026 — Wochen-Report: KI-Entwurf wieder vollständig:**
+
+- **Leerer KI-Block im Wochen-Report behoben:** das Modell erzeugte das Wochen-Narrativ zwar vollständig,
+  die Antwort wurde aber am Token-Budget abgeschnitten (das Modell „denkt" vor der Antwort und rechnet
+  dieses Denken gegen das Budget — beim Wochen-Report allein ~2.8k Denk-Tokens), sodass das JSON-Narrativ
+  unvollständig ankam und als „keine Auffälligkeiten" leer blieb. Das Antwort-Budget wurde erhöht (4096 →
+  8192), sodass Denken **und** vollständiges Narrativ + Ampel-Begründungen Platz haben. Ein abgeschnittenes
+  Ergebnis wird künftig als klarer Fehler sichtbar gemacht statt sich stumm als „leer" zu tarnen.
+
 **10.08.2026 — Reporte auf die gebrandete Vorlagen-Engine; Identität, IAP-Rollen-Gate & serverseitige KI:**
 
 _Reporte & Vorlagen (Weg 1):_

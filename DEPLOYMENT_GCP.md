@@ -379,7 +379,7 @@ bereits (Tabelle unten). Lokal (alle `RUBICON_AI_*` unset) fällt es byte-identi
 | `RUBICON_AI_MODEL` | `claude-sonnet-5` | Pflicht im Vertex-Modus (auf Vertex gelten für aktuelle Modellgenerationen die nackten first-party-IDs); klare `ValueError` → Platzhalter, wenn unset |
 | `RUBICON_AI_REGION` | `eu` | Default `eu` (Multi-Region, EEA). Bei `RUBICON_AI_PROVIDER=google` die Region zum Gemini-Modell wählen: Flash-3.x @ `eu`, `gemini-2.5-flash` @ `europe-west*`; s. Abschnitt „Modellwahl & Gemini-Schaltbarkeit" |
 | `RUBICON_AI_PROJECT` | — (Default `aixs-260106`) | GCP-Projekt der Inferenz |
-| `RUBICON_AI_MAX_TOKENS` | `4096` | nur Claude-Zweig |
+| `RUBICON_AI_MAX_TOKENS` | `8192` | nur Claude-Zweig. Muss Thinking **und** Text fassen — die Claude-5-Familie denkt vor der Antwort (Wochen-Report ~2.8k Thinking-Tokens); bei zu knappem Budget schneidet `stop_reason=max_tokens` das JSON-Narrativ ab (leerer KI-Entwurf). Trunkierung wird jetzt als Fehler sichtbar statt still leer |
 | `RUBICON_AI_PROMPT_FILE` | — (Default `scripts/prompts/ki_narrativ.txt`) | Prompt-Template; fehlt die Datei → Inline-Fallback |
 
 **IAM (einmalig, Operator):** SA `rubicon-ai@aixs-260106` anlegen (nur Vertex-Zweck);
