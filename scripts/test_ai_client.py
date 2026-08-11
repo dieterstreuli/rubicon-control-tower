@@ -189,7 +189,7 @@ def test_vertex_claude_branch_lazy_import():
 
         def _create(self, **kw):
             rec['create'] = kw
-            return types.SimpleNamespace(content=[types.SimpleNamespace(text='claude-antwort')])
+            return types.SimpleNamespace(content=[types.SimpleNamespace(type='text', text='claude-antwort')])
     anthropic_mod.AnthropicVertex = FakeVertex
     orig_cred = ai_client._ai_credentials
     ai_client._ai_credentials = lambda: 'FAKE-CREDS'
@@ -411,7 +411,21 @@ def test_local_cli_nonzero_exit_raises():
         _restore_env(saved)
 
 
+def test_claude_text_skips_thinking_blocks():
+    # Claude-5-Familie liefert ThinkingBlock (kein .text) VOR dem TextBlock — nur Text verketten,
+    # nicht blind message.content[0].text (sonst 'ThinkingBlock' object has no attribute 'text').
+    class _B:
+        def __init__(self, **kw):
+            self.__dict__.update(kw)
+    msg = types.SimpleNamespace(content=[
+        _B(type='thinking', thinking='intern'), _B(type='text', text='Hallo '), _B(type='text', text='Welt')])
+    assert ai_client._claude_text(msg) == 'Hallo Welt'
+    only_think = types.SimpleNamespace(content=[_B(type='thinking', thinking='x')])
+    assert ai_client._claude_text(only_think) == ''   # reiner Thinking-Block -> '' (kein Crash)
+
+
 TESTS = [
+    test_claude_text_skips_thinking_blocks,
     test_config_defaults,
     test_config_overrides,
     test_model_required_raises,

@@ -79,6 +79,14 @@ def _vertex_gemini(prompt):
     return client.models.generate_content(model=_model(), contents=prompt).text
 
 
+def _claude_text(message):
+    """Nur die TEXT-Bloecke der Anthropic-Antwort verketten. Die Claude-5-Familie liefert
+    Thinking-Bloecke (kein `.text`) — `message.content[0]` ist dann ein ThinkingBlock, und ein
+    blindes `.text` wirft `'ThinkingBlock' object has no attribute 'text'`. Text-Bloecke tragen
+    `type == 'text'`; alles andere (thinking/redacted_thinking/tool_use) wird uebersprungen."""
+    return ''.join(b.text for b in message.content if getattr(b, 'type', None) == 'text')
+
+
 def _vertex_claude(prompt):
     from anthropic import AnthropicVertex
     client = AnthropicVertex(region=_region(), project_id=_project(),
@@ -87,7 +95,7 @@ def _vertex_claude(prompt):
         model=_model(), max_tokens=_max_tokens(),
         messages=[{'role': 'user', 'content': prompt}],
     )
-    return message.content[0].text
+    return _claude_text(message)
 
 
 def generate(prompt, *, timeout=240):
