@@ -396,7 +396,17 @@ def ki_data(level, doc, now, label):
         }
         if level == 'woche':
             import gen_delta
-            facts['delta'] = gen_delta.compute(7)
+            d = gen_delta.compute(7)
+            # NUR die Kern-Änderungen an die KI (IDs + Übergänge/Δ) — NICHT die teils sehr langen
+            # Meilenstein-Namen/Beschreibungen (manche tragen ganze Statusabsätze + URLs). Sonst
+            # bläht der Prompt so auf, dass das Modell sein Token-Budget im Thinking verbraucht und
+            # KEINEN Text mehr liefert (leerer KI-Entwurf — nur beim Wochen-Report reproduziert).
+            facts['delta'] = {
+                'summe': d.get('summe'),
+                'ampel': [{'id': x.get('id'), 'von': x.get('von'), 'zu': x.get('zu')} for x in d.get('ampel', [])[:15]],
+                'fortschritt': [{'id': x.get('id'), 'von': x.get('von'), 'zu': x.get('zu')} for x in d.get('fortschritt', [])[:15]],
+                'erledigt': [{'nr': x.get('nr'), 'text': (x.get('text') or '')[:120]} for x in d.get('erledigt', [])[:15]],
+            }
         template = ai_client.load_prompt(KI_PROMPT_FALLBACK)
         prompt = template.rstrip('\n') + '\n\nFAKTEN:\n' + json.dumps(facts, ensure_ascii=False)
         out = ai_client.generate(prompt)
@@ -580,14 +590,19 @@ def report_spec(level, doc, meta, now, inper, start, end, label, prog_ampel, kom
             tables['{{DELTA_ERLEDIGT}}'] = _tbl(['Nr', 'Handlung', 'Owner', 'am'], [['—', note, '—', '—']], [40, 280, 90, 80])
             tables['{{DELTA_ENTSCHEIDE}}'] = _tbl(['ID', 'Titel', 'Status'], [['—', note, '—']], [70, 320, 100])
         else:
-            arow = [[_s(x.get('id')), _s(x.get('name')), f'{SIG_LBL.get(x.get("von"), x.get("von"))} → {SIG_LBL.get(x.get("zu"), x.get("zu"))}'] for x in dl.get('ampel', [])[:10]]
+            amp = list(dl.get('ampel', [])[:10])
+            arow = [[_s(x.get('id')), _s(x.get('name')), f'{SIG_LBL.get(x.get("von"), x.get("von"))} → {SIG_LBL.get(x.get("zu"), x.get("zu"))}'] for x in amp]
+            # Ampel-Wechsel-Zelle in der ZIEL-Ampelfarbe (neuer Status) einfärben — sonst zeigt der
+            # Wochen-Report gar keine Ampelfarben (die „Status je Arbeitsstrom"-Tabelle hat er nicht).
+            a_ctr = {(r, 2): _hex_rgb(SIG.get(x.get('zu'), '#6b7480')) for r, x in enumerate(amp)}
             frow = [[_s(x.get('id')), _s(x.get('name')), f'{_pct(x.get("von"))} → {_pct(x.get("zu"))}'] for x in dl.get('fortschritt', [])[:12]]
             erl = dl.get('erledigt', [])
             erow = [[_s(x.get('nr')), _s(x.get('text')), _s(x.get('owner')), de(x.get('am'))] for x in erl[:15]]
             if len(erl) > 15:  # Gesamtzahl bei Kappung nicht verschlucken (alt: „Erledigte Handlungen (N)")
                 erow.append(['—', f'… und {len(erl) - 15} weitere', '—', '—'])
             enrow = [[_s(x.get('id')), _s(x.get('titel')), _s(x.get('status'))] for x in dl.get('entscheide', [])]
-            tables['{{DELTA_AMPEL}}'] = _tbl(['MS', 'Meilenstein', 'Wechsel'], arow or [['—', 'keine Ampel-Wechsel', '—']], [70, 250, 170])
+            tables['{{DELTA_AMPEL}}'] = dict(_tbl(['MS', 'Meilenstein', 'Wechsel'],
+                arow or [['—', 'keine Ampel-Wechsel', '—']], [70, 250, 170]), cell_text_rgb=(a_ctr if arow else {}))
             tables['{{DELTA_FORTSCHRITT}}'] = _tbl(['MS', 'Meilenstein', 'Δ'], frow or [['—', 'keine Fortschritts-Änderungen', '—']], [70, 250, 170])
             tables['{{DELTA_ERLEDIGT}}'] = _tbl(['Nr', 'Handlung', 'Owner', 'am'], erow or [['—', 'keine erledigten Handlungen', '—', '—']], [40, 280, 90, 80])
             tables['{{DELTA_ENTSCHEIDE}}'] = _tbl(['ID', 'Titel', 'Status'], enrow or [['—', 'keine Entscheide bewegt', '—']], [70, 320, 100])
