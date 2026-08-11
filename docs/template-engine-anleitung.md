@@ -2,7 +2,8 @@
 
 Praktischer Leitfaden zur RUBICON-**Vorlagen-Engine**: wie man eine AXS-gebrandete Google-Doc-Vorlage
 baut und serverseitig zu Doc/PDF rendert — **ohne Chrome**. Das ist **Weg 1** der Doc-Erzeugung (feste
-Struktur); für dynamische Docs (Report/Protokoll) siehe README „Doc-Erzeugung: genau zwei Wege".
+Struktur); für das dynamische Protokoll siehe README „Doc-Erzeugung: genau zwei Wege" (die Reporte
+laufen seit 10.08. ebenfalls über Weg 1).
 
 Engine: [`scripts/_tools/doc_template.py`](../scripts/_tools/doc_template.py) · Tests:
 [`scripts/test_doc_template.py`](../scripts/test_doc_template.py).
@@ -229,9 +230,10 @@ Link. Merge-Brücke: `briefings_docs.json` + `fuehrungsrhythmus_doc.json` stehen
 ## 7. Wann Weg 1 vs Weg 2?
 
 - **Weg 1 (diese Engine):** feste Struktur, Felder + Wiederhol-Tabellen + Bullets, Branding ohne Code
-  editierbar → **Traktanden, Entscheide, Briefings, Führungsrhythmus**.
+  editierbar → **Traktanden, Entscheide, Briefings, Führungsrhythmus** sowie die **serverseitigen
+  Reporte (woche/monat/vr)** (seit 10.08.; report_spec → values/tables/bullets, KI-Entwurf im Doc).
 - **Weg 2 (HTML→PDF via Gotenberg):** berechnetes/dynamisches Layout (Ampel-Pills, Narrativ, git-Delta,
-  Level-Varianten) → **Report, Protokoll**.
+  Level-Varianten) → **Protokoll** (sowie Dieters lokaler Report-Pfad).
 
 Leitplanken + Alternative (Jinja2+WeasyPrint) siehe README „Doc-Erzeugung: genau zwei Wege" und
 `DEPLOYMENT_GCP.md §11`.

@@ -46,7 +46,7 @@ Weitere Personen freischalten = einfach Mitglied der Gruppe machen:
   `python3` + die Google-API-Client-Libs (`google-api-python-client`, `google-auth`) sind im Image
   (für die Renderer-Skripte, inkl. serverseitige Report-Erzeugung, s. §9). Chromium ist bewusst
   NICHT drin (Image-Größe): Reports (§9) und die Fix-Struktur-Docs (Weg 1, §12) laufen serverseitig
-  chromefrei über die Docs-API; der dynamische HTML-PDF-Pfad (Report/Protokoll, Weg 2) rendert über
+  chromefrei über die Docs-API; der dynamische HTML-PDF-Pfad (Protokoll, Weg 2) rendert über
   den **eigenen privaten Gotenberg-Service `rubicon-gotenberg`** (§11).
 - **`.dockerignore`** (neu): `node_modules`, `dist`, `.git`, `public`, …
 - **`vite.config.js`**: `server.allowedHosts: true` (DNS-Rebind-Check aus; Host variabel `*.run.app`/Custom-Domain; Schutz macht IAP).
@@ -129,7 +129,7 @@ env $Q gcloud storage rsync -r --delete-unmatched-destination-objects \
 - **Dev-Modus im Container:** faithful zum heutigen Mac-Betrieb (Runbook §4/5). Härtung = Write-API als
   kleiner Express-Server (~1 Tag), dann `vite build` + statisch.
 - **HTML-PDF ohne Chromium im Container (erledigt):** Fix-Struktur-Docs (Weg 1, §12) laufen
-  serverseitig chromefrei über die Docs-API; der dynamische HTML-PDF-Pfad (Report/Protokoll, Weg 2)
+  serverseitig chromefrei über die Docs-API; der dynamische HTML-PDF-Pfad (Protokoll, Weg 2)
   rendert über den eigenen privaten Gotenberg-Service `rubicon-gotenberg` (§11). Chromium bleibt
   bewusst aus dem Image.
 - **Echter DRS-Vollstand live (30.07., erledigt):** Mock ersetzt, Bucket geseedet (§4a).
@@ -464,9 +464,10 @@ Kosten je relevant werden.
 statt git). Die Doc-Generatoren sind serverseitig abgedeckt —
 **zwei verbindliche Wege** (entschieden 07.08.2026, s. `§11` + README „Doc-Erzeugung: genau zwei
 Wege"): **Weg 1** = Docs-REST-Vorlagen-Engine (feste, gebrandete Docs —
-Traktanden/Entscheid/Briefing/Führungsrhythmus), live über `rubicon-docs-job` (§12); **Weg 2** =
-HTML→PDF via **Gotenberg** (eigener privater Cloud-Run-Service `rubicon-gotenberg`) für die dynamischen
-Docs (Report/Protokoll). Die PDF-Quelle im Code ist dafür pluggbar gehalten.
+Traktanden/Entscheid/Briefing/Führungsrhythmus **+ Reporte woche/monat/vr, seit 10.08.**), live über
+`rubicon-docs-job` (§12) bzw. `gen_report` (§9); **Weg 2** = HTML→PDF via **Gotenberg** (eigener privater
+Cloud-Run-Service `rubicon-gotenberg`) für das dynamische **Protokoll** (+ Dieters lokaler Report-Pfad).
+Die PDF-Quelle im Code ist dafür pluggbar gehalten.
 
 ---
 
@@ -603,7 +604,7 @@ die Template-IDs kommen als Container-Config (nicht Dieters lokale `chief_templa
 Serverseitig **verdrahtet** über den Treiber `scripts/gen_docs_server.py` (Dual-Mode); die
 Job-Provisionierung (`rubicon-docs-job`) ist in **§12** beschrieben.
 
-**Weg 2 — HTML→PDF via Gotenberg** (self-hosted, für Report/Protokoll)
+**Weg 2 — HTML→PDF via Gotenberg** (self-hosted, für **Protokoll**; Dieters lokaler Report-Pfad)
 Dedizierte Doku (Code-Verhalten, betroffene Generatoren, Provisionierung inkl. PyMuPDF-Auflage):
 [`docs/gotenberg-html-pdf.md`](docs/gotenberg-html-pdf.md).
 [Gotenberg](https://gotenberg.dev) kapselt Chromium (+ LibreOffice) hinter einer stateless HTTP-API:

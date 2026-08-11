@@ -24,8 +24,9 @@ README, Abschnitt „Doc-Erzeugung: genau zwei Wege"):
   Google-APIs (Vorlage kopieren → per Docs-API füllen → als PDF exportieren). Anleitung:
   [`docs/template-engine-anleitung.md`](template-engine-anleitung.md).
 - **Weg 2 — HTML→PDF via Gotenberg** (diese Doku): dynamisches, berechnetes Layout (Ampel-Pills,
-  Inline-Balken, Narrativ, git-Delta, Level-Varianten) — für **Report und Protokoll**. Das in Python
-  erzeugte `render_*`-HTML wird als PDF gerendert.
+  Inline-Balken, Narrativ, git-Delta, Level-Varianten) — für das **Protokoll** (und Dieters lokalen
+  Report-Pfad). Der **serverseitige Report läuft seit 10.08. über Weg 1** (Vorlagen-Engine, §9). Das in
+  Python erzeugte `render_*`-HTML wird als PDF gerendert.
 
 **Warum Gotenberg statt Chrome im Container.** Der lokale Weg von Dieter rendert HTML mit einem
 headless Google Chrome. Das Container-Image enthält **bewusst keinen** Chromium (Image-Größe, Cold-
@@ -90,7 +91,7 @@ chromefrei (Docs-Export) bedient oder sind reine Lokal-Generatoren.
 | Generator | nutzt `html_to_pdf` | serverseitig relevant | Server-Weg |
 |---|---|---|---|
 | `gen_protokoll.py` | ja | **ja** — über die Node-Route `/api/protokoll/export` (`plugins/api-core.js` → `execFile python3 gen_protokoll.py`) getriggert | **Weg 2 (Gotenberg)** im Server-Modus |
-| `gen_report.py` | ja (nur lokaler Pfad) | ja, aber **ohne Gotenberg** | **§9 Report-Automation** (Google-Docs-Export, chromefrei) — kein Gotenberg |
+| `gen_report.py` | ja (nur lokaler Pfad) | ja, aber **ohne Gotenberg** | **Weg 1 — Vorlagen-Engine** (§9, gebrandetes Doc + PDF, KI-Entwurf im Doc; seit 10.08.) — kein Gotenberg |
 | `gen_traktanden_pdfs.py` | ja | serverseitig über den Weg-1-Treiber | **Weg 1** (`gen_docs_server.py`, Docs-Export) |
 | `gen_briefing_pdfs.py` | ja | serverseitig über den Weg-1-Treiber | **Weg 1** (`gen_docs_server.py`) |
 | `gen_entscheid_mail.py` | ja | serverseitig über den Weg-1-Treiber | **Weg 1** (`gen_docs_server.py`) |

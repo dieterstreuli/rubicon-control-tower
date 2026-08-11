@@ -49,9 +49,9 @@ Entwicklung, **nicht** als Parallel-Produktion.
   frühere „flüchtiges Cloud-Run-FS"-Vorbehalt ist damit erledigt.
 - **Dokument-Persistenz:** Beim Ausliefern hat **`RUBICON_DOCS_DIR`**
   (= `/app/src/data/_generated` auf dem GCS-Volume) Vorrang vor der ins Image
-  gebackenen `public`-Baseline. Reports (Woche/Monat/Quartal) werden bereits
-  serverseitig **chromefrei** erzeugt (Google Doc + Drive-`files.export`, s.
-  `DEPLOYMENT_GCP.md` §9) und landen dort — sie überleben damit Neustart/Redeploy.
+  gebackenen `public`-Baseline. Reports (Woche/Monat/Quartal) werden
+  serverseitig **chromefrei** über die gebrandete **Vorlagen-Engine (Weg 1)** erzeugt (Google Doc +
+  Drive-`files.export`, s. `DEPLOYMENT_GCP.md` §9) und landen dort — sie überleben damit Neustart/Redeploy.
   Briefings/Entscheide/Traktanden/Führungsrhythmus laufen **serverseitig live**
   (Weg 1, `gen_docs_server.py`, chromefrei via Docs-Export; Cloud-Run-Job
   `rubicon-docs-job`, `DEPLOYMENT_GCP.md` §12). Der dynamische HTML-PDF-Pfad
@@ -253,7 +253,7 @@ im Detail: `DEPLOYMENT_GCP.md §9` (Reports) + `§10` (Merge-Brücke).
 
 | Funktion | Lokal (Env unset) | Serverseitig | Status |
 |---|---|---|---|
-| Report-Doc + PDF | Chrome-HTML-PDF + Doc in Dieters Drive | Google Doc + PDF-Datei im Shared Drive (`files.export`) | ✅ live |
+| Report-Doc + PDF | Chrome-HTML-PDF + Doc in Dieters Drive | **Weg 1 — gebrandete Vorlagen-Engine**: gebrandetes Google Doc + PDF (Template, KI-Entwurf im Doc; seit 10.08.) | ✅ live |
 | Google-Auth | User-OAuth (`~/.config/google-mcp`) | keyless-DWD als `rubicon@axs.aero` | ✅ |
 | Dokument-Persistenz | `public/` | GCS-Volume `_generated/` + Serving-Precedence | ✅ |
 | Report-Trigger | launchd-Cron (Mac) | Cloud Scheduler → Cloud-Run-Job (Mo 06:00) | ✅ live |
@@ -262,7 +262,7 @@ im Detail: `DEPLOYMENT_GCP.md §9` (Reports) + `§10` (Merge-Brücke).
 | Δ-Block (Wochen-Delta) | git-Vergleich `projekt.yaml` | **datierte `projekt.yaml`-Snapshots** (`history/`, aus git backfilled + je Publish fortgeschrieben) | ✅ Code — serverseitig ab Deploy + Backfill |
 | KI-Narrativ | lokale CLI (`claude`, unverändert) | **Vertex AI** in `aixs-260106` via `ai_client`-Fassade (Provider `google`/`anthropic`, Modell/Region/Prompt per Env, SA `rubicon-ai@`) | ✅ Code + Deploy-Wiring — serverseitig **live erst nach Deploy + Cloud-Smoke** (`DEPLOYMENT_GCP.md §9.6`) |
 | Traktanden, Entscheid, Briefing, Führungsrhythmus (feste Struktur) **+ AXS-Branding** | Chrome-HTML-PDF je Generator | **Weg 1 — Docs-REST-Vorlagen-Engine**: AXS-gebrandete Google-Doc-Vorlage je Typ + Merge, kein Chrome | ✅ serverseitig live (`rubicon-docs-job`) |
-| Report/Protokoll (dynamisch, berechnetes Layout) | Chrome-HTML-PDF (lokal) | **Weg 2 — HTML→PDF via Gotenberg**: bestehendes `render_*`-HTML serverseitig gerendert | ✅ Service `rubicon-gotenberg` live + App-Wiring aktiv (`RUBICON_GOTENBERG_URL`/OIDC am App-Service); Server-Protokoll-Export-PDF läuft über Gotenberg |
+| Protokoll (dynamisch, berechnetes Layout) | Chrome-HTML-PDF (lokal) | **Weg 2 — HTML→PDF via Gotenberg**: bestehendes `render_*`-HTML serverseitig gerendert | ✅ Service `rubicon-gotenberg` live + App-Wiring aktiv (`RUBICON_GOTENBERG_URL`/OIDC am App-Service); Server-Protokoll-Export-PDF läuft über Gotenberg. **Server-Report** läuft seit 10.08. über **Weg 1** (Zeile „Report-Doc + PDF"); Dieters lokaler Report-Pfad nutzt weiter HTML/Chrome |
 | Reminder / Mailversand | Gmail-Entwurf lokal (DRS sendet) | serverseitig via DWD `gmail.send`/`gmail.modify` als `rubicon@axs.aero` | ⏳ geplant (Scopes autorisiert) |
 | Kalender / Eskalation | simuliert / MCP-Bridge lokal | serverseitig via DWD `calendar.events` | ⏳ geplant (Scopes autorisiert) |
 
