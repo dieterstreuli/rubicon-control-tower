@@ -135,6 +135,22 @@ durchgereicht (Node-Endpoints hängen die IAP-Identität als `--subject`/Env an 
 **Akzeptanz:** ein Server-Call mit Subject=`d.streuli@axs.aero` erzeugt ein Doc/Drive-Objekt in **Dieters** Kontext
 (Owner/Sichtbarkeit belegt per Smoke).
 
+**STATUS (11.08.2026) — erste Scheibe LIVE-verifiziert (Meetingnotiz-Import):**
+- `load_credentials(subject=…)` überschreibt `RUBICON_IMPERSONATE_SUBJECT` (nur Server-Modus; lokal ohne DWD-Env
+  wirkungslos → User-OAuth). Sicherheit: `plugins/identity.js` `dwdSubject(id)` liefert die E-Mail **nur** bei echtem
+  IAP-Login (`viaIap`), sonst `null` → der Subject stammt NIE aus dem Request-Body (keine Impersonation-Injection);
+  Node-Route `/api/gemini/import` reicht `dwdSubject(gid)` als `--subject` durch, `import_gemini_doc.py --subject` →
+  `get_drive(subject)`. Härtung: option-aussehende `body.doc_id` (führendes `-`) wird abgelehnt (kein `--subject=`/
+  `--post`-Schmuggel über argparse). Tests: `test_google_auth_dwd` (subject-override + local-ignore), `test_identity`
+  (dwdSubject-Gating).
+- **Admin-Vorbedingung VERIFIZIERT:** `rubicon-workspace` darf **beliebige** axs.aero- UND did-it.ch-Subjects
+  impersonieren (Live-Smoke: rubicon@ / d.streuli@axs.aero / g.suchomski@did-it.ch je OK). Ein frischer
+  tokenCreator-Grant braucht ~1 Min IAM-Propagation (sonst transientes 403).
+- **Akzeptanz belegt (Live):** Notiz als `g.suchomski` in dessen My-Drive angelegt + als `g.suchomski` gefunden
+  (50 persönliche Gemini-Docs sichtbar); als `rubicon@` **nicht** sichtbar (404) → Per-User-Kontext + Isolation bestätigt.
+- **Offen (Follow-up):** Scope-Verengung auf `drive.readonly` für den Import geht NICHT per Code — DWD ist Exact-Match
+  auf `drive`+`documents`; bräuchte erst eine Admin-Scope-Freigabe. Gmail/Calendar (Stufe 4) noch als `rubicon@`.
+
 ---
 
 ## Stufe 4 — Gmail in Dieters Konto (Reminder + Entscheid-Mails)

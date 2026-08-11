@@ -94,11 +94,18 @@ def _load_user_credentials(account):
     )
 
 
-def load_credentials(account: str = "d.streuli@axs.aero", scopes=None):
+def load_credentials(account: str = "d.streuli@axs.aero", scopes=None, subject: str = None):
     """Server-seitig (RUBICON_WORKSPACE_SA + RUBICON_IMPERSONATE_SUBJECT) keyless DWD
-    als der Service-User; sonst lokaler User-OAuth fuer `account`."""
+    als der Service-User; sonst lokaler User-OAuth fuer `account`.
+
+    `subject` (Stufe 3, angemeldeter User): expliziter DWD-Impersonation-Subject, der
+    `RUBICON_IMPERSONATE_SUBJECT` UEBERSCHREIBT — so handelt ein Server-Call im Kontext des
+    eingeloggten Nutzers (z.B. seine persoenlichen Drive-Notizen) statt als `rubicon@`. Wirkt NUR
+    im Server-Modus (DWD-Env gesetzt); lokal ohne DWD faellt es auf User-OAuth zurueck (Subject
+    ignoriert). SICHERHEIT: der `subject` MUSS aus einer server-verifizierten Quelle stammen
+    (IAP-Identitaet), NIE aus Client-Eingaben — sonst waere es Impersonation-Injection."""
     sa_email = os.environ.get("RUBICON_WORKSPACE_SA")
-    subject = os.environ.get("RUBICON_IMPERSONATE_SUBJECT")
-    if sa_email and subject:
-        return _dwd_credentials(sa_email, subject, scopes or DEFAULT_SCOPES)
+    eff_subject = subject or os.environ.get("RUBICON_IMPERSONATE_SUBJECT")
+    if sa_email and eff_subject:
+        return _dwd_credentials(sa_email, eff_subject, scopes or DEFAULT_SCOPES)
     return _load_user_credentials(account)

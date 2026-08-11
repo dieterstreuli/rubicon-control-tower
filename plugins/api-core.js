@@ -15,7 +15,7 @@ import { fileURLToPath } from 'node:url'
 import { execFile, spawn } from 'node:child_process'
 import yaml from 'js-yaml'
 import { can, requireCan } from '../src/lib/permissions.js'   // Q4: EINE Rechte-Matrix für UI + Server
-import { resolveIdentity, identityRoleDenied, ownerMeDenied } from './identity.js'
+import { resolveIdentity, identityRoleDenied, ownerMeDenied, dwdSubject } from './identity.js'
 
 const PY_BIN = process.env.RUBICON_PY || '/Library/Frameworks/Python.framework/Versions/3.14/bin/python3'  // Portabilität: env-Override (MIGRATION.md)
 // KI-Naht: Node shellt die Python-Modell-Fassade (ai_ask.py -> _tools/ai_client.py). Provider
@@ -618,7 +618,15 @@ export function createApi(rootDir) {
           requireCan(fail, body.role, body.me, 'sitzung.erfassen')
           if (!body.meeting_id) return json(400, { ok: false, error: 'meeting_id fehlt' })
           const args = [path.join(root, 'scripts', 'import_gemini_doc.py')]
-          if (body.doc_id) args.push(body.doc_id)
+          // body.doc_id ist ein optionaler POSITIONAL. Option-aussehende Werte (führendes '-')
+          // verbieten: sonst schmuggelt der Client über argparse ein --subject=opfer@… (Drive-
+          // Impersonation) oder --post (umgeht das Dry-Run-/Übernahme-Gate) ein. So hält die
+          // Invariante „Subject NUR aus verifizierter IAP-Identität, nie aus dem Body" IM CODE,
+          // nicht bloß über die argparse-Reihenfolge + den IAP-Ingress.
+          if (body.doc_id) {
+            if (/^-/.test(String(body.doc_id))) return json(400, { ok: false, error: 'doc_id ungültig' })
+            args.push(String(body.doc_id))
+          }
           args.push('--meeting-id', body.meeting_id, '--api', '--role', body.role)
           if (body.me) args.push('--me', body.me)
           if (body.on) args.push('--on', body.on)
@@ -626,6 +634,14 @@ export function createApi(rootDir) {
           if (body.datum) args.push('--datum', body.datum)
           if (body.sensitiv) args.push('--sensitiv')
           if (body.post) args.push('--post')
+          // Stufe 3: unter echtem IAP-Login den Drive-Zugriff im Kontext des ANGEMELDETEN Users
+          // ausführen (dessen persönliche Gemini-Meet-Notizen sichtbar machen). Der Subject kommt
+          // NUR aus der server-verifizierten IAP-Identität (x-goog-authenticated-user-email), NIE aus
+          // dem Request-Body — sonst Impersonation-Injection. Ohne echten IAP-Login (lokal/Tailnet,
+          // viaIap=false) wird KEIN --subject gesetzt → bisheriges Verhalten (Env-Subject/User-OAuth).
+          const gid = resolveIdentity(req.headers, db.identity.read(), process.env.RUBICON_DEV_IDENTITY, process.env.RUBICON_IAP_ACTIVE === '1')
+          const gSubject = dwdSubject(gid)   // nur bei echtem IAP-Login gesetzt (sonst null)
+          if (gSubject) args.push('--subject', gSubject)
           execFile(PY_BIN, args, { cwd: root, timeout: 120000 }, (err, stdout, stderr) => {
             if (err && !stdout) return json(500, { ok: false, error: String(stderr || err).slice(-300) })
             const last = (stdout || '').trim().split('\n').pop()

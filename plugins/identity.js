@@ -43,3 +43,12 @@ export function identityRoleDenied(identity, role) {
 export function ownerMeDenied(identity, role, me) {
   return !!(identity && identity.viaIap) && role === 'Owner' && me !== undefined && me !== identity.person
 }
+
+/** Stufe 3 (11.08.2026): DWD-Impersonation-Subject für serverseitige Aktionen im Kontext des
+ *  ANGEMELDETEN Users (z.B. seine persönlichen Google-Drive-Meet-Notizen). Gibt die E-Mail NUR
+ *  bei echtem IAP-Login zurück (`viaIap`) — sonst `null`. So kann der Subject NIE aus dem
+ *  Request-Body oder dem Dev-Fallback stammen (Impersonation-Injection ausgeschlossen); ohne
+ *  IAP bleibt das bisherige Verhalten (fester Env-Subject `rubicon@` bzw. lokaler User-OAuth). */
+export function dwdSubject(identity) {
+  return (identity && identity.viaIap && identity.email) ? identity.email : null
+}

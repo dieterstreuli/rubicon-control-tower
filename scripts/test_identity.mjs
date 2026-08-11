@@ -19,7 +19,7 @@ const fails = []
 const check = (name, ok) => { if (ok) pass++; else fails.push(name) }
 const deepEq = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 
-const { iapEmail, resolveIdentity, identityRoleDenied } = await import(lib('identity.js'))
+const { iapEmail, resolveIdentity, identityRoleDenied, dwdSubject } = await import(lib('identity.js'))
 
 // Map wird aus der echten Datei geladen (JSON.parse) — Schema-Wächter der Map.
 const MAP = JSON.parse(fs.readFileSync(path.join(ROOT, 'src', 'data', 'identity_map.json'), 'utf8'))
@@ -111,6 +111,17 @@ const MAP = JSON.parse(fs.readFileSync(path.join(ROOT, 'src', 'data', 'identity_
     identityRoleDenied({ viaIap: true, rollen: ['CoS'] }, 'CoS') === false)
   check('nicht viaIap → nie denied (altes freies Verhalten)',
     identityRoleDenied({ viaIap: false, rollen: ['CoS'] }, 'Chairman') === false)
+}
+
+// ── 9 · dwdSubject (Stufe 3, 11.08.2026): Impersonation-Subject NUR aus verifiziertem IAP-Login ──
+{
+  check('viaIap + email → subject = email',
+    dwdSubject({ viaIap: true, email: 'd.streuli@axs.aero' }) === 'd.streuli@axs.aero')
+  check('nicht viaIap (Dev-Fallback/lokal) → null (kein Impersonieren)',
+    dwdSubject({ viaIap: false, email: 'd.streuli@axs.aero' }) === null)
+  check('viaIap aber keine email → null',
+    dwdSubject({ viaIap: true, email: '' }) === null)
+  check('leere Identität → null', dwdSubject(null) === null)
 }
 
 // ── Ergebnis ──

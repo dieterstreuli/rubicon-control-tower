@@ -8,7 +8,7 @@ import { X } from 'lucide-react'
 const FUNKTIONEN = [
   { ok: true, t: 'Erkennung & rollenrichtige Ansicht — jetzt aktiv' },
   { ok: true, t: 'Sitzung erfassen → Tower · Reports · KI-Narrativ — serverseitig' },
-  { ok: false, t: 'Notiz-Suche & Dokumente in deinem Konto — folgt' },
+  { ok: true, t: 'Notiz-Suche in deinem Konto (Meet-Notizen) — jetzt aktiv' },
   { ok: false, t: 'Gmail-Reminder & Kalender in deinem Konto — folgt' },
 ]
 

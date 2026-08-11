@@ -107,8 +107,12 @@ def strip_md(s):
     return re.sub(r'\s+', ' ', s)
 
 
-def get_drive():
-    return build('drive', 'v3', credentials=load_credentials('d.streuli@axs.aero'))
+def get_drive(subject=None):
+    # subject (Stufe 3, Server): DWD-Impersonation des ANGEMELDETEN Users -> dessen persoenliche
+    # Gemini-Meet-Notizen werden sichtbar (statt nur der Ablage von rubicon@). Lokal ohne DWD-Env
+    # unwirksam -> User-OAuth als d.streuli (Dieters bisheriger Pfad). Der subject kommt serverseitig
+    # NUR aus der verifizierten IAP-Identitaet (Node), nie aus Client-Eingaben.
+    return build('drive', 'v3', credentials=load_credentials('d.streuli@axs.aero', subject=subject))
 
 
 def load_doc(drive, doc_id):
@@ -290,9 +294,10 @@ def main():
     ap.add_argument('--post', action='store_true', help='SCHARF: wirklich an /api/sitzung senden (sonst nur Dry-Run)')
     ap.add_argument('--json', action='store_true', help='nur das JSON-Payload ausgeben')
     ap.add_argument('--api', action='store_true', help='K1 (01.08.): genau EINE JSON-Zeile ausgeben (für POST /api/gemini/import) — auch für not_found/ambiguous')
+    ap.add_argument('--subject', help='DWD-Impersonation-Subject (Stufe 3, Server): E-Mail des ANGEMELDETEN Users, dessen Drive durchsucht wird. Wird serverseitig NUR aus der verifizierten IAP-Identität gesetzt, nie vom Client. Lokal ohne DWD-Env wirkungslos.')
     args = ap.parse_args()
 
-    drive = get_drive()
+    drive = get_drive(args.subject)
 
     # ── --list: alle Gemini-Notiz-Docs zeigen (Titel ablesen fürs Mapping) ──
     if args.list:

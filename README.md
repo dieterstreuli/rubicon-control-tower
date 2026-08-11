@@ -112,8 +112,16 @@ Betriebsregeln (für alle Beteiligten):
 
 ## Changelog (IT / Didit)
 
-**11.08.2026 — Wochen-Report: KI-Entwurf wieder vollständig:**
+**11.08.2026 — Meetingnotiz-Import im Nutzerkontext; Wochen-Report-KI wieder vollständig:**
 
+- **Notiz-Import liest jetzt das Drive des angemeldeten Nutzers, nicht mehr ein festes Betriebskonto:**
+  beim Import einer Meeting-/Gemini-Notiz übernimmt der Server den **Drive-Kontext des per Login (IAP)
+  erkannten Nutzers**, sodass dessen persönliche Meet-Notizen gefunden werden. Technisch wird das
+  Delegations-Subjekt pro Anfrage aus der **serverseitig verifizierten Login-Identität** abgeleitet.
+- **Sicherheit:** das Subjekt stammt ausschliesslich aus der IAP-Identität, **nie** aus Client-Eingaben;
+  ohne echten IAP-Login greift kein Nutzerkontext (Betriebskonto-Verhalten wie bisher). Eine
+  Dokument-ID, die wie eine Option aussieht (führendes `-`), wird abgewiesen.
+- Begrüssungs-Panel: der Punkt „Notiz-Suche in deinem Konto" ist damit **aktiv** markiert.
 - **Leerer KI-Block im Wochen-Report behoben:** das Modell erzeugte das Wochen-Narrativ zwar vollständig,
   die Antwort wurde aber am Token-Budget abgeschnitten (das Modell „denkt" vor der Antwort und rechnet
   dieses Denken gegen das Budget — beim Wochen-Report allein ~2.8k Denk-Tokens), sodass das JSON-Narrativ
