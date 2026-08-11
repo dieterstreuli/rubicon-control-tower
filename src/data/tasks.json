@@ -10872,6 +10872,48 @@
       "source": "zerlegung",
       "origin": "KI-Zerlegung Phase 2/3/Nachlauf, 13.07.2026 (DRS-Freigabe «alles aktivieren»)",
       "created_at": "2026-07-13"
+    },
+    {
+      "id": "WS3-26-H01",
+      "nr": 842,
+      "ms_id": "WS3-26",
+      "text": "Die Wirtschaftlichkeit der Greiss für den Eurowings-Vertrag ist ohne Pushback-Tätigkeit und ohne den bisherigen Overhead durchgerechnet, mit Puffer für den Branchentarifvertrag — daraus liegt die korrigierte Preisstellung gegenüber Eurowings vor (statt der bisherigen 30 Prozent, die den Tender ausgelöst haben). Zu beachten: nur rund ein Drittel der Greiss-Umsätze ist extern; zwei Drittel sind Konzernumsätze gegenüber Ramp und AAS Deutschland.",
+      "owner": "Cüneyt Gökcöl",
+      "due": "2026-08-19",
+      "status": "offen",
+      "erledigt_am": null,
+      "erledigt_von": null,
+      "source": "sitzung",
+      "origin": "Sitzung BTV Greiss 11.08.2026 — Auftrag an Gökcöl/Rohde/Matthei, fällig zur Folgerunde 19.08.",
+      "created_at": "2026-08-11"
+    },
+    {
+      "id": "WS3-25-H01",
+      "nr": 843,
+      "ms_id": "WS3-25",
+      "text": "Inhalt und Ablauf der Kommunikation an die Pushback-Fahrer sind festgelegt: Mitarbeiterversammlung in Düsseldorf (10 bis 15 Personen) am 19. oder 20.08.2026, danach schriftliche Bestätigung. Kommuniziert wird die Eingruppierung nach Branchentarifvertrag ab 01.08.2026 verbunden mit der Reorganisation — ausschliesslich gegenüber den Pushback-Fahrern, nicht gegenüber der gesamten Greiss. Vorgelagert abgestimmt mit Betriebsrat Greiss, Betriebsrat Ramp und ver.di.",
+      "owner": "Florian Matthei",
+      "due": "2026-08-19",
+      "status": "offen",
+      "erledigt_am": null,
+      "erledigt_von": null,
+      "source": "sitzung",
+      "origin": "Sitzung BTV Greiss 11.08.2026 — Auftrag an Matthei/Gökcöl, Definition bis zur Folgerunde 19.08.",
+      "created_at": "2026-08-11"
+    },
+    {
+      "id": "WS3-26-H02",
+      "nr": 844,
+      "ms_id": "WS3-26",
+      "text": "Geprüft ist, ob die Servicegebühren der AAS Düsseldorf Ramp um 3 bis 6 Prozent erhöht werden können, um die durch die Übernahme der Pushback-Mitarbeitenden steigenden Personalkosten zu decken. Zwischenstand zur Folgerunde am 19.08.2026; gemeinsam mit Michael Haeffner.",
+      "owner": "Cüneyt Gökcöl",
+      "due": "2026-08-19",
+      "status": "offen",
+      "erledigt_am": null,
+      "erledigt_von": null,
+      "source": "sitzung",
+      "origin": "Sitzung BTV Greiss 11.08.2026 — Prüfauftrag an Gökcöl mit Haeffner, Zwischenstand 19.08.",
+      "created_at": "2026-08-11"
     }
   ]
 }

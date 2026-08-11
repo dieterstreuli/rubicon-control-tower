@@ -533,7 +533,7 @@ export function createApi(rootDir) {
           }
           // Roll-up für alle berührten MS — auch bei reiner Aktivierung ohne neue Tasks
           const affected = [...new Set([...incoming.map(t => t.ms_id).filter(Boolean), ...(body.activate_ms ? [body.activate_ms] : [])])]
-          for (const msId of affected) { const r = rollupMs(msId, store); if (r.rolled) roll = { ms_id: msId, ...r } }
+          for (const msId of affected) { const r = rollupMs(msId, tstore); if (r.rolled) roll = { ms_id: msId, ...r } }
           return json(200, { ok: true, upserted, activation, rollup: roll })
       })
 
