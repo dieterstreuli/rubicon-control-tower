@@ -681,7 +681,10 @@ Fusszeile + alle Anker gefüllt, kein rohes `{{…}}`, Ablage im Shared-Ordner �
 (`1jX2CYbfTJP4P9Na1zpy6fimNamSY1oo7`, Shared Drive „00 AXS - Rubicon"; Code-Default in `gen_protokoll.py`,
 optionaler Override `RUBICON_DRIVE_PROTOKOLLE_FOLDER`). Wichtig: der frühere Default (Dieters persönlicher
 Sitzungsprotokolle-Ordner) ist für rubicon@ **nicht** erreichbar (404) — deshalb der dedizierte Shared-Ordner.
-Der Live-End-to-End über den **deployed** Service (PDF via Gotenberg + Doc via Weg 1) folgt mit dem Merge/Deploy.
+**Deployt** (main `435ff62`, Revision `rubicon-tower-00071`): der Container fährt den neuen Code mit DWD- +
+Gotenberg-Env. Der Doc-Weg ist auf Live-Infra bewiesen (rubicon@ = Service-DWD-Identität → Live-Shared-Ordner
++ Live-Vorlage). Der Nutzer-Export über die IAP/RBAC-Fassade ist an RUBICON-Rollen gebunden (persona-gated) —
+d.h. der End-to-End über die App-Oberfläche ist Dieters Server-Test (deckt sich mit der Dual-Mode-Regel).
 
 ---
 
@@ -804,7 +807,7 @@ die gebrandeten Docs zum frisch publizierten Datenstand passen. Der separate Woc
 | Erster Live-Lauf (echte Docs/PDFs) | ✅ Entscheide/Traktanden/FR + Teil der Briefings gerendert; bei der Briefing-Masse trat 429-Sättigung auf (Backoff allein reicht nicht) → `batchUpdate`-Bündelung + Pacing (< 60/min) ergänzt; sauberer Vollauf nach Deploy ausstehend |
 | Doc-Pipeline-Robustheit: `batchUpdate`-Bündelung + Pacing (`doc_template.py`) | ✅ im Code (Tests) — greift ab nächstem Job-Deploy |
 | Gotenberg-Service `rubicon-gotenberg` (privat, OIDC) | ✅ Service live + App-Wiring live (`RUBICON_GOTENBERG_URL` am App-Service) |
-| Protokoll-**Doc** serverseitig über Weg 1 (`gen_protokoll.protokoll_spec` → `doc_template`, Vorlage `protokoll`; md→gdoc serverseitig entfernt) | ✅ im Code (Anker-Tests) + **DWD-Smoke bestanden** (rubicon@: Doc gerendert, Footer/Anker/Shared-Ordner ok); Template hinterlegt (`11meUUbX…`); `server_doc_url` additiv/modusabhängig. Live über den deployed Service mit Deploy (§11) |
+| Protokoll-**Doc** serverseitig über Weg 1 (`gen_protokoll.protokoll_spec` → `doc_template`, Vorlage `protokoll`; md→gdoc serverseitig entfernt) | ✅ im Code (Anker-Tests) + **DWD-Smoke bestanden** (rubicon@: Doc gerendert, Footer/Anker/Shared-Ordner ok); Template hinterlegt (`11meUUbX…`); `server_doc_url` additiv/modusabhängig. **Deployt** (main `435ff62`, Revision `rubicon-tower-00071`); Doc-Weg auf Live-Infra bewiesen; Nutzer-Export IAP/RBAC-persona-gebunden = Dieters Server-Test (§11) |
 | Shared-Ordner „RUBICON — Sitzungsprotokolle" (`1jX2CYbf…`, Shared Drive „00 AXS - Rubicon") als Server-Ziel; Code-Default in `gen_protokoll.py`, Override `RUBICON_DRIVE_PROTOKOLLE_FOLDER` | ✅ angelegt + als Default gesetzt (Dieters persönlicher Ordner ist für rubicon@ 404) |
 | Server-DWD am Web-Service (`RUBICON_WORKSPACE_SA` + `RUBICON_IMPERSONATE_SUBJECT`) | ✅ live — über den Live-Service bestätigt: Report-Generierung (Google-Doc erzeugt) + Gemini-Import (Auth statt lokaler-OAuth-Fehler). Protokoll-Export-E2E s. §11. Keine neue IAM-Bindung (§9.1) |
 | Datenvertrag `meta` Repo-getrieben (`merge_bridge.py`, §10) | ✅ im Code — greift ab nächstem Merge-Job-Deploy |

@@ -219,8 +219,9 @@ DRS/Liste dann trotzdem Teilnehmer ist. `mcp/calendar_bridge.md` (Kalender-/Eska
   `export.doc_id`; Ziel = dedizierter **Shared-Ordner** „RUBICON — Sitzungsprotokolle" (Code-Default; Override
   `RUBICON_DRIVE_PROTOKOLLE_FOLDER`) — Dieters persönlicher Ordner ist für rubicon@ 404, daher der Shared-Ordner.
   UI-Doc-Link modusabhängig (`server_doc_url` server / `doc_url` lokal). md→gdoc bleibt nur im lokalen Zweig.
-  **DWD-Smoke bestanden** (rubicon@: Doc gerendert, Fusszeile + Anker gefüllt, Shared-Ordner); Live über den
-  deployed Service mit dem Merge.
+  **DWD-Smoke bestanden** (rubicon@: Doc gerendert, Fusszeile + Anker gefüllt, Shared-Ordner). **GEMERGT+DEPLOYT**
+  (main `435ff62`, Revision `rubicon-tower-00071`); Doc-Weg auf Live-Infra bewiesen. Der Nutzer-Export über die
+  App-Oberfläche ist IAP/RBAC-persona-gebunden = Dieters Server-Test.
 - **Notiz suchen — OFFEN:** mit Subject=Dieter (Stufe 3) sieht die Drive-Suche seine persönlichen Gemini-Meet-Notizen →
   Server-Smoke, ob Treffer kommen.
 - **Lokale-Pfad-Cleanup — OFFEN:** `sys.path.insert('/Users/dieterstreuli/Chief/Tools')` in ~10 Skripten entfernen (vendored
