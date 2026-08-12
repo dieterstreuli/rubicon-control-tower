@@ -292,8 +292,8 @@ im Detail: `DEPLOYMENT_GCP.md §9` (Reports) + `§10` (Merge-Brücke).
 | KI-Narrativ | lokale CLI (`claude`, unverändert) | **Vertex AI** in `aixs-260106` via `ai_client`-Fassade (Provider `google`/`anthropic`, Modell/Region/Prompt per Env, SA `rubicon-ai@`) | ✅ Code + Deploy-Wiring — serverseitig **live erst nach Deploy + Cloud-Smoke** (`DEPLOYMENT_GCP.md §9.6`) |
 | Traktanden, Entscheid, Briefing, Führungsrhythmus (feste Struktur) **+ AXS-Branding** | Chrome-HTML-PDF je Generator | **Weg 1 — Docs-REST-Vorlagen-Engine**: AXS-gebrandete Google-Doc-Vorlage je Typ + Merge, kein Chrome | ✅ serverseitig live (`rubicon-docs-job`) |
 | Protokoll (dynamisch, berechnetes Layout) | Chrome-HTML-PDF (lokal) | **Weg 2 — HTML→PDF via Gotenberg**: bestehendes `render_*`-HTML serverseitig gerendert | ✅ Service `rubicon-gotenberg` live + App-Wiring aktiv (`RUBICON_GOTENBERG_URL`/OIDC am App-Service); Server-Protokoll-Export-PDF läuft über Gotenberg. **Server-Report** läuft seit 10.08. über **Weg 1** (Zeile „Report-Doc + PDF"); Dieters lokaler Report-Pfad nutzt weiter HTML/Chrome |
-| Reminder / Mailversand | Gmail-Entwurf lokal (DRS sendet) | serverseitig via DWD `gmail.send`/`gmail.modify` als `rubicon@axs.aero` | ⏳ geplant (Scopes autorisiert) |
-| Kalender / Eskalation | simuliert / MCP-Bridge lokal | serverseitig via DWD `calendar.events` | ⏳ geplant (Scopes autorisiert) |
+| Reminder / Mailversand | Gmail-Entwurf lokal (DRS sendet) | Gmail-**Entwurf** via DWD `gmail.modify` **im Postfach des angemeldeten Nutzers** (dynamischer Subject); nie Auto-Send | ✅ live (12.08.) — Reminder + Entscheid-Kommunikation im Nutzerkontext; Versand bleibt bei DRS |
+| Kalender / Eskalation | simuliert (`[SIMULIERT]`-Log) | Kalender-Event via DWD `calendar.events` + Eskalations-**Entwurf** im Nutzerkontext | ⏳ geplant (nächster Ausbauschritt; `calendar.events` autorisiert) |
 
 **Bis zur 1:1-Parität** bleibt lokal die vollständige Umgebung; serverseitig wächst die Abdeckung
 inkrementell. Diese Tabelle wird je Ausbauschritt aktualisiert.
@@ -366,10 +366,12 @@ Chrome-getunte HTML **1:1 ohne Rework** rendert.
 ## Ausbaustufen
 
 1. **v1:** Kontrollturm live, geteilt, IAP-gated; Durchsetzung simuliert.
-2. **Mail/Kalender serverseitig:** Reminder-Versand + Kalender/Eskalation real —
-   serverseitig via SA-Impersonation (`rubicon@axs.aero`), DWD-Scopes `gmail.send`/
-   `gmail.modify`/`calendar.events` **bereits autorisiert** (kein erneuter Admin-Approval
-   nötig). Löst den bisherigen lokalen MCP-Bridge-Weg (`mcp/calendar_bridge.md`) ab.
+2. **Mail/Kalender serverseitig im Nutzerkontext:** Reminder- + Entscheid-Kommunikation
+   erzeugen serverseitig einen Gmail-**Entwurf im Postfach des angemeldeten Nutzers** (DWD,
+   dynamischer Subject = Login-Identität, Scope `gmail.modify`; **nie** Auto-Send — DRS sendet)
+   — **✅ umgesetzt (12.08.)**. Kalender (Termin je Fälligkeit, Owner eingeladen) + Eskalation
+   (Entwurf an die nächste Stufe + Log) folgen als nächster Schritt (`calendar.events`
+   autorisiert). Löst den lokalen MCP-Bridge-Weg (`mcp/calendar_bridge.md`) ab.
 3. **Tracker-Sync:** Gruppen-Commitment-Tracker ↔ read-only-Import.
 4. **Phase 2 (Datenschutz-Härtung):** Client-Runtime-Fetch (`/api/state`) ✅ umgesetzt
    (Daten zur Laufzeit aus dem Volume); verbleibend: `src/data`-Personendaten +
