@@ -1,0 +1,5 @@
+{
+  "_kommentar": "Stufe 5 (12.08.2026) — ANNAHME, von DRS nachzuspezifizieren: Der Führungsrhythmus definiert die Eskalations-MECHANIK (48h-Reminder -> 2x Nichtlieferung -> eine Ebene höher -> Steering Committee), aber KEINE Owner->Vorgesetzten-Matrix (die Owner sind überwiegend GL-Ebene). Bis DRS 'per_owner' füllt, geht der Eskalations-Entwurf an den Owner (To) mit CC an 'default_cc'; ist die Liste leer, greift der Default DRS (absender in kontakte.json). 'per_owner' überschreibt je Owner-Name. Nur verifizierte Adressen.",
+  "default_cc": [],
+  "per_owner": {}
+}

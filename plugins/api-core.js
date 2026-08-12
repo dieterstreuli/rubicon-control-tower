@@ -610,6 +610,46 @@ export function createApi(rootDir) {
           })
       })
 
+      // POST /api/kalender/event — Stufe 5: echter Calendar-Event (Owner + immer-einladen-Liste, Default
+      // DRS) im Kalender des angemeldeten Users. Nur CoS. Subject NUR aus verifizierter IAP-Identität,
+      // NIE aus dem Body; option-aussehende `id` (führendes '-') wird abgewiesen, damit kein Client-Wert
+      // den server-gesetzten --subject-Flag aliasieren kann (gleiche Invariante wie /api/gemini/import).
+      ep('/api/kalender/event', {}, async ({ body, req, json, fail }) => {
+          requireIdentityRole(req, body.role, fail, body.me)
+          requireCan(fail, body.role, body.me, 'reminder.entwerfen')
+          if (!body.id || /^-/.test(String(body.id))) return json(400, { ok: false, error: 'id fehlt/ungültig' })
+          const args = [path.join(root, 'scripts', 'gen_calendar_event.py'), '--id', String(body.id)]
+          // send_updates optional wählbar (sonst der änderbare Default aus kalender.json); nur erlaubte Werte.
+          if (body.send_updates === 'none' || body.send_updates === 'all') args.push('--send-updates', body.send_updates)
+          const kgid = resolveIdentity(req.headers, db.identity.read(), process.env.RUBICON_DEV_IDENTITY, process.env.RUBICON_IAP_ACTIVE === '1')
+          const kSubject = dwdSubject(kgid)
+          if (kSubject) args.push('--subject', kSubject)
+          execFile(PY_BIN, args, { cwd: root, timeout: 120000 }, (err, stdout, stderr) => {
+            if (err && !stdout) return json(500, { ok: false, error: String(stderr || err).slice(-300) })
+            const last = (stdout || '').trim().split('\n').pop()
+            try { return json(200, JSON.parse(last)) }
+            catch { return json(500, { ok: false, error: 'Parse: ' + (stderr || last || '').slice(-200) }) }
+          })
+      })
+
+      // POST /api/eskalation/mail — Stufe 5: Eskalations-Gmail-ENTWURF (To=Owner, CC=Liste/DRS) im
+      // Postfach des angemeldeten Users. NIE Send — DRS sendet. Nur CoS. Subject/`/^-/`-Guard wie oben.
+      ep('/api/eskalation/mail', {}, async ({ body, req, json, fail }) => {
+          requireIdentityRole(req, body.role, fail, body.me)
+          requireCan(fail, body.role, body.me, 'reminder.entwerfen')
+          if (!body.id || /^-/.test(String(body.id))) return json(400, { ok: false, error: 'id fehlt/ungültig' })
+          const args = [path.join(root, 'scripts', 'gen_eskalation_mail.py'), '--id', String(body.id)]
+          const egid = resolveIdentity(req.headers, db.identity.read(), process.env.RUBICON_DEV_IDENTITY, process.env.RUBICON_IAP_ACTIVE === '1')
+          const eSubject = dwdSubject(egid)
+          if (eSubject) args.push('--subject', eSubject)
+          execFile(PY_BIN, args, { cwd: root, timeout: 120000 }, (err, stdout, stderr) => {
+            if (err && !stdout) return json(500, { ok: false, error: String(stderr || err).slice(-300) })
+            const last = (stdout || '').trim().split('\n').pop()
+            try { return json(200, JSON.parse(last)) }
+            catch { return json(500, { ok: false, error: 'Parse: ' + (stderr || last || '').slice(-200) }) }
+          })
+      })
+
       // GET /api/delta?days=7 — B2 (01.08.): deterministischer Wochen-Delta aus
       // git-Historie (projekt.yaml) + Stores. Read-only, keine Guards nötig.
       ep('/api/delta', { method: 'GET', guard: false }, ({ req, json }) => {

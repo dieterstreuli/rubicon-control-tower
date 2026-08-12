@@ -1,0 +1,8 @@
+{
+  "_kommentar": "Stufe 5 (12.08.2026): Konfig für Kalender-Koordinationstermine. 'immer_einladen' = stets eingeladene Adressen (z.B. DRS / SC), damit der Termin auch dann bei den richtigen Personen landet, wenn er später über die eigene RUBICON-Identität (rubicon@axs.aero) statt über einen Menschen-Kalender läuft; leer -> Default = DRS (absender in kontakte.json). 'send_updates' steuert, ob Teilnehmer automatisch eine Einladungs-Mail bekommen ('none' = still angelegt, DRS lädt bei Bedarf selbst ein; 'all' = echte Einladung). Slot/Zeitzone bestimmen den fixen 30-Min-Termin am Fälligkeitstag. Nur verifizierte Adressen.",
+  "immer_einladen": [],
+  "send_updates": "none",
+  "slot_start": "09:00",
+  "slot_minutes": 30,
+  "timezone": "Europe/Zurich"
+}

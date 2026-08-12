@@ -24,6 +24,7 @@ ACCOUNTS = {
 DRIVE = "https://www.googleapis.com/auth/drive"
 DOCUMENTS = "https://www.googleapis.com/auth/documents"
 GMAIL_MODIFY = "https://www.googleapis.com/auth/gmail.modify"
+CALENDAR_EVENTS = "https://www.googleapis.com/auth/calendar.events"
 
 # Default (Drive/Docs) — unveraendert; Gmail/Calendar fordern die Aufrufer explizit an.
 DEFAULT_SCOPES = [DRIVE, DOCUMENTS]

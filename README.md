@@ -112,7 +112,7 @@ Betriebsregeln (für alle Beteiligten):
 
 ## Changelog (IT / Didit)
 
-**12.08.2026 — Reminder-/Entscheid-Gmail-Entwürfe im Konto des angemeldeten Nutzers:**
+**12.08.2026 — Durchsetzung im Nutzerkontext: Reminder-/Entscheid-/Eskalations-Mails + Kalender:**
 
 - **Erinnerungs- und Entscheid-Mails landen jetzt als Entwurf im Postfach des angemeldeten Nutzers:**
   „Reminder senden" und die Entscheid-Kommunikation („kommuniziert") erzeugen den Gmail-**Entwurf**
@@ -120,9 +120,17 @@ Betriebsregeln (für alle Beteiligten):
   einem festen Betriebskonto — über dieselbe server-verifizierte Delegation wie der Notiz-Import. Der
   Absender-Kontext ist damit der Nutzer selbst; der Entscheid-Entwurf trägt weiterhin das Register-PDF (und
   hinterlegte Anhänge) im Anhang.
-- **Sicherheit:** der Postfach-Kontext stammt ausschliesslich aus der verifizierten Login-Identität, **nie**
-  aus Client-Eingaben; option-aussehende Eingaben (führendes `-` in Empfänger/Auswahl) werden abgewiesen.
-  Ohne echten Login bleibt das bisherige lokale Verhalten unverändert.
+- **Kalender & Eskalation sind jetzt echt (bisher simuliert):** In der Durchsetzungs-Queue erzeugt
+  „Kalender" einen **echten Koordinationstermin** (30-Min-Slot am Fälligkeitstag) im Kalender des
+  angemeldeten Nutzers — Teilnehmer sind der Owner und eine definierte „immer-einladen"-Liste (Default:
+  DRS); standardmässig **still angelegt** (keine automatische Einladungs-Mail, konfigurierbar). „Eskalieren"
+  erzeugt einen **Gmail-Entwurf** (nie Versand) mit verschärftem Ton an den Owner, CC an die nächste Stufe
+  (konfigurierbare Liste, Default DRS). Beide führen ein persistentes Log; Rückmeldung erscheint im
+  Automations-Log (keine nativen Dialoge).
+- **Sicherheit:** der Postfach-/Kalender-Kontext stammt ausschliesslich aus der verifizierten
+  Login-Identität, **nie** aus Client-Eingaben; option-aussehende Eingaben (führendes `-`) werden
+  abgewiesen. Empfänger/Teilnehmer kommen nur aus verifizierten Konfig-Daten (fehlt die Liste → Default
+  DRS). Ohne echten Login bleibt das bisherige lokale Verhalten unverändert.
 
 **11.08.2026 — Meetingnotiz-Import im Nutzerkontext; Wochen-Report-KI wieder vollständig:**
 
@@ -293,7 +301,7 @@ im Detail: `DEPLOYMENT_GCP.md §9` (Reports) + `§10` (Merge-Brücke).
 | Traktanden, Entscheid, Briefing, Führungsrhythmus (feste Struktur) **+ AXS-Branding** | Chrome-HTML-PDF je Generator | **Weg 1 — Docs-REST-Vorlagen-Engine**: AXS-gebrandete Google-Doc-Vorlage je Typ + Merge, kein Chrome | ✅ serverseitig live (`rubicon-docs-job`) |
 | Protokoll (dynamisch, berechnetes Layout) | Chrome-HTML-PDF (lokal) | **Weg 2 — HTML→PDF via Gotenberg**: bestehendes `render_*`-HTML serverseitig gerendert | ✅ Service `rubicon-gotenberg` live + App-Wiring aktiv (`RUBICON_GOTENBERG_URL`/OIDC am App-Service); Server-Protokoll-Export-PDF läuft über Gotenberg. **Server-Report** läuft seit 10.08. über **Weg 1** (Zeile „Report-Doc + PDF"); Dieters lokaler Report-Pfad nutzt weiter HTML/Chrome |
 | Reminder / Mailversand | Gmail-Entwurf lokal (DRS sendet) | Gmail-**Entwurf** via DWD `gmail.modify` **im Postfach des angemeldeten Nutzers** (dynamischer Subject); nie Auto-Send | ✅ live (12.08.) — Reminder + Entscheid-Kommunikation im Nutzerkontext; Versand bleibt bei DRS |
-| Kalender / Eskalation | simuliert (`[SIMULIERT]`-Log) | Kalender-Event via DWD `calendar.events` + Eskalations-**Entwurf** im Nutzerkontext | ⏳ geplant (nächster Ausbauschritt; `calendar.events` autorisiert) |
+| Kalender / Eskalation | simuliert (`[SIMULIERT]`-Log) | Kalender-Event via DWD `calendar.events` (Owner + definierte Liste, still oder mit Einladung) + Eskalations-**Entwurf** (`gmail.modify`, To Owner / CC nächste Stufe), beide im Nutzerkontext | ✅ live (12.08.) — Kalender = echter Termin; Eskalation = Gmail-Entwurf (DRS sendet) |
 
 **Bis zur 1:1-Parität** bleibt lokal die vollständige Umgebung; serverseitig wächst die Abdeckung
 inkrementell. Diese Tabelle wird je Ausbauschritt aktualisiert.

@@ -9,7 +9,7 @@ const FUNKTIONEN = [
   { ok: true, t: 'Erkennung & rollenrichtige Ansicht — jetzt aktiv' },
   { ok: true, t: 'Sitzung erfassen → Tower · Reports · KI-Narrativ — serverseitig' },
   { ok: true, t: 'Notiz-Suche in deinem Konto (Meet-Notizen) — jetzt aktiv' },
-  { ok: false, t: 'Gmail-Reminder & Kalender in deinem Konto — folgt' },
+  { ok: true, t: 'Reminder-, Entscheid- & Eskalations-Mails + Kalender in deinem Konto — jetzt aktiv' },
 ]
 
 // Ohne IDENTITY (alter /api/state-Payload, kein IAP-Feld) ODER ohne echten IAP-Login

@@ -85,7 +85,7 @@ export default function App() {
 
   // Session-Overlays (flüchtig, nicht persistiert — Wahrheit bleibt projekt.yaml)
   const [overlay, setOverlay] = useState({})       // id -> {progress?, slip?} (What-if im Modal)
-  const [inputState, setInputState] = useState({}) // id -> {status?, last_reminder?}
+  const [inputState, setInputState] = useState({}) // id -> {status?}
   const [autoLog, setAutoLog] = useState([])       // CoS-Automations-Log (simuliert)
   const [remBusy, setRemBusy] = useState(false)    // K2: Gmail-Entwurf läuft
   const [selMs, setSelMs] = useState(null)         // Milestone-Detail-Modal
@@ -159,13 +159,45 @@ export default function App() {
   const nErr = ISSUES.filter(i => i.level === 'FEHLER').length
   const nGap = ISSUES.filter(i => i.level === 'LÜCKE').length
 
-  function remind(input, kind) {
-    const stamp = fmtDate(BASE.meta.today) + ' ' + clock.toTimeString().slice(0, 5)
-    setInputState(s => ({ ...s, [input.id]: { ...(s[input.id] || {}), last_reminder: stamp } }))
-    setAutoLog(l => [{
-      ts: new Date(),
-      msg: `[SIMULIERT] ${kind} an ${input.owner} — «${input.item}» (fällig ${fmtDate(input.due)})`,
-    }, ...l])
+  // Stufe 5 (12.08.): Kalender + Eskalation sind jetzt ECHTE Aktionen im Kontext des angemeldeten
+  // Nutzers (Server derives Subject aus der IAP-Identität, nicht aus dem Body). Status läuft über das
+  // Automations-Log (kein nativer Dialog). Kalender = echter Termin (Owner + immer-einladen-Liste,
+  // still oder mit Einladung je Konfig); Eskalation = Gmail-ENTWURF (nie Send — DRS sendet).
+  async function kalenderEvent(input) {
+    if (remBusy) return
+    setRemBusy(true)
+    try {
+      const r = await fetch('/api/kalender/event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ role, me, id: input.id }) })
+      const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
+      setAutoLog(l => [{
+        ts: new Date(),
+        msg: j.ok
+          ? `Kalender-Termin erstellt · «${input.item}» (${input.owner}) · Teilnehmer: ${(j.teilnehmer || []).join(', ')}`
+            + (j.send_updates === 'all' ? ' · Einladung versandt' : ' · still (keine Auto-Einladung)')
+          : `Kalender fehlgeschlagen · ${j.error || 'unbekannt'}`,
+      }, ...l])
+    } catch (err) {
+      setAutoLog(l => [{ ts: new Date(), msg: `Kalender fehlgeschlagen · ${err}` }, ...l])
+    } finally { setRemBusy(false) }
+  }
+
+  async function eskalieren(input) {
+    if (remBusy) return
+    setRemBusy(true)
+    try {
+      const r = await fetch('/api/eskalation/mail', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ role, me, id: input.id }) })
+      const j = await r.json().catch(() => ({ ok: false, error: 'ungültige Antwort' }))
+      setAutoLog(l => [{
+        ts: new Date(),
+        msg: j.ok
+          ? `Eskalations-Entwurf in Gmail · «${input.item}» → ${input.owner}`
+            + (j.cc && j.cc.length ? ' · CC ' + j.cc.join(', ') : '')
+            + (j.an ? '' : ' (OHNE Empfänger — E-Mail unbekannt)') + ' · DRS sendet'
+          : `Eskalation fehlgeschlagen · ${j.error || 'unbekannt'}`,
+      }, ...l])
+    } catch (err) {
+      setAutoLog(l => [{ ts: new Date(), msg: `Eskalation fehlgeschlagen · ${err}` }, ...l])
+    } finally { setRemBusy(false) }
   }
 
   // K2 Stufe 1 (01.08.): echte Gmail-ENTWÜRFE aus der Durchsetzungs-Queue — je Owner
@@ -801,8 +833,8 @@ export default function App() {
           {canAny(role, 'reminder.entwerfen') && (<>
             <div className="rounded-lg border px-4 py-2 text-[12px] flex items-center gap-2"
               style={{ borderColor: T.amber + '88', background: T.amber + '14', color: T.amber }}>
-              <Siren size={14} /> <b>Reminder = echte Gmail-ENTWÜRFE</b> (je Owner gebündelt · 7-Tage-Bremse · Versand bleibt bei DRS — K2 Stufe 1, 01.08.).
-              Kalender &amp; Eskalation bleiben <b>SIMULIERT</b> — Führungssignale gehen nie automatisch raus (Spez mcp/calendar_bridge.md).
+              <Siren size={14} /> <b>Durchsetzung im eigenen Konto:</b> Reminder + Eskalation = echte Gmail-<b>ENTWÜRFE</b> (Versand bleibt bei DRS) · Kalender = echter Koordinationstermin
+              im Kalender des angemeldeten Nutzers (Owner + definierte Liste; standardmässig ohne automatische Einladungs-Mail — konfigurierbar). Nie automatischer Mailversand.
             </div>
             <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
               <div className="flex items-center justify-between mb-2">
@@ -826,10 +858,12 @@ export default function App() {
                     <button onClick={() => reminderDrafts({ ids: [i.id] })} disabled={remBusy} className="px-2 py-0.5 rounded border text-[11px]"
                       title="Gmail-Entwurf für diesen Owner erzeugen — DRS sendet"
                       style={{ borderColor: T.brass + '88', color: T.brass }}><Send size={11} className="inline mr-1" />Gmail-Entwurf</button>
-                    <button onClick={() => remind(i, 'Kalender-Koordination')} className="px-2 py-0.5 rounded border text-[11px]"
-                      style={{ borderColor: T.line, color: T.ink }}><CalendarClock size={11} className="inline mr-1" />Kalender</button>
-                    <button onClick={() => remind(i, 'ESKALATION (Stufe +1)')} className="px-2 py-0.5 rounded border text-[11px]"
-                      style={{ borderColor: T.red + '88', color: T.red }}><Siren size={11} className="inline mr-1" />Eskalieren</button>
+                    <button onClick={() => kalenderEvent(i)} disabled={remBusy} title="Koordinationstermin im Kalender des angemeldeten Nutzers (Owner + definierte Liste)"
+                      className="px-2 py-0.5 rounded border text-[11px]"
+                      style={{ borderColor: T.line, color: T.ink, opacity: remBusy ? .4 : 1 }}><CalendarClock size={11} className="inline mr-1" />Kalender</button>
+                    <button onClick={() => eskalieren(i)} disabled={remBusy} title="Eskalations-Gmail-Entwurf (To Owner, CC nächste Stufe) — DRS sendet"
+                      className="px-2 py-0.5 rounded border text-[11px]"
+                      style={{ borderColor: T.red + '88', color: T.red, opacity: remBusy ? .4 : 1 }}><Siren size={11} className="inline mr-1" />Eskalieren</button>
                   </div>
                 ))}
               </div>
@@ -884,7 +918,7 @@ export default function App() {
 
       <footer className="px-6 py-3 text-[10px] border-t" style={{ borderColor: T.line, color: T.inkFaint, fontFamily: T.mono }}>
         RUBICON Control Tower · Wahrheitsquelle: src/data/projekt.yaml · Statuslogik deterministisch (status.js) ·
-        Erfasste Sitzungen/Reports werden persistiert · Reminder = Gmail-Entwürfe (DRS sendet) · Kalender/Eskalation simuliert · Vertraulich ExBoD/VR
+        Erfasste Sitzungen/Reports werden persistiert · Reminder + Eskalation = Gmail-Entwürfe (DRS sendet) · Kalender = echter Termin · Vertraulich ExBoD/VR
         {' · '}
         <span title={`Build ${__BUILD_SHA__}`} className="cursor-help" style={{ borderBottom: `1px dotted ${T.inkFaint}` }}>
           Stand {__BUILD_TIME__}

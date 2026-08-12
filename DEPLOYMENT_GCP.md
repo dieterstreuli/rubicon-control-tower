@@ -273,6 +273,17 @@ enable gmail.googleapis.com --project=aixs-260106`) — ohne sie schlägt der Dr
 `accessNotConfigured` fehl. Verifiziert per DWD-Smoke (Entwurf im Postfach des Test-Nutzers erzeugt +
 gelesen + gelöscht; ein anderes Betriebskonto sieht ihn nicht).
 
+**Erweiterung 12.08.2026 (Kalender + Eskalation im Nutzerkontext — Stufe 5):** „Kalender" erzeugt einen
+echten Calendar-Event, „Eskalieren" einen Gmail-**Entwurf** — beide per DWD **im Kontext des angemeldeten
+Nutzers**. `gen_calendar_event.py` fordert `…/auth/calendar.events` an (Eskalation reuse `…/auth/gmail.modify`);
+**keine neue IAM-Bindung** — beide Scopes sind am Client-ID bereits freigegeben. **Einmalig aktiviert wurde die
+Calendar-API im Projekt** (`gcloud services enable calendar-json.googleapis.com --project=aixs-260106`) — ohne
+sie schlägt der Event-Aufruf mit `accessNotConfigured` fehl. Verifiziert per DWD-Smoke (Event + Eskalations-
+Entwurf im Kontext des Test-Nutzers erzeugt + gelesen + gelöscht; ein anderes Betriebskonto sieht beide nicht;
+`sendUpdates=none` → keine Einladungs-Mails). **Zukunfts-Achse:** der DWD-Subject ist heute der angemeldete
+Nutzer; ein späterer Umschalt auf die eigene RUBICON-Identität (`rubicon@axs.aero`, eigenes Postfach/Kalender)
+ist per Config/Env vorgesehen (im Code als `RUBICON-CUTOVER: future-rubicon-identity` markiert).
+
 In-House-Vorlage der keyless-DWD-Mechanik: `scripts/_tools/gdoc_pdf.py` (bzw. das Muster aus
 `_google_auth._dwd_credentials`). Kein statischer Key nötig (Metadata-ADC signiert per IAM-API).
 
@@ -359,7 +370,7 @@ gcloud scheduler jobs create http rubicon-report-sched \
 |---|---|
 | Shared Drive „00 AXS - Rubicon" + 8 Ordner + 373 Baseline-Dokumente | ✅ angelegt/befüllt |
 | Service-User `rubicon@axs.aero` | ✅ angelegt |
-| SA `rubicon-workspace` + DWD-Freigabe (`drive`/`documents`/`spreadsheets`/`gmail.send`/`gmail.modify`/`calendar.events`) | ✅ angelegt/approved — `gmail.modify` seit **Stufe 4** (12.08.2026) für Reminder-/Entscheid-Entwürfe genutzt (Gmail-API im Projekt aktiviert, s. §9.1); `calendar.events` für Stufe 5 vorab autorisiert |
+| SA `rubicon-workspace` + DWD-Freigabe (`drive`/`documents`/`spreadsheets`/`gmail.send`/`gmail.modify`/`calendar.events`) | ✅ angelegt/approved — `gmail.modify` (Stufe 4) + `calendar.events` (**Stufe 5**, 12.08.2026) genutzt für Reminder-/Entscheid-/Eskalations-Entwürfe + Kalender-Events; **Gmail-API UND Calendar-API im Projekt aktiviert** (s. §9.1); keine neuen IAM-Bindungen (Scopes vorab freigegeben) |
 | `rubicon@axs.aero` = Mitglied des Shared Drive | ✅ |
 | Grant `rubicon-runtime` → `rubicon-workspace` (tokenCreator) | ✅ gesetzt |
 | Cloud-Run-Job `rubicon-report-job` | ✅ angelegt (Image-Loop in `deploy.yml`) |

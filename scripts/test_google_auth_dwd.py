@@ -81,8 +81,9 @@ def test_subject_ignored_without_dwd_env():
 
 
 def test_scope_constants():
-    # Stufe 4: benannte Scope-Konstanten fuer die Aufrufer (Gmail/Drive/Docs); Default unveraendert.
+    # Stufe 4/5: benannte Scope-Konstanten fuer die Aufrufer (Gmail/Drive/Docs/Calendar); Default unveraendert.
     assert ga.GMAIL_MODIFY == "https://www.googleapis.com/auth/gmail.modify"
+    assert ga.CALENDAR_EVENTS == "https://www.googleapis.com/auth/calendar.events"
     assert ga.DEFAULT_SCOPES == [ga.DRIVE, ga.DOCUMENTS]
 
 

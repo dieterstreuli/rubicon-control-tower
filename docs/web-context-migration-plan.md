@@ -190,6 +190,20 @@ als hinfällig markiert. Damit ist Zeile 152 (Follow-up „Gmail/Calendar noch a
 **Akzeptanz:** „Kalender" erzeugt einen echten Calendar-Event in Dieters Kalender; „Eskalieren" erzeugt einen
 Gmail-Entwurf an die nächste Eskalationsstufe (Matrix-basiert) + persistentes Log.
 
+**Status: ERLEDIGT (12.08.2026).** `gen_calendar_event.py` (Scope `calendar.events`, Subject=User) → echter
+30-Min-Koordinationstermin am Fälligkeitstag, Teilnehmer = Owner + `immer_einladen`-Liste (Default DRS);
+`sendUpdates` konfigurierbar (Default `none` = still). `gen_eskalation_mail.py` (Scope `gmail.modify`) → Gmail-
+Entwurf (nie Send), To=Owner, CC=`eskalation.json` (`per_owner` sonst `default_cc`, sonst Default DRS). Node-
+Endpoints `/api/kalender/event` + `/api/eskalation/mail` (CoS-gated, Subject nur aus IAP, `/^-/`-id-Guard);
+`src/App.jsx` `remind()`-SIMULIERT → echte Fetches, Status im Automations-Log. Konfig in `src/data/kalender.json`
++ `src/data/eskalation.json` (Resolver in `_kontakte.py`, robust gg. fehlende/kaputte/null-Felder → Default DRS).
+**Calendar-API im Projekt aktiviert.** Per DWD-Smoke bestätigt: Event + Eskal-Entwurf im Kontext des
+angemeldeten Users, ein anderes Betriebskonto sieht beide nicht, `sendUpdates=none` = keine Mails; danach gelöscht.
+**ANNAHME (DRS spezifiziert nach):** die Eskalations-Matrix hat nur einen Default (kein Owner→Vorgesetzten-Mapping
+— die Owner sind GL-Ebene); `per_owner` bleibt für DRS zu füllen. **Zukunft:** `RUBICON-CUTOVER: future-rubicon-identity`
+— Subject heute = User, später eigene `rubicon@`-Identität per Config/Env; die `immer_einladen`-Liste sichert, dass
+DRS/Liste dann trotzdem Teilnehmer ist. `mcp/calendar_bridge.md` (Kalender-/Eskalations-Weg) damit hinfällig.
+
 ---
 
 ## Stufe 6 — „Notiz suchen" als Dieter + `gen_protokoll.py`-Dual-Mode + Cleanup
