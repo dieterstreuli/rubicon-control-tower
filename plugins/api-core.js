@@ -586,9 +586,22 @@ export function createApi(rootDir) {
           requireCan(fail, body.role, body.me, 'reminder.entwerfen')
           const args = [path.join(root, 'scripts', 'gen_reminder_mail.py')]
           if (body.scope === 'alle') args.push('--alle')
-          else if (body.scope && Array.isArray(body.scope.ids) && body.scope.ids.length) args.push('--ids', body.scope.ids.join(','))
+          else if (body.scope && Array.isArray(body.scope.ids) && body.scope.ids.length) {
+            // Option-aussehende IDs (führendes '-') verbieten: sonst könnte ein Client-Wert einen
+            // CLI-Flag (z.B. das server-gesetzte --subject) verdrängen/aliasieren. Gleiche Invariante
+            // wie /api/gemini/import — kein Client-Wert darf einen Flag maskieren.
+            if (body.scope.ids.some(x => /^-/.test(String(x)))) return json(400, { ok: false, error: 'ids ungültig' })
+            args.push('--ids', body.scope.ids.join(','))
+          }
           else return json(400, { ok: false, error: 'scope fehlt («alle» oder {ids:[...]})' })
           if (body.force) args.push('--force')
+          // Stufe 4: unter echtem IAP-Login den Gmail-Entwurf im Kontext des ANGEMELDETEN Users erzeugen
+          // (der Entwurf landet in dessen Postfach). Der Subject kommt NUR aus der server-verifizierten
+          // IAP-Identität, NIE aus dem Body. Ohne echten IAP-Login (lokal/Tailnet) kein --subject → bisheriges
+          // Verhalten (Env-Subject/User-OAuth). Gleiche Invariante wie /api/gemini/import (Stufe 3).
+          const rgid = resolveIdentity(req.headers, db.identity.read(), process.env.RUBICON_DEV_IDENTITY, process.env.RUBICON_IAP_ACTIVE === '1')
+          const rSubject = dwdSubject(rgid)
+          if (rSubject) args.push('--subject', rSubject)
           execFile(PY_BIN, args, { cwd: root, timeout: 120000 }, (err, stdout, stderr) => {
             if (err && !stdout) return json(500, { ok: false, error: String(stderr || err).slice(-300) })
             const last = (stdout || '').trim().split('\n').pop()
@@ -732,6 +745,10 @@ export function createApi(rootDir) {
       // setzt den Kommunikations-Stempel {an, am}; «entschieden» stempelt das Entscheid-Datum.
       ep('/api/entscheid/status', {}, async ({ body, req, json, fail }) => {
           if (!body.id || !ENT_FLOW.includes(body.status)) return json(400, { ok: false, error: `id und status (${ENT_FLOW.join('|')}) sind Pflicht` })
+          // Option-aussehender Verteiler (führendes '-') verboten: `an` wird als `--an <wert>` an
+          // gen_entscheid_mail gereicht; ein Wert wie '--subject' würde sonst beim naiven argv-Scan
+          // den server-gesetzten --subject-Flag aliasieren. Gleiche Invariante wie /api/gemini/import.
+          if (body.an && /^-/.test(String(body.an))) return json(400, { ok: false, error: 'an ungültig' })
           const role = body.role, me = body.me
           requireIdentityRole(req, role, fail, me)
           requireCan(fail, role, me, 'entscheid.fortschreiben')
@@ -754,6 +771,12 @@ export function createApi(rootDir) {
           if (body.status === 'kommuniziert') {
             const args = [path.join(root, 'scripts', 'gen_entscheid_mail.py'), e.id]
             if (body.an) args.push('--an', body.an)
+            // Stufe 4: Entscheid-Gmail-Entwurf im Kontext des ANGEMELDETEN Users (Postfach des Users).
+            // Subject NUR aus verifizierter IAP-Identität, NIE aus dem Body. Ohne IAP kein --subject
+            // → bisheriges Verhalten. Gleiche Invariante wie /api/gemini/import + /api/reminder/draft.
+            const egid = resolveIdentity(req.headers, db.identity.read(), process.env.RUBICON_DEV_IDENTITY, process.env.RUBICON_IAP_ACTIVE === '1')
+            const eSubject = dwdSubject(egid)
+            if (eSubject) args.push('--subject', eSubject)
             execFile(PY_BIN, args, { cwd: root, timeout: 120000 }, (err, stdout, stderr) => {
               const last = (stdout || '').trim().split('\n').pop()
               let mail = null

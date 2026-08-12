@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""gen_entscheid_mail.py <entscheid_id> [--an "Verteiler"] — Kommunikations-Paket
+"""gen_entscheid_mail.py <entscheid_id> [--an "Verteiler"] [--subject EMAIL] — Kommunikations-Paket
+
+--subject EMAIL: DWD-Impersonation = dieser User (Server) → Entwurf in dessen Postfach; nur aus
+verifizierter IAP-Identität, nie aus Client-Eingaben. Lokal wirkungslos (User-OAuth).
+
 für einen Register-Entscheid (Säule 3, INS-001 Anhang B):
 
 1. Entscheid-PDF (public/entscheide/<id>.pdf) — der Antragsinhalt überführt in den
@@ -143,10 +147,12 @@ def fetch_anhaenge(drive, rec):
     return atts, errs
 
 
-def create_draft(rec, pdf_path, an):
-    from _google_auth import load_credentials
+def create_draft(rec, pdf_path, an, me=None):
+    from _google_auth import load_credentials, GMAIL_MODIFY, DRIVE
     from googleapiclient.discovery import build
-    creds = load_credentials('d.streuli@axs.aero')
+    # me = angemeldeter User (Server) -> Entwurf in SEINEM Postfach; lokal wirkungslos (User-OAuth).
+    # Drive-Scope zusätzlich zum Gmail-Scope, weil fetch_anhaenge hinterlegte Register-Anhänge aus Drive lädt.
+    creds = load_credentials('d.streuli@axs.aero', scopes=[GMAIL_MODIFY, DRIVE], subject=me)
     gmail = build('gmail', 'v1', credentials=creds)
     drive = build('drive', 'v3', credentials=creds)
     extra_atts, att_errs = fetch_anhaenge(drive, rec)
@@ -185,6 +191,7 @@ def main():
     an = None
     if '--an' in sys.argv:
         an = sys.argv[sys.argv.index('--an') + 1]
+    me = sys.argv[sys.argv.index('--subject') + 1] if '--subject' in sys.argv else None
     store = json.loads(ENTS.read_text())
     rec = next((x for x in store['entscheide'] if x['id'] == eid), None)
     if not rec:
@@ -200,7 +207,7 @@ def main():
     draft_id, draft_err, n_anh, anh_err = None, None, 0, []
     if '--pdf-only' not in sys.argv:                           # Vorschau/Beispiel ohne Gmail-Entwurf
         try:
-            draft_id, n_anh, anh_err = create_draft(rec, pdf_abs, an or (rec.get('kommunikation') or {}).get('an'))
+            draft_id, n_anh, anh_err = create_draft(rec, pdf_abs, an or (rec.get('kommunikation') or {}).get('an'), me=me)
         except Exception as ex:                                # PDF bleibt auch ohne Gmail nutzbar
             draft_err = str(ex)[-200:]
 

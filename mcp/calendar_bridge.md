@@ -1,5 +1,11 @@
 # MCP-Bridge — Reminder / Kalender / Eskalation (Spezifikation)
 
+> **Hinweis (Stufe 4):** Der **Gmail-Weg für Reminder und Entscheid-Kommunikation ist hinfällig** —
+> beide erzeugen den Entwurf jetzt serverseitig direkt über Domain-Wide Delegation **im Postfach des
+> angemeldeten Nutzers** (`gen_reminder_mail.py` / `gen_entscheid_mail.py` mit `--subject`, Scope
+> `gmail.modify`), nicht mehr über eine MCP-Gmail-Bridge. Der hier skizzierte MCP-Gmail-Weg gilt nur
+> noch als historische Referenz. Kalender + Eskalation folgen in Stufe 5.
+
 Status: **Spezifikation** — im Prototyp sind alle Durchsetzungs-Aktionen simuliert.
 Reale Writes (Gmail-Draft/Send, Google-Calendar-Events) laufen später ausschliesslich
 über dieses Muster. Ohne Freigabe-Token gibt es **keinen** Write.

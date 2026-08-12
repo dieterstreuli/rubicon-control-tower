@@ -80,6 +80,29 @@ def test_subject_ignored_without_dwd_env():
     assert out == "USER:d.streuli@axs.aero"
 
 
+def test_scope_constants():
+    # Stufe 4: benannte Scope-Konstanten fuer die Aufrufer (Gmail/Drive/Docs); Default unveraendert.
+    assert ga.GMAIL_MODIFY == "https://www.googleapis.com/auth/gmail.modify"
+    assert ga.DEFAULT_SCOPES == [ga.DRIVE, ga.DOCUMENTS]
+
+
+def test_explicit_scopes_reach_dwd():
+    # Stufe 4: ein explizit uebergebener Scope (z.B. gmail.modify) MUSS bis ins DWD-JWT durchgereicht
+    # werden — sonst faehrt der Server-Call mit dem Drive/Docs-Default und der Gmail-Call scheitert.
+    os.environ["RUBICON_WORKSPACE_SA"] = "sa@x.iam"
+    os.environ["RUBICON_IMPERSONATE_SUBJECT"] = "rubicon@axs.aero"
+    orig = ga._dwd_credentials
+    seen = {}
+    ga._dwd_credentials = lambda sa, sub, sc: seen.update(sc=sc) or "DWD"
+    try:
+        ga.load_credentials(subject="d.streuli@axs.aero", scopes=[ga.GMAIL_MODIFY])
+    finally:
+        ga._dwd_credentials = orig
+        os.environ.pop("RUBICON_WORKSPACE_SA", None)
+        os.environ.pop("RUBICON_IMPERSONATE_SUBJECT", None)
+    assert seen["sc"] == [ga.GMAIL_MODIFY]
+
+
 if __name__ == "__main__":
     test_build_jwt_payload()
     test_dispatch_sa_mode()
@@ -87,4 +110,6 @@ if __name__ == "__main__":
     test_default_scopes()
     test_subject_overrides_env()
     test_subject_ignored_without_dwd_env()
-    print("google_auth DWD: 6/6 gruen")
+    test_scope_constants()
+    test_explicit_scopes_reach_dwd()
+    print("google_auth DWD: 8/8 gruen")

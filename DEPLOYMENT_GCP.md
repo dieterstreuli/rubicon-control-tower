@@ -261,7 +261,17 @@ server-seitig als `rubicon@axs.aero` — für die on-demand Drive/Docs-Aktionen 
 Service den privaten Gotenberg über die *bestehende* `roles/run.invoker`-Bindung von `rubicon-runtime`
 auf `rubicon-gotenberg` (§11). **Es wurde in dieser Runde KEINE neue IAM-Bindung erteilt** — beide
 Grants existierten bereits (für die Jobs); neu ist allein die Aktivierung der Fähigkeit am Service via
-Env. Scope-Umfang unverändert: nur `…/auth/drive` + `…/auth/documents`.
+Env. Scope-Umfang für Drive/Docs-Aktionen: `…/auth/drive` + `…/auth/documents`.
+
+**Erweiterung 12.08.2026 (Gmail-Entwürfe im Nutzerkontext):** Reminder- und Entscheid-Kommunikation
+erzeugen ihren Gmail-**Entwurf** jetzt per DWD **im Postfach des angemeldeten Nutzers** (dynamischer
+Subject = verifizierte Login-Identität). Dafür fordern `gen_reminder_mail.py` bzw. `gen_entscheid_mail.py`
+explizit den Scope `…/auth/gmail.modify` an (bei Entscheid zusätzlich `…/auth/drive` für die Anhänge) —
+**keine neue IAM-Bindung**: der Scope ist am Client-ID `112708550499414880483` bereits Domain-Wide
+freigegeben (s. Tabelle unten). **Neu aktiviert wurde einmalig die Gmail-API im Projekt** (`gcloud services
+enable gmail.googleapis.com --project=aixs-260106`) — ohne sie schlägt der Draft-Aufruf mit
+`accessNotConfigured` fehl. Verifiziert per DWD-Smoke (Entwurf im Postfach des Test-Nutzers erzeugt +
+gelesen + gelöscht; ein anderes Betriebskonto sieht ihn nicht).
 
 In-House-Vorlage der keyless-DWD-Mechanik: `scripts/_tools/gdoc_pdf.py` (bzw. das Muster aus
 `_google_auth._dwd_credentials`). Kein statischer Key nötig (Metadata-ADC signiert per IAM-API).
@@ -349,7 +359,7 @@ gcloud scheduler jobs create http rubicon-report-sched \
 |---|---|
 | Shared Drive „00 AXS - Rubicon" + 8 Ordner + 373 Baseline-Dokumente | ✅ angelegt/befüllt |
 | Service-User `rubicon@axs.aero` | ✅ angelegt |
-| SA `rubicon-workspace` + DWD-Freigabe (`drive`/`documents`/`spreadsheets`/`gmail.send`/`gmail.modify`/`calendar.events`) | ✅ angelegt/approved (Gmail/Calendar für spätere Features vorab autorisiert) |
+| SA `rubicon-workspace` + DWD-Freigabe (`drive`/`documents`/`spreadsheets`/`gmail.send`/`gmail.modify`/`calendar.events`) | ✅ angelegt/approved — `gmail.modify` seit **Stufe 4** (12.08.2026) für Reminder-/Entscheid-Entwürfe genutzt (Gmail-API im Projekt aktiviert, s. §9.1); `calendar.events` für Stufe 5 vorab autorisiert |
 | `rubicon@axs.aero` = Mitglied des Shared Drive | ✅ |
 | Grant `rubicon-runtime` → `rubicon-workspace` (tokenCreator) | ✅ gesetzt |
 | Cloud-Run-Job `rubicon-report-job` | ✅ angelegt (Image-Loop in `deploy.yml`) |

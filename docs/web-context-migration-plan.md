@@ -165,6 +165,17 @@ Subject = angemeldeter User → Entwurf landet in **seinem** Postfach;
 **Akzeptanz:** „Reminder senden" erzeugt einen Gmail-**Entwurf im Postfach des angemeldeten Users** (kein Auto-Send);
 Entscheid-Mail mit PDF-Anhang ebenso.
 
+**Status: ERLEDIGT (12.08.2026).** `create_draft` in `gen_reminder_mail.py` + `gen_entscheid_mail.py` nimmt einen
+`me`-Subject + fordert `gmail.modify` an (Entscheid zusätzlich `drive` für die Anhänge); die Node-Endpoints
+`/api/reminder/draft` und `/api/entscheid/status`(→kommuniziert) reichen den Subject **nur aus der verifizierten
+IAP-Identität** (`resolveIdentity`→`dwdSubject`) als `--subject` durch — identisch zum Stufe-3-Muster von
+`/api/gemini/import`; option-aussehende Client-Werte (Empfänger/Auswahl mit führendem `-`) werden abgewiesen.
+Dual-Mode gewahrt (lokal ohne DWD-Env unverändert). **Einmalig die Gmail-API im Projekt aktiviert**
+(`gmail.googleapis.com`, sonst `accessNotConfigured`). **Mechanik + Isolation per DWD-Smoke bestätigt**
+(Impersonation eines Test-Subjects: Entwurf landet in dessen Postfach, ein anderes Betriebskonto sieht ihn nicht,
+danach gelöscht); **end-to-end über echten IAP-Login wirksam mit dem Deploy**. `mcp/calendar_bridge.md`-Gmail-Weg
+als hinfällig markiert. Damit ist Zeile 152 (Follow-up „Gmail/Calendar noch als rubicon@") für Gmail erledigt.
+
 ---
 
 ## Stufe 5 — Kalender + Eskalation (Neubau, heute rein simuliert)

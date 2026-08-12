@@ -124,10 +124,14 @@ async function main() {
   await expect('entscheid/upsert: ohne key/titel → 400', '/api/entscheid/upsert', { body: { ...CoS, entscheide: [{ titel: '' }] } }, 400)
   await expect('entscheid/status: ungültiger Status → 400', '/api/entscheid/status', { body: { ...CoS, id: 'E-2026-001', status: 'quatsch' } }, 400)
   await expect('entscheid/status: unbekannte E-Nummer → 404', '/api/entscheid/status', { body: { ...CoS, id: 'E-9999-999', status: 'entschieden' } }, 404)
+  // Stufe 4: option-aussehender Verteiler darf keinen CLI-Flag aliasieren (Guard vor jeder Mutation)
+  await expect('entscheid/status: option-aussehendes an → 400', '/api/entscheid/status', { body: { ...CoS, id: 'E-2026-001', status: 'kommuniziert', an: '-x' } }, 400, 'an')
 
   // ── 6 · Reminder / Gemini / KI (Gates only — kein Entwurf, kein KI-Aufruf) ──
   await expect('reminder/draft: nur CoS → 403', '/api/reminder/draft', { body: { role: 'Owner', me: 'Andreas Fritthum', scope: 'alle' } }, 403)
   await expect('reminder/draft: scope fehlt → 400', '/api/reminder/draft', { body: { ...CoS } }, 400, 'scope')
+  // Stufe 4: option-aussehende id darf keinen CLI-Flag (z.B. --subject) aliasieren (Guard vor execFile)
+  await expect('reminder/draft: option-aussehende id → 400', '/api/reminder/draft', { body: { ...CoS, scope: { ids: ['--subject'] } } }, 400, 'ids')
   await expect('gemini/import: lesende Rolle → 403', '/api/gemini/import', { body: { ...LESEND, meeting_id: 'gl-weekly' } }, 403)
   await expect('gemini/import: meeting_id fehlt → 400', '/api/gemini/import', { body: { ...CoS } }, 400)
   await expect('task/suggest: nur CoS → 403', '/api/task/suggest', { body: { role: 'Owner', me: 'Andreas Fritthum', ms_id: 'WS2-16' } }, 403)

@@ -112,6 +112,18 @@ Betriebsregeln (für alle Beteiligten):
 
 ## Changelog (IT / Didit)
 
+**12.08.2026 — Reminder-/Entscheid-Gmail-Entwürfe im Konto des angemeldeten Nutzers:**
+
+- **Erinnerungs- und Entscheid-Mails landen jetzt als Entwurf im Postfach des angemeldeten Nutzers:**
+  „Reminder senden" und die Entscheid-Kommunikation („kommuniziert") erzeugen den Gmail-**Entwurf**
+  (nie automatischer Versand) serverseitig **im Postfach des per Login (IAP) erkannten Nutzers** statt in
+  einem festen Betriebskonto — über dieselbe server-verifizierte Delegation wie der Notiz-Import. Der
+  Absender-Kontext ist damit der Nutzer selbst; der Entscheid-Entwurf trägt weiterhin das Register-PDF (und
+  hinterlegte Anhänge) im Anhang.
+- **Sicherheit:** der Postfach-Kontext stammt ausschliesslich aus der verifizierten Login-Identität, **nie**
+  aus Client-Eingaben; option-aussehende Eingaben (führendes `-` in Empfänger/Auswahl) werden abgewiesen.
+  Ohne echten Login bleibt das bisherige lokale Verhalten unverändert.
+
 **11.08.2026 — Meetingnotiz-Import im Nutzerkontext; Wochen-Report-KI wieder vollständig:**
 
 - **Notiz-Import liest jetzt das Drive des angemeldeten Nutzers, nicht mehr ein festes Betriebskonto:**

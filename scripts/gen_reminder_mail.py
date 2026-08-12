@@ -14,6 +14,8 @@ Auswahl:
   --ids IN-02,T-042   explizite Auswahl (Input-IDs und/oder T-Nummern)
   --dry-run           nur zeigen, was entstünde — kein Gmail-Zugriff, kein Log
   --force             7-Tage-Bremse übergehen (sonst: kürzlich erinnerte Items skip)
+  --subject EMAIL     DWD-Impersonation = dieser User (Server); Entwurf in dessen Postfach.
+                      Nur aus verifizierter IAP-Identität setzen, nie aus Client-Eingaben. Lokal wirkungslos.
 
 Leitplanken (Stufe 1):
   · Empfänger NUR aus der verifizierten Owner→E-Mail-Map — nie geraten.
@@ -142,10 +144,13 @@ def mail_for(owner, items, today):
     return subject, body
 
 
-def create_draft(to_email, subject, body_html):
-    from _google_auth import load_credentials
+def create_draft(to_email, subject, body_html, me=None):
+    from _google_auth import load_credentials, GMAIL_MODIFY
     from googleapiclient.discovery import build
-    creds = load_credentials('d.streuli@axs.aero')
+    # me = per IAP verifizierter angemeldeter User (Server-Modus) -> der Entwurf landet in SEINEM
+    # Postfach; lokal (keine DWD-Env) ist me wirkungslos und es gilt der account-User-OAuth. gmail.modify
+    # statt des Drive/Docs-Defaults, sonst fehlt dem DWD-Token das Gmail-Recht (drafts.create).
+    creds = load_credentials('d.streuli@axs.aero', scopes=[GMAIL_MODIFY], subject=me)
     gmail = build('gmail', 'v1', credentials=creds)
     msg = MIMEMultipart('alternative')
     text = re.sub(r'<[^>]+>', '', body_html.replace('<br>', '\n').replace('</p>', '\n\n'))
@@ -162,6 +167,7 @@ def main():
     args = sys.argv[1:]
     dry = '--dry-run' in args
     force = '--force' in args
+    me = args[args.index('--subject') + 1] if '--subject' in args else None
     if '--alle' not in args and '--ids' not in args and '--vorlauf' not in args:
         print(json.dumps({'ok': False, 'error': 'Auswahl fehlt: --alle, --ids oder --vorlauf'})); sys.exit(1)
 
@@ -192,7 +198,7 @@ def main():
         subject, body = mail_for(owner, its, today)
         draft_id = None
         if not dry:
-            draft_id = create_draft(email, subject, body)
+            draft_id = create_draft(email, subject, body, me=me)
             log['reminders'].insert(0, {
                 'created_at': datetime.datetime.now().isoformat(timespec='seconds'),
                 'owner': owner, 'email': email, 'draft_id': draft_id, 'mode': 'draft',

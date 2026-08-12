@@ -20,11 +20,13 @@ ACCOUNTS = {
     "d.straus@axs.aero": ".gdrive-dstraus-credentials.json",
 }
 
-# DWD-freigegebene Schreib-Scopes (Drive/Docs).
-DEFAULT_SCOPES = [
-    "https://www.googleapis.com/auth/drive",
-    "https://www.googleapis.com/auth/documents",
-]
+# DWD-freigegebene Scopes (am Client-ID 112708550499414880483 autorisiert, verifiziert 09.08.2026).
+DRIVE = "https://www.googleapis.com/auth/drive"
+DOCUMENTS = "https://www.googleapis.com/auth/documents"
+GMAIL_MODIFY = "https://www.googleapis.com/auth/gmail.modify"
+
+# Default (Drive/Docs) — unveraendert; Gmail/Calendar fordern die Aufrufer explizit an.
+DEFAULT_SCOPES = [DRIVE, DOCUMENTS]
 
 
 def _build_jwt_payload(sa_email, subject, scopes, now):
