@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { T } from '../lib/theme.js'
-import { ALL_TASKS, reloadKeepScroll, taskOverdue, tnr, FR, PROTO, AGENDAS, traktDocUrl } from '../lib/data.js'
+import { ALL_TASKS, reloadKeepScroll, taskOverdue, tnr, FR, PROTO, AGENDAS, traktDocUrl, SERVER } from '../lib/data.js'
 import { fmtDate } from '../lib/status.js'
 import { PROGRESS_STEPS, TYP_ICON, TYP_LABEL } from '../lib/domain.js'
 import { can } from '../lib/permissions.js'
@@ -404,7 +404,7 @@ export function ProtokolleView({ role, me }) {
                 ) : p.export?.pdf ? (
                   <span className="flex items-center gap-1.5">
                     <a href={p.export.pdf} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.brass, color: T.brass }}><FileText size={10} /> PDF</a>
-                    {p.export.doc_url && <a href={p.export.doc_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.blue, color: T.blue }}><FileText size={10} /> Doc</a>}
+                    {(SERVER ? p.export.server_doc_url : p.export.doc_url) && <a href={SERVER ? p.export.server_doc_url : p.export.doc_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.blue, color: T.blue }}><FileText size={10} /> Doc</a>}
                     {can(role, me, 'report.erzeugen') && (
                       <button onClick={() => exportP(p.id)} disabled={busy === p.id} className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.line, color: T.inkFaint }} title="neu erzeugen">{busy === p.id ? '…' : '↻'}</button>
                     )}

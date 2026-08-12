@@ -132,6 +132,18 @@ Betriebsregeln (für alle Beteiligten):
   abgewiesen. Empfänger/Teilnehmer kommen nur aus verifizierten Konfig-Daten (fehlt die Liste → Default
   DRS). Ohne echten Login bleibt das bisherige lokale Verhalten unverändert.
 
+_Sitzungsprotokoll & Notiz-Übernahme serverseitig vereinheitlicht:_
+- **Sitzungsprotokoll serverseitig als gebrandetes Google-Doc (Weg 1):** das Protokoll wird serverseitig
+  jetzt über die **AXS-gebrandete Vorlagen-Engine** erzeugt — einheitliches Doc mit **Logo im Header auf
+  jeder Seite**, **Seitenzahlen** und dynamischer Fusszeile — statt über den früheren Markdown→Doc-
+  Zwischenweg. Das PDF läuft weiterhin chromefrei über Gotenberg. Dieters **lokaler Weg bleibt unverändert**;
+  die server-seitige Doc-Verknüpfung liegt **additiv** neben seiner lokalen und wird im Tower modusabhängig
+  verlinkt. Damit entsteht serverseitig **kein** Dokument mehr über einen dritten Weg.
+- **Übernahme einer importierten Meetingnotiz greift serverseitig zuverlässig:** „Übernehmen" schreibt die
+  erkannte Sitzung serverseitig jetzt **direkt** (ohne internen Netz-Umweg), sodass sie im Server-Betrieb
+  gespeichert wird und alle Spiegel (Fortschritt/Blocker, Commitment→Handlung, Entscheid→Register) wie bei
+  manueller Erfassung greifen. Die Owner-Prüfung nutzt weiter die verifizierte Login-Identität.
+
 **11.08.2026 — Meetingnotiz-Import im Nutzerkontext; Wochen-Report-KI wieder vollständig:**
 
 - **Notiz-Import liest jetzt das Drive des angemeldeten Nutzers, nicht mehr ein festes Betriebskonto:**
@@ -299,7 +311,7 @@ im Detail: `DEPLOYMENT_GCP.md §9` (Reports) + `§10` (Merge-Brücke).
 | Δ-Block (Wochen-Delta) | git-Vergleich `projekt.yaml` | **datierte `projekt.yaml`-Snapshots** (`history/`, aus git backfilled + je Publish fortgeschrieben) | ✅ Code — serverseitig ab Deploy + Backfill |
 | KI-Narrativ | lokale CLI (`claude`, unverändert) | **Vertex AI** in `aixs-260106` via `ai_client`-Fassade (Provider `google`/`anthropic`, Modell/Region/Prompt per Env, SA `rubicon-ai@`) | ✅ Code + Deploy-Wiring — serverseitig **live erst nach Deploy + Cloud-Smoke** (`DEPLOYMENT_GCP.md §9.6`) |
 | Traktanden, Entscheid, Briefing, Führungsrhythmus (feste Struktur) **+ AXS-Branding** | Chrome-HTML-PDF je Generator | **Weg 1 — Docs-REST-Vorlagen-Engine**: AXS-gebrandete Google-Doc-Vorlage je Typ + Merge, kein Chrome | ✅ serverseitig live (`rubicon-docs-job`) |
-| Protokoll (dynamisch, berechnetes Layout) | Chrome-HTML-PDF (lokal) | **Weg 2 — HTML→PDF via Gotenberg**: bestehendes `render_*`-HTML serverseitig gerendert | ✅ Service `rubicon-gotenberg` live + App-Wiring aktiv (`RUBICON_GOTENBERG_URL`/OIDC am App-Service); Server-Protokoll-Export-PDF läuft über Gotenberg. **Server-Report** läuft seit 10.08. über **Weg 1** (Zeile „Report-Doc + PDF"); Dieters lokaler Report-Pfad nutzt weiter HTML/Chrome |
+| Protokoll (dynamisch, berechnetes Layout) | Chrome-HTML-PDF + Doc in Dieters Drive (Markdown→Doc) | **Doc: Weg 1 — gebrandete Vorlagen-Engine** (AXS-Google-Doc mit Logo/Seitenzahlen/dyn. Fusszeile, Vorlage `protokoll`) · **PDF: Weg 2 — Gotenberg** (chromefrei, bestehendes `render_*`-HTML). Der frühere Markdown→Doc-Zwischenweg entfällt serverseitig. | ✅ Code (12.08.) — Server-Protokoll-Doc über Weg 1, PDF über `rubicon-gotenberg` (`RUBICON_GOTENBERG_URL`/OIDC); `server_doc_url` modusabhängig, additiv neben Dieters lokaler `doc_url`. Ziel = Shared-Ordner „RUBICON — Sitzungsprotokolle" (rubicon@-zugänglich; Dieters persönlicher Ordner ist es NICHT). **DWD-Server-Smoke bestanden** (rubicon@: Doc gerendert, Footer/Anker/Shared-Ordner ok); Live über den deployed Service mit dem Merge (§11). **Server-Report** läuft seit 10.08. über **Weg 1** (Zeile „Report-Doc + PDF"); Dieters lokaler Report-/Protokoll-Pfad nutzt weiter HTML/Chrome + Markdown→Doc |
 | Reminder / Mailversand | Gmail-Entwurf lokal (DRS sendet) | Gmail-**Entwurf** via DWD `gmail.modify` **im Postfach des angemeldeten Nutzers** (dynamischer Subject); nie Auto-Send | ✅ live (12.08.) — Reminder + Entscheid-Kommunikation im Nutzerkontext; Versand bleibt bei DRS |
 | Kalender / Eskalation | simuliert (`[SIMULIERT]`-Log) | Kalender-Event via DWD `calendar.events` (Owner + definierte Liste, still oder mit Einladung) + Eskalations-**Entwurf** (`gmail.modify`, To Owner / CC nächste Stufe), beide im Nutzerkontext | ✅ live (12.08.) — Kalender = echter Termin; Eskalation = Gmail-Entwurf (DRS sendet) |
 
@@ -317,7 +329,8 @@ Eine AXS-gebrandete **Google-Doc-Vorlage** je Typ wird serverseitig gefüllt: `d
 `createParagraphBullets` für Listen) → `drive.files.export(pdf)`. **Kein Chrome.**
 → **Traktanden, Entscheid, Briefing, Führungsrhythmus** sowie die **Reporte (Woche/Monat/Quartal)
 serverseitig** (seit 10.08.2026 — löst den früheren Markdown→Doc-Zwischenweg für Reporte ab; der
-KI-Entwurf steht damit im Doc selbst). Alle Vorlagen teilen **eine gebrandete Basis** (Logo je Seite +
+KI-Entwurf steht damit im Doc selbst) und das **Sitzungsprotokoll-Doc serverseitig** (seit 12.08.2026 —
+löst auch dort den Markdown→Doc-Zwischenweg ab; das Protokoll-**PDF** bleibt Weg 2, s.u.). Alle Vorlagen teilen **eine gebrandete Basis** (Logo je Seite +
 Seitenzahlen + dynamische `{{FOOTER}}`-Fusszeile); reproduzierbar unter `scripts/templates_build/`.
 Nimm ihn, wenn: **feste Struktur**; Inhalt = Felder + Wiederhol-Tabellen + Bullets; Branding soll
 **ohne Code** in Google Docs editierbar sein (WYSIWYG); ein lebendes Google Doc als Nebenprodukt
@@ -347,8 +360,8 @@ Das in Python erzeugte `render_*`-HTML wird an den Gotenberg-Container geschickt
 zurückgegeben — **optisch identisch** zum lokalen Chrome-Pfad (`html_to_pdf`). Templating bleibt in
 Python. Dedizierte Doku (Code-Verhalten, betroffene Generatoren, Provisionierung):
 [`docs/gotenberg-html-pdf.md`](docs/gotenberg-html-pdf.md).
-→ **Protokoll** (sowie Dieters **lokaler** Report-Pfad; der **serverseitige** Report läuft seit
-10.08.2026 über Weg 1, s.o.).
+→ **Protokoll-PDF** (das serverseitige Protokoll-**Doc** läuft seit 12.08.2026 über Weg 1, s.o.) sowie
+Dieters **lokaler** Report-Pfad; der **serverseitige** Report läuft seit 10.08.2026 über Weg 1, s.o.
 Nimm ihn, wenn: **berechnetes/bedingtes Layout** über einfache Sektionen hinaus (farbige Ampel-Pills,
 Inline-Balken, Narrativ-Prosa, git-Delta, KI-Entwürfe, Level-Varianten VR/Monat/Woche); oder schon
 bewiesenes HTML/CSS existiert; oder pixelgenaues Druck-Layout zählt.

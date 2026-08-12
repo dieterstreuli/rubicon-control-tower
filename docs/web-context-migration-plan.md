@@ -206,14 +206,24 @@ DRS/Liste dann trotzdem Teilnehmer ist. `mcp/calendar_bridge.md` (Kalender-/Eska
 
 ---
 
-## Stufe 6 — „Notiz suchen" als Dieter + `gen_protokoll.py`-Dual-Mode + Cleanup
+## Stufe 6 — Server-Parität: Notiz-Übernahme + Protokoll-Doc (Weg 1) + „Notiz suchen" + Cleanup
 
-- **Notiz suchen:** mit Subject=Dieter (Stufe 3) sieht die Drive-Suche seine persönlichen Gemini-Meet-Notizen →
-  Server-Smoke, ob Treffer kommen. `TOWER_ORIGIN`-Hardcoding (`127.0.0.1:8621`) auf Env.
-- **`gen_protokoll.py`** auf `gen_report.py`-Muster heben: `_is_server`-Zweig (direkt gdoc/doc_template statt
-  `md_to_gdoc`-Template-Copy → behebt fehlende `chief_templates.json`-Crash bei Erst-Anlage), `server_doc_id`/`_url`
-  getrennt, Ziel-Ordner per Env.
-- **Lokale-Pfad-Cleanup:** `sys.path.insert('/Users/dieterstreuli/Chief/Tools')` in ~10 Skripten entfernen (vendored
+- **Meetingnotiz-Übernahme serverseitig — ERLEDIGT (Code):** die Übernahme (`/api/gemini/import` post:true) postet
+  die erkannte Sitzung nicht mehr über einen internen HTTP-Self-Call an `TOWER_ORIGIN`, sondern schreibt sie
+  **in-process** (`writeSitzung`) — behebt den serverseitigen „connection refused" (Container hört auf `$PORT`, nicht
+  `8621`). `TOWER_ORIGIN` ist auf Env (`RUBICON_TOWER_ORIGIN`) umgestellt; der CLI-`--post`-Zweig bleibt nur lokal.
+- **`gen_protokoll.py` Dual-Mode — ERLEDIGT (Code):** `_is_server`-Zweig hebt das Protokoll auf das
+  `gen_report.py`-Muster: das **Doc** entsteht über die gebrandete Weg-1-Vorlage (`protokoll_spec` → `doc_template`,
+  Vorlage `protokoll`) statt über `md_to_gdoc` (behebt den fehlenden `chief_templates.json`-Crash), das **PDF** bleibt
+  Weg 2 (Gotenberg via `html_to_pdf`). `server_doc_id`/`server_doc_url` liegen **additiv** neben Dieters lokalem
+  `export.doc_id`; Ziel = dedizierter **Shared-Ordner** „RUBICON — Sitzungsprotokolle" (Code-Default; Override
+  `RUBICON_DRIVE_PROTOKOLLE_FOLDER`) — Dieters persönlicher Ordner ist für rubicon@ 404, daher der Shared-Ordner.
+  UI-Doc-Link modusabhängig (`server_doc_url` server / `doc_url` lokal). md→gdoc bleibt nur im lokalen Zweig.
+  **DWD-Smoke bestanden** (rubicon@: Doc gerendert, Fusszeile + Anker gefüllt, Shared-Ordner); Live über den
+  deployed Service mit dem Merge.
+- **Notiz suchen — OFFEN:** mit Subject=Dieter (Stufe 3) sieht die Drive-Suche seine persönlichen Gemini-Meet-Notizen →
+  Server-Smoke, ob Treffer kommen.
+- **Lokale-Pfad-Cleanup — OFFEN:** `sys.path.insert('/Users/dieterstreuli/Chief/Tools')` in ~10 Skripten entfernen (vendored
   `scripts/_tools/` = kanonisch); toter `gen_traktanden_docs.py`, `serve.sh`, `reports_cron.sh` archivieren;
   `RUBICON_PY`/`RUBICON_CLAUDE`/`HOME`-Mac-Defaults entschärfen.
 

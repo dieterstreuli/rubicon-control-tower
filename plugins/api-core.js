@@ -364,11 +364,18 @@ export function createApi(rootDir) {
       // POST /api/sitzung — eine erfasste Sitzung speichern + Milestones aktualisieren
       ep('/api/sitzung', {}, async ({ body, req, json, fail }) => {
           if (!body.meeting_id || !body.datum) return json(400, { ok: false, error: 'meeting_id und datum sind Pflicht' })
-
           // Rollen-Gate (Audit #3): nur CoS/Owner dürfen schreiben
+          requireIdentityRole(req, body.role, fail, body.me)
+          requireCan(fail, body.role, body.me, 'sitzung.erfassen')
+          return json(200, writeSitzung(body))
+      })
+
+      // Schreiblogik einer erfassten Sitzung — Protokoll-Record + projekt.yaml-Progress/Blocker +
+      // Commitment→Handlung- und Entscheid→Register-Spiegel. Von /api/sitzung UND (in-process, OHNE
+      // HTTP-Self-Call) von /api/gemini/import (Übernahme) genutzt. Identität ist VOR dem Aufruf am
+      // jeweiligen Endpoint-Gate geprüft; role/me im body steuern hier nur die Owner-Feinprüfung (mayEdit).
+      function writeSitzung(body) {
           const role = body.role, me = body.me
-          requireIdentityRole(req, role, fail, me)
-          requireCan(fail, role, me, 'sitzung.erfassen')
 
           // 1) Protokoll-Datensatz anhängen (neueste zuerst) — kollisionssichere ID (Audit #22).
           // Sensitiv-Filter (#6): sensitive Sitzungen landen im GETRENNTEN, nie
@@ -472,9 +479,9 @@ export function createApi(rootDir) {
             db.entscheide.write(estore)
           }
 
-          return json(200, { ok: true, id, applied, skipped, mirrored, registered, sensitiv,
-            ...(sensitiv ? { hint: 'Sensitiv: Protokoll nur lokal einsehbar; keine Task-/Register-Spiegel' } : {}) })
-      })
+          return { ok: true, id, applied, skipped, mirrored, registered, sensitiv,
+            ...(sensitiv ? { hint: 'Sensitiv: Protokoll nur lokal einsehbar; keine Task-/Register-Spiegel' } : {}) }
+      }
 
       // POST /api/ms/progress — Fortschritt/Verzug DIREKT melden (Modal-Speichern,
       // DRS 01.08.). Gleiche Gates wie /api/sitzung: CoS alles, Owner nur eigene
@@ -686,7 +693,6 @@ export function createApi(rootDir) {
           if (body.days) args.push('--days', String(body.days))
           if (body.datum) args.push('--datum', body.datum)
           if (body.sensitiv) args.push('--sensitiv')
-          if (body.post) args.push('--post')
           // Stufe 3: unter echtem IAP-Login den Drive-Zugriff im Kontext des ANGEMELDETEN Users
           // ausführen (dessen persönliche Gemini-Meet-Notizen sichtbar machen). Der Subject kommt
           // NUR aus der server-verifizierten IAP-Identität (x-goog-authenticated-user-email), NIE aus
@@ -698,8 +704,19 @@ export function createApi(rootDir) {
           execFile(PY_BIN, args, { cwd: root, timeout: 120000 }, (err, stdout, stderr) => {
             if (err && !stdout) return json(500, { ok: false, error: String(stderr || err).slice(-300) })
             const last = (stdout || '').trim().split('\n').pop()
-            try { return json(200, JSON.parse(last)) }
-            catch { return json(500, { ok: false, error: 'Parse: ' + (stderr || last || '').slice(-200) }) }
+            let res
+            try { res = JSON.parse(last) } catch { return json(500, { ok: false, error: 'Parse: ' + (stderr || last || '').slice(-200) }) }
+            // Übernahme (Stufe 6): die Sitzung IN-PROCESS schreiben statt via HTTP-Self-Call an localhost
+            // (der Container hört auf $PORT, nicht 8621). Der Subprozess liefert nur das geparste payload
+            // (Vorschau); die Identität ist oben am Gate verifiziert → role/me aus dem Request gewinnen (nie
+            // aus dem Subprozess-Output). Ohne body.post bleibt es reine Vorschau (payload zurück).
+            if (body.post && res.ok && res.payload) {
+              res.payload.role = body.role
+              res.payload.me = body.me
+              try { res.posted = writeSitzung(res.payload) }
+              catch (e) { res.ok = false; res.error = 'übernahme_fehlgeschlagen: ' + String((e && e.message) || e).slice(-200) }
+            }
+            return json(200, res)
           })
       })
 

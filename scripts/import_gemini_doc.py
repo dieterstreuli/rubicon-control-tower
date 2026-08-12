@@ -30,6 +30,7 @@ Usage:
 """
 import argparse
 import json
+import os
 import re
 import sys
 import urllib.request
@@ -42,7 +43,11 @@ from _google_auth import load_credentials  # noqa: E402
 from googleapiclient.discovery import build  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
-TOWER_ORIGIN = 'http://127.0.0.1:8621'
+# RUBICON-CUTOVER: future-web-only — der CLI-`--post`-Selbst-POST an den lokalen Dev-Server ist NUR für
+# Dieters lokalen CLI-Weg. Die Web-App übernimmt Sitzungen serverseitig IN-PROCESS (plugins/api-core.js
+# `/api/gemini/import` → writeSitzung), NICHT über diesen Self-Call. Env-überschreibbar, damit der Port nicht
+# hart hängt; serverseitig wird `--post` gar nicht mehr gesetzt.
+TOWER_ORIGIN = os.environ.get('RUBICON_TOWER_ORIGIN', 'http://127.0.0.1:8621')
 TRAKTANDEN = ROOT / 'src' / 'data' / 'traktanden.json'
 GEM_MAP = ROOT / 'src' / 'data' / 'gemini_meetings.json'   # meeting_id → Suchbegriffe
 GEMINI_SUFFIX = ('Notizen von Gemini', 'Notes by Gemini')   # Gemini-Notiz-Doc-Titel-Suffix (DE/EN)

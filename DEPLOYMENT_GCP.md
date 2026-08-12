@@ -46,8 +46,10 @@ Weitere Personen freischalten = einfach Mitglied der Gruppe machen:
   `python3` + die Google-API-Client-Libs (`google-api-python-client`, `google-auth`) sind im Image
   (für die Renderer-Skripte, inkl. serverseitige Report-Erzeugung, s. §9). Chromium ist bewusst
   NICHT drin (Image-Größe): Reports (§9) und die Fix-Struktur-Docs (Weg 1, §12) laufen serverseitig
-  chromefrei über die Docs-API; der dynamische HTML-PDF-Pfad (Protokoll, Weg 2) rendert über
-  den **eigenen privaten Gotenberg-Service `rubicon-gotenberg`** (§11).
+  chromefrei über die Docs-API; der dynamische HTML-PDF-Pfad (Protokoll-**PDF**, Weg 2) rendert über
+  den **eigenen privaten Gotenberg-Service `rubicon-gotenberg`** (§11). Das Protokoll-**Doc** entsteht
+  serverseitig **im Code ab 12.08.** ebenfalls über die Docs-API (Weg-1-Vorlagen-Engine) — der frühere
+  Markdown→Doc-Zwischenweg entfällt serverseitig; die Live-E2E über den Service steht noch aus (§11).
 - **`.dockerignore`** (neu): `node_modules`, `dist`, `.git`, `public`, …
 - **`vite.config.js`**: `server.allowedHosts: true` (DNS-Rebind-Check aus; Host variabel `*.run.app`/Custom-Domain; Schutz macht IAP).
 - **`plugins/rubicon-api.js`**: `OK_ORIGINS` um **Env-Override** `RUBICON_OK_ORIGINS` (Komma-separiert) ergänzt — Deploy-Origins ohne Code-Redeploy.
@@ -57,8 +59,9 @@ Weitere Personen freischalten = einfach Mitglied der Gruppe machen:
   `public`-Baseline (`resolveStaticPath` in `server.mjs`). Der Report-Job (s. §9) schreibt bereits
   serverseitig und **chromefrei** dorthin (Google Doc + Drive-`files.export`) — diese PDFs
   überleben damit Neustart/Redeploy. Briefings/Entscheide/Traktanden/Führungsrhythmus schreibt der
-  Weg-1-Job `rubicon-docs-job` (§12) ebenso serverseitig dorthin; Protokolle rendern serverseitig über
-  den privaten Gotenberg-Service `rubicon-gotenberg` (§11).
+  Weg-1-Job `rubicon-docs-job` (§12) ebenso serverseitig dorthin; das Protokoll-**PDF** rendert
+  serverseitig über den privaten Gotenberg-Service `rubicon-gotenberg` (§11), das Protokoll-**Doc**
+  über die Weg-1-Vorlagen-Engine (Drive, Vorlage `protokoll`).
 
 ## 4 · Reproduzieren / Verwalten
 
@@ -485,10 +488,11 @@ Kosten je relevant werden.
 statt git). Die Doc-Generatoren sind serverseitig abgedeckt —
 **zwei verbindliche Wege** (entschieden 07.08.2026, s. `§11` + README „Doc-Erzeugung: genau zwei
 Wege"): **Weg 1** = Docs-REST-Vorlagen-Engine (feste, gebrandete Docs —
-Traktanden/Entscheid/Briefing/Führungsrhythmus **+ Reporte woche/monat/vr, seit 10.08.**), live über
-`rubicon-docs-job` (§12) bzw. `gen_report` (§9); **Weg 2** = HTML→PDF via **Gotenberg** (eigener privater
-Cloud-Run-Service `rubicon-gotenberg`) für das dynamische **Protokoll** (+ Dieters lokaler Report-Pfad).
-Die PDF-Quelle im Code ist dafür pluggbar gehalten.
+Traktanden/Entscheid/Briefing/Führungsrhythmus **+ Reporte woche/monat/vr, seit 10.08.** **+ Protokoll-Doc
+im Code ab 12.08.**, Live-E2E über den Service ausstehend, §11), live über `rubicon-docs-job` (§12) bzw.
+`gen_report` (§9) — `gen_protokoll` (§11); **Weg 2** =
+HTML→PDF via **Gotenberg** (eigener privater Cloud-Run-Service `rubicon-gotenberg`) für das **Protokoll-PDF**
+(+ Dieters lokaler Report-Pfad). Die PDF-Quelle im Code ist dafür pluggbar gehalten.
 
 ---
 
@@ -625,7 +629,7 @@ die Template-IDs kommen als Container-Config (nicht Dieters lokale `chief_templa
 Serverseitig **verdrahtet** über den Treiber `scripts/gen_docs_server.py` (Dual-Mode); die
 Job-Provisionierung (`rubicon-docs-job`) ist in **§12** beschrieben.
 
-**Weg 2 — HTML→PDF via Gotenberg** (self-hosted, für **Protokoll**; Dieters lokaler Report-Pfad)
+**Weg 2 — HTML→PDF via Gotenberg** (self-hosted, für das **Protokoll-PDF**; Dieters lokaler Report-Pfad)
 Dedizierte Doku (Code-Verhalten, betroffene Generatoren, Provisionierung inkl. PyMuPDF-Auflage):
 [`docs/gotenberg-html-pdf.md`](docs/gotenberg-html-pdf.md).
 [Gotenberg](https://gotenberg.dev) kapselt Chromium (+ LibreOffice) hinter einer stateless HTTP-API:
@@ -671,8 +675,13 @@ Default-Seitengröße statt des `@page`-A4 der Vorlagen.
 `rubicon-gotenberg` (OIDC). Die PDF-Quelle der Weg-2-Generatoren ist im Code auf `RUBICON_GOTENBERG_URL`
 umgebogen; die Variable ist am App-Service gesetzt (in `deploy.yml` hinterlegt), `html_to_pdf` verzweigt
 serverseitig auf Gotenberg. Lokal E2E validiert — Report (inkl. Ampel-Pill) + Protokoll (alle bedingten
-Sektionen) via echte Gotenberg-HTTP-API gerendert, optisch identisch zum Live-Stand. (Der vollständige
-on-demand Protokoll-Export über den Live-Service inkl. Google-Doc-Schritt: End-to-End-Verifikation offen.)
+Sektionen) via echte Gotenberg-HTTP-API gerendert, optisch identisch zum Live-Stand. Der Protokoll-**Doc**
+über die Weg-1-Vorlage `protokoll` wurde per **DWD-Smoke** (rubicon@, keyless) bestätigt: Doc gerendert,
+Fusszeile + alle Anker gefüllt, kein rohes `{{…}}`, Ablage im Shared-Ordner „RUBICON — Sitzungsprotokolle"
+(`1jX2CYbfTJP4P9Na1zpy6fimNamSY1oo7`, Shared Drive „00 AXS - Rubicon"; Code-Default in `gen_protokoll.py`,
+optionaler Override `RUBICON_DRIVE_PROTOKOLLE_FOLDER`). Wichtig: der frühere Default (Dieters persönlicher
+Sitzungsprotokolle-Ordner) ist für rubicon@ **nicht** erreichbar (404) — deshalb der dedizierte Shared-Ordner.
+Der Live-End-to-End über den **deployed** Service (PDF via Gotenberg + Doc via Weg 1) folgt mit dem Merge/Deploy.
 
 ---
 
@@ -795,6 +804,8 @@ die gebrandeten Docs zum frisch publizierten Datenstand passen. Der separate Woc
 | Erster Live-Lauf (echte Docs/PDFs) | ✅ Entscheide/Traktanden/FR + Teil der Briefings gerendert; bei der Briefing-Masse trat 429-Sättigung auf (Backoff allein reicht nicht) → `batchUpdate`-Bündelung + Pacing (< 60/min) ergänzt; sauberer Vollauf nach Deploy ausstehend |
 | Doc-Pipeline-Robustheit: `batchUpdate`-Bündelung + Pacing (`doc_template.py`) | ✅ im Code (Tests) — greift ab nächstem Job-Deploy |
 | Gotenberg-Service `rubicon-gotenberg` (privat, OIDC) | ✅ Service live + App-Wiring live (`RUBICON_GOTENBERG_URL` am App-Service) |
+| Protokoll-**Doc** serverseitig über Weg 1 (`gen_protokoll.protokoll_spec` → `doc_template`, Vorlage `protokoll`; md→gdoc serverseitig entfernt) | ✅ im Code (Anker-Tests) + **DWD-Smoke bestanden** (rubicon@: Doc gerendert, Footer/Anker/Shared-Ordner ok); Template hinterlegt (`11meUUbX…`); `server_doc_url` additiv/modusabhängig. Live über den deployed Service mit Deploy (§11) |
+| Shared-Ordner „RUBICON — Sitzungsprotokolle" (`1jX2CYbf…`, Shared Drive „00 AXS - Rubicon") als Server-Ziel; Code-Default in `gen_protokoll.py`, Override `RUBICON_DRIVE_PROTOKOLLE_FOLDER` | ✅ angelegt + als Default gesetzt (Dieters persönlicher Ordner ist für rubicon@ 404) |
 | Server-DWD am Web-Service (`RUBICON_WORKSPACE_SA` + `RUBICON_IMPERSONATE_SUBJECT`) | ✅ live — über den Live-Service bestätigt: Report-Generierung (Google-Doc erzeugt) + Gemini-Import (Auth statt lokaler-OAuth-Fehler). Protokoll-Export-E2E s. §11. Keine neue IAM-Bindung (§9.1) |
 | Datenvertrag `meta` Repo-getrieben (`merge_bridge.py`, §10) | ✅ im Code — greift ab nächstem Merge-Job-Deploy |
 | `deploy.yml`-Image-Loop um `rubicon-docs-job` erweitert | ✅ |
