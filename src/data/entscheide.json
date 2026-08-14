@@ -1,5 +1,5 @@
 {
-  "seq": 9,
+  "seq": 10,
   "entscheide": [
     {
       "key": "MAN-EXBOD-B1",
@@ -132,6 +132,34 @@
         "pdf": "/entscheide/E-2026-005.pdf",
         "draft_id": "r-8478965861259175516",
         "stand": "11.08.2026 14:26"
+      }
+    },
+    {
+      "key": "MAN-CRM-01",
+      "id": "E-2026-006",
+      "titel": "Odoo wird nicht verlängert — die AXS Group baut eine eigene Kundendatenbank auf",
+      "typ": "Governance / IT-Infrastruktur",
+      "gremium": "GL",
+      "antragsteller": "Dieter Streuli",
+      "entscheid": "Das Odoo-Abonnement wird nicht verlängert. Die AXS Group führt ihre Kunden-, Vertrags- und Aktivitätsdaten künftig in einer eigenen, autonomen Datenbank auf Konzerninfrastruktur. Grundlage ist der bereits vorliegende Odoo-Extrakt (Stand 30.06.2026: 338 Aktivitäten, 4'953 Nachrichten, 2'096 Kundensätze, 260 Leads, 609 Rate Adjustments) zusammen mit der Vertragsbasis aus dem Commercial Agent (2'497 Verträge, 21'302 Raten). Der nächtliche Odoo-Abgleich wird abgestellt, das Connector- und SSOT-Vorhaben (#72) geschlossen. Ob vor einer allfälligen Löschung der gesperrten Instanz ein einmaliger Final-Extrakt für den Zeitraum 01.07.–09.08.2026 gezogen wird, ist mit Gordon Suchomski abzuklären und separat zu entscheiden.",
+      "begruendung": "Die Odoo-Instanz ist seit dem 09./10.08.2026 gesperrt («Database not available»); seither hat konzernweit niemand Zugriff. Die Sperre hat sichtbar gemacht, dass Odoo für die AXS Group nie die Rolle erfüllt hat, die eine Verlängerung rechtfertigen würde: Die Follow-up-Ebene wurde seit dem 09.03.2026 nicht mehr gepflegt, die 337 offenen Follow-ups sind Ausdruck dieses Stillstands. Die fachlich tragende Datenbasis — Verträge, Raten, Kundenstamm — liegt ohnehin ausserhalb von Odoo im Commercial Agent. Eine Verlängerung würde rund EUR 20'000 für ein System binden, dessen Datenhoheit, Schnittstellen und Support-Tiefe wiederholt als unzureichend beurteilt wurden. Die eigene Datenbank stellt die Datenhoheit im Konzern her und ist Voraussetzung für die KI-Anwendungen des Programms AI@AXS. Abzuwägen war die Datenlücke vom 01.07. bis 09.08.2026 (rund sechs Wochen); sie wird angesichts der seit März ruhenden Aktivitätspflege als vertretbar beurteilt.",
+      "datengrundlage": "Bestandsaufnahme der lokalen Extrakte 14.08.2026 (odoo_cache.sqlite Stand 30.06.2026; master_index.sqlite) · Sperrmeldung Odoo seit 09./10.08.2026 · WS4-Triage Michael Haeffner 14.08.2026 (Anmerkung zu WS4-02)",
+      "datum": "2026-08-14",
+      "frist": "2026-09-30",
+      "status": "entschieden",
+      "kommunikation": {
+        "an": "GL",
+        "am": null
+      },
+      "tasks": [],
+      "anhaenge": [],
+      "programm": null,
+      "quelle": "WS4-Triage Haeffner 14.08.2026 · Bestandsaufnahme Odoo-Extrakte",
+      "created_at": "2026-08-14",
+      "export": {
+        "pdf": "/entscheide/E-2026-006.pdf",
+        "draft_id": null,
+        "stand": "14.08.2026 11:55"
       }
     },
     {
