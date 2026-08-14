@@ -20,6 +20,7 @@ import { AufgabenView } from './views/AufgabenView.jsx'
 import { ReportsView } from './views/ReportsView.jsx'
 import { BriefingModal, TaskSection, WhatIf, ZerlegungKI } from './views/MilestoneModal.jsx'
 import { can, canAny } from './lib/permissions.js'   // Q4: EINE Rechte-Matrix (identisch auf dem Server)
+import { I18nCtx, initialLang, storeLang, translate, CLOCK_LOCALE } from './lib/i18n.js'
 import {
   PHASE_ORDER, phaseToken, ENT_FLOW, ENT_TYPEN, ENT_GREMIEN, ENT_COLOR,
   TYP_LABEL, TYP_ICON, LVL_LABEL, LVL_AUSWAHL, LVL_COLOR, PROGRESS_STEPS, roleInfo,
@@ -55,6 +56,13 @@ export default function App() {
   const reopenWelcome = () => { sessionStorage.removeItem('rubicon_welcome_seen'); setWelcomeNonce(n => n + 1) }
   const [theme, setTheme] = useState(() => { const m = initialTheme(); applyTheme(m); return m })
   const toggleTheme = () => { const next = theme === 'dark' ? 'light' : 'dark'; applyTheme(next); setTheme(next) }
+  // Sprache (14.08.2026): DEUTSCH ist und bleibt Standard — Englisch ist ein
+  // persönlicher Schalter (localStorage), keine globale Umstellung. Wer ihn nie
+  // anfasst, sieht exakt den bisherigen Tower.
+  const [lang, setLangState] = useState(initialLang)
+  const setLang = (next) => { storeLang(next); setLangState(next) }
+  const toggleLang = () => setLang(lang === 'de' ? 'en' : 'de')
+  const t = React.useCallback((k) => translate(lang, k), [lang])
   // IA-Konsolidierung 01.08. (B0): 5 Tabs. Alte Tab-IDs (inputs/intro/streams/
   // erfassen/protokolle/log/cos) werden auf die neuen Heimaten gemappt.
   const LEGACY_TAB = { inputs: 'tower', intro: 'tower', streams: 'tower', erfassen: 'sitzungen', protokolle: 'sitzungen', log: 'tower', cos: 'tower' }
@@ -228,11 +236,11 @@ export default function App() {
   // CoS-Steuerung = CoS-Sektion im Kontrollturm · Erfassen+Protokolle = «Sitzungen» ·
   // Aktions-Log entfällt (What-if lebt im Milestone-Modal).
   const tabs = [
-    { id: 'tower', label: 'Kontrollturm', icon: Radar },
-    { id: 'aufgaben', label: 'Aufgaben', icon: CheckCircle2 },
-    { id: 'sitzungen', label: 'Sitzungen', icon: ClipboardList },
-    { id: 'entscheide', label: 'Entscheide', icon: Scale },
-    { id: 'reports', label: 'Reports', icon: BarChart3 },
+    { id: 'tower', label: t('nav.tower'), icon: Radar },
+    { id: 'aufgaben', label: t('nav.aufgaben'), icon: CheckCircle2 },
+    { id: 'sitzungen', label: t('nav.sitzungen'), icon: ClipboardList },
+    { id: 'entscheide', label: t('nav.entscheide'), icon: Scale },
+    { id: 'reports', label: t('nav.reports'), icon: BarChart3 },
   ]
 
   // A3 (01.08.): Drift zwischen manuellem Steuerungsdatum (meta.today) und realem
@@ -295,6 +303,10 @@ export default function App() {
   const overdueInputs = data.inputs.filter(i => i.status === 'offen' && parseDate(i.due) && daysBetween(parseDate(i.due), NOW) > 0)
 
   return (
+    // Provider umschliesst den gesamten Baum, damit Etappe 2 die Unter-Ansichten
+    // (Aufgaben/Sitzungen/Entscheide/Reports/Modale) per useT() nachziehen kann,
+    // ohne t durch jede Ebene durchzureichen.
+    <I18nCtx.Provider value={{ lang, t, setLang }}>
     <div className="min-h-screen" style={{ background: T.bg, color: T.ink, fontFamily: T.sans }}>
       {/* ── Header ── */}
       <header className="border-b px-4 md:px-6 py-3" style={{ borderColor: T.line, background: T.panel }}>
@@ -306,51 +318,57 @@ export default function App() {
             <div className="text-[11px] italic" style={{ color: T.inkFaint }}>« Alea iacta est. » · {data.meta.projekt}</div>
           </div>
           <div className="flex items-center gap-2 text-[12px]" style={{ fontFamily: T.mono, color: T.inkDim }}>
-            <Clock size={14} /> Steuerungsdatum <b style={{ color: T.ink }}>{fmtDate(BASE.meta.today)}</b>
-            <span style={{ color: T.inkFaint }}>· Uhr {clock.toLocaleTimeString('de-CH')}</span>
+            <Clock size={14} /> {t('hdr.steuerungsdatum')} <b style={{ color: T.ink }}>{fmtDate(BASE.meta.today)}</b>
+            <span style={{ color: T.inkFaint }}>· {t('hdr.uhr')} {clock.toLocaleTimeString(CLOCK_LOCALE[lang] || 'de-CH')}</span>
           </div>
           <div className="flex items-center gap-2 text-[12px]">
-            <span style={{ color: T.inkDim }}>Gesamtstatus</span> <Pill st={overall} />
+            <span style={{ color: T.inkDim }}>{t('hdr.gesamtstatus')}</span> <Pill st={overall} />
           </div>
           <div className="text-[12px]" style={{ fontFamily: T.mono }}>
-            <span style={{ color: T.inkDim }}>Kern-Ende </span>
+            <span style={{ color: T.inkDim }}>{t('hdr.kernEnde')} </span>
             <b>{fmtDate(proj.base)}</b>
-            {proj.slip > 0 && <b style={{ color: T.red }}> → {fmtDate(proj.projected)} (+{proj.slip} T)</b>}
-            {proj.slip === 0 && <span style={{ color: T.green }}> · auf Basislinie</span>}
-            <span style={{ color: breaches.length ? T.red : T.brass }}> · HARD EDGE {fmtDate(data.meta.hard_edge)}{breaches.length ? ` — ${breaches.length} VERLETZUNG(EN)!` : ' ✓'}</span>
+            {proj.slip > 0 && <b style={{ color: T.red }}> → {fmtDate(proj.projected)} (+{proj.slip} {t('hdr.tageKurz')})</b>}
+            {proj.slip === 0 && <span style={{ color: T.green }}> · {t('hdr.aufBasislinie')}</span>}
+            <span style={{ color: breaches.length ? T.red : T.brass }}> · HARD EDGE {fmtDate(data.meta.hard_edge)}{breaches.length ? ` — ${breaches.length} ${t('hdr.verletzungen')}` : ' ✓'}</span>
           </div>
           <div className="ml-auto flex items-center gap-2">
-            <button onClick={() => setShowIntro(true)} aria-label="Programm-Übersicht (Intro)" title="Programm-Übersicht: Sinn & Zweck · Ströme · Phasen · Zeitachse · Führungsrhythmus"
+            <button onClick={() => setShowIntro(true)} aria-label={t('hdr.introAria')} title={t('hdr.introTitle')}
               className="p-1.5 rounded border" style={{ borderColor: T.line, color: T.brass }}>
               <Compass size={14} />
             </button>
-            <button onClick={toggleTheme} aria-label="Hell/Dunkel umschalten" title={theme === 'dark' ? 'Hell-Modus' : 'Dunkel-Modus'}
+            <button onClick={toggleTheme} aria-label={t('hdr.themeAria')} title={theme === 'dark' ? t('hdr.themeLight') : t('hdr.themeDark')}
               className="p-1.5 rounded border" style={{ borderColor: T.line, color: T.brass }}>
               {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+            </button>
+            {/* Sprachschalter: zeigt die Sprache, in die er wechselt (nicht die aktive) */}
+            <button onClick={toggleLang} aria-label={t('hdr.langAria')} title={t('hdr.langTitle')}
+              className="px-2 py-1 rounded border text-[11px] font-bold"
+              style={{ borderColor: T.line, color: T.brass, fontFamily: T.mono }}>
+              {lang === 'de' ? 'EN' : 'DE'}
             </button>
             <button onClick={() => setShowIntegrity(v => !v)}
               className="text-[11px] px-2 py-1 rounded border"
               style={{ borderColor: nErr ? T.red : T.line, color: nErr ? T.red : T.inkDim, fontFamily: T.mono }}>
-              Integrität: {nErr} Fehler · {nGap} Lücken{RADAR.length ? ` · ${RADAR.length} Radar` : ''}
+              {t('hdr.integritaet')}: {nErr} {t('hdr.fehler')} · {nGap} {t('hdr.luecken')}{RADAR.length ? ` · ${RADAR.length} ${t('hdr.radar')}` : ''}
             </button>
             {prog && (
               <button onClick={() => setProg('')}
                 className="text-[11px] px-2 py-1 rounded border"
                 style={{ borderColor: T.brass + '88', color: T.brass, background: T.panelSoft, fontFamily: T.mono }}
-                title="Filter aufheben — zurück zur AXS-Gesamtübersicht">
-                Fokus: {(BASE.meta.programme || []).find(p => p.id === prog)?.name || prog} ✕
+                title={t('hdr.fokusTitle')}>
+                {t('hdr.fokus')}: {(BASE.meta.programme || []).find(p => p.id === prog)?.name || prog} ✕
               </button>
             )}
             <select value={role} onChange={e => setRole(e.target.value)}
               className="text-[12px] rounded px-2 py-1 border bg-transparent"
               style={{ borderColor: T.line, color: T.ink, background: T.panelSoft }}>
-              {allowedRoles.map(r => <option key={r} value={r} style={{ color: '#111' }}>Rolle: {r}</option>)}
+              {allowedRoles.map(r => <option key={r} value={r} style={{ color: '#111' }}>{t('hdr.rolle')}: {r}</option>)}
             </select>
             {role === 'Owner' && (
               <select value={me} onChange={e => setMe(e.target.value)}
                 className="text-[12px] rounded px-2 py-1 border bg-transparent"
                 style={{ borderColor: T.line, color: T.ink, background: T.panelSoft }}>
-                <option value="" style={{ color: '#111' }}>— wählen —</option>
+                <option value="" style={{ color: '#111' }}>{t('hdr.waehlen')}</option>
                 {(BASE.meta.owners || []).map(o => <option key={o} value={o} style={{ color: '#111' }}>{o}</option>)}
               </select>
             )}
@@ -359,7 +377,7 @@ export default function App() {
         {showIntegrity && (
           <div className="mt-2 max-h-40 overflow-auto rounded border p-2 text-[11px]"
             style={{ borderColor: T.line, background: T.bg, fontFamily: T.mono, color: T.inkDim }}>
-            {ALL_ISSUES.length === 0 ? 'Keine Befunde.' : ALL_ISSUES.map((i, k) => (
+            {ALL_ISSUES.length === 0 ? t('hdr.keineBefunde') : ALL_ISSUES.map((i, k) => (
               <div key={k} style={{ color: i.level === 'FEHLER' ? T.red : i.level === 'WARNUNG' ? T.amber : i.level === 'RADAR' ? T.brass : T.grey }}>
                 [{i.level}] {i.where}: {i.msg}
               </div>
@@ -925,6 +943,7 @@ export default function App() {
         </span>
       </footer>
     </div>
+    </I18nCtx.Provider>
   )
 }
 
