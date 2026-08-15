@@ -4,10 +4,12 @@ import { fmtDate, parseDate, statusOf } from '../lib/status.js'
 import { FR_COL, Pill } from '../components/ui.jsx'
 import { FileText } from 'lucide-react'
 import { FR, FR_DOC, traktDocUrl } from '../lib/data.js'
+import { useT } from '../lib/i18n.js'
 
 // ── INTRO-PAGE: Sinn & Zweck · WS-Übersicht (grafisch, Live-Ampeln) · Zeitachse ──
 // Inhalte aus RUBICON-Doc v2 (Sektionen 1–3, 7); Ströme/Status live aus projekt.yaml.
 export function IntroView({ data, goStreams }) {
+  const { t: tx } = useT()
   const now = parseDate(data.meta.today)
   const ZIELE = [
     { v: "≥12'372", l: 'EBITDA-Run-Rate CHF k (Ambition 15’000) — heute FY25A +323' },
@@ -70,7 +72,7 @@ export function IntroView({ data, goStreams }) {
           Projekt RUBICON macht AXS in <b>8 Monaten</b> (01.09.2026 → 30.04.2027, alles abgeschlossen bis
           <b style={{ color: T.red }}> HARD EDGE 30.06.2027</b>) zu einer <b>integriert geführten, kostenschlanken
           Gruppe mit einer klaren Organisation und eindeutiger Accountability</b> — aus eigener Kraft, unabhängig
-          vom Finanzierungsprozess (Projekt #98 = Parallel-Achse). Es konsolidiert <b>alle</b> bisherigen Pläne
+          vom Finanzierungsprozess (Projekt #98 = Parallel-Achse). Es konsolidiert <b>{tx('intro.alle')}</b> bisherigen Pläne
           und Tools — Transformationsagenda, Chairman-Tracker, Commercial-Masterplan — in <b>einem Programm auf
           dieser einen Plattform</b>. Voraussetzung für die Gruppenstrategie Top-3 EU 2030 (&gt;EUR 600 Mio).
         </div>
@@ -98,11 +100,11 @@ export function IntroView({ data, goStreams }) {
           Programmarchitektur — DRS steuert &amp; kontrolliert · AFR + CGO treiben · GL-6 liefert
         </div>
         <div className="rounded-lg border px-4 py-2 text-center text-[12px] mb-2" style={{ borderColor: T.brass, color: T.ink, background: T.panelSoft }}>
-          <b style={{ color: T.brass }}>DRS — Eigentümer &amp; Chairman:</b> steuert + kontrolliert (Cockpit + VR) — über dem Maschinenraum
+          <b style={{ color: T.brass }}>{tx('intro.drsEigentuemer')}</b> steuert + kontrolliert (Cockpit + VR) — über dem Maschinenraum
         </div>
         <div className="text-center text-[10px]" style={{ color: T.inkFaint }}>▼</div>
         <div className="rounded-lg px-4 py-2 text-center text-[12px] mb-2" style={{ background: T.brass, color: '#0b1220' }}>
-          <b>AFR + CGO — treiben die Umsetzung</b> · CGO = Ops-Energie + öffentliches Gesicht · AFR = Struktur / Disziplin / Finanz / Verhandlung
+          <b>{tx('intro.afrCgo')}</b> · CGO = Ops-Energie + öffentliches Gesicht · AFR = Struktur / Disziplin / Finanz / Verhandlung
         </div>
         <div className="text-center text-[10px] mb-2" style={{ color: T.inkFaint }}>▼ GL-6-Funktions-Owner liefern ▼</div>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
@@ -151,7 +153,7 @@ export function IntroView({ data, goStreams }) {
           ))}
         </div>
         <div className="text-[9.5px] mt-2" style={{ color: T.inkFaint }}>
-          Führungslogik quer über alle Phasen: <b style={{ color: T.brass }}>DRS steuert &amp; kontrolliert</b> · AFR + CGO treiben · GL-6 liefert.
+          Führungslogik quer über alle Phasen: <b style={{ color: T.brass }}>{tx('intro.drsSteuert')}</b> · AFR + CGO treiben · GL-6 liefert.
         </div>
       </div>
 
@@ -198,6 +200,7 @@ export function IntroView({ data, goStreams }) {
 // Führungsrhythmus-One-Pager auf der Frontseite (welche Meetings · mit wem · wann ·
 // Output-Erwartung). Native Tabelle + druckbare PDF-Fassung. Quelle: fuehrungsrhythmus.json.
 export function FuehrungsrhythmusCard() {
+  const { t: tx } = useT()
   return (
     <div className="rounded-xl border p-5" style={{ background: T.panel, borderColor: T.brass + '55' }}>
       <div className="flex items-start justify-between gap-3 mb-3">
@@ -226,10 +229,10 @@ export function FuehrungsrhythmusCard() {
         <table className="w-full text-[11px]" style={{ minWidth: 820 }}>
           <thead>
             <tr className="text-left" style={{ color: T.inkFaint, fontFamily: T.mono }}>
-              <th className="px-2 py-1.5">MEETING</th><th className="px-2 py-1.5">WANN</th>
-              <th className="px-2 py-1.5">MIT WEM</th><th className="px-2 py-1.5">ZWECK</th>
-              <th className="px-2 py-1.5">OUTPUT-ERWARTUNG → WOHIN</th>
-              <th className="px-2 py-1.5">TRAKTANDENLISTE</th>
+              <th className="px-2 py-1.5">{tx('intro.meeting')}</th><th className="px-2 py-1.5">{tx('intro.wann')}</th>
+              <th className="px-2 py-1.5">{tx('intro.mitWem')}</th><th className="px-2 py-1.5">{tx('intro.zweck')}</th>
+              <th className="px-2 py-1.5">{tx('intro.output')}</th>
+              <th className="px-2 py-1.5">{tx('intro.traktandenliste')}</th>
             </tr>
           </thead>
           <tbody>
@@ -274,7 +277,7 @@ export function FuehrungsrhythmusCard() {
         </table>
       </div>
       <div className="mt-3 rounded p-2.5 text-[10.5px]" style={{ background: T.panelSoft, borderLeft: `2.5px solid ${T.brass}` }}>
-        <b style={{ color: T.brass }}>Grundsätze:</b>
+        <b style={{ color: T.brass }}>{tx('intro.grundsaetze')}</b>
         <ul className="mt-1 space-y-0.5" style={{ color: T.inkDim }}>
           {FR.grundsaetze.map((p, i) => <li key={i}>· {p}</li>)}
         </ul>

@@ -3,12 +3,12 @@ import { T } from '../lib/theme.js'
 import { reloadKeepScroll, REPORTS, REPORT_COMMENTS, SERVER } from '../lib/data.js'
 import { LVL_AUSWAHL, LVL_COLOR, LVL_LABEL } from '../lib/domain.js'
 import { BarChart3, FileText, Lock } from 'lucide-react'
-import { useT } from '../lib/i18n.js'
+import { useT, translateValue as tval } from '../lib/i18n.js'
 
 // ── REPORTS — verdichtete Standard-Reports (Woche/Monat/Quartal), auto-generiert
 // aus projekt.yaml + protokolle.json via /api/report/generate. Kein Neu-Erfassen.
 export function ReportsView({ canEdit, role, me, today }) {
-  const { t: tx } = useT()
+  const { t: tx, lang } = useT()
   const reports = REPORTS.reports || []
   const qOf = (d) => `${d.slice(0, 4)}-Q${Math.ceil(parseInt(d.slice(5, 7), 10) / 3)}`
   const defP = (lvl) => lvl === 'woche' ? today : lvl === 'monat' ? today.slice(0, 7) : qOf(today)
@@ -41,15 +41,15 @@ export function ReportsView({ canEdit, role, me, today }) {
     <div className="max-w-5xl space-y-4">
       <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.brass + '55' }}>
         <div className="text-[11px] uppercase tracking-widest mb-1" style={{ color: T.inkFaint, fontFamily: T.mono }}>
-          Verdichtete Reports — Woche → Monat → Quartal aus einer Datenbasis
+          {tx('rep.titel')}
         </div>
         <div className="text-[11px] mb-3" style={{ color: T.inkDim }}>
-          Kein Zusammentragen: jeder Report wird aus den erfassten Sitzungen + dem Milestone-Stand berechnet. VR-getaggte Entscheide wandern automatisch ins VR-Pack.
+          {tx('rep.untertitel')}
         </div>
         <div className="flex flex-wrap items-end gap-3">
           <label className="flex flex-col gap-1 text-[12px]"><span style={{ color: T.inkDim }}>{tx('rep.ebene')}</span>
             <select value={level} onChange={e => changeLevel(e.target.value)} className="rounded border px-2 py-1" style={inp}>
-              {Object.entries(LVL_AUSWAHL).map(([k, lbl]) => <option key={k} value={k} style={{ color: '#111' }}>{lbl}</option>)}
+              {Object.entries(LVL_AUSWAHL).map(([k, lbl]) => <option key={k} value={k} style={{ color: '#111' }}>{tval(lang, lbl)}</option>)}
             </select>
           </label>
           <label className="flex flex-col gap-1 text-[12px]"><span style={{ color: T.inkDim }}>{tx('rep.periode')}</span>
@@ -61,24 +61,24 @@ export function ReportsView({ canEdit, role, me, today }) {
               </select>
             )}
           </label>
-          <label className="flex flex-col gap-1 text-[12px] flex-1 min-w-[240px]"><span style={{ color: T.inkDim }}>{level === 'vr' ? 'Chairman-Statement (optional)' : 'Programm-Kommentar (optional)'}</span>
-            <input value={comment} onChange={e => setComment(e.target.value)} placeholder="das Urteil, das die Daten nicht liefern …" className="rounded border px-2 py-1" style={inp} />
+          <label className="flex flex-col gap-1 text-[12px] flex-1 min-w-[240px]"><span style={{ color: T.inkDim }}>{level === 'vr' ? tx('rep.chairmanStatement') : tx('rep.programmKommentar')}</span>
+            <input value={comment} onChange={e => setComment(e.target.value)} placeholder={tx('rep.urteilPlaceholder')} className="rounded border px-2 py-1" style={inp} />
           </label>
           {canEdit && (
             <label className="flex items-center gap-1.5 pb-2 text-[11.5px] cursor-pointer" style={{ color: ki ? T.brass : T.inkDim }}
-              title="Ergänzt den Report um einen klar markierten KI-ENTWURF: Narrativ zum Berichtszeitraum + 2-Satz-Begründung je gefährdetem/verzögertem Meilenstein. Ampel & Zahlen bleiben deterministisch; du gibst vor Verteilung frei.">
-              <input type="checkbox" checked={ki} onChange={e => setKi(e.target.checked)} /> 🤖 KI-Entwurf (Narrativ + Ampel-Begründungen)
+              title={tx('rep.kiTitle')}>
+              <input type="checkbox" checked={ki} onChange={e => setKi(e.target.checked)} /> {tx('rep.kiLabel')}
             </label>
           )}
           {canEdit
-            ? <button onClick={gen} disabled={busy} className="flex items-center gap-1.5 px-4 py-2 rounded font-semibold text-[13px]" style={{ background: T.brass, color: '#0b1220', opacity: busy ? 0.6 : 1 }}><BarChart3 size={15} /> {busy ? (ki ? 'erzeugt… (~1-2 Min mit KI)' : 'erzeugt… (~15s)') : `${LVL_LABEL[level]} erzeugen`}</button>
+            ? <button onClick={gen} disabled={busy} className="flex items-center gap-1.5 px-4 py-2 rounded font-semibold text-[13px]" style={{ background: T.brass, color: '#0b1220', opacity: busy ? 0.6 : 1 }}><BarChart3 size={15} /> {busy ? (ki ? tx('rep.erzeugtKi') : tx('rep.erzeugt')) : `${tval(lang, LVL_LABEL[level])} ${tx('rep.erzeugen')}`}</button>
             : <span className="text-[11px]" style={{ color: T.inkFaint }}><Lock size={12} className="inline mr-1" />{tx('rep.nurLesen')}</span>}
         </div>
       </div>
 
       <div className="rounded-xl border overflow-hidden" style={{ background: T.panel, borderColor: T.line }}>
         <div className="px-4 py-2 text-[13px] font-semibold border-b" style={{ borderColor: T.line }}>
-          Erzeugte Reports <span className="text-[10px]" style={{ color: T.inkFaint }}>({reports.length} — neueste zuerst; Quelle reports_index.json)</span>
+          {tx('rep.erzeugteReports')} <span className="text-[10px]" style={{ color: T.inkFaint }}>({reports.length} {tx('rep.neuesteZuerst')})</span>
         </div>
         {reports.length === 0 && <div className="px-4 py-6 text-[12px]" style={{ color: T.inkFaint }}>{tx('rep.keinReport')}</div>}
         <div className="divide-y" style={{ borderColor: T.line }}>

@@ -5,10 +5,12 @@ import { Pill } from '../components/ui.jsx'
 import { MS_META, reloadKeepScroll, ZBSTORE } from '../lib/data.js'
 import { ZB_FLOW, ZB_META, ZB_DOMAENEN, ZB_COLOR, ZB_SCORE, ZB_EVIDENZ_AB } from '../lib/domain.js'
 import { canAny } from '../lib/permissions.js'
+import { useT } from '../lib/i18n.js'
 
 // ── Δ WOCHE (B2, 01.08.) — Führungs-Delta: erledigte Handlungen, Fortschritts-/
 // Ampel-Änderungen (git-Vergleich), neue Protokolle/Entscheide. Reine Fakten.
 export function DeltaWoche({ prog }) {
+  const { t: tx } = useT()
   const [d0, setD0] = useState(null)
   const [err, setErr] = useState(null)
   useEffect(() => {
@@ -42,12 +44,12 @@ export function DeltaWoche({ prog }) {
         {d.basis && <span className="font-normal text-[10px] ml-auto" style={{ color: T.inkFaint, fontFamily: T.mono }}>Basis: {d.basis}</span>}
       </div>
       {none
-        ? <div className="px-4 py-3 text-[12px]" style={{ color: T.inkFaint }}>Keine Veränderungen im Fenster.</div>
+        ? <div className="px-4 py-3 text-[12px]" style={{ color: T.inkFaint }}>{tx('tw.keineVeraenderung')}</div>
         : (
           <div className="grid md:grid-cols-2 gap-x-6 gap-y-2 px-4 py-3 text-[12px]">
             {s.ampel > 0 && (
               <div>
-                <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: T.amber, fontFamily: T.mono }}>Ampel-Wechsel</div>
+                <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: T.amber, fontFamily: T.mono }}>{tx('tw.ampelWechsel')}</div>
                 {cap(d.ampel).show.map((x, i) => (
                   <div key={i} className="flex items-center gap-2 py-0.5">
                     <span style={{ fontFamily: T.mono, color: T.inkDim }}>{x.id}</span>
@@ -60,7 +62,7 @@ export function DeltaWoche({ prog }) {
             )}
             {s.fortschritt > 0 && (
               <div>
-                <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: T.green, fontFamily: T.mono }}>Fortschritt</div>
+                <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: T.green, fontFamily: T.mono }}>{tx('tw.fortschritt')}</div>
                 {cap(d.fortschritt).show.map((x, i) => (
                   <div key={i} className="flex items-center gap-2 py-0.5">
                     <span style={{ fontFamily: T.mono, color: T.inkDim }}>{x.id}</span>
@@ -73,7 +75,7 @@ export function DeltaWoche({ prog }) {
             )}
             {s.erledigt > 0 && (
               <div>
-                <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: T.blue, fontFamily: T.mono }}>Erledigte Handlungen</div>
+                <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: T.blue, fontFamily: T.mono }}>{tx('tw.erledigteHandlungen')}</div>
                 {cap(d.erledigt).show.map((x, i) => (
                   <div key={i} className="flex items-center gap-2 py-0.5">
                     <span style={{ fontFamily: T.mono, color: T.brass }}>{x.nr}</span>
@@ -86,7 +88,7 @@ export function DeltaWoche({ prog }) {
             )}
             {(s.protokolle > 0 || s.entscheide > 0) && (
               <div>
-                <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: T.brass, fontFamily: T.mono }}>Protokolle & Entscheide</div>
+                <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: T.brass, fontFamily: T.mono }}>{tx('tw.protokolleEntscheide')}</div>
                 {d.protokolle.map((p, i) => (
                   <div key={'p' + i} className="py-0.5" style={{ color: T.inkDim }}>
                     <span style={{ fontFamily: T.mono, color: T.inkFaint }}>{fmtDate(p.datum)}</span> {p.meeting} <span style={{ color: T.inkFaint }}>({p.eintraege} Einträge)</span>
@@ -110,6 +112,7 @@ export function DeltaWoche({ prog }) {
 // «vorhanden»/«gelebt» NUR mit Evidenz (Server erzwingt). Konzern-Messlatte —
 // wird nur in der AXS-Gesamt-Sicht gezeigt (App.jsx: !prog).
 export function ZielbildCard({ role }) {
+  const { t: tx } = useT()
   const [openDom, setOpenDom] = useState(null)
   const [edit, setEdit] = useState(null)          // {id, status, evidenz}
   const [err, setErr] = useState(null)
@@ -169,13 +172,13 @@ export function ZielbildCard({ role }) {
                               className="text-[10.5px] border rounded px-1" style={{ background: T.panelSoft, borderColor: T.line, color: T.ink }}>
                               {ZB_FLOW.map(st => <option key={st} value={st} style={{ color: '#111' }}>{ZB_META[st].label}</option>)}
                             </select>
-                            <input value={edit.evidenz} onChange={e => setEdit({ ...edit, evidenz: e.target.value })} placeholder="Evidenz (Link/Quelle)"
+                            <input value={edit.evidenz} onChange={e => setEdit({ ...edit, evidenz: e.target.value })} placeholder={tx('tw.evidenz')}
                               className="text-[10.5px] border rounded px-1 w-40" style={{ background: T.panelSoft, borderColor: T.line, color: T.ink }} />
                             <button onClick={speichern} className="text-[10.5px] px-1.5 rounded border" style={{ borderColor: T.brass, color: T.brass }}>OK</button>
                             <button onClick={() => setEdit(null)} className="text-[10.5px] px-1 rounded" style={{ color: T.inkFaint }}>✕</button>
                           </span>
                         : <button onClick={() => setEdit({ id: z.id, status: z.status, evidenz: z.evidenz || '' })}
-                            className="text-[10.5px] px-1.5 rounded border flex-shrink-0" style={{ borderColor: T.line, color: T.inkFaint }}>fortschreiben</button>)}
+                            className="text-[10.5px] px-1.5 rounded border flex-shrink-0" style={{ borderColor: T.line, color: T.inkFaint }}>{tx('tw.fortschreiben')}</button>)}
                     </div>
                   ))}
                 </div>
@@ -192,6 +195,7 @@ export function ZielbildCard({ role }) {
 // ── FRAG DIE DATEN (K7, 01.08.) — read-only NL-Abfrage über die Plattform-Stores.
 // Harte Quellenbindung (IDs zitieren, «nicht in den Daten» statt raten); alle Rollen.
 export function FragDieDaten() {
+  const { t: tx } = useT()
   const [frage, setFrage] = useState('')
   const [busy, setBusy] = useState(false)
   const [antwort, setAntwort] = useState(null)
@@ -214,7 +218,7 @@ export function FragDieDaten() {
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-[11px] font-semibold tracking-wide" style={{ fontFamily: T.mono, color: T.brass }}>🤖 FRAG DIE DATEN</span>
         <input value={frage} onChange={e => setFrage(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') ask() }}
-          placeholder="z.B. «Welche kritischen Meilensteine von Stephanie Rohde sind vor dem 31.10. fällig?»"
+          placeholder={tx('tw.fragePlaceholder')}
           aria-label="Frage an die Plattform-Daten" maxLength={500}
           className="flex-1 min-w-[280px] rounded border px-3 py-1.5 text-[12px]"
           style={{ background: T.panelSoft, borderColor: T.line, color: T.ink }} />
