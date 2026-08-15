@@ -20,7 +20,7 @@ import { AufgabenView } from './views/AufgabenView.jsx'
 import { ReportsView } from './views/ReportsView.jsx'
 import { BriefingModal, TaskSection, WhatIf, ZerlegungKI } from './views/MilestoneModal.jsx'
 import { can, canAny } from './lib/permissions.js'   // Q4: EINE Rechte-Matrix (identisch auf dem Server)
-import { I18nCtx, initialLang, storeLang, translate, CLOCK_LOCALE } from './lib/i18n.js'
+import { I18nCtx, initialLang, storeLang, translate, translateValue, translateRole, CLOCK_LOCALE } from './lib/i18n.js'
 import {
   PHASE_ORDER, phaseToken, ENT_FLOW, ENT_TYPEN, ENT_GREMIEN, ENT_COLOR,
   TYP_LABEL, TYP_ICON, LVL_LABEL, LVL_AUSWAHL, LVL_COLOR, PROGRESS_STEPS, roleInfo,
@@ -63,6 +63,10 @@ export default function App() {
   const setLang = (next) => { storeLang(next); setLangState(next) }
   const toggleLang = () => setLang(lang === 'de' ? 'en' : 'de')
   const t = React.useCallback((k) => translate(lang, k), [lang])
+  // tv = «translate value»: uebersetzt ANGEZEIGTE Domaenen-Werte (Status,
+  // Phasen, Rollen) wert-basiert, ohne domain.json anzufassen — die Datei ist
+  // SSOT fuer JS UND Python (gen_report/validate) und darf nicht umbenannt werden.
+  const tv = React.useCallback((v) => translateValue(lang, v), [lang])
   // IA-Konsolidierung 01.08. (B0): 5 Tabs. Alte Tab-IDs (inputs/intro/streams/
   // erfassen/protokolle/log/cos) werden auf die neuen Heimaten gemappt.
   const LEGACY_TAB = { inputs: 'tower', intro: 'tower', streams: 'tower', erfassen: 'sitzungen', protokolle: 'sitzungen', log: 'tower', cos: 'tower' }
@@ -400,7 +404,7 @@ export default function App() {
       {/* Rollen-Kontextband — macht den Rollenwechsel sofort sichtbar (welche
           Perspektive aktiv ist + was sie darf). */}
       {(() => {
-        const ri = roleInfo(role)
+        const ri = translateRole(lang, role, roleInfo(role))
         const info = { c: ri.color, t: role === 'Owner' ? `${ri.titel} — ${me}` : ri.titel, d: ri.beschreibung }
         return (
           <div className="px-4 md:px-6 py-1.5 flex items-center gap-2 text-[11.5px] border-b"
@@ -408,13 +412,13 @@ export default function App() {
             {canAny(role, 'reminder.entwerfen') ? <ShieldCheck size={13} style={{ color: info.c }} />
               : role === 'Owner' ? <ListChecks size={13} style={{ color: info.c }} />
               : <Lock size={13} style={{ color: info.c }} />}
-            <b style={{ color: info.c }}>Aktive Rolle: {info.t}</b>
+            <b style={{ color: info.c }}>{t('tower.aktiveRolle')}: {info.t}</b>
             <span style={{ color: T.inkDim }}>· {info.d}</span>
             {viaIap && (
-              <button type="button" onClick={reopenWelcome} title="Willkommen erneut anzeigen"
+              <button type="button" onClick={reopenWelcome} title={t('tower.willkommenErneut')}
                 style={{ marginLeft: 'auto', color: T.inkFaint, fontFamily: T.mono, fontSize: '10.5px',
                   background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}>
-                Angemeldet als {IDENTITY.person} · {IDENTITY.email}{!IDENTITY.isKnown && ' — unbekannt, nur lesend'}
+                {t('tower.angemeldetAls')} {IDENTITY.person} · {IDENTITY.email}{!IDENTITY.isKnown && ` ${t('tower.unbekanntLesend')}`}
               </button>
             )}
           </div>
@@ -427,8 +431,8 @@ export default function App() {
         {driftDays > 2 && (
           <div className="rounded-lg border px-4 py-2 text-[12px] flex items-center gap-2"
             style={{ borderColor: T.amber + '88', background: T.amber + '14', color: T.amber }}>
-            <AlertTriangle size={14} /> Steuerungsdatum <b style={{ fontFamily: T.mono }}>{fmtDate(BASE.meta.today)}</b> ist {driftDays} Tage alt —
-            Ampeln &amp; «überfällig» rechnen damit. Bei der nächsten Steuerungssitzung <span style={{ fontFamily: T.mono }}>meta.today</span> in projekt.yaml aktualisieren.
+            <AlertTriangle size={14} /> {t('drift.1')} <b style={{ fontFamily: T.mono }}>{fmtDate(BASE.meta.today)}</b> {t('drift.2')} {driftDays}{' '}
+            {t('drift.3')} <span style={{ fontFamily: T.mono }}>meta.today</span> {t('drift.4')}
           </div>
         )}
         {savedInfo && (
@@ -474,7 +478,7 @@ export default function App() {
             return (
               <div>
                 <div className="text-[10px] uppercase tracking-widest mb-2" style={{ color: T.inkFaint, fontFamily: T.mono }}>
-                  Portfolio · Fokus wählen
+                  {t('tower.portfolio')}
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {SCOPES.map((sc, i) => {
@@ -498,7 +502,7 @@ export default function App() {
                           {s.ws} WS · {s.ms} MS · {s.done} ✓
                         </div>
                         <div className="text-[10px]" style={{ color: s.offen ? T.amber : T.inkFaint, fontFamily: T.mono }}>
-                          {s.offen} Handlungen offen
+                          {s.offen} {t('tower.handlungenOffenKurz')}
                         </div>
                       </button>
                     )
@@ -519,16 +523,16 @@ export default function App() {
             }
             return (
           <div className={ts.total > 0 ? 'grid grid-cols-2 md:grid-cols-5 gap-3' : 'grid grid-cols-2 md:grid-cols-4 gap-3'}>
-            <Kpi label="Gesamtstatus" value={STATUS_META[overall].label} color={STATUS_META[overall].color}
-              sub={`${cnt.total} Meilensteine · ${cnt.done} erledigt · ${cnt.unknown} unbekannt`} />
-            <Kpi label="Auf Kurs" value={cnt.onTrack} color={T.green} />
-            <Kpi label="Gefährdet" value={cnt.atRisk} color={T.amber} />
-            <Kpi label="Verzug" value={cnt.delayed} color={T.red}
-              sub={proj.drivers.length ? `Treiber: ${proj.drivers.map(d => d.id).join(', ')}` : 'kein kritischer Verzug'} />
+            <Kpi label={t('kpi.gesamtstatus')} value={tv(STATUS_META[overall].label)} color={STATUS_META[overall].color}
+              sub={`${cnt.total} ${t('kpi.meilensteine')} · ${cnt.done} ${t('kpi.erledigt')} · ${cnt.unknown} ${t('kpi.unbekannt')}`} />
+            <Kpi label={t('kpi.aufKurs')} value={cnt.onTrack} color={T.green} />
+            <Kpi label={t('kpi.gefaehrdet')} value={cnt.atRisk} color={T.amber} />
+            <Kpi label={t('kpi.verzug')} value={cnt.delayed} color={T.red}
+              sub={proj.drivers.length ? `${t('kpi.treiber')}: ${proj.drivers.map(d => d.id).join(', ')}` : t('kpi.keinKritVerzug')} />
             {ts.total > 0 && (
-              <Kpi label="Handlungen offen" value={ts.offen}
+              <Kpi label={t('kpi.handlungenOffen')} value={ts.offen}
                 color={ts.ueberfaellig > 0 ? T.red : ts.offen > 0 ? T.amber : T.green}
-                sub={`${ts.ueberfaellig} überfällig · ${ts.erledigt} erledigt · treiben den Fortschritt`} />
+                sub={`${ts.ueberfaellig} ${t('kpi.ueberfaellig')} · ${ts.erledigt} ${t('kpi.erledigt')} · ${t('kpi.treibenFortschritt')}`} />
             )}
           </div>
             )
@@ -537,20 +541,20 @@ export default function App() {
           {/* Erfüllungsgrad je Phase */}
           <div>
             <div className="text-[10px] uppercase tracking-widest mb-2" style={{ color: T.inkFaint, fontFamily: T.mono }}>
-              Erfüllungsgrad je Phase (erledigt = 100 %{progEntry?.start ? ` · Programmstart ${fmtDate(progEntry.start)}` : ''})
+              {t('tower.erfuellungPhase')}{progEntry?.start ? ` · ${t('tower.programmstart')} ${fmtDate(progEntry.start)}` : ''})
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
               {PHASE_TILES.map(p => {
                 const col = phaseColor(p.key)
                 return (
                   <div key={p.key} className="rounded-xl p-3 border" style={{ background: T.panel, borderColor: T.line, borderTop: `2.5px solid ${col}` }}>
-                    <div className="text-[10px] font-semibold truncate" style={{ color: col }}>{p.key === 'Masterplan' ? 'Masterplan' : p.label}</div>
+                    <div className="text-[10px] font-semibold truncate" style={{ color: col }}>{p.key === 'Masterplan' ? 'Masterplan' : tv(p.label)}</div>
                     <div className="text-2xl font-bold mt-0.5" style={{ fontFamily: T.mono, color: T.ink }}>{p.pct}<span className="text-[13px]" style={{ color: T.inkDim }}> %</span></div>
                     <div className="w-full h-1.5 rounded mt-1" style={{ background: T.line }}>
                       <div className="h-1.5 rounded" style={{ width: p.pct + '%', background: col }} />
                     </div>
                     <div className="text-[10px] mt-1.5" style={{ fontFamily: T.mono, color: T.inkFaint }}>
-                      <b style={{ color: T.ink }}>{p.done}</b> / {p.total} erledigt
+                      <b style={{ color: T.ink }}>{p.done}</b> / {p.total} {t('tower.phaseErledigt')}
                     </div>
                   </div>
                 )
@@ -731,11 +735,11 @@ export default function App() {
               <table className="w-full text-[12px]">
                 <thead>
                   <tr className="text-left" style={{ color: T.inkFaint, fontFamily: T.mono }}>
-                    <th className="px-3 py-1.5 w-6"></th><th className="px-2 py-1.5">CODE</th>
-                    <th className="px-2 py-1.5">MEILENSTEIN</th><th className="px-2 py-1.5">PHASE</th><th className="px-2 py-1.5">OWNER</th>
-                    <th className="px-2 py-1.5">FÄLLIG</th><th className="px-2 py-1.5 w-36">FORTSCHRITT</th>
-                    <th className="px-2 py-1.5">HANDLUNGEN</th>
-                    <th className="px-2 py-1.5">STATUS</th>
+                    <th className="px-3 py-1.5 w-6"></th><th className="px-2 py-1.5">{t('tafel.code')}</th>
+                    <th className="px-2 py-1.5">{t('tafel.meilenstein')}</th><th className="px-2 py-1.5">{t('tafel.phase')}</th><th className="px-2 py-1.5">{t('tafel.owner')}</th>
+                    <th className="px-2 py-1.5">{t('tafel.faellig')}</th><th className="px-2 py-1.5 w-36">{t('tafel.fortschritt')}</th>
+                    <th className="px-2 py-1.5">{t('tafel.handlungen')}</th>
+                    <th className="px-2 py-1.5">{t('tafel.status')}</th>
                   </tr>
                 </thead>
                 <tbody>
