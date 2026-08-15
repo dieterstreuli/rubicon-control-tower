@@ -6,6 +6,7 @@ import { PHASE_ORDER } from '../lib/domain.js'
 import { can } from '../lib/permissions.js'
 import { ArtefaktZeile, PhaseTag } from '../components/ui.jsx'
 import { CheckCircle2, Circle, Filter } from 'lucide-react'
+import { useT } from '../lib/i18n.js'
 
 // ── AUFGABEN — flache, filterbare Liste ALLER Handlungen (Phase × WS × Person ×
 // Status), sortiert nach Fälligkeit. Beantwortet «was muss ICH bis wann tun?» —
@@ -77,38 +78,40 @@ export function AufgabenView({ role, me, prog, onOpenMs }) {
       else { alert('Abhaken fehlgeschlagen: ' + (j.error || 'unbekannt')); setBusy(null) }
     } catch (e) { alert('Abhaken fehlgeschlagen: ' + e); setBusy(null) }
   }
+  // 'tx' statt 't': in dieser Datei ist 't' bereits die Handlung (filtered.map(t => …))
+  const { t: tx } = useT()
   const sel = { background: T.panelSoft, borderColor: T.line, color: T.ink }
   return (
     <div className="space-y-3">
       <div className="rounded-xl border overflow-hidden" style={{ background: T.panel, borderColor: T.line }}>
         <div className="flex items-center justify-between flex-wrap gap-2 px-4 py-2 border-b" style={{ borderColor: T.line }}>
           <div className="text-[13px] font-semibold tracking-widest" style={{ fontFamily: T.mono, color: T.brass }}>
-            ── AUFGABEN · ALLE HANDLUNGEN ──
-            <span className="ml-2 text-[11px] font-normal" style={{ color: T.inkDim }}>{nOffen} offen{nOver ? ` · ${nOver} überfällig ⚠` : ''} · {filtered.length} angezeigt / {rows.length} gesamt</span>
+            ── {tx('auf.titel')} ──
+            <span className="ml-2 text-[11px] font-normal" style={{ color: T.inkDim }}>{nOffen} {tx('auf.offen')}{nOver ? ` · ${nOver} ${tx('auf.ueberfaellig')}` : ''} · {filtered.length} {tx('auf.angezeigt')} / {rows.length} {tx('auf.gesamt')}</span>
           </div>
           <div className="flex items-center gap-1.5 text-[12px] flex-wrap justify-end" style={{ color: T.inkDim }}>
             <input value={search} onChange={e => setSearch(e.target.value)}
-              placeholder="Suchen: Handlung / Person / T-Nr…" aria-label="Handlungen durchsuchen"
+              placeholder={tx('auf.suchen')} aria-label={tx('auf.suchenAria')}
               className="bg-transparent border rounded px-2 py-0.5 w-52"
               style={{ borderColor: search ? T.brass : T.line, background: T.panelSoft, color: T.ink }} />
             <Filter size={13} />
             <select value={fStatus} onChange={e => setFStatus(e.target.value)} className="bg-transparent border rounded px-1.5 py-0.5" style={sel}>
-              <option value="offen" style={{ color: '#111' }}>offen</option>
-              <option value="ueberfaellig" style={{ color: '#111' }}>überfällig ⚠</option>
-              <option value="erledigt" style={{ color: '#111' }}>erledigt</option>
-              <option value="alle" style={{ color: '#111' }}>alle Status</option>
+              <option value="offen" style={{ color: '#111' }}>{tx('auf.offen')}</option>
+              <option value="ueberfaellig" style={{ color: '#111' }}>{tx('auf.ueberfaellig')}</option>
+              <option value="erledigt" style={{ color: '#111' }}>{tx('auf.erledigt')}</option>
+              <option value="alle" style={{ color: '#111' }}>{tx('auf.alleStatus')}</option>
             </select>
             <select value={fPhase} onChange={e => setFPhase(e.target.value)} className="bg-transparent border rounded px-1.5 py-0.5" style={sel}>
-              <option value="alle" style={{ color: '#111' }}>alle Phasen</option>
+              <option value="alle" style={{ color: '#111' }}>{tx('auf.allePhasen')}</option>
               {phases.map(p => <option key={p} value={p} style={{ color: '#111' }}>{p}</option>)}
-              <option value="ohne" style={{ color: '#111' }}>ohne Milestone</option>
+              <option value="ohne" style={{ color: '#111' }}>{tx('auf.ohneMilestone')}</option>
             </select>
             <select value={fWs} onChange={e => setFWs(e.target.value)} className="bg-transparent border rounded px-1.5 py-0.5" style={sel}>
-              <option value="alle" style={{ color: '#111' }}>alle Ströme</option>
+              <option value="alle" style={{ color: '#111' }}>{tx('auf.alleStroeme')}</option>
               {wss.map(w => <option key={w} value={w} style={{ color: '#111' }}>{w}</option>)}
             </select>
             <select value={fOwner} onChange={e => setFOwner(e.target.value)} className="bg-transparent border rounded px-1.5 py-0.5" style={sel}>
-              <option value="alle" style={{ color: '#111' }}>alle Verantwortlichen</option>
+              <option value="alle" style={{ color: '#111' }}>{tx('auf.alleVerantwortlichen')}</option>
               {owners.map(o => <option key={o} value={o} style={{ color: '#111' }}>{o.length > 30 ? o.slice(0, 30) + '…' : o}</option>)}
             </select>
           </div>
@@ -119,16 +122,16 @@ export function AufgabenView({ role, me, prog, onOpenMs }) {
               <tr className="text-left" style={{ color: T.inkFaint, fontFamily: T.mono }}>
                 <th className="px-3 py-1.5 w-8"></th>
                 <th className="px-2 py-1.5 w-16">NR</th>
-                <th className="px-2 py-1.5">HANDLUNG</th>
-                <th className="px-2 py-1.5">VERANTWORTLICH</th>
-                <th className="px-2 py-1.5">FÄLLIG</th>
-                <th className="px-2 py-1.5">MILESTONE</th>
-                <th className="px-2 py-1.5">PHASE</th>
+                <th className="px-2 py-1.5">{tx('auf.handlung')}</th>
+                <th className="px-2 py-1.5">{tx('auf.verantwortlich')}</th>
+                <th className="px-2 py-1.5">{tx('auf.faellig')}</th>
+                <th className="px-2 py-1.5">{tx('auf.milestone')}</th>
+                <th className="px-2 py-1.5">{tx('auf.phase')}</th>
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 && (
-                <tr><td colSpan={7} className="px-4 py-6 text-[12px]" style={{ color: T.inkFaint }}>Keine Handlungen für diese Filter.</td></tr>
+                <tr><td colSpan={7} className="px-4 py-6 text-[12px]" style={{ color: T.inkFaint }}>{tx('auf.keine')}</td></tr>
               )}
               {filtered.map(t => {
                 const ov = taskOverdue(t)
@@ -138,7 +141,7 @@ export function AufgabenView({ role, me, prog, onOpenMs }) {
                   <tr style={{ borderTop: `1px solid ${T.line}`, opacity: t.status === 'erledigt' ? 0.55 : 1 }}>
                     <td className="px-3 py-1.5">
                       <button onClick={() => klick(t)} disabled={!can || !!busy}
-                        title={can ? (t.status === 'erledigt' ? 'wieder öffnen' : 'abhaken') : 'Rolle darf diese Handlung nicht abhaken'}
+                        title={can ? (t.status === 'erledigt' ? 'wieder öffnen' : 'abhaken') : tx('auf.keinRecht')}
                         style={{ cursor: can ? 'pointer' : 'not-allowed', opacity: busy === t.id ? 0.4 : 1 }}>
                         {t.status === 'erledigt'
                           ? <CheckCircle2 size={15} style={{ color: T.green }} />

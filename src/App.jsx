@@ -366,7 +366,7 @@ export default function App() {
             <select value={role} onChange={e => setRole(e.target.value)}
               className="text-[12px] rounded px-2 py-1 border bg-transparent"
               style={{ borderColor: T.line, color: T.ink, background: T.panelSoft }}>
-              {allowedRoles.map(r => <option key={r} value={r} style={{ color: '#111' }}>{t('hdr.rolle')}: {r}</option>)}
+              {allowedRoles.map(r => <option key={r} value={r} style={{ color: '#111' }}>{t('hdr.rolle')}: {tv(r)}</option>)}
             </select>
             {role === 'Owner' && (
               <select value={me} onChange={e => setMe(e.target.value)}

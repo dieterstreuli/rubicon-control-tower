@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { T } from '../lib/theme.js'
 import { IDENTITY } from '../lib/data.js'
 import { X } from 'lucide-react'
+import { useT } from '../lib/i18n.js'
 
 // Stufe 1: einmalige Begrüßung pro Session. Die Funktionsliste ist datengetrieben —
 // spätere Stufen (Drive/Gmail/Kalender in Dieters Konto) flippen ⏳ → ✓.
@@ -16,6 +17,7 @@ const FUNKTIONEN = [
 // (Dieters lokaler Betrieb, via Tailnet geteilt) rendert die Komponente null — sonst würde
 // z.B. Andreas im Tailnet-Zugang fälschlich als «Dieter Streuli» begrüßt (Härtung 10.08.2026).
 export function WelcomePanel() {
+  const { t: tx } = useT()
   const [seen, setSeen] = useState(() => sessionStorage.getItem('rubicon_welcome_seen') === '1')
   if (seen || !IDENTITY || !IDENTITY.viaIap) return null
   const dismiss = () => { sessionStorage.setItem('rubicon_welcome_seen', '1'); setSeen(true) }
@@ -23,7 +25,7 @@ export function WelcomePanel() {
   return (
     <div className="mx-4 md:mx-6 mt-3 rounded-lg border p-3.5 relative"
       style={{ background: T.panelSoft, borderColor: T.brass + '55', borderLeft: `3px solid ${T.brass}` }}>
-      <button onClick={dismiss} title="Ausblenden"
+      <button onClick={dismiss} title={tx('wp.ausblenden')}
         className="absolute top-2 right-2 p-1 rounded" style={{ color: T.inkFaint }}>
         <X size={15} />
       </button>
@@ -33,7 +35,7 @@ export function WelcomePanel() {
       <div className="text-[11px] mt-0.5" style={{ color: T.inkDim, fontFamily: T.mono }}>
         Angemeldet als {IDENTITY.email} · Rolle {rollen}{!IDENTITY.isKnown && ' — unbekannt (nur lesend)'}
       </div>
-      <div className="text-[11px] mt-2 mb-1" style={{ color: T.inkFaint }}>In deinem Web-Kontext:</div>
+      <div className="text-[11px] mt-2 mb-1" style={{ color: T.inkFaint }}>{tx('wp.webKontext')}</div>
       <ul className="space-y-0.5">
         {FUNKTIONEN.map((f, i) => (
           <li key={i} className="text-[11.5px]" style={{ color: f.ok ? T.ink : T.inkFaint }}>

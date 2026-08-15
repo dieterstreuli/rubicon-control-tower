@@ -3,22 +3,24 @@
 import React, { useState } from 'react'
 import { T, STATUS_META } from '../lib/theme.js'
 import { phaseToken, artefaktGueltig, ARTEFAKT_HINWEIS } from '../lib/domain.js'
+import { useT, translateValue } from '../lib/i18n.js'
 
 // ── ARTEFAKT-ZEILE (Stufe 2, 04.08. «AXS-Datengehirn») — erscheint beim Abhaken und
 // fragt den Ablage-Pointer des Arbeitsprodukts ab. Bewusst KEIN Hard-Block: «ohne
 // Artefakt» bleibt möglich (sonst wird Schrott eingetippt), validate.py meldet den
 // Fall dann als Datenlücke. Format wird clientseitig geprüft, der Server nochmals.
 export function ArtefaktZeile({ onOk, onSkip, onCancel, busy }) {
+  const { t: tx } = useT()
   const [v, setV] = useState('')
   const ok = artefaktGueltig(v)
   const btn = { padding: '2px 8px', borderRadius: 4, border: `1px solid ${T.line}` }
   return (
     <div className="px-3 py-2 flex flex-wrap items-center gap-2 text-[11.5px]"
       style={{ background: T.panelSoft, borderTop: `1px solid ${T.brass}44` }}>
-      <span style={{ color: T.brass, fontFamily: T.mono, fontSize: 10 }}>ARTEFAKT</span>
+      <span style={{ color: T.brass, fontFamily: T.mono, fontSize: 10 }}>{tx('ui.artefakt')}</span>
       <input value={v} autoFocus onChange={e => setV(e.target.value)}
         onKeyDown={e => { if (e.key === 'Enter' && ok) onOk(v); if (e.key === 'Escape') onCancel() }}
-        placeholder={ARTEFAKT_HINWEIS} aria-label="Ablage-Link des Arbeitsprodukts"
+        placeholder={ARTEFAKT_HINWEIS} aria-label={tx('ui.ablageLink')}
         className="flex-1 min-w-[220px] rounded border px-2 py-1"
         style={{ background: T.panel, borderColor: v && !ok ? T.red : T.line, color: T.ink }} />
       <button onClick={() => onOk(v)} disabled={!ok || !!busy} style={{ ...btn, borderColor: ok ? T.brass : T.line, color: ok ? T.brass : T.inkFaint, opacity: ok ? 1 : .5 }}>
@@ -28,7 +30,7 @@ export function ArtefaktZeile({ onOk, onSkip, onCancel, busy }) {
         ohne Artefakt
       </button>
       <button onClick={onCancel} disabled={!!busy} style={{ color: T.inkFaint }} aria-label="abbrechen">✕</button>
-      {v && !ok && <span style={{ color: T.red }}>kein gültiger Archiv-Pointer</span>}
+      {v && !ok && <span style={{ color: T.red }}>{tx('ui.keinPointer')}</span>}
     </div>
   )
 }
@@ -36,10 +38,14 @@ export function ArtefaktZeile({ onOk, onSkip, onCancel, busy }) {
 // ---------- kleine Bausteine ----------
 export const Pill = ({ st }) => {
   const m = STATUS_META[st] || STATUS_META.unknown
+  // Statuswort wert-basiert uebersetzen (domain.json bleibt unangetastet — die
+  // Datei ist SSOT fuer JS UND Python). Pill sitzt in der Kopfzeile und in jeder
+  // Tabellenzeile; ohne das bleibt «Gefährdet» auch im englischen Modus stehen.
+  const { lang } = useT()
   return (
     <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold whitespace-nowrap"
       style={{ background: m.color + '22', color: m.color, border: `1px solid ${m.color}55`, fontFamily: T.mono }}>
-      {m.label}
+      {translateValue(lang, m.label)}
     </span>
   )
 }
@@ -80,6 +86,7 @@ export const PhaseTag = ({ p }) => (
 // A2 (01.08.): MS-Auswahl mit Textfilter — 167 Meilensteine sind per nativem
 // Select nicht mehr greifbar. Tippen filtert die Optionsliste live.
 export function MsPicker({ ms, value, onChange, optional, style: inp }) {
+  const { t: tx } = useT()
   const [q, setQ] = useState('')
   const qq = q.trim().toLowerCase()
   const hits = qq ? ms.filter(m => (m.id + ' ' + (m.name || '') + ' ' + (m.owner || '')).toLowerCase().includes(qq)) : ms
@@ -88,7 +95,7 @@ export function MsPicker({ ms, value, onChange, optional, style: inp }) {
   return (
     <span className="inline-flex items-center gap-1">
       <input value={q} onChange={ev => setQ(ev.target.value)} placeholder="filtern…"
-        aria-label="Milestone filtern" className="w-24 rounded border px-2 py-1 text-[11px]" style={inp} />
+        aria-label={tx('ui.msFiltern')} className="w-24 rounded border px-2 py-1 text-[11px]" style={inp} />
       <select value={value || ''} onChange={ev => onChange(ev.target.value)}
         className="rounded border px-2 py-1 text-[11px]" style={inp}
         title={optional ? 'Optional: an Milestone koppeln — wird dann als treibende Handlung gespiegelt' : undefined}>

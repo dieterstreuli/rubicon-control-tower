@@ -3,10 +3,12 @@ import { T } from '../lib/theme.js'
 import { reloadKeepScroll, REPORTS, REPORT_COMMENTS, SERVER } from '../lib/data.js'
 import { LVL_AUSWAHL, LVL_COLOR, LVL_LABEL } from '../lib/domain.js'
 import { BarChart3, FileText, Lock } from 'lucide-react'
+import { useT } from '../lib/i18n.js'
 
 // ── REPORTS — verdichtete Standard-Reports (Woche/Monat/Quartal), auto-generiert
 // aus projekt.yaml + protokolle.json via /api/report/generate. Kein Neu-Erfassen.
 export function ReportsView({ canEdit, role, me, today }) {
+  const { t: tx } = useT()
   const reports = REPORTS.reports || []
   const qOf = (d) => `${d.slice(0, 4)}-Q${Math.ceil(parseInt(d.slice(5, 7), 10) / 3)}`
   const defP = (lvl) => lvl === 'woche' ? today : lvl === 'monat' ? today.slice(0, 7) : qOf(today)
@@ -45,12 +47,12 @@ export function ReportsView({ canEdit, role, me, today }) {
           Kein Zusammentragen: jeder Report wird aus den erfassten Sitzungen + dem Milestone-Stand berechnet. VR-getaggte Entscheide wandern automatisch ins VR-Pack.
         </div>
         <div className="flex flex-wrap items-end gap-3">
-          <label className="flex flex-col gap-1 text-[12px]"><span style={{ color: T.inkDim }}>Ebene</span>
+          <label className="flex flex-col gap-1 text-[12px]"><span style={{ color: T.inkDim }}>{tx('rep.ebene')}</span>
             <select value={level} onChange={e => changeLevel(e.target.value)} className="rounded border px-2 py-1" style={inp}>
               {Object.entries(LVL_AUSWAHL).map(([k, lbl]) => <option key={k} value={k} style={{ color: '#111' }}>{lbl}</option>)}
             </select>
           </label>
-          <label className="flex flex-col gap-1 text-[12px]"><span style={{ color: T.inkDim }}>Periode</span>
+          <label className="flex flex-col gap-1 text-[12px]"><span style={{ color: T.inkDim }}>{tx('rep.periode')}</span>
             {level === 'woche' && <input type="date" value={period} onChange={e => changePeriod(e.target.value)} className="rounded border px-2 py-1" style={{ ...inp, fontFamily: T.mono }} />}
             {level === 'monat' && <input type="month" value={period} onChange={e => changePeriod(e.target.value)} className="rounded border px-2 py-1" style={{ ...inp, fontFamily: T.mono }} />}
             {level === 'vr' && (
@@ -70,7 +72,7 @@ export function ReportsView({ canEdit, role, me, today }) {
           )}
           {canEdit
             ? <button onClick={gen} disabled={busy} className="flex items-center gap-1.5 px-4 py-2 rounded font-semibold text-[13px]" style={{ background: T.brass, color: '#0b1220', opacity: busy ? 0.6 : 1 }}><BarChart3 size={15} /> {busy ? (ki ? 'erzeugt… (~1-2 Min mit KI)' : 'erzeugt… (~15s)') : `${LVL_LABEL[level]} erzeugen`}</button>
-            : <span className="text-[11px]" style={{ color: T.inkFaint }}><Lock size={12} className="inline mr-1" />nur Lesen</span>}
+            : <span className="text-[11px]" style={{ color: T.inkFaint }}><Lock size={12} className="inline mr-1" />{tx('rep.nurLesen')}</span>}
         </div>
       </div>
 
@@ -78,7 +80,7 @@ export function ReportsView({ canEdit, role, me, today }) {
         <div className="px-4 py-2 text-[13px] font-semibold border-b" style={{ borderColor: T.line }}>
           Erzeugte Reports <span className="text-[10px]" style={{ color: T.inkFaint }}>({reports.length} — neueste zuerst; Quelle reports_index.json)</span>
         </div>
-        {reports.length === 0 && <div className="px-4 py-6 text-[12px]" style={{ color: T.inkFaint }}>Noch kein Report erzeugt.</div>}
+        {reports.length === 0 && <div className="px-4 py-6 text-[12px]" style={{ color: T.inkFaint }}>{tx('rep.keinReport')}</div>}
         <div className="divide-y" style={{ borderColor: T.line }}>
           {reports.map(r => {
             // Modusabhängig: auf dem Server zeigen die Links auf die Server-Artefakte
@@ -95,7 +97,7 @@ export function ReportsView({ canEdit, role, me, today }) {
                 <b style={{ color: T.ink }}>{r.label}</b>
                 <span className="muted" style={{ color: T.inkFaint, fontFamily: T.mono }}>Stand {r.stand}</span>
                 <span className="flex-1" />
-                {localOnly && <span className="text-[10px]" style={{ color: T.inkFaint, fontFamily: T.mono }}>nur lokal</span>}
+                {localOnly && <span className="text-[10px]" style={{ color: T.inkFaint, fontFamily: T.mono }}>{tx('rep.nurLokal')}</span>}
                 {pdfShown && <a href={r.pdf} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.brass, color: T.brass }}><FileText size={10} /> PDF</a>}
                 {docUrl && <a href={docUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.blue, color: T.blue }}><FileText size={10} /> Doc</a>}
               </div>
