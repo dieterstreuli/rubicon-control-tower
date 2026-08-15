@@ -1,6 +1,16 @@
 {
   "reports": [
     {
+      "id": "woche-2026-08-07",
+      "level": "woche",
+      "period": "2026-08-07",
+      "label": "KW 32 · 03.08.–09.08.2026",
+      "pdf": "/reports/woche-2026-08-07.pdf",
+      "stand": "Steuerungsstand 07.08.2026",
+      "doc_id": "1-_dGLOFOztED4QMojqMcS895ArvDnf0EVS2fi-TYEVk",
+      "doc_url": "https://docs.google.com/document/d/1-_dGLOFOztED4QMojqMcS895ArvDnf0EVS2fi-TYEVk/edit"
+    },
+    {
       "id": "vr-2026-Q3",
       "level": "vr",
       "period": "2026-Q3",
