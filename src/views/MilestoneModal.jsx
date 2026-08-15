@@ -6,11 +6,13 @@ import { PROGRESS_STEPS } from '../lib/domain.js'
 import { can, canAny } from '../lib/permissions.js'
 import { ArtefaktZeile, Pill } from '../components/ui.jsx'
 import { CheckCircle2, Circle, FileText, ListChecks, Lock, Save, X } from 'lucide-react'
+import { useT } from '../lib/i18n.js'
 
 // Handlungen im Milestone-Modal — abhakbar (CoS alles, Owner nur eigene; sonst lesend).
 // Abhaken schreibt via POST /api/task/status (atomar, serverseitiges Owner-Scoping);
 // der Roll-up VERDIENT den Fortschritt, HMR lädt neu, Modal öffnet sich wieder.
 export function TaskSection({ m, role, me }) {
+  const { t: tx } = useT()
   const ts = tasksFor(m.id)
   const [busy, setBusy] = useState(null)
   const [artefaktFuer, setArtefaktFuer] = useState(null)   // Task-ID, für die die Artefakt-Zeile offen ist
@@ -84,7 +86,7 @@ export function TaskSection({ m, role, me }) {
                   {t.owner && <span>{t.owner}</span>}
                   {t.due
                     ? <span style={{ color: ov ? T.red : T.inkFaint }}>fällig {fmtDate(t.due)}{ov ? ' ⚠ überfällig' : ''}</span>
-                    : <span>fällig — (Datenlücke)</span>}
+                    : <span>{tx('ms.faelligLuecke')}</span>}
                   {t.erledigt_am && <span style={{ color: T.green }}>erledigt {fmtDate(t.erledigt_am)}{t.erledigt_von ? ` · ${t.erledigt_von}` : ''}</span>}
                   {t.artefakt && <span title={t.artefakt} style={{ color: T.brass }}>📎 Artefakt</span>}
                 </div>
@@ -114,6 +116,7 @@ export function TaskSection({ m, role, me }) {
 // due-Vorschläge sind Annahmen; Übernahme läuft über den regulären /api/task/upsert.
 // Roll-up-Aktivierung («treibend») bleibt ein separater, bewusster Haken.
 export function ZerlegungKI({ m, role }) {
+  const { t: tx } = useT()
   const [busy, setBusy] = useState(false)
   const [drafts, setDrafts] = useState(null)   // [{text, owner, due, use}]
   const [activate, setActivate] = useState(false)
@@ -168,10 +171,10 @@ export function ZerlegungKI({ m, role }) {
         <div className="mt-2 space-y-1.5">
           {drafts.map((d, i) => (
             <div key={i} className="flex flex-wrap items-center gap-2 text-[11.5px]">
-              <input type="checkbox" checked={d.use} onChange={e2 => upd(i, { use: e2.target.checked })} aria-label="Vorschlag übernehmen" />
+              <input type="checkbox" checked={d.use} onChange={e2 => upd(i, { use: e2.target.checked })} aria-label={tx('ms.vorschlagUebernehmen')} />
               <input value={d.text} onChange={e2 => upd(i, { text: e2.target.value })} className="flex-1 min-w-[260px] rounded border px-2 py-1" style={inp} />
-              <input value={d.owner || ''} onChange={e2 => upd(i, { owner: e2.target.value })} placeholder="Owner" className="w-36 rounded border px-2 py-1" style={inp} />
-              <input type="date" value={d.due || ''} onChange={e2 => upd(i, { due: e2.target.value })} className="rounded border px-2 py-1" style={{ ...inp, fontFamily: T.mono }} title="Vorschlag — prüfen!" />
+              <input value={d.owner || ''} onChange={e2 => upd(i, { owner: e2.target.value })} placeholder={tx('ms.owner')} className="w-36 rounded border px-2 py-1" style={inp} />
+              <input type="date" value={d.due || ''} onChange={e2 => upd(i, { due: e2.target.value })} className="rounded border px-2 py-1" style={{ ...inp, fontFamily: T.mono }} title={tx('ms.vorschlagPruefen')} />
             </div>
           ))}
           <div className="flex flex-wrap items-center gap-3 pt-1.5">
@@ -180,10 +183,10 @@ export function ZerlegungKI({ m, role }) {
               {busy ? 'übernimmt…' : `Übernehmen (${drafts.filter(d => d.use).length})`}
             </button>
             <label className="flex items-center gap-1.5 text-[11px] cursor-pointer" style={{ color: activate ? T.brass : T.inkDim }}
-              title="progress_source: tasks — der Milestone-Fortschritt wird ab dann aus den Handlungen VERDIENT (bewusster Akt)">
+              title={tx('ms.progressSource')}>
               <input type="checkbox" checked={activate} onChange={e2 => setActivate(e2.target.checked)} /> Roll-up aktivieren («treibend»)
             </label>
-            <button onClick={() => { setDrafts(null); setErr(null) }} className="px-2.5 py-1 rounded border text-[11px]" style={{ borderColor: T.line, color: T.inkDim }}>Verwerfen</button>
+            <button onClick={() => { setDrafts(null); setErr(null) }} className="px-2.5 py-1 rounded border text-[11px]" style={{ borderColor: T.line, color: T.inkDim }}>{tx('ms.verwerfen')}</button>
           </div>
         </div>
       )}
@@ -196,6 +199,7 @@ export function ZerlegungKI({ m, role }) {
 // /api/ms/progress in projekt.yaml (CoS alles, Owner nur eigene; task-getriebene
 // MS gesperrt: dort wird Fortschritt aus Handlungen VERDIENT). Git = Journal.
 export function WhatIf({ m, role, me }) {
+  const { t: tx } = useT()
   const [kind, setKind] = useState('progress')
   const [val, setVal] = useState(typeof m.progress === 'number' ? m.progress : 50)
   const [busy, setBusy] = useState(false)
@@ -236,11 +240,11 @@ export function WhatIf({ m, role, me }) {
   return (
     <div className="mx-5 mt-3 rounded-xl border p-3" style={{ borderColor: T.line, background: T.panelSoft + '55' }}>
       <div className="flex flex-wrap items-center gap-2 text-[12px]">
-        <b className="text-[11px] tracking-wide" style={{ color: T.brass, fontFamily: T.mono }}>FORTSCHRITT MELDEN</b>
+        <b className="text-[11px] tracking-wide" style={{ color: T.brass, fontFamily: T.mono }}>{tx('ms.fortschrittMelden')}</b>
         <select value={kind} onChange={e => { setKind(e.target.value); setVal(e.target.value === 'progress' ? (typeof m.progress === 'number' ? m.progress : 50) : (m.reported_slip_days || 7)) }}
           className="rounded border px-2 py-1 text-[11px]" style={inp}>
-          <option value="progress" style={{ color: '#111' }}>Fortschritt (%)</option>
-          <option value="blocker" style={{ color: '#111' }}>Blocker (+Tage Verzug)</option>
+          <option value="progress" style={{ color: '#111' }}>{tx('ms.fortschrittProzent')}</option>
+          <option value="blocker" style={{ color: '#111' }}>{tx('ms.blocker')}</option>
         </select>
         {kind === 'progress'
           ? (
@@ -261,7 +265,7 @@ export function WhatIf({ m, role, me }) {
             <input type="number" min={0} max={365} step={7} value={val} onChange={e => setVal(+e.target.value)}
               className="w-20 rounded border px-2 py-1 text-[11px]" style={{ ...inp, fontFamily: T.mono }} />
           )}
-        <span style={{ color: T.inkDim }}>Ampel</span> <Pill st={stNow} /> <span style={{ color: T.inkDim }}>→</span> <Pill st={stAfter} />
+        <span style={{ color: T.inkDim }}>{tx('ms.ampel')}</span> <Pill st={stNow} /> <span style={{ color: T.inkDim }}>→</span> <Pill st={stAfter} />
         <span style={{ fontFamily: T.mono, color: shift > 0 ? T.red : shift < 0 ? T.green : T.inkDim }}>
           · Projektende {shift !== 0 ? `${shift > 0 ? '+' : ''}${shift} T` : 'unverändert'}
         </span>
@@ -288,6 +292,7 @@ export function WhatIf({ m, role, me }) {
 // Struktur analog Commercial-Masterplan (KONTEXT/LEISTUNG/VORGEHEN/KPI/RISIKEN)
 // + eingebettetes Briefing-PDF (public/briefings/<id>.pdf).
 export function BriefingModal({ m, role, me, onClose, onNav }) {
+  const { t: tx } = useT()
   const b = BRIEFINGS[m.id] || {}
   const st = statusOf(m, NOW)
   const Sect = ({ title, children }) => (
@@ -320,9 +325,9 @@ export function BriefingModal({ m, role, me, onClose, onNav }) {
           </div>
           {onNav && (
             <span className="flex items-center gap-1">
-              <button onClick={() => onNav(-1)} aria-label="Vorheriger Meilenstein" title="Vorheriger Meilenstein (←)"
+              <button onClick={() => onNav(-1)} aria-label={tx('ms.vorheriger')} title={tx('ms.vorherigerTitle')}
                 className="px-2 py-1 rounded border text-[13px]" style={{ borderColor: T.line, color: T.inkDim }}>‹</button>
-              <button onClick={() => onNav(1)} aria-label="Nächster Meilenstein" title="Nächster Meilenstein (→)"
+              <button onClick={() => onNav(1)} aria-label={tx('ms.naechster')} title={tx('ms.naechsterTitle')}
                 className="px-2 py-1 rounded border text-[13px]" style={{ borderColor: T.line, color: T.inkDim }}>›</button>
             </span>
           )}
@@ -331,7 +336,7 @@ export function BriefingModal({ m, role, me, onClose, onNav }) {
             style={{ borderColor: T.brass, color: T.brass }}>
             <FileText size={13} /> PDF öffnen
           </a>
-          <button onClick={onClose} aria-label="Schliessen"
+          <button onClick={onClose} aria-label={tx('ms.schliessen')}
             className="p-1.5 rounded border" style={{ borderColor: T.line, color: T.inkDim }}>
             <X size={15} />
           </button>
@@ -340,15 +345,15 @@ export function BriefingModal({ m, role, me, onClose, onNav }) {
         <div className="px-5 pt-3">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-1.5 text-[11.5px] rounded p-3"
             style={{ background: T.panelSoft }}>
-            <div><span style={{ color: T.inkFaint }}>Owner</span><br /><b style={{ fontFamily: T.mono }}>{m.owner || 'zu klären'}</b></div>
-            <div><span style={{ color: T.inkFaint }}>Fällig bis</span><br /><b style={{ fontFamily: T.mono }}>{fmtDate(m.due)}{m.date_assumed ? ' *' : ''}</b></div>
-            <div><span style={{ color: T.inkFaint }}>Start</span><br /><b style={{ fontFamily: T.mono }}>{m.start ? fmtDate(m.start) : '—'}</b></div>
-            <div><span style={{ color: T.inkFaint }}>Abhängig von</span><br /><b style={{ fontFamily: T.mono }}>{(m.depends_on || []).join(', ') || '—'}</b></div>
+            <div><span style={{ color: T.inkFaint }}>{tx('ms.owner')}</span><br /><b style={{ fontFamily: T.mono }}>{m.owner || 'zu klären'}</b></div>
+            <div><span style={{ color: T.inkFaint }}>{tx('ms.faelligBis')}</span><br /><b style={{ fontFamily: T.mono }}>{fmtDate(m.due)}{m.date_assumed ? ' *' : ''}</b></div>
+            <div><span style={{ color: T.inkFaint }}>{tx('ms.start')}</span><br /><b style={{ fontFamily: T.mono }}>{m.start ? fmtDate(m.start) : '—'}</b></div>
+            <div><span style={{ color: T.inkFaint }}>{tx('ms.abhaengigVon')}</span><br /><b style={{ fontFamily: T.mono }}>{(m.depends_on || []).join(', ') || '—'}</b></div>
           </div>
-          {b.beteiligte && <div className="text-[11.5px] mt-2" style={{ color: T.inkDim }}><b style={{ color: T.brass }}>Beteiligte:</b> {b.beteiligte}</div>}
+          {b.beteiligte && <div className="text-[11.5px] mt-2" style={{ color: T.inkDim }}><b style={{ color: T.brass }}>{tx('ms.beteiligte')}</b> {b.beteiligte}</div>}
           {b.ziel_klartext && (
             <div className="mt-3 rounded p-3 text-[12px]" style={{ background: T.panelSoft, borderLeft: `2.5px solid ${T.brass}`, color: T.ink }}>
-              <b style={{ color: T.brass }}>ZIEL IM KLARTEXT:</b> {b.ziel_klartext}
+              <b style={{ color: T.brass }}>{tx('ms.zielKlartext')}</b> {b.ziel_klartext}
             </div>
           )}
         </div>
@@ -369,15 +374,15 @@ export function BriefingModal({ m, role, me, onClose, onNav }) {
               (Kontext/Leistung/Vorgehen/KPI/Risiken). Nachziehen: Briefing-Text erfassen → PDFs regenerieren.
             </div>
           )}
-          {b.kontext && <Sect title="KONTEXT — WARUM DIESER MILESTONE">{b.kontext}</Sect>}
-          {(b.leistung || []).length > 0 && <Sect title="ERWARTETE LEISTUNG (DELIVERABLES)">
+          {b.kontext && <Sect title={tx('ms.kontext')}>{b.kontext}</Sect>}
+          {(b.leistung || []).length > 0 && <Sect title={tx('ms.deliverables')}>
             <ul className="list-disc pl-4">{b.leistung.map((x, i) => <li key={i}>{x}</li>)}</ul></Sect>}
-          {(b.vorgehen || []).length > 0 && <Sect title="VORGEHEN">
+          {(b.vorgehen || []).length > 0 && <Sect title={tx('ms.vorgehen')}>
             <ol className="list-decimal pl-4">{b.vorgehen.map((x, i) => <li key={i}>{x}</li>)}</ol></Sect>}
-          {(b.erfolgsmessung || m.kpi) && <Sect title="ERFOLGSMESSUNG (KPI)">{b.erfolgsmessung || m.kpi}</Sect>}
-          {(b.risiken || []).length > 0 && <Sect title="RISIKEN & ABHÄNGIGKEITEN">
+          {(b.erfolgsmessung || m.kpi) && <Sect title={tx('ms.kpi')}>{b.erfolgsmessung || m.kpi}</Sect>}
+          {(b.risiken || []).length > 0 && <Sect title={tx('ms.risiken')}>
             <ul className="list-disc pl-4">{b.risiken.map((x, i) => <li key={i}>{x}</li>)}</ul></Sect>}
-          {b.grounding && <Sect title="DATENGRUNDLAGE"><span style={{ color: T.inkDim }}>{b.grounding}</span></Sect>}
+          {b.grounding && <Sect title={tx('ms.datengrundlage')}><span style={{ color: T.inkDim }}>{b.grounding}</span></Sect>}
           {/* Eingebettetes Briefing-PDF: klickbare Seiten-1-Vorschau (PNG lädt überall
               zuverlässig; Klick öffnet die vollständige PDF). */}
           <div className="mt-4 rounded border overflow-hidden" style={{ borderColor: T.line }}>
@@ -385,13 +390,13 @@ export function BriefingModal({ m, role, me, onClose, onNav }) {
               style={{ background: T.panelSoft, color: T.inkDim, fontFamily: T.mono }}>
               <span className="flex items-center gap-1.5"><FileText size={11} /> Briefing-PDF — {m.id}.pdf (automatisch generiert, aktueller Stand)</span>
               <span className="flex items-center gap-2">
-                <a href={pdfUrl} target="_blank" rel="noreferrer" style={{ color: T.brass }}>vollständig öffnen →</a>
+                <a href={pdfUrl} target="_blank" rel="noreferrer" style={{ color: T.brass }}>{tx('ms.vollstaendig')}</a>
                 {BRIEFINGS_DOCS[m.id]?.server_doc_url && (
-                  <a href={BRIEFINGS_DOCS[m.id].server_doc_url} target="_blank" rel="noopener noreferrer" style={{ color: T.blue }}>Doc ↗</a>
+                  <a href={BRIEFINGS_DOCS[m.id].server_doc_url} target="_blank" rel="noopener noreferrer" style={{ color: T.blue }}>{tx('ms.doc')}</a>
                 )}
               </span>
             </div>
-            <a href={pdfUrl} target="_blank" rel="noreferrer" title="Vollständige PDF öffnen"
+            <a href={pdfUrl} target="_blank" rel="noreferrer" title={tx('ms.pdfOeffnen')}
               className="block" style={{ maxHeight: '58vh', overflow: 'auto', background: '#fff' }}>
               <img src={`/briefings/${m.id}.png`} alt={`Briefing ${m.id} — Seite 1`}
                 className="w-full" style={{ display: 'block' }} />

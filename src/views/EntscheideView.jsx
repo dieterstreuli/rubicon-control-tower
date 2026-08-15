@@ -5,6 +5,7 @@ import { fmtDate } from '../lib/status.js'
 import { ENT_COLOR, ENT_FLOW, ENT_GREMIEN, ENT_TYPEN } from '../lib/domain.js'
 import { can, canAny } from '../lib/permissions.js'
 import { Filter, Plus, Save } from 'lucide-react'
+import { useT } from '../lib/i18n.js'
 
 // ── ENTSCHEIDS-REGISTER — Säule 3 der Entscheidungsordnung (INS-001 Anhang B):
 // jeder Entscheid zentral, mit dauerhafter E-Nummer, Begründung, Datengrundlage,
@@ -16,6 +17,7 @@ import { Filter, Plus, Save } from 'lucide-react'
 // nötig, weil der Server «entschieden» ohne Begründung jetzt hart ablehnt.
 // Upsert über denselben key erhält Lifecycle (Status/Kommunikation/E-Nummer).
 export function EntEdit({ e, role, me, today }) {
+  const { t: tx } = useT()
   const [beg, setBeg] = useState(e.begruendung || '')
   const [dat, setDat] = useState(e.datengrundlage || '')
   const [anh, setAnh] = useState((e.anhaenge || []).join(', '))
@@ -37,13 +39,13 @@ export function EntEdit({ e, role, me, today }) {
   }
   return (
     <div className="mt-2 pt-2 border-t flex flex-wrap items-center gap-2 text-[11.5px]" style={{ borderColor: T.line }}>
-      <span className="text-[10px] uppercase tracking-wider" style={{ color: T.inkFaint, fontFamily: T.mono }}>Pflege</span>
-      <input placeholder="Begründung (Pflicht vor «entschieden»)" value={beg} onChange={ev => setBeg(ev.target.value)}
+      <span className="text-[10px] uppercase tracking-wider" style={{ color: T.inkFaint, fontFamily: T.mono }}>{tx('ent.pflege')}</span>
+      <input placeholder={tx('ent.begruendungPflicht')} value={beg} onChange={ev => setBeg(ev.target.value)}
         className="flex-1 min-w-[220px] rounded border px-2 py-1" style={inp} />
-      <input placeholder="Datengrundlage (Unterlagen/Links)" value={dat} onChange={ev => setDat(ev.target.value)}
+      <input placeholder={tx('ent.datengrundlage')} value={dat} onChange={ev => setDat(ev.target.value)}
         className="flex-1 min-w-[220px] rounded border px-2 py-1" style={inp} />
-      <input placeholder="Anhänge: Drive-Links, kommagetrennt — gehen bei «kommuniziert» als PDF mit" value={anh} onChange={ev => setAnh(ev.target.value)}
-        title="z.B. Kompetenzordnung — Google-Docs werden als PDF exportiert und dem Gmail-Entwurf angehängt"
+      <input placeholder={tx('ent.anhaenge')} value={anh} onChange={ev => setAnh(ev.target.value)}
+        title={tx('ent.anhaengeTitle')}
         className="flex-1 min-w-[260px] rounded border px-2 py-1" style={inp} />
       <button onClick={save} disabled={busy || !dirty} className="px-2.5 py-1 rounded border text-[11px]"
         style={{ borderColor: dirty ? T.brass : T.line, color: dirty ? T.brass : T.inkFaint, opacity: busy ? .5 : 1 }}>
@@ -54,6 +56,7 @@ export function EntEdit({ e, role, me, today }) {
 }
 
 export function EntscheideView({ role, me, today }) {
+  const { t: tx } = useT()
   const all = ENTS.entscheide || []
   // A1 (01.08.): Filter überleben den Reload nach Status-Übergängen
   const [fStatus, setFStatus] = useState(() => sessionStorage.getItem('rubicon_e_status') || 'alle')
@@ -130,11 +133,11 @@ export function EntscheideView({ role, me, today }) {
           <div className="flex items-center gap-1.5 text-[12px] flex-wrap justify-end" style={{ color: T.inkDim }}>
             <Filter size={13} />
             <select value={fStatus} onChange={e => setFStatus(e.target.value)} className="bg-transparent border rounded px-1.5 py-0.5" style={sel}>
-              <option value="alle" style={{ color: '#111' }}>alle Status</option>
+              <option value="alle" style={{ color: '#111' }}>{tx('ent.alleStatus')}</option>
               {ENT_FLOW.map(s => <option key={s} value={s} style={{ color: '#111' }}>{s}</option>)}
             </select>
             <select value={fGremium} onChange={e => setFGremium(e.target.value)} className="bg-transparent border rounded px-1.5 py-0.5" style={sel}>
-              <option value="alle" style={{ color: '#111' }}>alle Gremien</option>
+              <option value="alle" style={{ color: '#111' }}>{tx('ent.alleGremien')}</option>
               {gremien.map(g => <option key={g} value={g} style={{ color: '#111' }}>{g}</option>)}
             </select>
             {canWrite && (
@@ -161,20 +164,20 @@ export function EntscheideView({ role, me, today }) {
           <div className="px-4 py-3 border-b space-y-2" style={{ borderColor: T.line, background: T.panelSoft + '66' }}>
             <div className="text-[11px] uppercase tracking-wider" style={{ color: T.inkDim, fontFamily: T.mono }}>Neuer Entscheid (Status: beantragt — Pflichtfelder gemäss Beschlussvorlage-Standard folgen in der Vorlage)</div>
             <div className="flex gap-2 flex-wrap">
-              <input placeholder="Titel *" value={form.titel} onChange={e => setForm(f => ({ ...f, titel: e.target.value }))} className="flex-1 min-w-[220px] rounded border px-2 py-1 text-[12px]" style={inp} />
+              <input placeholder={tx('ent.titelPflicht')} value={form.titel} onChange={e => setForm(f => ({ ...f, titel: e.target.value }))} className="flex-1 min-w-[220px] rounded border px-2 py-1 text-[12px]" style={inp} />
               <select value={form.typ} onChange={e => setForm(f => ({ ...f, typ: e.target.value }))} className="rounded border px-2 py-1 text-[12px]" style={inp}>
                 {ENT_TYPEN.map(t => <option key={t} value={t} style={{ color: '#111' }}>{t}</option>)}
               </select>
-              <select value={form.gremium} onChange={e => setForm(f => ({ ...f, gremium: e.target.value }))} className="rounded border px-2 py-1 text-[12px]" style={inp} title="zuständiges Gremium (aus Kompetenzmatrix)">
+              <select value={form.gremium} onChange={e => setForm(f => ({ ...f, gremium: e.target.value }))} className="rounded border px-2 py-1 text-[12px]" style={inp} title={tx('ent.gremiumTitle')}>
                 {ENT_GREMIEN.map(g => <option key={g} value={g} style={{ color: '#111' }}>{g}</option>)}
               </select>
-              <input placeholder="Antragsteller" value={form.antragsteller} onChange={e => setForm(f => ({ ...f, antragsteller: e.target.value }))} className="w-40 rounded border px-2 py-1 text-[12px]" style={inp} />
-              <input type="date" value={form.frist} onChange={e => setForm(f => ({ ...f, frist: e.target.value }))} className="rounded border px-2 py-1 text-[12px]" style={{ ...inp, fontFamily: T.mono }} title="Frist — bis wann entschieden sein muss" />
+              <input placeholder={tx('ent.antragsteller')} value={form.antragsteller} onChange={e => setForm(f => ({ ...f, antragsteller: e.target.value }))} className="w-40 rounded border px-2 py-1 text-[12px]" style={inp} />
+              <input type="date" value={form.frist} onChange={e => setForm(f => ({ ...f, frist: e.target.value }))} className="rounded border px-2 py-1 text-[12px]" style={{ ...inp, fontFamily: T.mono }} title={tx('ent.fristTitle')} />
             </div>
-            <textarea placeholder="Entscheid-Frage / beantragter Entscheid *" value={form.entscheid} onChange={e => setForm(f => ({ ...f, entscheid: e.target.value }))} rows={2} className="w-full rounded border px-2 py-1 text-[12px]" style={inp} />
+            <textarea placeholder={tx('ent.frage')} value={form.entscheid} onChange={e => setForm(f => ({ ...f, entscheid: e.target.value }))} rows={2} className="w-full rounded border px-2 py-1 text-[12px]" style={inp} />
             <div className="flex gap-2 flex-wrap">
-              <input placeholder="Begründung" value={form.begruendung} onChange={e => setForm(f => ({ ...f, begruendung: e.target.value }))} className="flex-1 min-w-[220px] rounded border px-2 py-1 text-[12px]" style={inp} />
-              <input placeholder="Datengrundlage (Unterlagen/Links)" value={form.datengrundlage} onChange={e => setForm(f => ({ ...f, datengrundlage: e.target.value }))} className="flex-1 min-w-[220px] rounded border px-2 py-1 text-[12px]" style={inp} />
+              <input placeholder={tx('ent.begruendung')} value={form.begruendung} onChange={e => setForm(f => ({ ...f, begruendung: e.target.value }))} className="flex-1 min-w-[220px] rounded border px-2 py-1 text-[12px]" style={inp} />
+              <input placeholder={tx('ent.datengrundlage')} value={form.datengrundlage} onChange={e => setForm(f => ({ ...f, datengrundlage: e.target.value }))} className="flex-1 min-w-[220px] rounded border px-2 py-1 text-[12px]" style={inp} />
               <button onClick={submitNew} disabled={busy || !form.titel.trim() || !form.entscheid.trim()}
                 className="flex items-center gap-1.5 px-3 py-1 rounded font-semibold text-[12px]"
                 style={{ background: form.titel.trim() && form.entscheid.trim() ? T.brass : T.line, color: '#0b1220', opacity: busy ? 0.6 : 1 }}>
@@ -189,18 +192,18 @@ export function EntscheideView({ role, me, today }) {
             <thead>
               <tr className="text-left" style={{ color: T.inkFaint, fontFamily: T.mono }}>
                 <th className="px-3 py-1.5 w-24">ID</th>
-                <th className="px-2 py-1.5">TITEL</th>
-                <th className="px-2 py-1.5">TYP</th>
-                <th className="px-2 py-1.5">GREMIUM</th>
-                <th className="px-2 py-1.5">ANTRAGSTELLER</th>
-                <th className="px-2 py-1.5">FRIST / DATUM</th>
-                <th className="px-2 py-1.5">STATUS</th>
+                <th className="px-2 py-1.5">{tx('ent.thTitel')}</th>
+                <th className="px-2 py-1.5">{tx('ent.thTyp')}</th>
+                <th className="px-2 py-1.5">{tx('ent.thGremium')}</th>
+                <th className="px-2 py-1.5">{tx('ent.thAntragsteller')}</th>
+                <th className="px-2 py-1.5">{tx('ent.thFrist')}</th>
+                <th className="px-2 py-1.5">{tx('ent.thStatus')}</th>
                 {canWrite && <th className="px-2 py-1.5 w-28"></th>}
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 && (
-                <tr><td colSpan={8} className="px-4 py-6 text-[12px]" style={{ color: T.inkFaint }}>Keine Entscheide für diese Filter.</td></tr>
+                <tr><td colSpan={8} className="px-4 py-6 text-[12px]" style={{ color: T.inkFaint }}>{tx('ent.keine')}</td></tr>
               )}
               {filtered.map(e => {
                 const nextSt = ENT_FLOW[ENT_FLOW.indexOf(e.status) + 1] || null
@@ -258,8 +261,8 @@ export function EntscheideView({ role, me, today }) {
                               style={{ background: ENT_COLOR(confirm.next), color: '#0b1220', opacity: (busy || (confirm.next === 'entschieden' && !(e.begruendung || '').trim())) ? .4 : 1 }}>
                               Bestätigen
                             </button>
-                            <button onClick={() => setConfirm(null)} className="px-3 py-1 rounded border text-[11.5px]" style={{ borderColor: T.line, color: T.inkDim }}>Abbrechen</button>
-                            {confirm.next === 'kommuniziert' && <span className="text-[10.5px]" style={{ color: T.inkFaint }}>erzeugt Entscheid-PDF + Gmail-Entwurf — DRS sendet</span>}
+                            <button onClick={() => setConfirm(null)} className="px-3 py-1 rounded border text-[11.5px]" style={{ borderColor: T.line, color: T.inkDim }}>{tx('ent.abbrechen')}</button>
+                            {confirm.next === 'kommuniziert' && <span className="text-[10.5px]" style={{ color: T.inkFaint }}>{tx('ent.erzeugtPdf')}</span>}
                             <span className="text-[10.5px]" style={{ color: T.inkFaint }}>Register ist revisionssicher — Übergänge sind nicht rückgängig zu machen.</span>
                           </div>
                         </td>
@@ -269,10 +272,10 @@ export function EntscheideView({ role, me, today }) {
                       <tr style={{ background: T.panelSoft + '33' }}>
                         <td colSpan={canWrite ? 8 : 7} className="px-4 py-3">
                           <div className="grid md:grid-cols-2 gap-x-6 gap-y-2 text-[11.5px]" style={{ color: T.ink }}>
-                            <div><b style={{ color: T.inkDim }}>Entscheid:</b> {e.entscheid || '—'}</div>
-                            <div><b style={{ color: T.inkDim }}>Begründung:</b> {e.begruendung || <span style={{ color: T.amber }}>— fehlt (Pflicht vor «entschieden»)</span>}</div>
-                            <div><b style={{ color: T.inkDim }}>Datengrundlage:</b> {e.datengrundlage || '—'}</div>
-                            <div><b style={{ color: T.inkDim }}>Anhänge:</b>{' '}
+                            <div><b style={{ color: T.inkDim }}>{tx('ent.lblEntscheid')}</b> {e.entscheid || '—'}</div>
+                            <div><b style={{ color: T.inkDim }}>{tx('ent.lblBegruendung')}</b> {e.begruendung || <span style={{ color: T.amber }}>— fehlt (Pflicht vor «entschieden»)</span>}</div>
+                            <div><b style={{ color: T.inkDim }}>{tx('ent.lblDatengrundlage')}</b> {e.datengrundlage || '—'}</div>
+                            <div><b style={{ color: T.inkDim }}>{tx('ent.lblAnhaenge')}</b>{' '}
                               {(e.anhaenge || []).length
                                 ? e.anhaenge.map((a, i) => (
                                   <a key={i} href={a.startsWith('http') ? a : `https://drive.google.com/open?id=${a}`}
@@ -281,19 +284,19 @@ export function EntscheideView({ role, me, today }) {
                                 : <span style={{ color: T.inkFaint }}>— (gehen bei «kommuniziert» als PDF mit, unten pflegbar)</span>}
                             </div>
                             <div>
-                              <b style={{ color: T.inkDim }}>Kommunikation:</b>{' '}
+                              <b style={{ color: T.inkDim }}>{tx('ent.lblKommunikation')}</b>{' '}
                               {e.kommunikation ? `an ${e.kommunikation.an || '?'} am ${fmtDate(e.kommunikation.am)}` : '— noch nicht kommuniziert'}
                             </div>
-                            <div><b style={{ color: T.inkDim }}>Umsetzungs-Handlungen:</b>{' '}
+                            <div><b style={{ color: T.inkDim }}>{tx('ent.lblUmsetzung')}</b>{' '}
                               {(e.tasks && e.tasks.length)
                                 ? e.tasks.map(tid => { const t = ALL_TASKS.find(x => x.id === tid); return t ? `${tnr(t)}${t.status === 'erledigt' ? ' ✓' : ''}` : tid }).join(' · ')
                                 : '—'}
                             </div>
                             <div style={{ color: T.inkFaint, fontFamily: T.mono }}>
                               {e.quelle ? `Quelle: Protokoll ${e.quelle} · ` : ''}erfasst {fmtDate(e.created_at)}
-                              {e.export?.pdf && <> · <a href={e.export.pdf} target="_blank" rel="noreferrer" style={{ color: T.brass }}>Entscheid-PDF ↗</a></>}
-                              {e.export?.server_doc_url && <> · <a href={e.export.server_doc_url} target="_blank" rel="noopener noreferrer" style={{ color: T.blue }}>Doc ↗</a></>}
-                              {e.export?.draft_id && <> · <a href="https://mail.google.com/mail/u/0/#drafts" target="_blank" rel="noreferrer" style={{ color: T.brass }} title="Gmail-Entwurf mit PDF-Anhang — DRS sendet">Gmail-Entwurf ↗</a></>}
+                              {e.export?.pdf && <> · <a href={e.export.pdf} target="_blank" rel="noreferrer" style={{ color: T.brass }}>{tx('ent.pdfLink')}</a></>}
+                              {e.export?.server_doc_url && <> · <a href={e.export.server_doc_url} target="_blank" rel="noopener noreferrer" style={{ color: T.blue }}>{tx('ent.docLink')}</a></>}
+                              {e.export?.draft_id && <> · <a href="https://mail.google.com/mail/u/0/#drafts" target="_blank" rel="noreferrer" style={{ color: T.brass }} title={tx('ent.gmailTitle')}>{tx('ent.gmailLink')}</a></>}
                             </div>
                           </div>
                           {mayAdvance(e) && <EntEdit e={e} role={role} me={me} today={today} />}

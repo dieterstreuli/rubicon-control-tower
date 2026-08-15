@@ -6,6 +6,7 @@ import { PROGRESS_STEPS, TYP_ICON, TYP_LABEL } from '../lib/domain.js'
 import { can } from '../lib/permissions.js'
 import { MsPicker, ArtefaktZeile } from '../components/ui.jsx'
 import { Circle, FileText, Plus, Save, Trash2 } from 'lucide-react'
+import { useT } from '../lib/i18n.js'
 
 // ── SITZUNG ERFASSEN — Sitzungs-Output strukturiert erfassen (5 Typen),
 // schreibt via /api/sitzung in projekt.yaml (Fortschritt/Blocker) + protokolle.json.
@@ -19,6 +20,7 @@ export const FR_MEETINGS = FR.gruppen.flatMap(g => g.meetings.filter(m => (m.typ
 // ohne Gemini-Notiz, Ad-hoc-Gespräche). Immer Mensch im Loop: «Suchen & Vorschau»
 // = Dry-Run (nichts geschrieben) → «Übernehmen» = regulärer /api/sitzung-Pfad.
 export function GeminiImport({ role, me }) {
+  const { t: tx } = useT()
   const realToday = new Date().toISOString().slice(0, 10)
   const [meetingId, setMeetingId] = useState(FR_MEETINGS[0]?.id || '')
   const [on, setOn] = useState(realToday)
@@ -60,15 +62,15 @@ export function GeminiImport({ role, me }) {
         Sucht die «Notizen von Gemini»-Doc zum Meeting, zeigt ALLE erkannten Einträge zur Prüfung — geschrieben wird erst nach «Übernehmen». Erzeugt nie Fortschritt/Verzug aus Prosa.
       </div>
       <div className="flex flex-wrap items-end gap-3 text-[12px]">
-        <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>Meeting</span>
+        <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>{tx('sit.meeting')}</span>
           <select value={meetingId} onChange={e => setMeetingId(e.target.value)} className="rounded border px-2 py-1" style={inp}>
             {FR_MEETINGS.map(m => <option key={m.id} value={m.id} style={{ color: '#111' }}>{m.name}</option>)}
           </select></label>
-        <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>Meeting-Tag</span>
+        <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>{tx('sit.meetingTag')}</span>
           <input type="date" value={on} onChange={e => setOn(e.target.value)} className="rounded border px-2 py-1" style={{ ...inp, fontFamily: T.mono }} /></label>
-        <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>Suchfenster</span>
+        <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>{tx('sit.suchfenster')}</span>
           <select value={days} onChange={e => setDays(+e.target.value)} className="rounded border px-2 py-1" style={inp}>
-            <option value={1} style={{ color: '#111' }}>nur dieser Tag</option>
+            <option value={1} style={{ color: '#111' }}>{tx('sit.nurDieserTag')}</option>
             <option value={3} style={{ color: '#111' }}>3 Tage rückwärts</option>
             <option value={7} style={{ color: '#111' }}>7 Tage rückwärts</option>
           </select></label>
@@ -95,7 +97,7 @@ export function GeminiImport({ role, me }) {
               <span style={{ fontFamily: T.mono, color: T.inkFaint }}>{k.datum}</span>
               <span className="flex-1 truncate">{k.name}</span>
               <button onClick={() => call(false, k.id)} disabled={busy} className="px-2 py-0.5 rounded border text-[11px]"
-                style={{ borderColor: T.brass, color: T.brass }}>diese verwenden</button>
+                style={{ borderColor: T.brass, color: T.brass }}>{tx('sit.dieseVerwenden')}</button>
             </div>
           ))}
         </div>
@@ -109,18 +111,18 @@ export function GeminiImport({ role, me }) {
       {p && (
         <div className="mt-3 rounded-xl border overflow-hidden" style={{ borderColor: T.brass + '66' }}>
           <div className="px-3 py-2 flex flex-wrap items-center gap-2 text-[12px] border-b" style={{ borderColor: T.line, background: T.panelSoft }}>
-            <b style={{ color: T.brass }}>VORSCHAU — nichts geschrieben</b>
+            <b style={{ color: T.brass }}>{tx('sit.vorschau')}</b>
             <span>{p.meeting_name}</span>
             <span style={{ fontFamily: T.mono, color: T.inkDim }}>{fmtDate(p.datum)}</span>
             {p.sensitiv && <span style={{ color: T.red }}>🔒 sensitiv</span>}
-            <a href={p.gemini_doc_url} target="_blank" rel="noreferrer" className="text-[11px]" style={{ color: T.blue }}>Quelle: Gemini-Doc ↗</a>
+            <a href={p.gemini_doc_url} target="_blank" rel="noreferrer" className="text-[11px]" style={{ color: T.blue }}>{tx('sit.quelleGemini')}</a>
             <span className="flex-1" />
-            <span className="text-[11px]" style={{ color: T.green }}>projekt.yaml-Wirkung: KEINE</span>
+            <span className="text-[11px]" style={{ color: T.green }}>{tx('sit.keineWirkung')}</span>
           </div>
           <table className="w-full text-[12px]">
             <thead><tr className="text-left" style={{ color: T.inkFaint, fontFamily: T.mono }}>
-              <th className="px-3 py-1.5 w-24">TYP</th><th className="px-2 py-1.5">TEXT</th>
-              <th className="px-2 py-1.5">OWNER</th><th className="px-2 py-1.5 w-24">BIS</th>
+              <th className="px-3 py-1.5 w-24">{tx('sit.thTyp')}</th><th className="px-2 py-1.5">{tx('sit.thText')}</th>
+              <th className="px-2 py-1.5">{tx('sit.thOwner')}</th><th className="px-2 py-1.5 w-24">{tx('sit.thBis')}</th>
             </tr></thead>
             <tbody>
               {p.eintraege.map((e, i) => (
@@ -139,7 +141,7 @@ export function GeminiImport({ role, me }) {
               style={{ background: T.brass, color: '#0b1220', opacity: busy ? .6 : 1 }}>
               <Save size={13} /> {busy ? 'übernimmt…' : 'Übernehmen → Tower'}
             </button>
-            <button onClick={() => setRes(null)} disabled={busy} className="px-3 py-1.5 rounded border text-[12px]" style={{ borderColor: T.line, color: T.inkDim }}>Verwerfen</button>
+            <button onClick={() => setRes(null)} disabled={busy} className="px-3 py-1.5 rounded border text-[12px]" style={{ borderColor: T.line, color: T.inkDim }}>{tx('sit.verwerfen')}</button>
             <span className="text-[10.5px]" style={{ color: T.inkFaint }}>Commitments werden als Handlungen gespiegelt (De-Dup über die Doc-ID — Re-Import dupliziert nicht).</span>
           </div>
         </div>
@@ -161,6 +163,7 @@ async function saveSitzung(payload) {
 }
 
 export function ErfassungView({ ms, today, role, me }) {
+  const { t: tx } = useT()
   const [meetingId, setMeetingId] = useState(FR_MEETINGS[0]?.id || '')
   const [datum, setDatum] = useState(today)
   const agenda = AGENDA_BY_ID[meetingId]
@@ -194,15 +197,15 @@ export function ErfassungView({ ms, today, role, me }) {
           Sitzung erfassen — Output entlang der Traktandenliste → schreibt in den Tower
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-[12px]">
-          <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>Meeting</span>
+          <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>{tx('sit.meeting')}</span>
             <select value={meetingId} onChange={e => setMeetingId(e.target.value)} className="rounded border px-2 py-1" style={inp}>
               {FR_MEETINGS.map(m => <option key={m.id} value={m.id} style={{ color: '#111' }}>{m.name}</option>)}
             </select></label>
-          <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>Datum</span>
+          <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>{tx('sit.datum')}</span>
             <input type="date" value={datum} onChange={e => setDatum(e.target.value)} className="rounded border px-2 py-1" style={{ ...inp, fontFamily: T.mono }} /></label>
-          <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>Vorsitz</span>
+          <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>{tx('sit.vorsitz')}</span>
             <input value={vorsitz} onChange={e => setVorsitz(e.target.value)} className="rounded border px-2 py-1" style={inp} /></label>
-          <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>Erfasst von</span>
+          <label className="flex flex-col gap-1"><span style={{ color: T.inkDim }}>{tx('sit.erfasstVon')}</span>
             <input value={erfasstVon} onChange={e => setErfasstVon(e.target.value)} className="rounded border px-2 py-1" style={inp} /></label>
         </div>
       </div>
@@ -211,11 +214,11 @@ export function ErfassungView({ ms, today, role, me }) {
       {agenda && (
         <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
           <div className="flex items-center justify-between mb-2">
-            <div className="text-[11px] uppercase tracking-widest" style={{ color: T.inkFaint, fontFamily: T.mono }}>Traktanden dieser Sitzung (Leitfaden)</div>
+            <div className="text-[11px] uppercase tracking-widest" style={{ color: T.inkFaint, fontFamily: T.mono }}>{tx('sit.traktanden')}</div>
             <div className="flex items-center gap-2">
-              <a href={`/traktanden/${meetingId}.pdf`} target="_blank" rel="noreferrer" className="text-[11px]" style={{ color: T.brass }}><FileText size={11} className="inline mr-1" />Agenda-PDF</a>
+              <a href={`/traktanden/${meetingId}.pdf`} target="_blank" rel="noreferrer" className="text-[11px]" style={{ color: T.brass }}><FileText size={11} className="inline mr-1" />{tx('sit.agendaPdf')}</a>
               {traktDocUrl(meetingId) && (
-                <a href={traktDocUrl(meetingId)} target="_blank" rel="noreferrer" className="text-[11px]" style={{ color: T.blue }}><FileText size={11} className="inline mr-1" />Doc ↗</a>
+                <a href={traktDocUrl(meetingId)} target="_blank" rel="noreferrer" className="text-[11px]" style={{ color: T.blue }}><FileText size={11} className="inline mr-1" />{tx('sit.doc')}</a>
               )}
             </div>
           </div>
@@ -228,13 +231,13 @@ export function ErfassungView({ ms, today, role, me }) {
       {/* Ergebnisse erfassen */}
       <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
         <div className="flex items-center flex-wrap gap-2 mb-3">
-          <span className="text-[12px] font-semibold" style={{ color: T.ink }}>Ergebnisse</span>
+          <span className="text-[12px] font-semibold" style={{ color: T.ink }}>{tx('sit.ergebnisse')}</span>
           {Object.entries(TYP_LABEL).map(([typ, lbl]) => (
             <button key={typ} onClick={() => addEintrag(typ)} className="flex items-center gap-1 text-[11px] px-2 py-1 rounded border"
               style={{ borderColor: T.line, color: T.brass }}><Plus size={11} /> {lbl}</button>
           ))}
         </div>
-        {eintraege.length === 0 && <div className="text-[12px]" style={{ color: T.inkFaint }}>Noch nichts erfasst — oben einen Ergebnistyp hinzufügen.</div>}
+        {eintraege.length === 0 && <div className="text-[12px]" style={{ color: T.inkFaint }}>{tx('sit.nichtsErfasst')}</div>}
         <div className="space-y-2">
           {eintraege.map((e, i) => (
             <div key={i} className="rounded border p-2.5 flex flex-wrap items-start gap-2" style={{ borderColor: T.line, background: T.panelSoft }}>
@@ -244,32 +247,32 @@ export function ErfassungView({ ms, today, role, me }) {
               )}
               {e.typ === 'fortschritt' && (
                 <select value={e.wert} onChange={ev => upd(i, { wert: +ev.target.value })}
-                  className="rounded border px-2 py-1 text-[11px]" style={{ ...inp, fontFamily: T.mono }} title="Fortschritt in 25%-Stufen (DRS 01.08.)">
+                  className="rounded border px-2 py-1 text-[11px]" style={{ ...inp, fontFamily: T.mono }} title={tx('sit.fortschrittStufen')}>
                   {PROGRESS_STEPS.map(p => <option key={p} value={p} style={{ color: '#111' }}>{p}%</option>)}
                 </select>
               )}
               {e.typ === 'blocker' && (
                 <input type="number" min={0} max={365} value={e.slip} onChange={ev => upd(i, { slip: +ev.target.value })}
-                  className="w-24 rounded border px-2 py-1 text-[11px]" style={{ ...inp, fontFamily: T.mono }} title="Verzug in Tagen" />
+                  className="w-24 rounded border px-2 py-1 text-[11px]" style={{ ...inp, fontFamily: T.mono }} title={tx('sit.verzugTage')} />
               )}
               {e.typ === 'commitment' && (<>
-                <input placeholder="Owner" value={e.owner} onChange={ev => upd(i, { owner: ev.target.value })} className="w-28 rounded border px-2 py-1 text-[11px]" style={inp} />
-                <input type="date" value={e.bis} onChange={ev => upd(i, { bis: ev.target.value })} className="rounded border px-2 py-1 text-[11px]" style={{ ...inp, fontFamily: T.mono }} title="bis wann" />
+                <input placeholder={tx('sit.owner')} value={e.owner} onChange={ev => upd(i, { owner: ev.target.value })} className="w-28 rounded border px-2 py-1 text-[11px]" style={inp} />
+                <input type="date" value={e.bis} onChange={ev => upd(i, { bis: ev.target.value })} className="rounded border px-2 py-1 text-[11px]" style={{ ...inp, fontFamily: T.mono }} title={tx('sit.bisWann')} />
                 <MsPicker ms={ms} value={e.ms_id} onChange={v => upd(i, { ms_id: v })} style={inp} optional />
               </>)}
               {e.typ === 'entscheid' && (<>
                 <select value={e.status} onChange={ev => upd(i, { status: ev.target.value })} className="rounded border px-2 py-1 text-[11px]" style={inp}>
-                  <option value="getroffen" style={{ color: '#111' }}>getroffen</option>
-                  <option value="offen" style={{ color: '#111' }}>offen (Entscheids-Queue)</option>
+                  <option value="getroffen" style={{ color: '#111' }}>{tx('sit.getroffen')}</option>
+                  <option value="offen" style={{ color: '#111' }}>{tx('sit.offenQueue')}</option>
                 </select>
-                <select value={e.ebene} onChange={ev => upd(i, { ebene: ev.target.value })} className="rounded border px-2 py-1 text-[11px]" style={inp} title="Eskalationsebene — VR erscheint im VR-Report">
-                  <option value="GL" style={{ color: '#111' }}>Ebene GL</option>
-                  <option value="VR" style={{ color: '#111' }}>Ebene VR</option>
+                <select value={e.ebene} onChange={ev => upd(i, { ebene: ev.target.value })} className="rounded border px-2 py-1 text-[11px]" style={inp} title={tx('sit.eskalationsebene')}>
+                  <option value="GL" style={{ color: '#111' }}>{tx('sit.ebeneGL')}</option>
+                  <option value="VR" style={{ color: '#111' }}>{tx('sit.ebeneVR')}</option>
                 </select>
               </>)}
               <input placeholder={e.typ === 'notiz' ? 'Notiz …' : 'Beschreibung …'} value={e.text} onChange={ev => upd(i, { text: ev.target.value })}
                 className="flex-1 min-w-[180px] rounded border px-2 py-1 text-[11px]" style={inp} />
-              <button onClick={() => del(i)} className="p-1 rounded" style={{ color: T.red }} title="entfernen"><Trash2 size={13} /></button>
+              <button onClick={() => del(i)} className="p-1 rounded" style={{ color: T.red }} title={tx('sit.entfernen')}><Trash2 size={13} /></button>
             </div>
           ))}
         </div>
@@ -292,6 +295,7 @@ export function ErfassungView({ ms, today, role, me }) {
 
 // ── PROTOKOLLE — erfasste Sitzungen + aggregierte offene Commitments/Entscheide.
 export function ProtokolleView({ role, me }) {
+  const { t: tx } = useT()
   const [busy, setBusy] = useState(null)
   const [artefaktFuer, setArtefaktFuer] = useState(null)   // Commitment-ID mit offener Artefakt-Zeile
   // Sensitiv-Filter (#6): sensitive Protokolle sind NICHT im Bundle — sie kommen nur
@@ -358,7 +362,7 @@ export function ProtokolleView({ role, me }) {
                   <span title={c.id} style={{ fontFamily: T.mono, color: T.brass, fontSize: 11 }}>{tnr(c)} </span>
                   <b style={{ color: T.ink }}>{c.owner || '—'}</b> <span style={{ color: T.inkDim }}>{c.text}</span>
                   {c.due && <span style={{ fontFamily: T.mono, color: ov ? T.red : T.amber }}> · bis {fmtDate(c.due)}{ov ? ' ⚠' : ''}</span>}
-                  {c.ms_id && <span style={{ fontFamily: T.mono, color: T.brass }} title="an Milestone gekoppelt — treibt dessen Fortschritt"> · ▸ {c.ms_id}</span>}
+                  {c.ms_id && <span style={{ fontFamily: T.mono, color: T.brass }} title={tx('sit.gekoppelt')}> · ▸ {c.ms_id}</span>}
                   <span style={{ color: T.inkFaint }}> · {c.origin || ''}</span>
                 </div>
                 </div>
@@ -374,7 +378,7 @@ export function ProtokolleView({ role, me }) {
         </div>
         <div className="rounded-xl border p-4" style={{ background: T.panel, borderColor: T.line }}>
           <div className="text-[11px] uppercase tracking-widest mb-2" style={{ color: T.inkFaint, fontFamily: T.mono }}>Offene Entscheide ({offeneEntscheide.length})</div>
-          {offeneEntscheide.length === 0 && <div className="text-[12px]" style={{ color: T.inkFaint }}>keine offen</div>}
+          {offeneEntscheide.length === 0 && <div className="text-[12px]" style={{ color: T.inkFaint }}>{tx('sit.keineOffen')}</div>}
           {offeneEntscheide.map((c, i) => (
             <div key={i} className="text-[12px] py-1" style={{ borderTop: i ? `1px solid ${T.line}` : 'none', color: T.inkDim }}>
               {c.text} <span style={{ color: T.inkFaint }}>· {c._m} ({fmtDate(c._d)})</span>
@@ -393,20 +397,20 @@ export function ProtokolleView({ role, me }) {
             <div key={p.id} className="px-4 py-3" style={{ borderTop: `1px solid ${T.line}` }}>
               <div className="flex flex-wrap items-center gap-2 text-[12px]">
                 <b style={{ color: T.brass }}>{p.meeting_name}</b>
-                {p.sensitiv && <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold" style={{ background: T.red + '22', color: T.red, border: `1px solid ${T.red}55` }} title="nur lokal einsehbar — keine Spiegel, kein Export">🔒 sensitiv</span>}
+                {p.sensitiv && <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold" style={{ background: T.red + '22', color: T.red, border: `1px solid ${T.red}55` }} title={tx('sit.nurLokal')}>🔒 sensitiv</span>}
                 <span style={{ fontFamily: T.mono, color: T.inkDim }}>{fmtDate(p.datum)}</span>
                 {p.vorsitz && <span style={{ color: T.inkFaint }}>· Vorsitz {p.vorsitz}</span>}
                 {p.erfasst_von && <span style={{ color: T.inkFaint }}>· erfasst: {p.erfasst_von}</span>}
                 <span style={{ fontFamily: T.mono, color: T.inkFaint }}>· {p.id}</span>
                 <span className="flex-1" />
                 {p.sensitiv ? (
-                  <span className="text-[10px]" style={{ color: T.inkFaint }}>kein Export (sensitiv)</span>
+                  <span className="text-[10px]" style={{ color: T.inkFaint }}>{tx('sit.keinExportSens')}</span>
                 ) : p.export?.pdf ? (
                   <span className="flex items-center gap-1.5">
                     <a href={p.export.pdf} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.brass, color: T.brass }}><FileText size={10} /> PDF</a>
                     {(SERVER ? p.export.server_doc_url : p.export.doc_url) && <a href={SERVER ? p.export.server_doc_url : p.export.doc_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.blue, color: T.blue }}><FileText size={10} /> Doc</a>}
                     {can(role, me, 'report.erzeugen') && (
-                      <button onClick={() => exportP(p.id)} disabled={busy === p.id} className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.line, color: T.inkFaint }} title="neu erzeugen">{busy === p.id ? '…' : '↻'}</button>
+                      <button onClick={() => exportP(p.id)} disabled={busy === p.id} className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]" style={{ borderColor: T.line, color: T.inkFaint }} title={tx('sit.neuErzeugen')}>{busy === p.id ? '…' : '↻'}</button>
                     )}
                   </span>
                 ) : can(role, me, 'report.erzeugen') ? (
@@ -414,7 +418,7 @@ export function ProtokolleView({ role, me }) {
                     <FileText size={10} /> {busy === p.id ? 'erzeugt… (~15s)' : 'Protokoll erzeugen (PDF + Doc)'}
                   </button>
                 ) : (
-                  <span className="text-[10px]" style={{ color: T.inkFaint }}>noch kein Export</span>
+                  <span className="text-[10px]" style={{ color: T.inkFaint }}>{tx('sit.nochKeinExport')}</span>
                 )}
               </div>
               <div className="mt-1.5 space-y-1">
