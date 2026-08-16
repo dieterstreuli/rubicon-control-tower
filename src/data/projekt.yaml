@@ -2394,10 +2394,11 @@ workstreams:
         phase: Phase 0
         gate: null
         critical: false
-        progress: 0
+        progress: 100
         depends_on: []
         nachlauf: false
         support: Mertinz (KWR)
+        kpi: 'ERFÜLLT 13.08.2026 — KWR (Mertinz/Plese) hat die Frühwarn-/§45a-AMFG-Meldung an das AMS SFU Schwechat eingebracht; Lesebestätigung liegt vor. Fristenlauf steht: Sperrfrist 14.08.–12.09., Kündigungsfenster 13.09.–12.10., BR-Verständigung spätestens 04.09.'
       - id: WS7-13
         name: 'VR-Entscheidungsgrundlage Reduktion Lizenzgeschäft (Projekt Bridgehead: Doppelzielbild ≥ EUR 15 Mio EBITDA / ≥ 75% lizenzunabhängig bis Ende 2028)'
         owner: Dieter Streuli
