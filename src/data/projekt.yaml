@@ -432,7 +432,7 @@ workstreams:
         name: 'WS-Freigabe aller Verantwortlichen: jede/r analysiert eigenen Strom + Handlungen, gibt frei bzw. passt an'
         owner: Andreas Fritthum
         start: '2026-08-03'
-        due: '2026-08-14'
+        due: '2026-08-22'
         date_assumed: false
         phase: Phase 0
         gate: null
@@ -442,6 +442,7 @@ workstreams:
           - WS2-15
         nachlauf: false
         progress_source: tasks
+        kpi: 'Frist auf Bitte von Andreas Fritthum am 17.08.2026 von 14.08. auf 22.08. verschoben — Urlaubsabwesenheit, Strom konnte nicht vollumfänglich bearbeitet werden.'
       - id: WS2-17
         name: 'Commitment RUBICON-Plan: Read & Sign aller Verantwortlichen (Plan verbindlich einhalten)'
         owner: Dieter Streuli
@@ -2372,6 +2373,7 @@ workstreams:
         depends_on: []
         nachlauf: false
         support: Mertinz (KWR)
+        kpi: 'Stand 17.08.2026 (Fritthum): Joint Sky hat im persönlichen Termin gegenüber DRS und AFR NICHTS bestätigt. Das Ministerium (Oliver Frank) hat gegenüber KWR bis dato ebenfalls nicht bestätigt. KWR hat Ende KW33 erneut urgiert. ⚠️ Die Beschwerdefrist läuft am 20.08. ab, dieser Milestone erst am 21.08. — die schriftliche Bestätigung käme damit zu spät, um in die Beschwerde einzufliessen.'
       - id: WS7-11
         name: Betriebsrat VIE abgestimmt (Kündigungs-/Betriebsübergangsthematik)
         owner: Andreas Fritthum
@@ -2381,10 +2383,11 @@ workstreams:
         phase: Phase 0
         gate: null
         critical: false
-        progress: 0
+        progress: 100
         depends_on: []
         nachlauf: false
         support: Amélie Charisius
+        kpi: 'ERFÜLLT — Rückmeldung Fritthum 17.08.2026: Der Betriebsrat hat die AMS-Frühwarnmeldung unterschrieben, nach gemeinsamem Termin mit Fritthum und Angela Huber sowie BR-Sitzung am Folgetag. Sowohl Angestellten- als auch Arbeiter-Betriebsrat. Der Task war NICHT überfällig, sondern zeitgerecht erledigt.'
       - id: WS7-12
         name: 'AMS-Frühwarnsystem: Unterlagen zur Massenentlassung vorsorglich vorbereitet'
         owner: Andreas Fritthum
