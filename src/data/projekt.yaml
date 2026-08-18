@@ -684,7 +684,7 @@ workstreams:
         name: Standort-Kostenvergleich Wien vs. Hamburg (Miet-/Betriebskosten) — Einsparpotenzial ermittelt
         owner: Stephanie Rohde
         start: '2026-07-31'
-        due: '2026-08-14'
+        due: '2026-08-21'
         date_assumed: false
         phase: Phase 0
         gate: null
@@ -2241,7 +2241,7 @@ workstreams:
           (Weiterbetrieb bei Beschwerde-Erfolg vs. VIE-Ende 25.10.2026)
         owner: Stephanie Rohde
         start: '2026-07-28'
-        due: '2026-08-14'
+        due: '2026-08-21'
         date_assumed: true
         phase: Phase 0
         gate: null
@@ -2253,7 +2253,7 @@ workstreams:
         name: 'Overhead-Zahlengrundlage final: per-Kopf-OPEX + aktualisierte Gruppenfunktionsliste + Elysium-Letztstand; von VIE getragener Overhead in EUR beziffert (Schlüssel 9,8% AXS / 20,5% AAS) ZWISCHENSTAND 10.08.2026 — Pajor hat mit AXS_OPEX_FC_V2_2026-07-31 (Elysium 4.0) alle 6 geforderten Punkte geliefert (Elysium-Markierung je Kopf, Austrittsdaten, Recharge Key und OPEX je Zeile, Fuehrungsebene mit Entity und Gross pY, FX CHF/EUR; Auswertung Elysium_2026_Folie1 mit 74 Koepfen 2026 und Saving 4''443''205). NICHT final ist allein der Datenstand vom 31.07. — die Holding-Kostenbasis haengt an Simon Lei, dessen aktueller FC 2027 erst Ende KW33 kommt. Der Milestone ist damit NICHT durch Pajor blockiert.'
         owner: Thomas Pajor
         start: '2026-07-28'
-        due: '2026-08-14'
+        due: '2026-08-21'
         date_assumed: true
         phase: Phase 0
         gate: null
@@ -2420,7 +2420,7 @@ workstreams:
         owner: Jörg Ehlers
         support: Stephanie Rohde
         start: '2026-07-31'
-        due: '2026-08-14'
+        due: '2026-08-21'
         date_assumed: false
         phase: Phase 0
         gate: null
@@ -3027,5 +3027,5 @@ inputs:
   - id: IN-17
     owner: Thomas Pajor
     item: 'VIE-Overhead in EUR + aktualisierte Gruppenfunktionsliste + Elysium-Letztstand (Basis für den Restrukturierungs-Business-Case; per-Kopf-OPEX) ZWISCHENSTAND 10.08.2026 — Pajor hat mit AXS_OPEX_FC_V2_2026-07-31 (Elysium 4.0) alle 6 geforderten Punkte geliefert (Elysium-Markierung je Kopf, Austrittsdaten, Recharge Key und OPEX je Zeile, Fuehrungsebene mit Entity und Gross pY, FX CHF/EUR; Auswertung Elysium_2026_Folie1 mit 74 Koepfen 2026 und Saving 4''443''205). NICHT final ist allein der Datenstand vom 31.07. — die Holding-Kostenbasis haengt an Simon Lei, dessen aktueller FC 2027 erst Ende KW33 kommt. Der Milestone ist damit NICHT durch Pajor blockiert.'
-    due: '2026-08-14'
+    due: '2026-08-21'
     status: offen
