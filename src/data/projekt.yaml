@@ -677,7 +677,7 @@ workstreams:
         phase: Phase 0
         gate: null
         critical: true
-        progress: 0
+        progress: 100
         depends_on: []
         nachlauf: false
       - id: WS3-17
@@ -1850,7 +1850,7 @@ workstreams:
         phase: Phase 0
         gate: null
         critical: false
-        progress: 0
+        progress: 100
         depends_on: []
         nachlauf: false
         support: Amélie Charisius
@@ -2456,7 +2456,7 @@ workstreams:
         phase: Vorbereitung
         gate: null
         critical: false
-        progress: null
+        progress: 100
         depends_on:
           - FIN-01
         nachlauf: false
@@ -2546,7 +2546,7 @@ workstreams:
         phase: Phase 0
         gate: null
         critical: false
-        progress: 0
+        progress: 100
         depends_on: []
         nachlauf: false
         support: Legal
@@ -2578,7 +2578,7 @@ workstreams:
         phase: Phase 0
         gate: null
         critical: false
-        progress: 0
+        progress: 100
         depends_on:
           - PV-01
         nachlauf: false
