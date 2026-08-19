@@ -1,5 +1,5 @@
 {
-  "seq": 10,
+  "seq": 11,
   "entscheide": [
     {
       "key": "MAN-EXBOD-B1",
@@ -248,6 +248,31 @@
         "pdf": "/entscheide/E-2026-010.pdf",
         "draft_id": null,
         "stand": "14.08.2026 15:46"
+      }
+    },
+    {
+      "key": "MAN-PAYROLL-01",
+      "id": "E-2026-011",
+      "titel": "Payrolling und Conductos werden in die AXS integriert — Trägergesellschaft AHS",
+      "typ": "Strategie",
+      "gremium": "GL",
+      "antragsteller": "Dieter Streuli",
+      "entscheid": "Das Payrolling wird in die AXS integriert und künftig über die AHS als Trägergesellschaft abgewickelt; die bisher geplante Abwicklung über die ShAir Payrolling AG entfällt. Conductos wird ebenfalls in die AXS integriert und den nutzenden Gesellschaften zum Selbstkostenpreis verrechnet. Die dafür notwendigen Systeme werden nach dem besten Kosten-Nutzen-Verhältnis ausgewählt; eine Fortführung bestehender Lösungen ist nicht gesetzt. Der entstehende Personalüberhang ist so zu gestalten, dass für beide Seiten — ShAir und AXS — ein möglichst schadloser Endzustand erreicht wird. Zeitliche Zielgrösse: vollständige Integration des Payrollings und der zugehörigen Systeme in die AXS per 01.01.2027.",
+      "begruendung": "Conductos ist Eigentum der ShAir AG, bedient aber sämtliche AXS-Gesellschaften und trägt damit gruppenweite HR- und Vertragsdaten. In dieser Konstellation hängt eine Kerninfrastruktur des Konzerns an einer Gesellschaft, die nicht vollständig zur AXS gehört. Die Integration stellt die Verfügungsgewalt über Prozess und Datenbasis im Konzern her und schafft zugleich die Voraussetzung dafür, HR- und Vertragsdaten im Programm AI@AXS zu nutzen. Die Verrechnung zum Selbstkostenpreis stellt sicher, dass die nutzenden Gesellschaften nicht über eine interne Marge belastet werden. Die Systemwahl wird bewusst offengehalten und allein am Kosten-Nutzen-Verhältnis ausgerichtet. Der Personalüberhang wird nicht einseitig zu Lasten einer Seite gelöst; Ziel ist ein für ShAir und AXS gleichermassen schadloser Endzustand.",
+      "datengrundlage": "Entscheid Chairman 19.08.2026 · Dossier ShAir Quo Vadis (Struktur ShAir AG und ShAir Payrolling AG als Töchter der AAS AG; Conductos im Eigentum der ShAir AG, gruppenweit im Einsatz)",
+      "datum": "2026-08-19",
+      "frist": "2027-01-01",
+      "status": "entschieden",
+      "kommunikation": null,
+      "tasks": [],
+      "anhaenge": [],
+      "programm": null,
+      "quelle": "Entscheid Chairman 19.08.2026",
+      "created_at": "2026-08-19",
+      "export": {
+        "pdf": "/entscheide/E-2026-011.pdf",
+        "draft_id": null,
+        "stand": "19.08.2026 11:30"
       }
     }
   ]
