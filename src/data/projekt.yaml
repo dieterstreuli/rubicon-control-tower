@@ -787,7 +787,7 @@ workstreams:
         name: 'Das Pushback- und Towing-Geschäft ist von der Greiss Airline Service Management auf die AAS Düsseldorf Ramp übertragen: Die Ramp kündigt den Vertrag mit der Greiss, erbringt die Leistung selbst und hat allen Pushback-Fahrern die Übernahme zu Branchentarif-Konditionen (Entgeltgruppe 4) angeboten; der Teilbetriebsübergang ist rechtlich dokumentiert und mit Betriebsrat Greiss, Betriebsrat Ramp und ver.di abgestimmt (Beschluss Sitzung 11.08.2026)'
         owner: Amélie Charisius
         start: '2026-08-11'
-        due: '2026-09-30'
+        due: '2026-10-01'
         date_assumed: true
         phase: Phase 0
         gate: null
@@ -805,7 +805,7 @@ workstreams:
         phase: Phase 1
         gate: null
         critical: false
-        progress: 0
+        progress: 40
         depends_on:
           - WS3-25
         nachlauf: false

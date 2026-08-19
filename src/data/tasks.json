@@ -10880,9 +10880,9 @@
       "text": "Die Wirtschaftlichkeit der Greiss für den Eurowings-Vertrag ist ohne Pushback-Tätigkeit und ohne den bisherigen Overhead durchgerechnet, mit Puffer für den Branchentarifvertrag — daraus liegt die korrigierte Preisstellung gegenüber Eurowings vor (statt der bisherigen 30 Prozent, die den Tender ausgelöst haben). Zu beachten: nur rund ein Drittel der Greiss-Umsätze ist extern; zwei Drittel sind Konzernumsätze gegenüber Ramp und AAS Deutschland.",
       "owner": "Cüneyt Gökcöl",
       "due": "2026-08-19",
-      "status": "offen",
-      "erledigt_am": null,
-      "erledigt_von": null,
+      "status": "erledigt",
+      "erledigt_am": "2026-08-19",
+      "erledigt_von": "CoS",
       "source": "sitzung",
       "origin": "Sitzung BTV Greiss 11.08.2026 — Auftrag an Gökcöl/Rohde/Matthei, fällig zur Folgerunde 19.08.",
       "created_at": "2026-08-11"

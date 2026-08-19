@@ -1,5 +1,5 @@
 {
-  "seq": 11,
+  "seq": 12,
   "entscheide": [
     {
       "key": "MAN-EXBOD-B1",
@@ -274,6 +274,26 @@
         "draft_id": null,
         "stand": "19.08.2026 11:30"
       }
+    },
+    {
+      "key": "MAN-BTVGRS-07",
+      "id": "E-2026-012",
+      "titel": "BTV-Zahlung und ADR-Übergang werden zeitlich entkoppelt: BTV ab 01.08.2026 in der Greiss, Übergang zum 01.10.2026",
+      "typ": "Personal",
+      "gremium": "GL",
+      "antragsteller": "Dieter Streuli",
+      "entscheid": "Die 13 Pushback-Mitarbeitenden werden rückwirkend ab 01.08.2026 nach Branchentarifvertrag in Entgeltgruppe 4 vergütet — umgesetzt zunächst IN DER GREISS, nicht erst nach dem Übergang. Payroll ist an Meike Byrd und das Steuerbüro weitergeleitet, die Betriebsratsanhörung fand am 19.08.2026 statt, die Eingruppierungsschreiben gehen in den Folgetagen an die Mitarbeitenden. Der Teilbetriebsübergang auf die AAS Düsseldorf Ramp wird davon zeitlich getrennt und auf den 01.10.2026 angesetzt. Die Kommunikation an die Mitarbeitenden beschränkt sich vorerst ausdrücklich auf die BTV-Anpassung; der Übergang wird später kommuniziert. Der Beschluss E-2026-004 bleibt gültig und wird durch diesen Entscheid nur terminlich konkretisiert.",
+      "begruendung": "Drei bis vier Pushback-Fahrer haben Angebote von LEOS zu gleichen Konditionen und bleiben nach Einschätzung der Standortführung nur wegen der Verbundenheit zum Eigentümer. Bei Bekanntgabe des Übergangs auf die Ramp wäre mit sofortigen Kündigungen zu rechnen, während der Bereich bereits unterbesetzt ist. Die Entkopplung sichert den Sommerbetrieb, setzt die tarifliche Bindungswirkung sofort in Kraft und verschiebt das Abgangsrisiko in eine verkehrsärmere Phase.",
+      "datengrundlage": "Call 19.08.2026 (Streuli, Matthei, Gökcöl, Seyler), Mitschrift Doc 1WqF77epSUtaSV-5ZsKaJjAjF-U_GQOzFoTPRqHJQIcM · Einschätzung Standort Düsseldorf zur Abwerbung durch LEOS · Empfehlung Esche Schümann Commichau vom 17.08.2026, Priorität 3 (Gehaltsanpassung als Mitarbeiterbindung)",
+      "datum": "2026-08-19",
+      "frist": "2026-10-01",
+      "status": "entschieden",
+      "kommunikation": null,
+      "tasks": [],
+      "anhaenge": [],
+      "programm": null,
+      "quelle": "Call BTV Greiss 19.08.2026",
+      "created_at": "2026-08-19"
     }
   ]
 }
