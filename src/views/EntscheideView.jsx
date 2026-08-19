@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { T } from '../lib/theme.js'
 import { ALL_TASKS, reloadKeepScroll, tnr, ENTS } from '../lib/data.js'
 import { fmtDate } from '../lib/status.js'
-import { ENT_COLOR, ENT_FLOW, ENT_GREMIEN, ENT_TYPEN } from '../lib/domain.js'
+import { ENT_COLOR, ENT_FLOW, ENT_TERMINAL, ENT_STATUS_ALLE, ENT_GREMIEN, ENT_TYPEN } from '../lib/domain.js'
 import { can, canAny } from '../lib/permissions.js'
 import { Filter, Plus, Save } from 'lucide-react'
 import { useT } from '../lib/i18n.js'
@@ -74,10 +74,16 @@ export function EntscheideView({ role, me, today }) {
   const mayAdvance = (e) => can(role, me, 'entscheid.fortschreiben', e)
 
   const gremien = [...new Set(all.map(e => e.gremium).filter(Boolean))]
+  // 19.08.2026 (DRS): Zurückgezogene Entscheide werden SEPARAT geführt — sie bleiben
+  // im Register (revisionssicher, Nummer belegt), sollen aber nicht zwischen den
+  // aktiven stehen. Darum ans Ende sortiert und mit eigener Kapitel-Zeile abgesetzt.
+  const istZurueck = (e) => ENT_TERMINAL.includes(e.status)
   const filtered = all.filter(e =>
     (fStatus === 'alle' || e.status === fStatus) && (fGremium === 'alle' || e.gremium === fGremium)
-  ).sort((a, b) => b.id.localeCompare(a.id))       // neueste E-Nummer zuerst
-  const nOffen = all.filter(e => !['kommuniziert', 'umgesetzt'].includes(e.status)).length
+  ).sort((a, b) => (istZurueck(a) - istZurueck(b)) || b.id.localeCompare(a.id))
+  const nZurueck = filtered.filter(istZurueck).length
+  // «nicht abgeschlossen» zählt zurückgezogene NICHT mit — sie warten auf nichts.
+  const nOffen = all.filter(e => !['kommuniziert', 'umgesetzt'].includes(e.status) && !istZurueck(e)).length
 
   // A4 (01.08.): Übergang läuft IMMER über die Bestätigungs-Zeile (kein Direkt-Klick,
   // kein window.prompt mehr) — der Server erzwingt zusätzlich Begründung vor «entschieden».
@@ -128,13 +134,13 @@ export function EntscheideView({ role, me, today }) {
         <div className="flex items-center justify-between flex-wrap gap-2 px-4 py-2 border-b" style={{ borderColor: T.line }}>
           <div className="text-[13px] font-semibold tracking-widest" style={{ fontFamily: T.mono, color: T.brass }}>
             ── ENTSCHEIDS-REGISTER ──
-            <span className="ml-2 text-[11px] font-normal" style={{ color: T.inkDim }}>{all.length} Entscheide · {nOffen} nicht abgeschlossen · {filtered.length} angezeigt</span>
+            <span className="ml-2 text-[11px] font-normal" style={{ color: T.inkDim }}>{all.length} Entscheide · {nOffen} nicht abgeschlossen · {filtered.length} angezeigt{nZurueck ? ` · ${nZurueck} zurückgezogen` : ''}</span>
           </div>
           <div className="flex items-center gap-1.5 text-[12px] flex-wrap justify-end" style={{ color: T.inkDim }}>
             <Filter size={13} />
             <select value={fStatus} onChange={e => setFStatus(e.target.value)} className="bg-transparent border rounded px-1.5 py-0.5" style={sel}>
               <option value="alle" style={{ color: '#111' }}>{tx('ent.alleStatus')}</option>
-              {ENT_FLOW.map(s => <option key={s} value={s} style={{ color: '#111' }}>{s}</option>)}
+              {ENT_STATUS_ALLE.map(s => <option key={s} value={s} style={{ color: '#111' }}>{s}</option>)}
             </select>
             <select value={fGremium} onChange={e => setFGremium(e.target.value)} className="bg-transparent border rounded px-1.5 py-0.5" style={sel}>
               <option value="alle" style={{ color: '#111' }}>{tx('ent.alleGremien')}</option>
@@ -158,6 +164,7 @@ export function EntscheideView({ role, me, today }) {
             </React.Fragment>
           ))}
           <span className="ml-2" style={{ color: T.inkFaint }}>· revisionssicher (kein Löschen) · VR-Entscheide erscheinen im VR-Board-Pack</span>
+            {ENT_TERMINAL.map(s2 => <span key={s2} style={{ color: ENT_COLOR(s2) }}>⊣ {s2}</span>)}
         </div>
 
         {showForm && canWrite && (
@@ -205,11 +212,23 @@ export function EntscheideView({ role, me, today }) {
               {filtered.length === 0 && (
                 <tr><td colSpan={8} className="px-4 py-6 text-[12px]" style={{ color: T.inkFaint }}>{tx('ent.keine')}</td></tr>
               )}
-              {filtered.map(e => {
-                const nextSt = ENT_FLOW[ENT_FLOW.indexOf(e.status) + 1] || null
+              {filtered.map((e, iRow) => {
+                const iFlow = ENT_FLOW.indexOf(e.status)
+                const nextSt = iFlow >= 0 ? (ENT_FLOW[iFlow + 1] || null) : null
+                // Kapitel-Trenner vor dem ERSTEN zurückgezogenen Eintrag (DRS 19.08.):
+                // sie stehen im Register, aber sichtbar abgesetzt von den aktiven.
+                const kapitel = istZurueck(e) && (iRow === 0 || !istZurueck(filtered[iRow - 1]))
                 const isOpen = open === e.id
                 return (
                   <React.Fragment key={e.id}>
+                    {kapitel && (
+                      <tr>
+                        <td colSpan={8} className="px-4 pt-5 pb-1 text-[11px] tracking-widest"
+                          style={{ color: T.inkFaint, fontFamily: T.mono, borderTop: `2px solid ${T.line}` }}>
+                          ── ZURÜCKGEZOGEN · Nummer bleibt belegt · als Handlung weitergeführt ──
+                        </td>
+                      </tr>
+                    )}
                     <tr onClick={() => setOpen(isOpen ? null : e.id)}
                       tabIndex={0} role="button" aria-label={`${e.id} ${e.titel} — Details ${isOpen ? 'schliessen' : 'öffnen'}`}
                       onKeyDown={ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); setOpen(isOpen ? null : e.id) } }}

@@ -140,7 +140,7 @@
         "status": {
           "typ": "str",
           "pflicht": true,
-          "werte_aus": "domain.entscheide.flow"
+          "werte_aus": "domain.entscheide.status_alle"
         },
         "kommunikation": {
           "typ": "obj",
@@ -239,7 +239,15 @@
         "domaene": {
           "typ": "str",
           "pflicht": true,
-          "werte": ["GOV", "FIN", "COM", "OPS", "HR", "LEG", "DAT"]
+          "werte": [
+            "GOV",
+            "FIN",
+            "COM",
+            "OPS",
+            "HR",
+            "LEG",
+            "DAT"
+          ]
         },
         "kriterium": {
           "typ": "str",
@@ -252,7 +260,13 @@
         "status": {
           "typ": "str",
           "pflicht": true,
-          "werte": ["fehlt", "unbekannt", "im_aufbau", "vorhanden", "gelebt"]
+          "werte": [
+            "fehlt",
+            "unbekannt",
+            "im_aufbau",
+            "vorhanden",
+            "gelebt"
+          ]
         },
         "evidenz": {
           "typ": "str",

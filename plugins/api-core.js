@@ -186,6 +186,9 @@ export function createApi(rootDir) {
   // Domänen-SSOT (Q2, 01.08.): identische Liste wie im UI — src/data/domain.json
   const DOMAIN = db.domain.read()
   const ENT_FLOW = DOMAIN.entscheide.flow
+  // 19.08.2026: 'zurückgezogen' ist ein gültiger Endzustand, aber KEIN Kettenschritt.
+  // Für die Annahme eines Status zählt ENT_STATUS_ALLE, für das Weiterschalten ENT_FLOW.
+  const ENT_STATUS_ALLE = DOMAIN.entscheide.status_alle || ENT_FLOW
   const ENT_BEGRUENDUNG_AB = DOMAIN.entscheide.begruendung_pflicht_ab
   // Evidenz-Format-Gate (Härtung 04.08., «Datengehirn»): gültige Evidenz/Artefakte müssen
   // einen Drive-/Docs-Link ODER eine Register-Referenz enthalten — Muster-SSOT domain.json.
@@ -219,7 +222,7 @@ export function createApi(rootDir) {
         datum: e.datum ?? prev?.datum ?? null,                 // Entscheid-Datum — nie geraten
         frist: e.frist ?? prev?.frist ?? null,
         // Lifecycle nur über /api/entscheid/status — Upsert erhält bestehenden Status
-        status: prev ? prev.status : (ENT_FLOW.includes(e.status) ? e.status : 'beantragt'),
+        status: prev ? prev.status : (ENT_STATUS_ALLE.includes(e.status) ? e.status : 'beantragt'),
         kommunikation: prev?.kommunikation ?? null,             // Stempel {an, am} — nur via Status-Übergang
         tasks: e.tasks ?? prev?.tasks ?? [],                    // Verweis auf Umsetzungs-Handlungen (T-IDs)
         anhaenge: e.anhaenge ?? prev?.anhaenge ?? [],           // Drive-Links/IDs — gehen bei «kommuniziert» als PDF mit (DRS 01.08.)
@@ -801,7 +804,7 @@ export function createApi(rootDir) {
       // CoS immer; Owner nur eigene (antragsteller === me). Übergang zu «kommuniziert»
       // setzt den Kommunikations-Stempel {an, am}; «entschieden» stempelt das Entscheid-Datum.
       ep('/api/entscheid/status', {}, async ({ body, req, json, fail }) => {
-          if (!body.id || !ENT_FLOW.includes(body.status)) return json(400, { ok: false, error: `id und status (${ENT_FLOW.join('|')}) sind Pflicht` })
+          if (!body.id || !ENT_STATUS_ALLE.includes(body.status)) return json(400, { ok: false, error: `id und status (${ENT_STATUS_ALLE.join('|')}) sind Pflicht` })
           // Option-aussehender Verteiler (führendes '-') verboten: `an` wird als `--an <wert>` an
           // gen_entscheid_mail gereicht; ein Wert wie '--subject' würde sonst beim naiven argv-Scan
           // den server-gesetzten --subject-Flag aliasieren. Gleiche Invariante wie /api/gemini/import.

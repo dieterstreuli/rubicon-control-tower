@@ -23,6 +23,9 @@ PHASEN = _DOMAIN['phasen']['reihenfolge']
 
 # Entscheids-Register
 ENT_FLOW = _DOMAIN['entscheide']['flow']
+# 'zurückgezogen' = Seitenausgang, nicht Teil der Kette (s. domain.js)
+ENT_TERMINAL = _DOMAIN['entscheide'].get('terminal', [])
+ENT_STATUS_ALLE = _DOMAIN['entscheide'].get('status_alle', ENT_FLOW)
 ENT_TYPEN = _DOMAIN['entscheide']['typen']
 ENT_GREMIEN = _DOMAIN['entscheide']['gremien']
 ENT_BEGRUENDUNG_AB = _DOMAIN['entscheide']['begruendung_pflicht_ab']

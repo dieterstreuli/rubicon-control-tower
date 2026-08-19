@@ -35,6 +35,11 @@ export const phaseToken = (p) => D.phasen.token[p] || null
 
 // ── Entscheids-Register ──
 export const ENT_FLOW = D.entscheide.flow
+// 19.08.2026: 'zurückgezogen' ist ein Seitenausgang, KEIN Schritt in der Kette.
+// Darum getrennt von ENT_FLOW — sonst würde das Weiterschalten (ENT_FLOW[i+1])
+// aus «umgesetzt» plötzlich «zurückgezogen» anbieten.
+export const ENT_TERMINAL = D.entscheide.terminal || []
+export const ENT_STATUS_ALLE = D.entscheide.status_alle || D.entscheide.flow
 export const ENT_TYPEN = D.entscheide.typen
 export const ENT_GREMIEN = D.entscheide.gremien
 export const ENT_COLOR = (st) => T[D.entscheide.token[st] || 'grey']

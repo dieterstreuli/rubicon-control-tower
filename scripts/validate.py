@@ -255,7 +255,9 @@ def main():
     # ── Entscheids-Register (16.07., Säule 3 INS-001 Anhang B): entscheide.json —
     # E-Nummern + keys eindeutig, Status im 5-Stufen-Modell, kommuniziert ⇒ Stempel,
     # Task-Verweise müssen existieren. Revisionssicherheit ist API-seitig (kein Delete).
-    ENT_FLOW = ("beantragt", "entscheidungsreif", "entschieden", "kommuniziert", "umgesetzt")
+    # 19.08.2026: war hier hartkodiert — eine stille SSOT-Verletzung. Jetzt aus
+    # domain.json, sonst bricht jede Status-Erweiterung genau hier.
+    from _domain import ENT_STATUS_ALLE as ENT_FLOW
     ents_path = ROOT / "src" / "data" / "entscheide.json"
     n_ents = 0
     if ents_path.exists():
